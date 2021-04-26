@@ -2,7 +2,8 @@ package com.bavostepbros.leap.database;
 
 import com.bavostepbros.leap.model.Capability;
 
-import org.hibernate.HibernateException;
+import java.sql.Blob;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -42,7 +43,7 @@ public class CapabilityDAL {
     Blob targetOperatingModel, Integer resourceQuality, Integer informationQuality, Integer applicationFit) {
         Session session = factory.openSession();
         Transaction transaction = session.beginTransaction();
-        Capability capability = getCapabilityById(id);
+        Capability capability = getCapabilityById(capabilityId);
         capability.setEnvironmentId(environmentId);
         capability.setStatusId(statusId);
         capability.setParentCapabilityId(parentCapabilityId);

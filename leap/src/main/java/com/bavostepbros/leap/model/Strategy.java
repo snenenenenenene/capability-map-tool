@@ -1,6 +1,15 @@
 package com.bavostepbros.leap.model;
 
 import java.sql.Date;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 public class Strategy {
 

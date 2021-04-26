@@ -1,6 +1,7 @@
 package com.bavostepbros.leap.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class CapabilityItemId implements Serializable {
 

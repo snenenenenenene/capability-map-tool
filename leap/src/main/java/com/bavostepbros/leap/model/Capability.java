@@ -4,10 +4,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.ManyToMany;
 
 import java.sql.Blob;
+import java.util.List;
 
 @Entity
 public class Capability {
@@ -32,7 +33,7 @@ public class Capability {
     private Integer applicationFit;
 
     @OneToMany(mappedBy = "Capability")
-    private Set<CapabilityItem> capabilityItems;
+    private List<CapabilityItem> capabilityItems;
 
     public Capability() {
     }
@@ -151,7 +152,7 @@ public class Capability {
             ", environmentId='" + getEnvironmentId() + "'" +
             ", statusId='" + getStatusId() + "'" +
             ", parentCapabilityId='" + getParentCapabilityId() + "'" +
-            ", name='" + getName() + "'" +
+            ", name='" + getCapabilityName() + "'" +
             ", level='" + getLevel() + "'" +
             ", paceOfChange='" + isPaceOfChange() + "'" +
             ", targetOperatingModel='" + getTargetOperatingModel() + "'" +

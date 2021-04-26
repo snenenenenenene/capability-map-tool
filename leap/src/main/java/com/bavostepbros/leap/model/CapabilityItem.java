@@ -1,5 +1,11 @@
 package com.bavostepbros.leap.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 @Entity
 @IdClass(CapabilityItemId.class)
 public class CapabilityItem {
@@ -31,11 +37,11 @@ public class CapabilityItem {
         this.capability = capability;
     }
 
-    public CapabilityItem getStrategyItem() {
+    public StrategyItem getStrategyItem() {
         return this.strategyItem;
     }
 
-    public void setStrategyItem(CapabilityItem strategyItem) {
+    public void setStrategyItem(StrategyItem strategyItem) {
         this.strategyItem = strategyItem;
     }
 

@@ -1,5 +1,15 @@
 package com.bavostepbros.leap.model;
 
+import java.util.List;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.Type;
+
 @Entity
 public class StrategyItem {
 
@@ -16,7 +26,7 @@ public class StrategyItem {
     private String description;
 
     @OneToMany(mappedBy = "StrategyItem")
-    private Set<CapabilityItem> capabilityItems;
+    private List<CapabilityItem> capabilityItems;
 
     public StrategyItem() {
     }
