@@ -15,9 +15,15 @@ public class Strategy {
     private Date timeFrameStart;
     private Date timeFrameEnd;
 
+    @ManyToOne
+    private Environment environment;
+
     @OneToMany(cascade=CascadeType.ALL)
     @JoinColumn(name="STRATEGYID")
     private Set<StrategyItem> items;
+
+    public Strategy() {
+    }
 
     public Strategy(Integer statusId, String strategyName, Date timeFrameStart, Date timeFrameEnd) {
         this.statusId = statusId;

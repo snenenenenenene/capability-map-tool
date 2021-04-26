@@ -9,6 +9,9 @@ public class Status {
 
     private Integer validityPeriod;
 
+    public Status() {
+    }
+
     public Status(Integer validityPeriod) {
         this.validityPeriod = validityPeriod;
     }

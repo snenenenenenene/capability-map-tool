@@ -1,5 +1,12 @@
 package com.bavostepbros.leap.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.ManyToMany;
+
 import java.sql.Blob;
 
 @Entity
@@ -12,7 +19,7 @@ public class Capability {
     @ManyToOne
     private Integer environmentId;
 
-    @ManyToOne
+    @OneToOne
     private Integer statusId;
 
     private Integer parentCapabilityId;
@@ -24,6 +31,11 @@ public class Capability {
     private Integer informationQuality;
     private Integer applicationFit;
 
+    @OneToMany(mappedBy = "Capability")
+    private Set<CapabilityItem> capabilityItems;
+
+    public Capability() {
+    }
 
     public Capability(Integer environmentId, Integer statusId, Integer parentCapabilityId, String capabilityName, 
     Integer level, boolean paceOfChange, Blob targetOperatingModel, Integer resourceQuality, 
@@ -76,7 +88,7 @@ public class Capability {
         return this.capabilityName;
     }
 
-    public void setName(String capabilityName) {
+    public void setCapabilityName(String capabilityName) {
         this.capabilityName = capabilityName;
     }
 

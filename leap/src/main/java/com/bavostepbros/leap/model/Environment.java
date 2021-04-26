@@ -9,6 +9,12 @@ public class Environment {
 
     private String environmentName;
 
+    @OneToMany(cascade=CascadeType.ALL)
+    @JoinColumn(name="ENVIRONMENTID")
+    private Set<Strategy> strategies;
+
+    public Environment() {
+    }
 
     public Environment(String environmentName) {
         this.environmentName = environmentName;

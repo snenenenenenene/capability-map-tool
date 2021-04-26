@@ -15,6 +15,11 @@ public class StrategyItem {
     @Type(type="text")
     private String description;
 
+    @OneToMany(mappedBy = "StrategyItem")
+    private Set<CapabilityItem> capabilityItems;
+
+    public StrategyItem() {
+    }
 
     public StrategyItem(Strategy strategy, String strategyItemName, String description) {
         this.strategy = strategy;
