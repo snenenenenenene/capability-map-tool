@@ -1,12 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import App from './App'
+import { Auth0Provider } from '@auth0/auth0-react';
+
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+      <Auth0Provider
+        domain="dev-94uwxr97.eu.auth0.com"
+        clientId="NPIzze5rZdtNhJyHibQIKmZwn5iLWIaY"
+        redirectUri={window.location.origin}
+        audience="https://dev-94uwxr97.eu.auth0.com/api/v2/"
+        scope="read:current_user"
+      >
+        <App />
+      </Auth0Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
