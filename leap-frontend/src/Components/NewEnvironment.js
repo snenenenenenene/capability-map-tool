@@ -19,7 +19,7 @@ export default class NewEnvironment extends Component
     newEnvironment (){
         console.log("soep")
         //const post_response = await fetch(`http://localhost:8080/addCapability`, { method: 'POST'});
-        const environmentname = document.getElementById('environmentname').value();
+        const environmentname = document.getElementById('environmentname').value;
         this.setState({ redirect: `/environment/${environmentname}`})
     }
 
