@@ -13,7 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class LeapController {
     @GetMapping("/")
     public String index(){
-        return  "redirect:/login";
+        return  "redirect:/authorize";
     }
 
 
