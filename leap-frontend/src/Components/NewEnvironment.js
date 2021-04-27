@@ -1,7 +1,11 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import  { Redirect } from 'react-router-dom'
+import RecentEnvironment from './RecentEnvironments'
 import axios from "axios"
+import { Container, Col, Form, FormGroup, Label, Input } from 'reactstrap'
+import RecentEnvironmentTableRow from "./RecentEnvironmentTableRow";
+import styles from "../App.css"
 
 
 export default class NewEnvironment extends Component
@@ -9,36 +13,58 @@ export default class NewEnvironment extends Component
     constructor(props) {
         super(props);
         this.state = {
-            redirect: null
+            environments: [],
+            environmentName: '',
             };
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleSubmit = e => {
+        e.preventDefault();
+        let environmentName = this.environmentname.value;
+        let path = `environment/${environmentName}`;
+        // this is the part !!!
+        this.props.history.push(path);
     }
 
     componentDidMount() {
     }
 
-    newEnvironment (){
-        console.log("soep")
-        //const post_response = await fetch(`http://localhost:8080/addCapability`, { method: 'POST'});
-        const environmentname = document.getElementById('environmentname').value;
-        this.setState({ redirect: `/environment/${environmentname}`})
+    recentEnvironmentTableRow() {
+        return this.state.environments.map((row, i) => {
+            return <RecentEnvironmentTableRow obj={ row } key={ i }/>
+        })
     }
 
-    
-
     render() {
-        if (this.state.redirect) {
-            return <Redirect to={this.state.redirect} />
-          }
           return(
-            <div>
+            <div class="jumbotron">
             <h1>Home &gt; New Environment</h1>
-            <form onSubmit={this.newEnvironment} method="POST">
-                <input type="text" id="environmentname" placeholder="New Environment"></input>
-                
-                <input type="button" value="Submit" onClick={() => this.newEnvironment()}></input>
-                
-            </form>
-            
+            <div class="row">
+                <div class="col-sm-6">
+                    <div>
+                        <p>Recent Environments</p>
+                        <table className='table table-striped'>
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Description</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            { this.recentEnvironmentTableRow() }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                <p>New Environments</p>
+                <form className="form-inline" onSubmit={this.handleSubmit} method="POST">
+                    <input type="text" className="form-control" placeholder="New Environment" ref={input => (this.environmentname = input)}></input>
+                    <button className="btn primary" type="submit">Add</button>
+                </form>
+                </div>
+            </div>
         </div>
         )
     }

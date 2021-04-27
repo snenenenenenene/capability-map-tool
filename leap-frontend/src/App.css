@@ -13,56 +13,6 @@
   }
 }
 
-nav {
-  display: flex;
-  flex-flow: row;
-  background-color: rgba(235, 74, 0, 0.781);
-  color: rgb(255, 254, 221);
-  height: 3rem;
-}
-
-.home-container {
-  display: flex;
-}
-
-.home-child {
-  flex: 1;
-    border: 2px solid rgba(0, 0, 0, 0.37);
-}
-
-nav button {
-  text-align: -webkit-center;
-  background-color: inherit;
-  color: inherit;
-  border-color: transparent;
-  border-right: 1px solid lightgrey;
-  height: 100%;
-  width: 6rem;
-}
-
-.brand {
-  text-align: -webkit-center;
-  background-color: rgb(255, 123, 0);
-  color: inherit;
-  border-color: transparent;
-  border-right: 1px solid lightgrey;
-  height: 100%;
-  width: 6rem;
-}
-
-nav button:focus {
-  outline: none;
-}
-
-nav .login {
-  display: flex;
-  margin-left: auto;
-}
-
-nav .login button {
-  border-left: 1px solid lightgrey;
-}
-
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -76,6 +26,20 @@ nav .login button {
 
 .App-link {
   color: #61dafb;
+}
+
+.splitScreen {
+  display: flex;
+  flexDirection: row;
+}
+
+.topPane {
+  width: 50%;
+  background-color: #61dafb;
+}
+.bottomPane {
+  width: 50%;
+  background-color: red;
 }
 
 @keyframes App-logo-spin {

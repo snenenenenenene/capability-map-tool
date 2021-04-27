@@ -20,7 +20,7 @@ export default class Home extends Component
                 <h2>Recently Used Environments</h2>
                 <form>
                     <div>
-                        <Link to={'/environments'}>
+                        <Link to={'/recent'}>
                         <input type="button" value="Recently Used Environments" className="input-button hoverable"/>
                         </Link>
                     </div> 
@@ -30,7 +30,7 @@ export default class Home extends Component
                 <h2>Environment</h2>
                 <form>
                     <div>
-                        <Link to={'/newenvironment'}>
+                        <Link to={'/add'}>
                         <input type="button" value="New Environment" className="input-button hoverable"/>
                         </Link>
                     </div> 
@@ -40,7 +40,7 @@ export default class Home extends Component
                 <h2>User List</h2>
                 <form>
                     <div>
-                        <Link to={'/userlist'}>
+                        <Link to={'/users'}>
                         <input type="button" value="User list" className="input-button hoverable"/>
                         </Link>
                     </div> 

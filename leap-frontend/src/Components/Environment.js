@@ -2,23 +2,30 @@ import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import  { Redirect } from 'react-router-dom'
 import axios from "axios"
+import { Container, Col, Form, FormGroup, Label, Input } from 'reactstrap'
+import { useHistory, useParams } from 'react-router-dom'
 
 
-export default class NewEnvironment extends Component
+export default class Environment extends Component
 {
     constructor(props) {
         super(props);
         this.state = {
-            };
+            name: '',
+            environmentname: props.environmentname
+        };
+
     }
 
     componentDidMount() {
     }
 
     render() {
+        const data = this.props.match.params.name;
         return(
             <div>
-                <h1>Home &gt; Environment</h1>
+                <h4>Home &gt; Environment &gt; {data}</h4>
+                <p></p>
             </div>
         )
     }
