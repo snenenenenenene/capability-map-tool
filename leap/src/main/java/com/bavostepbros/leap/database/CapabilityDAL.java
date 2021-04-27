@@ -25,6 +25,7 @@ public class CapabilityDAL {
         Session session = factory.openSession();
         Transaction transaction = session.beginTransaction();
         Integer id = (Integer) session.save(capability);
+        System.out.println(id);
         transaction.commit();
         session.close();
         capability.setCapabilityId(id);
@@ -33,7 +34,7 @@ public class CapabilityDAL {
 
     public Capability getCapabilityById(Integer id) {
         Session session = factory.openSession();
-        Query<Capability> query = session.createQuery("SELECT c FROM Capability WHERE capabilityId = '"+ id +"' ", Capability.class);
+        Query<Capability> query = session.createQuery("SELECT c FROM Capability c WHERE capabilityId = '"+ id +"' ", Capability.class);
         Capability capability = query.getSingleResult();
         return capability;
     }

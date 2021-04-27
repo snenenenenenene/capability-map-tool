@@ -31,7 +31,7 @@ public class EnvironmentDAL {
 	
 	public Environment getEnvironmentById(Integer id) {
 		Session session = factory.openSession();
-		Query<Environment> query = session.createQuery("SELECT e FROM Environment WHERE environmentId = '"+ id +"'", Environment.class);
+		Query<Environment> query = session.createQuery("SELECT e FROM Environment e WHERE environmentId = '"+ id +"'", Environment.class);
 		Environment environment = query.getSingleResult();
 		return environment;
 	}
