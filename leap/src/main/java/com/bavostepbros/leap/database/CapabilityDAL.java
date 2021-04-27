@@ -65,7 +65,7 @@ public class CapabilityDAL {
         List<Capability> capabilities = null;
         try {
         	Query<Capability> query = session.createQuery(
-        			"SELECT * FROM Capability c ", 
+        			"SELECT c FROM Capability c ", 
         			Capability.class);
             capabilities = query.getResultList();
         } catch (HibernateException e) {

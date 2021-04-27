@@ -97,8 +97,10 @@ public class CapabilityDALTest {
         
         capabilityDAL.deleteCapability(id);
         List<Capability> capabilities = capabilityDAL.getAllCapabilities();
-        // assertTrue(capabilities.stream()
-        		// .filter(cap)))
+        assertNull(capabilities.stream()
+        	.filter((cap) -> id.equals(cap.getCapabilityId()))
+        	.findAny()
+        	.orElse(null));
 	}
 
 }
