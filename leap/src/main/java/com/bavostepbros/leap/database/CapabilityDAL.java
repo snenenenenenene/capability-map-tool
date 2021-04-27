@@ -1,8 +1,8 @@
 package com.bavostepbros.leap.database;
 
 import com.bavostepbros.leap.model.Capability;
-
-import java.sql.Blob;
+import com.bavostepbros.leap.model.Environment;
+import com.bavostepbros.leap.model.Status;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -38,14 +38,14 @@ public class CapabilityDAL {
         return capability;
     }
 
-    public void updateCapability(Integer capabilityId, Integer environmentId, Integer statusId, 
+    public void updateCapability(Integer capabilityId, Environment environment, Status status, 
     Integer parentCapabilityId, String capabilityName, Integer level, boolean paceOfChange, 
-    Blob targetOperatingModel, Integer resourceQuality, Integer informationQuality, Integer applicationFit) {
+    String targetOperatingModel, Integer resourceQuality, Integer informationQuality, Integer applicationFit) {
         Session session = factory.openSession();
         Transaction transaction = session.beginTransaction();
         Capability capability = getCapabilityById(capabilityId);
-        capability.setEnvironmentId(environmentId);
-        capability.setStatusId(statusId);
+        capability.setEnvironment(environment);
+        capability.setStatus(status);
         capability.setParentCapabilityId(parentCapabilityId);
         capability.setCapabilityName(capabilityName);
         capability.setLevel(level);

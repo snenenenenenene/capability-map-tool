@@ -1,6 +1,7 @@
 package com.bavostepbros.leap.model;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -17,10 +18,13 @@ public class Environment {
     private Integer environmentId;
 
     private String environmentName;
+    
+    @OneToMany
+    private List<Capability> capabilities = new ArrayList<Capability>();
 
     @OneToMany(cascade=CascadeType.ALL)
     @JoinColumn(name="ENVIRONMENTID")
-    private Set<Strategy> strategies;
+    private List<Strategy> strategies = new ArrayList<Strategy>();
 
     public Environment() {
     }

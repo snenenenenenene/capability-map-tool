@@ -11,7 +11,7 @@
       <property name = "hibernate.connection.url">jdbc:h2:./data/leap</property>
       <property name = "hibernate.connection.username">root</property>
       <property name = "hibernate.connection.password"></property>
-      <property name = "hbm2ddl.auto">update</property>
+      <property name = "hbm2ddl.auto">create</property>
       
       <!-- List of XML mapping files -->
       <mapping class = "com.bavostepbros.leap.model.Capability"/>

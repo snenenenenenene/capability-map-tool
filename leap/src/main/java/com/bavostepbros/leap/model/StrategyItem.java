@@ -25,7 +25,7 @@ public class StrategyItem {
     @Type(type="text")
     private String description;
 
-    @OneToMany(mappedBy = "StrategyItem")
+    @OneToMany
     private List<CapabilityItem> capabilityItems;
 
     public StrategyItem() {
