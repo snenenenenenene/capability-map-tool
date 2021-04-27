@@ -32,5 +32,10 @@ public class LeapApplication {
         Capability c = new Capability(e, s, 1, "test", 1, true, "test", 1, 1, 1);       
         capabilityDAL.saveCapability(c);
         System.out.println(capabilityDAL.getCapabilityById(c.getCapabilityId()));
+        
+        capabilityDAL.updateCapability(
+        		c.getCapabilityId(), 
+        		e, s, 2, "Test", 2, false, "Test", 2, 2, 2);
+        System.out.println(capabilityDAL.getCapabilityById(c.getCapabilityId()));
     }
 }
