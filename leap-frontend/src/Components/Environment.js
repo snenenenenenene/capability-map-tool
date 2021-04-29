@@ -1,10 +1,5 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
-import  { Redirect } from 'react-router-dom'
-import axios from "axios"
-import { Container, Col, Form, FormGroup, Label, Input } from 'reactstrap'
-import { useHistory, useParams } from 'react-router-dom'
-import deleteImg from "../img/delete.jpg";
 import plusImg from '../img/plus.png'
 
 
@@ -37,17 +32,17 @@ export default class Environment extends Component
     }
 
     render() {
-        const data = this.props.match.params.name;
+        const environmentName = this.props.match.params.name;
         return(
             <div>
-                <h4>Home &gt; Environment &gt; {data}</h4>
+                <h4>Home &gt; Environment &gt; {environmentName}</h4>
                 <div className="container jumbotron">
                     <div className="card-deck">
                         <div className="card">
                             <div className="card-body">
                                 <h5 className="card-title text-center">Capabilities</h5>
                                 <div className="text-center">
-                                <Link to={'/addCapability'}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
+                                <Link to={`${environmentName}/add/capability`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
                                 </div>
                             </div>
                             <div className="card-footer">
@@ -58,7 +53,7 @@ export default class Environment extends Component
                             <div className="card-body">
                                 <h5 className="card-title text-center">Strategies</h5>
                                 <div className="text-center">
-                                    <Link to={'/addStrategy'}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
+                                    <Link to={`${environmentName}/add/strategy`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
                                 </div>
                             </div>
                             <div className="card-footer">
@@ -69,7 +64,7 @@ export default class Environment extends Component
                             <div className="card-body">
                                 <h5 className="card-title text-center">Resources</h5>
                                 <div className="text-center">
-                                    <Link to={'/addResources'}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
+                                    <Link to={`${environmentName}/add/resources`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
                                 </div>
                             </div>
                             <div className="card-footer">
@@ -82,7 +77,7 @@ export default class Environment extends Component
                             <div className="card-body">
                                 <h5 className="card-title text-center">IT-Applications</h5>
                                 <div className="text-center">
-                                    <Link to={'/addITapplication'}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
+                                    <Link to={`${environmentName}/add/ITapplication`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
                                 </div>
                             </div>
                             <div className="card-footer">
@@ -93,7 +88,7 @@ export default class Environment extends Component
                             <div className="card-body">
                                 <h5 className="card-title text-center">Strategy Items</h5>
                                 <div className="text-center">
-                                    <Link to={'/addStrategyItem'}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
+                                    <Link to={`${environmentName}/add/strategyItem`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
                                 </div>
                             </div>
                             <div className="card-footer">
@@ -102,9 +97,9 @@ export default class Environment extends Component
                         </div>
                         <div className="card">
                             <div className="card-body">
-                                <h5 className="card-title text-center">business processes</h5>
+                                <h5 className="card-title text-center">Business processes</h5>
                                 <div className="text-center">
-                                    <Link to={'/addBusinessProcess'}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
+                                    <Link to={`${environmentName}/add/businessProcess`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
                                 </div>
                             </div>
                             <div className="card-footer">
@@ -117,7 +112,7 @@ export default class Environment extends Component
                             <div className="card-body">
                                 <h5 className="card-title text-center">Programs</h5>
                                 <div className="text-center">
-                                    <Link to={'/addProgram'}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
+                                    <Link to={`${environmentName}/add/program`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
                                 </div>
                             </div>
                             <div className="card-footer">
@@ -128,7 +123,7 @@ export default class Environment extends Component
                             <div className="card-body">
                                 <h5 className="card-title text-center">Projects</h5>
                                 <div className="text-center">
-                                    <Link to={'/addProject'}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
+                                    <Link to={`${environmentName}/add/project`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
                                 </div>
                             </div>
                             <div className="card-footer">
@@ -139,7 +134,7 @@ export default class Environment extends Component
                             <div className="card-body">
                                 <h5 className="card-title text-center">Status</h5>
                                 <div className="text-center">
-                                    <Link to={'/addStatus'}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
+                                    <Link to={`${environmentName}/add/status`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
                                 </div>
                             </div>
                             <div className="card-footer">

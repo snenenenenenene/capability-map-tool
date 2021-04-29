@@ -39,12 +39,12 @@ export default class NewEnvironment extends Component
     render() {
           return(
             <div class="jumbotron">
-            <h1>Home &gt; New Environment</h1>
+            <h1>Add Environment</h1>
             <div class="row">
                 <div class="col-sm-6">
                     <div>
                         <p>Recent Environments</p>
-                        <table className='table table-striped'>
+                        <table className=' table table-striped'>
                             <thead>
                             <tr>
                                 <th>Name</th>

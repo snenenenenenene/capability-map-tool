@@ -24,7 +24,7 @@ export default class Home extends Component
 
     render() {
         return(
-            <div>
+            <div className="jumbotron">
                 <h1 className='display-4'>Recent Environments</h1>
                 <br/><br/>
                 <table className='table table-striped'>

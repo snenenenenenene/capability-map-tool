@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
+import plusImg from "../img/plus.png";
 
 
 export default class Home extends Component
@@ -15,37 +16,51 @@ export default class Home extends Component
 
     render() {
         return(
-            <div class="home-container">
-                <div class="home-child">
-                <h2>Recently Used Environments</h2>
-                <form>
-                    <div>
-                        <Link to={'/recent'}>
-                        <input type="button" value="Recently Used Environments" className="input-button hoverable"/>
-                        </Link>
-                    </div> 
-                </form>
-                </div>
-                <div class="home-child">
-                <h2>Environment</h2>
-                <form>
-                    <div>
-                        <Link to={'/add'}>
-                        <input type="button" value="New Environment" className="input-button hoverable"/>
-                        </Link>
-                    </div> 
-                </form>
-                </div>
-                <div class="home-child">
-                <h2>User List</h2>
-                <form>
-                    <div>
-                        <Link to={'/users'}>
-                        <input type="button" value="User list" className="input-button hoverable"/>
-                        </Link>
-                    </div> 
-                </form>
-                </div>
+            <div className="jumbotron">
+                    <div className="card-deck">
+                        <div className="card">
+                            <div className="card-body">
+                                <h4 className="card-title text-center">User List</h4>
+                                <form>
+                                    <div className="text-center">
+                                        <Link to={'/users'}>
+                                            <input type="button" value="User list" className="input-button hoverable"/>
+                                        </Link>
+                                    </div>
+                                </form>
+                            </div>
+                            <div className="card-footer">
+                            </div>
+                        </div>
+                        <div className="card">
+                            <div className="card-body">
+                                <h4 className="card-title text-center">Environment</h4>
+                                <form>
+                                    <div className="text-center">
+                                        <Link to={'/add'}>
+                                            <input type="button" value="New Environment" className="input-button hoverable"/>
+                                        </Link>
+                                    </div>
+                                </form>
+                            </div>
+                            <div className="card-footer">
+                            </div>
+                        </div>
+                        <div className="card">
+                            <div className="card-body">
+                                <h4 className="card-title text-center">Recently used Environments</h4>
+                            <form>
+                                <div className="text-center">
+                                    <Link to={'/recent'}>
+                                        <input type="button" value="Recently Used Environments" className="input-button hoverable"/>
+                                    </Link>
+                                </div>
+                            </form>
+                            </div>
+                            <div className="card-footer">
+                            </div>
+                        </div>
+                    </div>
             </div>
         )
     }
