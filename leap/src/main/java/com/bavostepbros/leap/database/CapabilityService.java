@@ -1,7 +1,6 @@
 package com.bavostepbros.leap.database;
 
 import java.util.List;
-
 import com.bavostepbros.leap.model.Capability;
 
 public interface CapabilityService {
