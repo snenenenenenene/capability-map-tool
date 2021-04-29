@@ -1,5 +1,6 @@
 package com.bavostepbros.leap.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -15,6 +16,7 @@ public class Capability {
 
     @Id
     @GeneratedValue
+    @Column(name = "CAPABILITYID")
     private Integer capabilityId;
     
     @ManyToOne
@@ -23,14 +25,29 @@ public class Capability {
     @OneToOne
     @JoinColumn
     private Status status;
-
+    
+    @Column(name = "PARENTCAPABILITYID")
     private Integer parentCapabilityId;
+    
+    @Column(name = "CAPABILITYNAME")
     private String capabilityName;
+    
+    @Column(name = "LEVEL")
     private Integer level;
+    
+    @Column(name = "PACEOFCHANGE")
     private boolean paceOfChange;
+    
+    @Column(name = "TARGETOPERATINGMODEL")
     private String targetOperatingModel;
+    
+    @Column(name = "RESOURCEQUALITY")
     private Integer resourceQuality;
+    
+    @Column(name = "INFORMATIONQUALITY")
     private Integer informationQuality;
+    
+    @Column(name = "APPLICATIONFIT")
     private Integer applicationFit;
 
     @OneToMany
@@ -54,7 +71,24 @@ public class Capability {
         this.applicationFit = applicationFit;
     }
 
-    public Integer getCapabilityId() {
+    public Capability(Integer capabilityId, Environment environment, Status status, Integer parentCapabilityId,
+			String capabilityName, Integer level, boolean paceOfChange, String targetOperatingModel,
+			Integer resourceQuality, Integer informationQuality, Integer applicationFit) {
+		super();
+		this.capabilityId = capabilityId;
+		this.environment = environment;
+		this.status = status;
+		this.parentCapabilityId = parentCapabilityId;
+		this.capabilityName = capabilityName;
+		this.level = level;
+		this.paceOfChange = paceOfChange;
+		this.targetOperatingModel = targetOperatingModel;
+		this.resourceQuality = resourceQuality;
+		this.informationQuality = informationQuality;
+		this.applicationFit = applicationFit;
+	}
+
+	public Integer getCapabilityId() {
         return this.capabilityId;
     }
 

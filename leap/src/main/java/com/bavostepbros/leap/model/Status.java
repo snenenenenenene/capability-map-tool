@@ -1,5 +1,6 @@
 package com.bavostepbros.leap.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -9,8 +10,10 @@ public class Status {
 
     @Id
     @GeneratedValue
+    @Column(name = "STATUSID")
     private Integer statusId;
-
+    
+    @Column(name = "VALIDITYPERIOD")
     private Integer validityPeriod;
 
     public Status() {
@@ -20,7 +23,13 @@ public class Status {
         this.validityPeriod = validityPeriod;
     }
 
-    public Integer getStatusId() {
+    public Status(Integer statusId, Integer validityPeriod) {
+		super();
+		this.statusId = statusId;
+		this.validityPeriod = validityPeriod;
+	}
+
+	public Integer getStatusId() {
         return this.statusId;
     }
 
