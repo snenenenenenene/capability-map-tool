@@ -71,23 +71,6 @@ public class Capability {
         this.applicationFit = applicationFit;
     }
 
-    public Capability(Integer capabilityId, Environment environment, Status status, Integer parentCapabilityId,
-			String capabilityName, Integer level, boolean paceOfChange, String targetOperatingModel,
-			Integer resourceQuality, Integer informationQuality, Integer applicationFit) {
-		super();
-		this.capabilityId = capabilityId;
-		this.environment = environment;
-		this.status = status;
-		this.parentCapabilityId = parentCapabilityId;
-		this.capabilityName = capabilityName;
-		this.level = level;
-		this.paceOfChange = paceOfChange;
-		this.targetOperatingModel = targetOperatingModel;
-		this.resourceQuality = resourceQuality;
-		this.informationQuality = informationQuality;
-		this.applicationFit = applicationFit;
-	}
-
 	public Integer getCapabilityId() {
         return this.capabilityId;
     }

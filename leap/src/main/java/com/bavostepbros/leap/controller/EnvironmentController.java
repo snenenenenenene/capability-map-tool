@@ -14,53 +14,48 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.bavostepbros.leap.database.StatusService;
-import com.bavostepbros.leap.model.Status;
-
-import lombok.RequiredArgsConstructor;
+import com.bavostepbros.leap.database.EnvironmentService;
+import com.bavostepbros.leap.model.Environment;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequiredArgsConstructor
-public class StatusController {
+public class EnvironmentController {
 	
 	@Autowired
-	private StatusService statusService;
+	private EnvironmentService envService;
 	
-	@PostMapping(value = "/status/add")
-	public ResponseEntity<Void> addStatus(
-			@RequestBody Status status, 
+	@PostMapping("/environment/add")
+	public ResponseEntity<Void> addEnvironment(
+			@RequestBody Environment environment, 
 			UriComponentsBuilder builder) {
 		
-		// Status status = new Status(validityPeriod);
-		System.out.println(status);
-		boolean flag = statusService.save(status);
+		boolean flag = envService.save(environment);
 		if (flag == false) {
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		}
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(builder
-				.path("/status/{id}")
-				.buildAndExpand(status.getStatusId()).toUri());
+				.path("/environment/{id}")
+				.buildAndExpand(environment.getEnvironmentId()).toUri());
 		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/status/{id}")
-    public ResponseEntity<Status> getStatusById(@PathVariable("id") Integer id) {
-		Status status = statusService.get(id);
-        return  new ResponseEntity<Status>(status, HttpStatus.OK);
+	@GetMapping("/environment/{id}")
+    public ResponseEntity<Environment> getEnvironmentById(@PathVariable("id") Integer id) {
+		Environment environment = envService.get(id);
+        return  new ResponseEntity<Environment>(environment, HttpStatus.OK);
     }
 	
-	@PutMapping("/status/update")
-	public ResponseEntity<Status> updateStatus(@RequestBody Status status) {
-		statusService.update(status);
-		return new ResponseEntity<Status>(status, HttpStatus.OK);
+	@PutMapping("/environment/update")
+	public ResponseEntity<Environment> updateEnvironment(@RequestBody Environment environment) {
+		envService.update(environment);
+		return new ResponseEntity<Environment>(environment, HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/status/{id}")
-	public ResponseEntity<Void> deleteStatus(@PathVariable("id") Integer id) {
-		statusService.delete(id);
+	@DeleteMapping("/environment/{id}")
+	public ResponseEntity<Void> deleteEnvironment(@PathVariable("id") Integer id) {
+		envService.delete(id);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 }

@@ -20,8 +20,13 @@ public class StatusServiceImpl implements StatusService {
 	}
 
 	@Override
-	public void save(Status status) {
-		statusDAL.save(status);
+	public boolean save(Status status) {
+		try {
+			statusDAL.save(status);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	@Override
@@ -36,8 +41,8 @@ public class StatusServiceImpl implements StatusService {
 	}
 
 	@Override
-	public void delete(Status status) {
-		statusDAL.delete(status);
+	public void delete(Integer id) {
+		statusDAL.deleteById(id);
 	}
 
 }

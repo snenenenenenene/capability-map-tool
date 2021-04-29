@@ -20,8 +20,14 @@ public class EnvironmentServiceImpl implements EnvironmentService {
 	}
 
 	@Override
-	public void save(Environment environment) {
-		environmentDAL.save(environment);
+	public boolean save(Environment environment) {
+		try {
+			environmentDAL.save(environment);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	@Override
@@ -36,8 +42,8 @@ public class EnvironmentServiceImpl implements EnvironmentService {
 	}
 
 	@Override
-	public void delete(Environment environment) {
-		environmentDAL.delete(environment);
+	public void delete(Integer id) {
+		environmentDAL.deleteById(id);
 	}
 
 }

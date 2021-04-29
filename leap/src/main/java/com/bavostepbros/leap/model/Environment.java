@@ -35,12 +35,6 @@ public class Environment {
     public Environment(String environmentName) {
         this.environmentName = environmentName;
     }
-    
-    public Environment(Integer environmentId, String environmentName) {
-		super();
-		this.environmentId = environmentId;
-		this.environmentName = environmentName;
-	}
 
 	public Integer getEnvironmentId() {
         return this.environmentId;

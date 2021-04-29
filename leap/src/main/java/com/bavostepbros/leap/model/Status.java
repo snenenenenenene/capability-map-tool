@@ -23,12 +23,6 @@ public class Status {
         this.validityPeriod = validityPeriod;
     }
 
-    public Status(Integer statusId, Integer validityPeriod) {
-		super();
-		this.statusId = statusId;
-		this.validityPeriod = validityPeriod;
-	}
-
 	public Integer getStatusId() {
         return this.statusId;
     }
