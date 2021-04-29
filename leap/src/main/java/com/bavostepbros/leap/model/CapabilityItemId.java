@@ -5,23 +5,24 @@ import java.util.Objects;
 
 public class CapabilityItemId implements Serializable {
 
-    private Integer capabilityId;
-    private Integer itemId;
+	private static final long serialVersionUID = 1L;
+	private Integer capability;
+    private Integer strategyItem;
 
-    public Integer getCapabilityId() {
-        return this.capabilityId;
+    public Integer getCapability() {
+        return this.capability;
     }
 
-    public void setCapabilityId(Integer capabilityId) {
-        this.capabilityId = capabilityId;
+    public void setCapability(Integer capabilityId) {
+        this.capability = capabilityId;
     }
 
-    public Integer getItemId() {
-        return this.itemId;
+    public Integer getstrategyItem() {
+        return this.strategyItem;
     }
 
-    public void setItemId(Integer itemId) {
-        this.itemId = itemId;
+    public void setstrategyItem(Integer strategyItem) {
+        this.strategyItem = strategyItem;
     }
 
     @Override
@@ -32,13 +33,13 @@ public class CapabilityItemId implements Serializable {
             return false;
         }
         CapabilityItemId capabilityItemId = (CapabilityItemId) o;
-        return Objects.equals(capabilityId, capabilityItemId.capabilityId) 
-        && Objects.equals(itemId, capabilityItemId.itemId);
+        return Objects.equals(capability, capabilityItemId.capability) 
+        && Objects.equals(strategyItem, capabilityItemId.strategyItem);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(capabilityId, itemId);
+        return Objects.hash(capability, strategyItem);
     }
 
 }

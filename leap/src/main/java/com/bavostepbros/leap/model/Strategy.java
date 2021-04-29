@@ -1,9 +1,11 @@
 package com.bavostepbros.leap.model;
 
 import java.sql.Date;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -11,14 +13,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+@Entity
 public class Strategy {
 
     @Id
     @GeneratedValue
     private Integer strategyId;
 
-    @OneToOne(mappedBy="Status")
-    private Integer statusId;
+    @OneToOne
+    @JoinColumn
+    private Status status;
 
     private String strategyName;
     private Date timeFrameStart;
@@ -29,13 +33,13 @@ public class Strategy {
 
     @OneToMany(cascade=CascadeType.ALL)
     @JoinColumn(name="STRATEGYID")
-    private Set<StrategyItem> items;
+    private List<StrategyItem> items = new ArrayList<StrategyItem>();
 
     public Strategy() {
     }
 
-    public Strategy(Integer statusId, String strategyName, Date timeFrameStart, Date timeFrameEnd) {
-        this.statusId = statusId;
+    public Strategy(Status status, String strategyName, Date timeFrameStart, Date timeFrameEnd) {
+        this.status = status;
         this.strategyName = strategyName;
         this.timeFrameStart = timeFrameStart;
         this.timeFrameEnd = timeFrameEnd;
@@ -49,12 +53,12 @@ public class Strategy {
         this.strategyId = strategyId;
     }
 
-    public Integer getStatusId() {
-        return this.statusId;
+    public Status getStatus() {
+        return this.status;
     }
 
-    public void setStatusId(Integer statusId) {
-        this.statusId = statusId;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public String getStrategyName() {
@@ -85,7 +89,7 @@ public class Strategy {
     public String toString() {
         return "{" +
             " strategyId='" + getStrategyId() + "'" +
-            ", statusId='" + getStatusId() + "'" +
+            ", statusId='" + getStatus() + "'" +
             ", strategyName='" + getStrategyName() + "'" +
             ", timeFrameStart='" + getTimeFrameStart() + "'" +
             ", timeFrameEnd='" + getTimeFrameEnd() + "'" +

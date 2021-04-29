@@ -1,8 +1,10 @@
 package com.bavostepbros.leap.model;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -14,13 +16,18 @@ public class Environment {
 
     @Id
     @GeneratedValue
+    @Column(name = "ENVIRONMENTID")
     private Integer environmentId;
-
+    
+    @Column(name = "ENVIRONMENTNAME")
     private String environmentName;
+    
+    @OneToMany
+    private List<Capability> capabilities = new ArrayList<Capability>();
 
     @OneToMany(cascade=CascadeType.ALL)
     @JoinColumn(name="ENVIRONMENTID")
-    private Set<Strategy> strategies;
+    private List<Strategy> strategies = new ArrayList<Strategy>();
 
     public Environment() {
     }
@@ -28,8 +35,14 @@ public class Environment {
     public Environment(String environmentName) {
         this.environmentName = environmentName;
     }
+    
+    public Environment(Integer environmentId, String environmentName) {
+		super();
+		this.environmentId = environmentId;
+		this.environmentName = environmentName;
+	}
 
-    public Integer getEnvironmentId() {
+	public Integer getEnvironmentId() {
         return this.environmentId;
     }
 
@@ -45,7 +58,11 @@ public class Environment {
         this.environmentName = environmentName;
     }
 
-    @Override
+    public List<Capability> getCapabilities() {
+		return capabilities;
+	}
+
+	@Override
     public String toString() {
         return "{" +
             " environmentId='" + getEnvironmentId() + "'" +

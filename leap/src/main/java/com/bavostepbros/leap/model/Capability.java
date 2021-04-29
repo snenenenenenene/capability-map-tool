@@ -1,13 +1,14 @@
 package com.bavostepbros.leap.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import java.sql.Blob;
 import java.util.List;
 
 @Entity
@@ -15,34 +16,51 @@ public class Capability {
 
     @Id
     @GeneratedValue
+    @Column(name = "CAPABILITYID")
     private Integer capabilityId;
-
+    
     @ManyToOne
-    private Integer environmentId;
+    private Environment environment;
 
     @OneToOne
-    private Integer statusId;
-
+    @JoinColumn
+    private Status status;
+    
+    @Column(name = "PARENTCAPABILITYID")
     private Integer parentCapabilityId;
+    
+    @Column(name = "CAPABILITYNAME")
     private String capabilityName;
+    
+    @Column(name = "LEVEL")
     private Integer level;
+    
+    @Column(name = "PACEOFCHANGE")
     private boolean paceOfChange;
-    private Blob targetOperatingModel;
+    
+    @Column(name = "TARGETOPERATINGMODEL")
+    private String targetOperatingModel;
+    
+    @Column(name = "RESOURCEQUALITY")
     private Integer resourceQuality;
+    
+    @Column(name = "INFORMATIONQUALITY")
     private Integer informationQuality;
+    
+    @Column(name = "APPLICATIONFIT")
     private Integer applicationFit;
 
-    @OneToMany(mappedBy = "Capability")
+    @OneToMany
     private List<CapabilityItem> capabilityItems;
 
     public Capability() {
     }
 
-    public Capability(Integer environmentId, Integer statusId, Integer parentCapabilityId, String capabilityName, 
-    Integer level, boolean paceOfChange, Blob targetOperatingModel, Integer resourceQuality, 
+    public Capability(Environment environment, Status status, Integer parentCapabilityId, String capabilityName, 
+    Integer level, boolean paceOfChange, String targetOperatingModel, Integer resourceQuality, 
     Integer informationQuality, Integer applicationFit) {
-        this.environmentId = environmentId;
-        this.statusId = statusId;
+        this.environment = environment;
+        this.status = status;
         this.parentCapabilityId = parentCapabilityId;
         this.capabilityName = capabilityName;
         this.level = level;
@@ -53,7 +71,24 @@ public class Capability {
         this.applicationFit = applicationFit;
     }
 
-    public Integer getCapabilityId() {
+    public Capability(Integer capabilityId, Environment environment, Status status, Integer parentCapabilityId,
+			String capabilityName, Integer level, boolean paceOfChange, String targetOperatingModel,
+			Integer resourceQuality, Integer informationQuality, Integer applicationFit) {
+		super();
+		this.capabilityId = capabilityId;
+		this.environment = environment;
+		this.status = status;
+		this.parentCapabilityId = parentCapabilityId;
+		this.capabilityName = capabilityName;
+		this.level = level;
+		this.paceOfChange = paceOfChange;
+		this.targetOperatingModel = targetOperatingModel;
+		this.resourceQuality = resourceQuality;
+		this.informationQuality = informationQuality;
+		this.applicationFit = applicationFit;
+	}
+
+	public Integer getCapabilityId() {
         return this.capabilityId;
     }
 
@@ -61,20 +96,20 @@ public class Capability {
         this.capabilityId = capabilityId;
     }
 
-    public Integer getEnvironmentId() {
-        return this.environmentId;
+    public Environment getEnvironment() {
+        return this.environment;
     }
 
-    public void setEnvironmentId(Integer environmentId) {
-        this.environmentId = environmentId;
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
     }
 
-    public Integer getStatusId() {
-        return this.statusId;
+    public Status getStatus() {
+        return this.status;
     }
 
-    public void setStatusId(Integer statusId) {
-        this.statusId = statusId;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public Integer getParentCapabilityId() {
@@ -113,11 +148,11 @@ public class Capability {
         this.paceOfChange = paceOfChange;
     }
 
-    public Blob getTargetOperatingModel() {
+    public String getTargetOperatingModel() {
         return this.targetOperatingModel;
     }
 
-    public void setTargetOperatingModel(Blob targetOperatingModel) {
+    public void setTargetOperatingModel(String targetOperatingModel) {
         this.targetOperatingModel = targetOperatingModel;
     }
 
@@ -149,8 +184,8 @@ public class Capability {
     public String toString() {
         return "{" +
             " capabilityId='" + getCapabilityId() + "'" +
-            ", environmentId='" + getEnvironmentId() + "'" +
-            ", statusId='" + getStatusId() + "'" +
+            ", environment='" + getEnvironment() + "'" +
+            ", status='" + getStatus() + "'" +
             ", parentCapabilityId='" + getParentCapabilityId() + "'" +
             ", name='" + getCapabilityName() + "'" +
             ", level='" + getLevel() + "'" +

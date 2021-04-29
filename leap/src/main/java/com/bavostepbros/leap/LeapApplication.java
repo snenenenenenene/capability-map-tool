@@ -1,20 +1,15 @@
 package com.bavostepbros.leap;
 
-import com.bavostepbros.leap.database.CapabilityDAL;
-import com.bavostepbros.leap.model.Capability;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
+@EnableJpaRepositories("com.bavostepbros.leap.database")
 public class LeapApplication {
-    static CapabilityDAL capabilityDAL;
 
     public static void main(String[] args) {
-        SpringApplication.run(LeapApplication.class, args);
-
-        Capability c = new Capability(1, 1, 1, "test", 1, true, null, 1, 1, 1);
-        capabilityDAL.saveCapability(c);
-        System.out.println(capabilityDAL.getCapabilityById(1));
+        SpringApplication.run(LeapApplication.class, args);       
+        
     }
 }
