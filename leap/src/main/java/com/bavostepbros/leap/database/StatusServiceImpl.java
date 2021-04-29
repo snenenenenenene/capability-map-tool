@@ -7,11 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.bavostepbros.leap.model.Status;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
 @Transactional
-@RequiredArgsConstructor
 public class StatusServiceImpl implements StatusService {
 	
 	private final StatusDAL statusDAL;	

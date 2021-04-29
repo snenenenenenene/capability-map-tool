@@ -7,11 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.bavostepbros.leap.model.Environment;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
 @Transactional
-@RequiredArgsConstructor
 public class EnvironmentServiceImpl implements EnvironmentService {
 	
 	private final EnvironmentDAL environmentDAL;

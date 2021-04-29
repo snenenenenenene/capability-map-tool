@@ -1,5 +1,6 @@
 package com.bavostepbros.leap.database;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,11 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.bavostepbros.leap.model.Capability;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
 @Transactional
-@RequiredArgsConstructor
 public class CapabilityServiceImpl implements CapabilityService {
 
 	private final CapabilityDAL capabilityDAL;
@@ -32,7 +30,6 @@ public class CapabilityServiceImpl implements CapabilityService {
 				.filter(cap -> capability.getCapabilityName().equals(cap.getCapabilityName()))
 				.collect(Collectors.toList());
 		if (results.size() > 0) {
-			// TODO add number to duplicate.
 			return false;
 		} else {
 			capabilityDAL.save(capability);
@@ -42,24 +39,42 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 	@Override
 	public Capability get(Integer id) {
-		Capability capability = capabilityDAL.findById(id).get();
+		Capability capability = null;
+		try {
+			capability = capabilityDAL.findById(id).get();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return capability;
 	}
 	
 	@Override
 	public List<Capability> getAll() {
-		List<Capability> capabilities = capabilityDAL.findAll();
+		List<Capability> capabilities = new ArrayList<Capability>();
+		try {
+			capabilities = capabilityDAL.findAll();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return capabilities;
 	}
 	
 	@Override
 	public void update(Capability capability) {
-		capabilityDAL.save(capability);
+		try {
+			capabilityDAL.save(capability);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void delete(Integer id) {
-		capabilityDAL.deleteById(id);
+		try {
+			capabilityDAL.deleteById(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
