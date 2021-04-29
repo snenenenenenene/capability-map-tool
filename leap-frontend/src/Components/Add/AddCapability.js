@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import RecentEnvironmentTableRow from "./RecentEnvironmentTableRow";
+import RecentEnvironmentTableRow from "../RecentEnvironmentTableRow";
 
 export default class AddCapability extends Component {
     constructor(props) {
@@ -24,30 +24,28 @@ export default class AddCapability extends Component {
 
     async handleSubmit() {
         var Capability = {
+            environment: this.state.environmentName,
             capabilityName: this.state.capabilityName.value,
-            parentCapability: this.state.parentCapability.value,
-            description: this.state.description.value,
+            parentCapabilityId: this.state.parentCapability.value,
+            // description: this.state.description.value,
             paceOfChange: this.state.paceOfChange.value,
-            TOM: this.state.TOM.value,
+            targetOperatingModel: this.state.TOM.value,
             informationQuality: this.state.informationQuality.value,
             applicationFit: this.state.applicationFit.value,
-            resourcesQuality: this.state.resourcesQuality.value,
-            expirationDate: this.state.expirationDate.value,
+            resourceQuality: this.state.resourcesQuality.value,
+            status: this.state.expirationDate.value,
             level: this.state.level.value
         }
         console.log(Capability)
-        const post_response = await fetch(`http://localhost:8080/add/capability`, { method: 'POST', body: Capability });
+        const post_response = await fetch(`http://localhost:8080/capability/add`, { method: 'POST', body: Capability });
         if (!post_response.ok) {
             console.log('Failed to upload via presigned POST');
         }
         console.log(`File uploaded via presigned POST with key: ${Capability.capabilityName}`);
-
-
     }
 
     componentDidMount() {
     }
-
 
     render() {
         const environmentName = this.props.match.params.name;
@@ -160,7 +158,7 @@ export default class AddCapability extends Component {
                             </div>
                         </div>
                     </div>
-                    <button className="btn btn-primary" type="submit">Submit</button>
+                    <button className="btn btn-primary" type="button" onClick={this.handleSubmit}>Submit</button>
                 </form>
             </div>
             </div>

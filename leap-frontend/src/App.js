@@ -4,9 +4,9 @@ import Environment from "./Components/Environment";
 import NewEnvironment from "./Components/NewEnvironment";
 import UserList from "./Components/UserList"
 import RecentEnvironments from './Components/RecentEnvironments'
-import AddCapability from './Components/AddCapability'
+import AddCapability from './Components/Add/AddCapability'
 import './App.css';
-import Login from './auth/Login'
+import Signup from './auth/Login'
 import LeapImg from './img/LEAP logo.png'
 import { BrowserRouter, Switch, Route, Link } from 'react-router-dom'
 
@@ -61,7 +61,7 @@ class App extends Component {
                 <Route exact path='/environment/:name' component={Environment}/>
                 <Route exact path='/environment/:name/add/capability' component={AddCapability}/>
                 <Route exact path='/add' component={ NewEnvironment }/>
-                <Route exact path='/login' component={ Login }/>
+                <Route exact path='/login' component={ Signup }/>
                 <Route exact path='/recent' component={ RecentEnvironments }/>
                 <Route exact path='/users' component={ UserList }/>
                 <Route path='*'><Home/></Route>
@@ -75,7 +75,7 @@ class App extends Component {
     else {
       return (
           <BrowserRouter>
-            <Route path='*' component={ Login }/>
+            <Route path='*' component={ Signup }/>
           </BrowserRouter>)
     }
   }

@@ -49,7 +49,7 @@ export default class Login extends Component {
                     </Col>
                     <Col>
                         <FormGroup row>
-                            <button type='button' onClick={ this.login } className='btn btn-outline-primary'>Login</button>
+                            <button type='button' onClick={ this.login } className='btn btn-dark btn-lg btn-block'>Login</button>
                         </FormGroup>
                     </Col>
                 </Form>
