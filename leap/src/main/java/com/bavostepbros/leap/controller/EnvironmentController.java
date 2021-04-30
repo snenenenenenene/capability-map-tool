@@ -17,7 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.bavostepbros.leap.database.EnvironmentService;
 import com.bavostepbros.leap.model.Environment;
 
-@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 public class EnvironmentController {
 	
