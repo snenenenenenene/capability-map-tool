@@ -19,7 +19,7 @@ import com.bavostepbros.leap.model.Status;
 
 import lombok.RequiredArgsConstructor;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequiredArgsConstructor
 public class StatusController {
@@ -41,12 +41,12 @@ public class StatusController {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(builder
-				.path("/status/{id}")
+				.path("/status/get/{id}")
 				.buildAndExpand(status.getStatusId()).toUri());
 		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/status/{id}")
+	@GetMapping("/status/get/{id}")
     public ResponseEntity<Status> getStatusById(@PathVariable("id") Integer id) {
 		Status status = statusService.get(id);
         return  new ResponseEntity<Status>(status, HttpStatus.OK);
@@ -58,7 +58,7 @@ public class StatusController {
 		return new ResponseEntity<Status>(status, HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/status/{id}")
+	@DeleteMapping("/status/delete/{id}")
 	public ResponseEntity<Void> deleteStatus(@PathVariable("id") Integer id) {
 		statusService.delete(id);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);

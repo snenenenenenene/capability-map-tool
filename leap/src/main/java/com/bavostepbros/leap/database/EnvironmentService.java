@@ -6,5 +6,5 @@ public interface EnvironmentService {
 	boolean save(Environment environment);
 	Environment get(Integer id);
 	void update(Environment environment);
-	void delete(Integer id);
+	void delete(Integer id);	
 }

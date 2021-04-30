@@ -10,17 +10,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bavostepbros.leap.model.Capability;
+import com.bavostepbros.leap.model.Environment;
 
 @Service
 @Transactional
 public class CapabilityServiceImpl implements CapabilityService {
 
 	private final CapabilityDAL capabilityDAL;
+	private final EnvironmentDAL environmentDAL;
 
 	@Autowired
-	public CapabilityServiceImpl(CapabilityDAL capabilityDAL) {
+	public CapabilityServiceImpl(CapabilityDAL capabilityDAL, EnvironmentDAL environmentDAL) {
 		super();
 		this.capabilityDAL = capabilityDAL;
+		this.environmentDAL = environmentDAL;
 	}
 
 	@Override
@@ -76,6 +79,12 @@ public class CapabilityServiceImpl implements CapabilityService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public List<Capability> getCapabilitiesByEnvironment(Integer environmentId) {
+		Environment environment = environmentDAL.findById(environmentId).get();
+		return capabilityDAL.findByEnvironment(environment);
 	}
 	
 }

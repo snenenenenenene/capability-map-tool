@@ -17,7 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.bavostepbros.leap.database.EnvironmentService;
 import com.bavostepbros.leap.model.Environment;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 public class EnvironmentController {
 	
@@ -36,12 +36,12 @@ public class EnvironmentController {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(builder
-				.path("/environment/{id}")
+				.path("/environment/get/{id}")
 				.buildAndExpand(environment.getEnvironmentId()).toUri());
 		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/environment/{id}")
+	@GetMapping("/environment/get/{id}")
     public ResponseEntity<Environment> getEnvironmentById(@PathVariable("id") Integer id) {
 		Environment environment = envService.get(id);
         return  new ResponseEntity<Environment>(environment, HttpStatus.OK);
@@ -53,7 +53,7 @@ public class EnvironmentController {
 		return new ResponseEntity<Environment>(environment, HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/environment/{id}")
+	@DeleteMapping("/environment/delete/{id}")
 	public ResponseEntity<Void> deleteEnvironment(@PathVariable("id") Integer id) {
 		envService.delete(id);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
