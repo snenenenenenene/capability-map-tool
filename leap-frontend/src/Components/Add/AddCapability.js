@@ -7,7 +7,8 @@ export default class AddCapability extends Component {
         super(props);
         this.state = {
             environments: [],
-            environmentName: '',
+            environmentName: this.props.match.params.name,
+            environmentId: 1,
             capabilityName: '',
             parentCapability: '',
             description: '',
@@ -25,22 +26,26 @@ export default class AddCapability extends Component {
 
     handleSubmit = async e => {
         e.preventDefault();
+        console.log(this.state.environmentName)
         const post_response = await fetch(`http://localhost:8080/capability/add`, { method: 'POST',
             headers:
                 {
                     'Content-Type': "application/json",
                     'Accept': "application/json"},
             body: JSON.stringify({
-                environment: this.state.environmentName,
-                capabilityName: this.state.capabilityName.value,
-                parentCapabilityId: this.state.parentCapability.value,
-                paceOfChange: this.state.paceOfChange.value,
-                targetOperatingModel: this.state.TOM.value,
-                informationQuality: this.state.informationQuality.value,
-                applicationFit: this.state.applicationFit.value,
-                resourceQuality: this.state.resourcesQuality.value,
-                status: this.state.expirationDate.value,
-                level: this.state.level.value
+                environment: {
+                    environmentName: this.state.environmentName,
+                    environmentId: this.state.environmentId
+                },
+                capabilityName: this.state.capabilityName,
+                parentCapabilityId: this.state.parentCapability,
+                paceOfChange: this.state.paceOfChange,
+                targetOperatingModel: this.state.TOM,
+                informationQuality: this.state.informationQuality,
+                applicationFit: this.state.applicationFit,
+                resourceQuality: this.state.resourcesQuality,
+                // status: this.state.expirationDate,
+                level: this.state.level
             }) });
         if (!post_response.ok) {
             console.log('Failed to upload via presigned POST');
@@ -83,9 +88,9 @@ export default class AddCapability extends Component {
                                     <label htmlFor="paceOfChange">Parent Capability</label>
                                 <select className="form-control" name="parentCapability" id="parentCapability" placeholder="Add Parent Capability"
                                         value={this.state.parentCapabilityId} onChange={this.handleInputChange}>
-                                    <option>Capability 1</option>
-                                    <option>Capability 2</option>
-                                    <option>Capability 3</option>
+                                    <option value="1">Capability 1</option>
+                                    <option value="2">Capability 2</option>
+                                    <option value="3">Capability 3</option>
                                 </select>
                                 </div>
                                 <div className="form-group col-md-6">

@@ -20,7 +20,6 @@ import AddProject from "./Components/Add/AddProject";
 import EditCapability from "./Components/Edit/EditCapability";
 import Capability from "./Components/General/Capability";
 
-
 class App extends Component {
 
   constructor(props) {
@@ -34,6 +33,13 @@ class App extends Component {
       let user = JSON.parse(localStorage.getItem('user'))
       this.setState({ authenticated: user.authenticated })
     }
+  this.fetchEnvironments()
+  }
+
+  async fetchEnvironments() {
+    const response = await fetch(`http://localhost:8080/environment/all}`, { method: 'GET'});
+    const data = await response.json();
+    console.log(data);
   }
 
   logout() {

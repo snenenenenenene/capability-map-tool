@@ -11,6 +11,7 @@ export default class Environment extends Component
         this.state = {
             name: '',
             environmentname: props.environmentname,
+            environmentId: 1,
             capabilities: 0,
             itApplications: 0,
             programs: 0,
@@ -29,6 +30,7 @@ export default class Environment extends Component
     }
 
     componentDidMount() {
+        const post_response = fetch(`http://localhost:8080/environment/${this.state.environmentId}`, { method: 'GET'});
     }
 
     render() {
