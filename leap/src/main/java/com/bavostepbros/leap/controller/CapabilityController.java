@@ -3,6 +3,7 @@ package com.bavostepbros.leap.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.bavostepbros.leap.database.CapabilityService;
 import com.bavostepbros.leap.model.Capability;
@@ -38,21 +40,27 @@ public class CapabilityController {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(builder
-				.path("/capability/{id}")
+				.path("/capability/get/{id}")
 				.buildAndExpand(capability.getCapabilityId()).toUri());
 		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/capability/{id}")
+	@GetMapping("/capability/get/{id}")
     public ResponseEntity<Capability> getCapabilityById(@PathVariable("id") Integer id) {
 		Capability capability = capService.get(id);
         return  new ResponseEntity<Capability>(capability, HttpStatus.OK);
     }
 	
+	@GetMapping("/capability/getallbyenvironment/{id}")
+	public ResponseEntity<List<Capability>> getAllCapabilitiesByEnvironment(@PathVariable("id") Integer id) {
+		List<Capability> capabilities = capService.getCapabilitiesByEnvironment(id);
+		return new ResponseEntity<List<Capability>>(capabilities, HttpStatus.OK);
+	}
+	
 	@GetMapping("/capability/all")
-	public List<Capability> getAllCapabilities() {
+	public ResponseEntity<List<Capability>> getAllCapabilities() {
 		List<Capability> capabilities = capService.getAll();
-		return capabilities;
+		return new ResponseEntity<List<Capability>>(capabilities, HttpStatus.OK);
 	}
 	
 	@PutMapping("/capability/update")
@@ -61,7 +69,7 @@ public class CapabilityController {
 		return new ResponseEntity<Capability>(capability, HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/capability/{id}")
+	@DeleteMapping("/capability/delete/{id}")
 	public ResponseEntity<Void> deleteCapability(@PathVariable("id") Integer id) {
 		capService.delete(id);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
