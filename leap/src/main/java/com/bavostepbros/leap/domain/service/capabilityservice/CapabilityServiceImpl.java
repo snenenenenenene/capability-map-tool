@@ -38,7 +38,6 @@ public class CapabilityServiceImpl implements CapabilityService {
 			capabilityDAL.save(capability);
 			return true;
 		}
-
 	}
 
 	@Override

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.service.statusservice.StatusService;
 
@@ -35,18 +34,17 @@ public class StatusController {
 			@RequestBody Status status, 
 			UriComponentsBuilder builder) {
 		
-		// Status status = new Status(validityPeriod);
 		System.out.println(status);
 		boolean flag = statusService.save(status);
 		if (flag == false) {
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(builder
 				.path("/status/get/{id}")
 				.buildAndExpand(status.getStatusId()).toUri());
-		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+		return new ResponseEntity<>(headers, HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/status/get/{id}")
