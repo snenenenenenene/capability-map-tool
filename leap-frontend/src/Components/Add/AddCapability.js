@@ -37,7 +37,7 @@ export default class AddCapability extends Component {
             level: this.state.level.value
         }
         console.log(Capability)
-        const post_response = await fetch(`http://localhost:8080/capability/add`, { method: 'POST', body: Capability });
+        const post_response = await fetch(`http://localhost:8080/strategy/add`, { method: 'POST', body: Capability });
         if (!post_response.ok) {
             console.log('Failed to upload via presigned POST');
         }

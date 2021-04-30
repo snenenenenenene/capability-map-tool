@@ -28,9 +28,19 @@ public class CapabilityController {
 	private CapabilityService capService;
 	
 	@PostMapping("/capability/add")
-	Capability addCapability(
-			@RequestBody Capability capability) {
-		return capService.save(capability);
+	public ResponseEntity<Void> addCapability(
+			@RequestBody Capability capability,
+			UriComponentsBuilder builder) {
+		boolean flag = capService.save(capability);
+		if (flag == false) {
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setLocation(builder
+				.path("/capability/{id}")
+				.buildAndExpand(capability.getCapabilityId()).toUri());
+		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/capability/{id}")

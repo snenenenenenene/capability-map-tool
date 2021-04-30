@@ -24,16 +24,18 @@ public class CapabilityServiceImpl implements CapabilityService {
 	}
 
 	@Override
-	public Capability save(Capability capability) {
+	public boolean save(Capability capability) {
 		List<Capability> capabilities = getAll();
 		List<Capability> results = capabilities.stream()
 				.filter(cap -> capability.getCapabilityName().equals(cap.getCapabilityName()))
 				.collect(Collectors.toList());
 		if (results.size() > 0) {
-			return null;
+			return false;
 		} else {
-			return capabilityDAL.save(capability);
+			capabilityDAL.save(capability);
+			return true;
 		}
+
 	}
 
 	@Override
