@@ -21,7 +21,7 @@ import com.bavostepbros.leap.model.Capability;
 
 import lombok.RequiredArgsConstructor;
 
-@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequiredArgsConstructor
 public class CapabilityController {
