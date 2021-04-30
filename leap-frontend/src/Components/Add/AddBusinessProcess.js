@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import RecentEnvironmentTableRow from "../RecentEnvironmentTableRow";
 
-export default class AddProgram extends Component {
+export default class AddBusinessProcess extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -55,11 +55,11 @@ export default class AddProgram extends Component {
                     <ol className="breadcrumb">
                         <li className="breadcrumb-item"><Link to={`/`}><a>Home</a></Link></li>
                         <li className="breadcrumb-item"><Link to={`/environment/${environmentName}`}><a>{environmentName}</a></Link></li>
-                        <li className="breadcrumb-item active" aria-current="page">Add Program</li>
+                        <li className="breadcrumb-item active" aria-current="page">Add Business Process</li>
                     </ol>
                 </nav>
                 <div class="jumbotron">
-                    <h3>Add Program</h3>
+                    <h3>Add Business Process</h3>
                     <form onSubmit={this.handleSubmit} method="POST">
                         <div className="row">
                             <div className="col-sm-6">

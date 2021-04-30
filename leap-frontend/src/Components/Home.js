@@ -21,6 +21,9 @@ export default class Home extends Component
                         <div className="card">
                             <div className="card-body">
                                 <h4 className="card-title text-center">User List</h4>
+
+                            </div>
+                            <div className="card-footer">
                                 <form>
                                     <div className="text-center">
                                         <Link to={'/users'}>
@@ -29,12 +32,13 @@ export default class Home extends Component
                                     </div>
                                 </form>
                             </div>
-                            <div className="card-footer">
-                            </div>
                         </div>
                         <div className="card">
                             <div className="card-body">
                                 <h4 className="card-title text-center">Environment</h4>
+
+                            </div>
+                            <div className="card-footer">
                                 <form>
                                     <div className="text-center">
                                         <Link to={'/add'}>
@@ -43,21 +47,20 @@ export default class Home extends Component
                                     </div>
                                 </form>
                             </div>
-                            <div className="card-footer">
-                            </div>
                         </div>
                         <div className="card">
                             <div className="card-body">
                                 <h4 className="card-title text-center">Recently used Environments</h4>
-                            <form>
-                                <div className="text-center">
-                                    <Link to={'/recent'}>
-                                        <input type="button" value="Recently Used Environments" className="input-button hoverable"/>
-                                    </Link>
-                                </div>
-                            </form>
+
                             </div>
                             <div className="card-footer">
+                                <form>
+                                    <div className="text-center">
+                                        <Link to={'/recent'}>
+                                            <input type="button" value="Recently Used Environments" className="input-button hoverable"/>
+                                        </Link>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>

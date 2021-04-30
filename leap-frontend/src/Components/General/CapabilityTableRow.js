@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import deleteImg from '../img/delete.jpg'
+import deleteImg from '../../img/delete.jpg'
 
 export default class CapabilityTableRow extends Component {
 

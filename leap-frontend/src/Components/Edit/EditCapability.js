@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import RecentEnvironmentTableRow from "../RecentEnvironmentTableRow";
 
-export default class AddProgram extends Component {
+export default class EditCapability extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -49,17 +49,20 @@ export default class AddProgram extends Component {
 
     render() {
         const environmentName = this.props.match.params.name;
+        const capabilityID = this.props.match.params.id;
+
         return (
             <div>
                 <nav aria-label="breadcrumb">
                     <ol className="breadcrumb">
                         <li className="breadcrumb-item"><Link to={`/`}><a>Home</a></Link></li>
                         <li className="breadcrumb-item"><Link to={`/environment/${environmentName}`}><a>{environmentName}</a></Link></li>
-                        <li className="breadcrumb-item active" aria-current="page">Add Program</li>
+                        <li className="breadcrumb-item"><Link to={`/environment/capability${capabilityID}`}><a>{capabilityID}</a></Link></li>
+                        <li className="breadcrumb-item active" aria-current="page">Edit Capability</li>
                     </ol>
                 </nav>
                 <div class="jumbotron">
-                    <h3>Add Program</h3>
+                    <h3>Edit Capability</h3>
                     <form onSubmit={this.handleSubmit} method="POST">
                         <div className="row">
                             <div className="col-sm-6">

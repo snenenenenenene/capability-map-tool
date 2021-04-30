@@ -9,6 +9,16 @@ import './App.css';
 import Signup from './auth/Login'
 import LeapImg from './img/LEAP logo.png'
 import { BrowserRouter, Switch, Route, Link } from 'react-router-dom'
+import AddResources from "./Components/Add/AddResources";
+import AddStrategy from "./Components/Add/AddStrategy";
+import AddBusinessProcess from "./Components/Add/AddBusinessProcess";
+import AddITApplication from "./Components/Add/AddITApplication";
+import AddProgram from "./Components/Add/AddProgram";
+import AddStatus from "./Components/Add/AddStatus";
+import AddStrategyItems from "./Components/Add/AddStrategyItems";
+import AddProject from "./Components/Add/AddProject";
+import EditCapability from "./Components/Edit/EditCapability";
+import Capability from "./Components/General/Capability";
 
 
 class App extends Component {
@@ -36,35 +46,49 @@ class App extends Component {
       return (
           <div>
             <BrowserRouter>
-          <nav className='navbar navbar-light navbar-expand' style={{ backgroundColor: 'orangered' }}>
-            <a className="navbar-brand" href="">
-              <img src={ LeapImg } width="160" height="45"/>
-            </a>
-            <div className='collapse navbar-collapse' id='navbarNav'>
-              <ul className='navbar-nav'>
-                <li className='nav-item active'>
-                  <Link to={ '/home' } className='nav-link'>Home</Link>
-                </li>
-                <li className='nav-item active'>
-                  <Link to={ '/add' } className='nav-link'>Add</Link>
-                </li>
-                <li className='nav-item active'>
-                  <Link to={ '' } onClick={ this.logout } className='nav-link'>Logout</Link>
-                </li>
-              </ul>
-            </div>
-          </nav>
+              <nav className="navbar navbar-expand-lg navbar-dark sticky-top" style={{ backgroundColor: '#ff754f'}}>
+                <button className="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                  <span className="navbar-toggler-icon"></span>
+                </button>
+                <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
+                  <Link to={ '/home' } className='navbar-brand'><img src={ LeapImg } width="80" height="22"/></Link>
+                  <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
+                    <li className="nav-item">
+                      <Link to={ '/add' } className='nav-link'>Add</Link>
+                    </li>
+                    <li className="nav-item">
+                      <a className="nav-link disabled" href="#">Disabled</a>
+                    </li>
+                  </ul>
+                  <form className="form-inline my-2 my-lg-0">
+
+                    <Link to={ '' } onClick={ this.logout } style={{ color: '#fff'}} className='nav-link'>Logout</Link>
+                  </form>
+                </div>
+              </nav>
           <div className = 'container'>
               <br/><br/>
               <Switch>
                 <Route exact path='/home'><Home/></Route>
                 <Route exact path='/environment/:name' component={Environment}/>
-                <Route exact path='/environment/:name/add/capability' component={AddCapability}/>
+                <Route exact path='/environment/:name/capability/add' component={AddCapability}/>
+                <Route exact path='/environment/:name/capability/:id/edit' component={EditCapability}/>
+                <Route exact path='/environment/:name/capability/all' component={Capability}/>
+                <Route exact path='/environment/:name/strategy/add' component={AddStrategy}/>
+                <Route exact path='/environment/:name/resource/add' component={AddResources}/>
+                <Route exact path='/environment/:name/itapplication/add' component={AddITApplication}/>
+                <Route exact path='/environment/:name/businessprocess/add' component={AddBusinessProcess}/>
+                <Route exact path='/environment/:name/status/add' component={AddStatus}/>
+                <Route exact path='/environment/:name/project/add' component={AddProject}/>
+                <Route exact path='/environment/:name/strategyitem/add' component={AddStrategyItems}/>
+                <Route exact path='/environment/:name/program/add' component={AddProgram}/>
                 <Route exact path='/add' component={ NewEnvironment }/>
                 <Route exact path='/login' component={ Signup }/>
                 <Route exact path='/recent' component={ RecentEnvironments }/>
                 <Route exact path='/users' component={ UserList }/>
-                <Route path='*'><Home/></Route>
+                <Route path='/'><Home/></Route>
               </Switch>
 
           </div>

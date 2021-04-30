@@ -1,11 +1,9 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
-import RecentTableRow from './RecentEnvironmentTableRow'
-import RecentEnvironmentTableRow from "./RecentEnvironmentTableRow";
 import CapabilityTableRow from "./CapabilityTableRow";
 
 
-export default class Home extends Component
+export default class Capability extends Component
 {
     constructor(props) {
         super(props);
@@ -28,6 +26,8 @@ export default class Home extends Component
             <div className="jumbotron">
                 <h1 className='display-4'>Capabilities</h1>
                 <br/><br/>
+                <div className="row">
+                    <div className="col-sm-9">
                 <table className='table table-striped'>
                     <thead>
                     <tr>
@@ -39,6 +39,22 @@ export default class Home extends Component
                     { this.capabilityTable() }
                     </tbody>
                 </table>
+                    </div>
+                    <div className="col-sm-2">
+
+                    <div className="text-center">
+                        <Link to={'edit'}>
+                            <input type="button" value="Edit" className="btn btn-secondary input-button hoverable"/>
+                        </Link>
+                    </div>
+                        <br/>
+                    <div className="text-center">
+                        <Link to={'childcapability'}>
+                            <input type="button" value="Child Capability" className="btn btn-secondary input-button hoverable"/>
+                        </Link>
+                    </div>
+                    </div>
+                </div>
             </div>
         )
     }

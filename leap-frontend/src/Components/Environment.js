@@ -35,40 +35,45 @@ export default class Environment extends Component
         const environmentName = this.props.match.params.name;
         return(
             <div>
-                <h4>Home &gt; Environment &gt; {environmentName}</h4>
+                <nav aria-label="breadcrumb">
+                    <ol className="breadcrumb">
+                        <li className="breadcrumb-item"><Link to={`/`}><a>Home</a></Link></li>
+                        <li className="breadcrumb-item"><Link to={`/environment/${environmentName}`}><a>{environmentName}</a></Link></li>
+                    </ol>
+                </nav>
                 <div className="container jumbotron">
                     <div className="card-deck">
                         <div className="card">
                             <div className="card-body">
                                 <h5 className="card-title text-center">Capabilities</h5>
                                 <div className="text-center">
-                                <Link to={`${environmentName}/add/capability`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
+                                <Link to={`${environmentName}/capability/add`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
                                 </div>
                             </div>
                             <div className="card-footer">
-                                <small className="text-muted">{this.state.capabilities} capabilities</small>
+                                <Link to={`${environmentName}/capability/all`}><small className="text-muted">{this.state.capabilities} capabilities</small></Link>
                             </div>
                         </div>
                         <div className="card">
                             <div className="card-body">
                                 <h5 className="card-title text-center">Strategies</h5>
                                 <div className="text-center">
-                                    <Link to={`${environmentName}/add/strategy`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
+                                    <Link to={`${environmentName}/strategy/add`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
                                 </div>
                             </div>
                             <div className="card-footer">
-                                <small className="text-muted">{this.state.strategies} strategies</small>
+                                <Link to={`${environmentName}/strategy/all`}><small className="text-muted">{this.state.strategies} strategies</small></Link>
                             </div>
                         </div>
                         <div className="card">
                             <div className="card-body">
                                 <h5 className="card-title text-center">Resources</h5>
                                 <div className="text-center">
-                                    <Link to={`${environmentName}/add/resources`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
+                                    <Link to={`${environmentName}/resource/add`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
                                 </div>
                             </div>
                             <div className="card-footer">
-                                <small className="text-muted">{this.state.resources} resources</small>
+                                <Link to={`${environmentName}/resources/all`}><small className="text-muted">{this.state.resources} resources</small></Link>
                             </div>
                         </div>
                     </div>
@@ -77,33 +82,33 @@ export default class Environment extends Component
                             <div className="card-body">
                                 <h5 className="card-title text-center">IT-Applications</h5>
                                 <div className="text-center">
-                                    <Link to={`${environmentName}/add/ITapplication`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
+                                    <Link to={`${environmentName}/itapplication/add`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
                                 </div>
                             </div>
                             <div className="card-footer">
-                                <small className="text-muted">{this.state.itApplications} IT-applications</small>
+                                <Link to={`${environmentName}/itapplication/all`}><small className="text-muted">{this.state.itApplications} IT-applications</small></Link>
                             </div>
                         </div>
                         <div className="card">
                             <div className="card-body">
                                 <h5 className="card-title text-center">Strategy Items</h5>
                                 <div className="text-center">
-                                    <Link to={`${environmentName}/add/strategyItem`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
+                                    <Link to={`${environmentName}/strategyitem/add`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
                                 </div>
                             </div>
                             <div className="card-footer">
-                                <small className="text-muted">{this.state.strategyItems} stategy items</small>
+                                <Link to={`${environmentName}/strategyitem/all`}><small className="text-muted">{this.state.strategyItems} stategy items</small></Link>
                             </div>
                         </div>
                         <div className="card">
                             <div className="card-body">
                                 <h5 className="card-title text-center">Business processes</h5>
                                 <div className="text-center">
-                                    <Link to={`${environmentName}/add/businessProcess`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
+                                    <Link to={`${environmentName}/businessprocess/add`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
                                 </div>
                             </div>
                             <div className="card-footer">
-                                <small className="text-muted">{this.state.businessProcesses} business processes</small>
+                                <Link to={`${environmentName}/businessprocess/all`}><small className="text-muted">{this.state.businessProcesses} business processes</small></Link>
                             </div>
                         </div>
                     </div>
@@ -112,33 +117,33 @@ export default class Environment extends Component
                             <div className="card-body">
                                 <h5 className="card-title text-center">Programs</h5>
                                 <div className="text-center">
-                                    <Link to={`${environmentName}/add/program`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
+                                    <Link to={`${environmentName}/program/add`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
                                 </div>
                             </div>
                             <div className="card-footer">
-                                <small className="text-muted">{this.state.programs} programs</small>
+                                <Link to={`${environmentName}/programs/all`}><small className="text-muted">{this.state.programs} programs</small></Link>
                             </div>
                         </div>
                         <div className="card">
                             <div className="card-body">
                                 <h5 className="card-title text-center">Projects</h5>
                                 <div className="text-center">
-                                    <Link to={`${environmentName}/add/project`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
+                                    <Link to={`${environmentName}/project/add`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
                                 </div>
                             </div>
                             <div className="card-footer">
-                                <small className="text-muted">{this.state.projects} projects</small>
+                                <Link to={`${environmentName}/projects/all`}><small className="text-muted">{this.state.projects} projects</small></Link>
                             </div>
                         </div>
                         <div className="card">
                             <div className="card-body">
                                 <h5 className="card-title text-center">Status</h5>
                                 <div className="text-center">
-                                    <Link to={`${environmentName}/add/status`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
+                                    <Link to={`${environmentName}/status/add`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
                                 </div>
                             </div>
                             <div className="card-footer">
-                                <small className="text-muted">{this.state.status} statuses</small>
+                                <Link to={`${environmentName}/status/all`}><small className="text-muted">{this.state.status} statuses</small></Link>
                             </div>
                         </div>
                     </div>

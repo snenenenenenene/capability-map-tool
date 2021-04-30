@@ -19,11 +19,17 @@ export default class NewEnvironment extends Component
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleSubmit = e => {
-        e.preventDefault();
+     async handleSubmit () {
         let environmentName = this.environmentname.value;
         let path = `environment/${environmentName}`;
-        // this is the part !!!
+        var Environment = {
+            environmentName: environmentName
+        }
+        const post_response = await fetch(`http://localhost:8080/environment/add`, { method: 'POST', body: Environment });
+        if (!post_response.ok) {
+            console.log('Failed to upload via presigned POST');
+        }
+        console.log(`File uploaded via presigned POST with key: ${Environment.environmentName}`);
         this.props.history.push(path);
     }
 
