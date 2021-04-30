@@ -3,27 +3,16 @@ package com.bavostepbros.leap.domain.model;
 import java.io.Serializable;
 import java.util.Objects;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class CapabilityItemId implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private Integer capability;
     private Integer strategyItem;
-
-    public Integer getCapability() {
-        return this.capability;
-    }
-
-    public void setCapability(Integer capabilityId) {
-        this.capability = capabilityId;
-    }
-
-    public Integer getstrategyItem() {
-        return this.strategyItem;
-    }
-
-    public void setstrategyItem(Integer strategyItem) {
-        this.strategyItem = strategyItem;
-    }
 
     @Override
     public boolean equals(Object o) {

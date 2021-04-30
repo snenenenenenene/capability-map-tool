@@ -11,7 +11,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class Environment {
 
     @Id
@@ -29,32 +36,9 @@ public class Environment {
     @JoinColumn(name="ENVIRONMENTID")
     private List<Strategy> strategies = new ArrayList<Strategy>();
 
-    public Environment() {
-    }
-
     public Environment(String environmentName) {
         this.environmentName = environmentName;
     }
-
-	public Integer getEnvironmentId() {
-        return this.environmentId;
-    }
-
-    public void setEnvironmentId(Integer environmentId) {
-        this.environmentId = environmentId;
-    }
-
-    public String getEnvironmentName() {
-        return this.environmentName;
-    }
-
-    public void setEnvironmentName(String environmentName) {
-        this.environmentName = environmentName;
-    }
-
-    public List<Capability> getCapabilities() {
-		return capabilities;
-	}
 
 	@Override
     public String toString() {
