@@ -1,4 +1,4 @@
-package com.bavostepbros.leap.database;
+package com.bavostepbros.leap.domain.service.capabilityservice;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,22 +9,22 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bavostepbros.leap.model.Capability;
-import com.bavostepbros.leap.model.Environment;
+import com.bavostepbros.leap.domain.model.Capability;
+import com.bavostepbros.leap.domain.model.Environment;
+import com.bavostepbros.leap.persistance.CapabilityDAL;
+import com.bavostepbros.leap.persistance.EnvironmentDAL;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class CapabilityServiceImpl implements CapabilityService {
-
-	private final CapabilityDAL capabilityDAL;
-	private final EnvironmentDAL environmentDAL;
-
+	
 	@Autowired
-	public CapabilityServiceImpl(CapabilityDAL capabilityDAL, EnvironmentDAL environmentDAL) {
-		super();
-		this.capabilityDAL = capabilityDAL;
-		this.environmentDAL = environmentDAL;
-	}
+	private CapabilityDAL capabilityDAL;
+	@Autowired
+	private EnvironmentDAL environmentDAL;
 
 	@Override
 	public boolean save(Capability capability) {
@@ -51,7 +51,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 		}
 		return capability;
 	}
-	
+
 	@Override
 	public List<Capability> getAll() {
 		List<Capability> capabilities = new ArrayList<Capability>();
@@ -62,7 +62,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 		}
 		return capabilities;
 	}
-	
+
 	@Override
 	public void update(Capability capability) {
 		try {
@@ -86,5 +86,5 @@ public class CapabilityServiceImpl implements CapabilityService {
 		Environment environment = environmentDAL.findById(environmentId).get();
 		return capabilityDAL.findByEnvironment(environment);
 	}
-	
+
 }

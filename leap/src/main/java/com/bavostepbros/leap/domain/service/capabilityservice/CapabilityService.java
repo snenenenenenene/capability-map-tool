@@ -1,8 +1,8 @@
-package com.bavostepbros.leap.database;
+package com.bavostepbros.leap.domain.service.capabilityservice;
 
 import java.util.List;
 
-import com.bavostepbros.leap.model.Capability;
+import com.bavostepbros.leap.domain.model.Capability;
 
 public interface CapabilityService {
 	boolean save(Capability capability);

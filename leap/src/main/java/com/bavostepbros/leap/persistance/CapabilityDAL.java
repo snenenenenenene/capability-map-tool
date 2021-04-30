@@ -1,11 +1,11 @@
-package com.bavostepbros.leap.database;
+package com.bavostepbros.leap.persistance;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.bavostepbros.leap.model.Capability;
-import com.bavostepbros.leap.model.Environment;
+import com.bavostepbros.leap.domain.model.Capability;
+import com.bavostepbros.leap.domain.model.Environment;
 
 public interface CapabilityDAL extends JpaRepository<Capability, Integer> {
 	List<Capability> findByEnvironment(Environment environment);

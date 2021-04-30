@@ -1,11 +1,15 @@
-package com.bavostepbros.leap.database;
+package com.bavostepbros.leap.domain.service.environmentservice;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bavostepbros.leap.model.Environment;
+import com.bavostepbros.leap.domain.model.Environment;
+import com.bavostepbros.leap.persistance.EnvironmentDAL;
 
 @Service
 @Transactional
@@ -34,6 +38,13 @@ public class EnvironmentServiceImpl implements EnvironmentService {
 	public Environment get(Integer id) {
 		Environment environment = environmentDAL.findById(id).get();
 		return environment;
+	}
+	
+	@Override
+	public List<Environment> getAll() {
+		List<Environment> environments = new ArrayList<Environment>();
+		environments = environmentDAL.findAll();
+		return environments;
 	}
 
 	@Override

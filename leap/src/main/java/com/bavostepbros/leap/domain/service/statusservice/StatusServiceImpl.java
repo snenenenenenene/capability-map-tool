@@ -1,11 +1,15 @@
-package com.bavostepbros.leap.database;
+package com.bavostepbros.leap.domain.service.statusservice;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bavostepbros.leap.model.Status;
+import com.bavostepbros.leap.domain.model.Status;
+import com.bavostepbros.leap.persistance.StatusDAL;
 
 @Service
 @Transactional
@@ -32,6 +36,13 @@ public class StatusServiceImpl implements StatusService {
 	@Override
 	public Status get(Integer id) {
 		Status status = statusDAL.findById(id).get();
+		return status;
+	}
+	
+	@Override
+	public List<Status> getAll() {
+		List<Status> status = new ArrayList<Status>();
+		status = statusDAL.findAll();
 		return status;
 	}
 

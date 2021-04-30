@@ -1,5 +1,7 @@
 package com.bavostepbros.leap.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,12 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.bavostepbros.leap.database.StatusService;
-import com.bavostepbros.leap.model.Status;
+import com.bavostepbros.leap.domain.model.Environment;
+import com.bavostepbros.leap.domain.model.Status;
+import com.bavostepbros.leap.domain.service.statusservice.StatusService;
 
 import lombok.RequiredArgsConstructor;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
 public class StatusController {
@@ -27,7 +30,7 @@ public class StatusController {
 	@Autowired
 	private StatusService statusService;
 	
-	@PostMapping(value = "/status/add")
+	@PostMapping(path = "/status/add", consumes = "application/json")
 	public ResponseEntity<Void> addStatus(
 			@RequestBody Status status, 
 			UriComponentsBuilder builder) {
@@ -51,6 +54,12 @@ public class StatusController {
 		Status status = statusService.get(id);
         return  new ResponseEntity<Status>(status, HttpStatus.OK);
     }
+	
+	@GetMapping("/status/all")
+	public ResponseEntity<List<Status>> getAllStatus() {
+		List<Status> status = statusService.getAll();
+		return new ResponseEntity<List<Status>>(status, HttpStatus.OK);
+	}
 	
 	@PutMapping("/status/update")
 	public ResponseEntity<Status> updateStatus(@RequestBody Status status) {

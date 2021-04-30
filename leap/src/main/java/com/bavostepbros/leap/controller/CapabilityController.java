@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.bavostepbros.leap.database.CapabilityService;
-import com.bavostepbros.leap.model.Capability;
+import com.bavostepbros.leap.domain.model.Capability;
+import com.bavostepbros.leap.domain.service.capabilityservice.CapabilityService;
 
 import lombok.RequiredArgsConstructor;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
 public class CapabilityController {
@@ -29,7 +29,7 @@ public class CapabilityController {
 	@Autowired
 	private CapabilityService capService;
 	
-	@PostMapping("/capability/add")
+	@PostMapping(path = "/capability/add", consumes = "application/json")
 	public ResponseEntity<Void> addCapability(
 			@RequestBody Capability capability,
 			UriComponentsBuilder builder) {

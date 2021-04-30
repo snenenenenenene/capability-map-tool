@@ -1,4 +1,4 @@
-package com.bavostepbros.leap.model;
+package com.bavostepbros.leap.domain.model;
 
 import java.util.ArrayList;
 import java.util.List;

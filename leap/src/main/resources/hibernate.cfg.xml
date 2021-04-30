@@ -14,12 +14,12 @@
       <property name = "hbm2ddl.auto">create-drop</property>
       
       <!-- List of XML mapping files -->
-      <mapping class = "com.bavostepbros.leap.model.Capability"/>
-      <mapping class = "com.bavostepbros.leap.model.CapabilityItem"/>
-      <mapping class = "com.bavostepbros.leap.model.Environment"/>
-      <mapping class = "com.bavostepbros.leap.model.Status"/>
-      <mapping class = "com.bavostepbros.leap.model.Strategy"/>
-      <mapping class = "com.bavostepbros.leap.model.StrategyItem"/>
+      <mapping class = "com.bavostepbros.leap.domain.model.Capability"/>
+      <mapping class = "com.bavostepbros.leap.domain.model.CapabilityItem"/>
+      <mapping class = "com.bavostepbros.leap.domain.model.Environment"/>
+      <mapping class = "com.bavostepbros.leap.domain.model.Status"/>
+      <mapping class = "com.bavostepbros.leap.domain.model.Strategy"/>
+      <mapping class = "com.bavostepbros.leap.domain.model.StrategyItem"/>
       
    </session-factory>
 </hibernate-configuration>
