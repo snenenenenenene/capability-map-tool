@@ -19,7 +19,7 @@ import com.bavostepbros.leap.model.Status;
 
 import lombok.RequiredArgsConstructor;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
 @RequiredArgsConstructor
 public class StatusController {
