@@ -20,31 +20,39 @@ export default class AddCapability extends Component {
             level: 0,
         };
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this)
     }
 
-    async handleSubmit() {
-        var Capability = {
-            environment: this.state.environmentName,
-            capabilityName: this.state.capabilityName.value,
-            parentCapabilityId: this.state.parentCapability.value,
-            // description: this.state.description.value,
-            paceOfChange: this.state.paceOfChange.value,
-            targetOperatingModel: this.state.TOM.value,
-            informationQuality: this.state.informationQuality.value,
-            applicationFit: this.state.applicationFit.value,
-            resourceQuality: this.state.resourcesQuality.value,
-            status: this.state.expirationDate.value,
-            level: this.state.level.value
-        }
-        console.log(Capability)
-        const post_response = await fetch(`http://localhost:8080/strategy/add`, { method: 'POST', body: Capability });
+    handleSubmit = async e => {
+        e.preventDefault();
+        const post_response = await fetch(`http://localhost:8080/capability/add`, { method: 'POST',
+            headers:
+                {
+                    'Content-Type': "application/json",
+                    'Accept': "application/json"},
+            body: JSON.stringify({
+                environment: this.state.environmentName,
+                capabilityName: this.state.capabilityName.value,
+                parentCapabilityId: this.state.parentCapability.value,
+                paceOfChange: this.state.paceOfChange.value,
+                targetOperatingModel: this.state.TOM.value,
+                informationQuality: this.state.informationQuality.value,
+                applicationFit: this.state.applicationFit.value,
+                resourceQuality: this.state.resourcesQuality.value,
+                status: this.state.expirationDate.value,
+                level: this.state.level.value
+            }) });
         if (!post_response.ok) {
             console.log('Failed to upload via presigned POST');
         }
-        console.log(`File uploaded via presigned POST with key: ${Capability.capabilityName}`);
+        console.log(`File uploaded via presigned POST with key: ${this.state.capabilityName}`);
     }
 
     componentDidMount() {
+    }
+
+    handleInputChange(event) {
+        this.setState({ [event.target.name]: event.target.value })
     }
 
     render() {
@@ -60,21 +68,21 @@ export default class AddCapability extends Component {
                 </nav>
             <div class="jumbotron">
                 <h3>Add Capability</h3>
-                <form onSubmit={this.handleSubmit} method="POST">
+                <form onSubmit={this.handleSubmit}>
                     <div className="row">
                         <div className="col-sm-6">
                             <div className="form-row">
                                 <div className="form-group col-md-6">
                                     <label htmlFor="nameCapability">Name Capability</label>
-                                <input type="text" id="capabilityName" className="form-control" placeholder="Name Capability"
-                                       ref={input => (this.state.capabilityName = input)}></input>
+                                <input type="text" id="capabilityName" name="capabilityName" className="form-control" placeholder="Name Capability"
+                                       value={this.state.capabilityName} onChange={this.handleInputChange}/>
                                 </div>
                             </div>
                             <div className="form-row">
                                 <div className="form-group col-md-6">
                                     <label htmlFor="paceOfChange">Parent Capability</label>
-                                <select className="form-control" id="parentCapability" placeholder="Add Parent Capability"
-                                        ref={input => (this.state.parentCapability = input)}>
+                                <select className="form-control" name="parentCapability" id="parentCapability" placeholder="Add Parent Capability"
+                                        value={this.state.parentCapabilityId} onChange={this.handleInputChange}>
                                     <option>Capability 1</option>
                                     <option>Capability 2</option>
                                     <option>Capability 3</option>
@@ -82,8 +90,8 @@ export default class AddCapability extends Component {
                                 </div>
                                 <div className="form-group col-md-6">
                                     <label htmlFor="capabilityLevel">Capability Level</label>
-                                <select className="form-control" id="capabilityLevel" placeholder="Add Level"
-                                        ref={input => (this.state.level = input)}>
+                                <select className="form-control" name="capabilityLevel" id="capabilityLevel" placeholder="Add Level"
+                                        value={this.state.capabilityLevel} onChange={this.handleInputChange}>
                                     <option>1</option>
                                     <option>2</option>
                                     <option>3</option>
@@ -92,24 +100,24 @@ export default class AddCapability extends Component {
                             </div>
                             <div className="form-group">
                                 <label htmlFor="description">Description</label>
-                                <textarea type="text" id="description" className="form-control" rows="4" placeholder="Description"
-                                          ref={input => (this.state.description = input)}></textarea>
+                                <textarea type="text" id="description" name="description" className="form-control" rows="4" placeholder="Description"
+                                          value={this.state.description} onChange={this.handleInputChange}/>
                             </div>
                         </div>
                         <div className="col-sm-6">
                             <div className="form-row">
                                 <div className="form-group col-md-6">
                                     <label htmlFor="paceOfChange">Pace of Change</label>
-                                    <select className="form-control" placeholder="Add Pace of Change" id="paceOfChange"
-                                            ref={input => (this.state.paceOfChange = input)}>
+                                    <select className="form-control" name="paceOfChange" placeholder="Add Pace of Change" id="paceOfChange"
+                                            value={this.state.paceOfChange} onChange={this.handleInputChange}>
                                         <option>True</option>
                                         <option>False</option>
                                     </select>
                                 </div>
                                 <div className="form-group col-md-6">
                                     <label htmlFor="informationQuality">Information Quality</label>
-                                    <select className="form-control" placeholder="Add Information Quality" id="informationQuality"
-                                            ref={input => (this.state.informationQuality = input)}>
+                                    <select className="form-control" name="informationQuality" placeholder="Add Information Quality" id="informationQuality"
+                                            value={this.state.informationQuality} onChange={this.handleInputChange}>
                                         <option>1</option>
                                         <option>2</option>
                                         <option>3</option>
@@ -118,12 +126,11 @@ export default class AddCapability extends Component {
                                     </select>
                                 </div>
                             </div>
-
                             <div className="form-row">
                                 <div className="form-group col-md-6">
                                     <label htmlFor="paceOfChange">TOM</label>
-                                    <select className="form-control" placeholder="Add TOM" id="TOM"
-                                            ref={input => (this.state.TOM = input)}>
+                                    <select className="form-control" name="TOM" placeholder="Add TOM" id="TOM"
+                                            value={this.state.TOM} onChange={this.handleInputChange}>
                                         <option>1</option>
                                         <option>2</option>
                                         <option>3</option>
@@ -131,8 +138,8 @@ export default class AddCapability extends Component {
                                 </div>
                                 <div className="form-group col-md-6">
                                     <label htmlFor="applicationFit">Application Fit</label>
-                                    <select className="form-control" placeholder="Add Application Fit" id="applicationFit"
-                                            ref={input => (this.state.applicationFit = input)}>
+                                    <select className="form-control" name="applicationFit" placeholder="Add Application Fit" id="applicationFit"
+                                            value={this.state.applicationFit} onChange={this.handleInputChange}>
                                         <option>1</option>
                                         <option>2</option>
                                         <option>3</option>
@@ -144,8 +151,8 @@ export default class AddCapability extends Component {
 
                             <div className="form-group">
                                 <label for="resourcesQuality">Resources Quality</label>
-                                <select id="resourcesQuality" className="form-control" placeholder="Resources Quality"
-                                        ref={input => (this.state.resourcesQuality = input)}>
+                                <select id="resourcesQuality" name="resourcesQuality" className="form-control" placeholder="Resources Quality"
+                                        value={this.state.resourcesQuality} onChange={this.handleInputChange}>
                                     <option>1</option>
                                     <option>2</option>
                                     <option>3</option>
@@ -153,8 +160,8 @@ export default class AddCapability extends Component {
                                     <option>5</option>
                                 </select>
                                 <label htmlFor="expirationDate">Expiration Date</label>
-                                <input id="expirationDate" type="date" className="form-control"
-                                       ref={input => (this.state.expirationDate = input)}></input>
+                                <input id="expirationDate" name="expirationDate" type="date" className="form-control"
+                                       value={this.state.expirationDate} onChange={this.handleInputChange}/>
                             </div>
                         </div>
                     </div>

@@ -8,6 +8,8 @@ export default class Capability extends Component
     constructor(props) {
         super(props);
         this.state = {
+            environments: [],
+            environmentName: '',
             capabilities: []
         };
     }
@@ -22,8 +24,15 @@ export default class Capability extends Component
     }
 
     render() {
+        const environmentName = this.props.match.params.name;
         return(
             <div className="jumbotron">
+                <nav aria-label="breadcrumb">
+                    <ol className="breadcrumb">
+                        <li className="breadcrumb-item"><Link to={`/`}><a>Home</a></Link></li>
+                        <li className="breadcrumb-item"><Link to={`/environment/${environmentName}`}><a>{environmentName}</a></Link></li>
+                    </ol>
+                </nav>
                 <h1 className='display-4'>Capabilities</h1>
                 <br/><br/>
                 <div className="row">

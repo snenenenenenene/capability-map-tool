@@ -16,21 +16,32 @@ export default class NewEnvironment extends Component
             environments: [],
             environmentName: '',
             };
+        this.handleInputChange = this.handleInputChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-     async handleSubmit () {
-        let environmentName = this.environmentname.value;
-        let path = `environment/${environmentName}`;
-        var Environment = {
-            environmentName: environmentName
-        }
-        const post_response = await fetch(`http://localhost:8080/environment/add`, { method: 'POST', body: Environment });
+     handleSubmit = async e => {
+        e.preventDefault();
+        console.log("submit")
+        let path = `environment/${this.state.environmentName}`;
+        const post_response = await fetch(`http://localhost:8080/environment/add`,
+            {
+            method: 'POST',
+            headers:
+                {
+                    'Content-Type': "application/json",
+                    'Accept': "application/json"},
+            body: JSON.stringify({environmentName: this.state.environmentName}) });
         if (!post_response.ok) {
             console.log('Failed to upload via presigned POST');
         }
-        console.log(`File uploaded via presigned POST with key: ${Environment.environmentName}`);
+        console.log(`File uploaded via presigned POST with key: ${this.state.environmentName}`);
         this.props.history.push(path);
+    }
+
+
+    handleInputChange(event) {
+        this.setState({ [event.target.name]: event.target.value })
     }
 
     componentDidMount() {
@@ -65,9 +76,9 @@ export default class NewEnvironment extends Component
                 </div>
                 <div class="col-sm-6">
                 <p>New Environments</p>
-                <form className="form-inline" onSubmit={this.handleSubmit} method="POST">
-                    <input type="text" className="form-control" placeholder="New Environment" ref={input => (this.environmentname = input)}></input>
-                    <button className="btn primary" type="submit">Add</button>
+                <form className="form-inline" onSubmit={this.handleSubmit}>
+                    <Input type="text" name="environmentName" value={this.state.environmentName} onChange={this.handleInputChange} className="form-control" placeholder="New Environment"/>
+                    <button className="btn primary" type="button" onClick={this.handleSubmit}>Add</button>
                 </form>
                 </div>
             </div>
