@@ -10,4 +10,5 @@ public interface CapabilityService {
 	List<Capability> getAll();
 	void update(Capability capability);
 	void delete(Integer id);
+
 }

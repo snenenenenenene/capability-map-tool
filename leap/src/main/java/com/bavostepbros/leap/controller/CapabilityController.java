@@ -33,8 +33,6 @@ public class CapabilityController {
 	public ResponseEntity<Void> addCapability(
 			@RequestBody Capability capability,
 			UriComponentsBuilder builder) {
-		
-
 		boolean flag = capService.save(capability);
 		if (flag == false) {
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
