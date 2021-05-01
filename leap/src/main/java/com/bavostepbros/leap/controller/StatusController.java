@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.service.statusservice.StatusService;
 
@@ -49,6 +50,9 @@ public class StatusController {
 	
 	@GetMapping("/status/get/{id}")
     public ResponseEntity<Status> getStatusById(@PathVariable("id") Integer id) {
+		if (id == null || id.equals(0)) {
+			throw new InvalidInputException("Status ID is not valid.");
+		}
 		Status status = statusService.get(id);
         return  new ResponseEntity<Status>(status, HttpStatus.OK);
     }
