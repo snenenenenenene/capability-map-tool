@@ -1,4 +1,4 @@
-package com.bavostepbros.leap.persistance;
+package com.bavostepbros.leap.persistence;
 
 import java.util.List;
 

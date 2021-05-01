@@ -53,6 +53,9 @@ public class StatusController {
 		if (id == null || id.equals(0)) {
 			throw new InvalidInputException("Status ID is not valid.");
 		}
+		if (!statusService.existsById(id)) {
+			throw new InvalidInputException("Status ID does not exists.");
+		}
 		Status status = statusService.get(id);
         return  new ResponseEntity<Status>(status, HttpStatus.OK);
     }
@@ -61,6 +64,12 @@ public class StatusController {
 	public ResponseEntity<List<Status>> getAllStatus() {
 		List<Status> status = statusService.getAll();
 		return new ResponseEntity<List<Status>>(status, HttpStatus.OK);
+	}
+	
+	@GetMapping("/status/exists/{id}")
+	public ResponseEntity<Boolean> doesStatusExistsById(@PathVariable("id") Integer id) {
+		boolean result = statusService.existsById(id);
+		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 	}
 	
 	@PutMapping("/status/update")

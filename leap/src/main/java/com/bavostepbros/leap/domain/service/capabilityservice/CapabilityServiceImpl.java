@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Environment;
-import com.bavostepbros.leap.persistance.CapabilityDAL;
-import com.bavostepbros.leap.persistance.EnvironmentDAL;
+import com.bavostepbros.leap.persistence.CapabilityDAL;
+import com.bavostepbros.leap.persistence.EnvironmentDAL;
 
 import lombok.RequiredArgsConstructor;
 

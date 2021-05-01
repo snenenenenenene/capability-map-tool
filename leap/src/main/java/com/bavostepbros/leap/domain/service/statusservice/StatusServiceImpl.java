@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bavostepbros.leap.domain.model.Status;
-import com.bavostepbros.leap.persistance.StatusDAL;
+import com.bavostepbros.leap.persistence.StatusDAL;
 
 @Service
 @Transactional
@@ -54,6 +54,12 @@ public class StatusServiceImpl implements StatusService {
 	@Override
 	public void delete(Integer id) {
 		statusDAL.deleteById(id);
+	}
+
+	@Override
+	public boolean existsById(Integer id) {
+		boolean result = statusDAL.existsById(id);
+		return result;
 	}
 
 }

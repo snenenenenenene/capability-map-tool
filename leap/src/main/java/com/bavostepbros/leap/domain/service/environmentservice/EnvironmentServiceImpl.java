@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bavostepbros.leap.domain.model.Environment;
-import com.bavostepbros.leap.persistance.EnvironmentDAL;
+import com.bavostepbros.leap.persistence.EnvironmentDAL;
 
 @Service
 @Transactional

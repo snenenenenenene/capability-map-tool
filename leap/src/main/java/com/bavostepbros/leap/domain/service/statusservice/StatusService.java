@@ -10,4 +10,5 @@ public interface StatusService {
 	List<Status> getAll();
 	void update(Status status);
 	void delete(Integer id);
+	boolean existsById(Integer id);
 }
