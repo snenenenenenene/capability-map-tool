@@ -1,4 +1,4 @@
-package com.bavostepbros.leap.model;
+package com.bavostepbros.leap.domain.model;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -13,7 +13,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class Strategy {
 
     @Id
@@ -35,53 +42,10 @@ public class Strategy {
     @JoinColumn(name="STRATEGYID")
     private List<StrategyItem> items = new ArrayList<StrategyItem>();
 
-    public Strategy() {
-    }
-
     public Strategy(Status status, String strategyName, Date timeFrameStart, Date timeFrameEnd) {
         this.status = status;
         this.strategyName = strategyName;
         this.timeFrameStart = timeFrameStart;
-        this.timeFrameEnd = timeFrameEnd;
-    }
-
-    public Integer getStrategyId() {
-        return this.strategyId;
-    }
-
-    public void setStrategyId(Integer strategyId) {
-        this.strategyId = strategyId;
-    }
-
-    public Status getStatus() {
-        return this.status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public String getStrategyName() {
-        return this.strategyName;
-    }
-
-    public void setStrategyName(String strategyName) {
-        this.strategyName = strategyName;
-    }
-
-    public Date getTimeFrameStart() {
-        return this.timeFrameStart;
-    }
-
-    public void setTimeFrameStart(Date timeFrameStart) {
-        this.timeFrameStart = timeFrameStart;
-    }
-
-    public Date getTimeFrameEnd() {
-        return this.timeFrameEnd;
-    }
-
-    public void setTimeFrameEnd(Date timeFrameEnd) {
         this.timeFrameEnd = timeFrameEnd;
     }
 

@@ -1,5 +1,7 @@
 package com.bavostepbros.leap.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,12 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.bavostepbros.leap.database.StatusService;
-import com.bavostepbros.leap.model.Status;
+import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
+import com.bavostepbros.leap.domain.model.Status;
+import com.bavostepbros.leap.domain.service.statusservice.StatusService;
 
 import lombok.RequiredArgsConstructor;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
 public class StatusController {
@@ -27,30 +30,38 @@ public class StatusController {
 	@Autowired
 	private StatusService statusService;
 	
-	@PostMapping(value = "/status/add")
+	@PostMapping(path = "/status/add", consumes = "application/json")
 	public ResponseEntity<Void> addStatus(
 			@RequestBody Status status, 
 			UriComponentsBuilder builder) {
 		
-		// Status status = new Status(validityPeriod);
 		System.out.println(status);
 		boolean flag = statusService.save(status);
 		if (flag == false) {
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(builder
 				.path("/status/get/{id}")
 				.buildAndExpand(status.getStatusId()).toUri());
-		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+		return new ResponseEntity<>(headers, HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/status/get/{id}")
     public ResponseEntity<Status> getStatusById(@PathVariable("id") Integer id) {
+		if (id == null || id.equals(0)) {
+			throw new InvalidInputException("Status ID is not valid.");
+		}
 		Status status = statusService.get(id);
         return  new ResponseEntity<Status>(status, HttpStatus.OK);
     }
+	
+	@GetMapping("/status/all")
+	public ResponseEntity<List<Status>> getAllStatus() {
+		List<Status> status = statusService.getAll();
+		return new ResponseEntity<List<Status>>(status, HttpStatus.OK);
+	}
 	
 	@PutMapping("/status/update")
 	public ResponseEntity<Status> updateStatus(@RequestBody Status status) {
