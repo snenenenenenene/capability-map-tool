@@ -14,65 +14,65 @@ import com.bavostepbros.leap.persistence.EnvironmentDAL;
 @Service
 @Transactional
 public class EnvironmentServiceImpl implements EnvironmentService {
-	
-	private final EnvironmentDAL environmentDAL;
-	
-	@Autowired
-	public EnvironmentServiceImpl(EnvironmentDAL environmentDAL) {
-		super();
-		this.environmentDAL = environmentDAL;
-	}
 
-	@Override
-	public boolean save(Environment environment) {
-		try {
-			environmentDAL.save(environment);
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
+    private final EnvironmentDAL environmentDAL;
 
-	@Override
-	public Environment get(Integer id) {
-		Environment environment = environmentDAL.findById(id).get();
-		return environment;
-	}
-	
-	@Override
-	public Environment getByEnvironmentName(String evironmentName) {
-		Environment environment = environmentDAL.findByEnvironmentName(evironmentName).get(0);
-		return environment;
-	}
-	
-	@Override
-	public List<Environment> getAll() {
-		List<Environment> environments = new ArrayList<Environment>();
-		environments = environmentDAL.findAll();
-		return environments;
-	}
+    @Autowired
+    public EnvironmentServiceImpl(EnvironmentDAL environmentDAL) {
+        super();
+        this.environmentDAL = environmentDAL;
+    }
 
-	@Override
-	public void update(Environment environment) {
-		environmentDAL.save(environment);
-	}
+    @Override
+    public boolean save(Environment environment) {
+        try {
+            environmentDAL.save(environment);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
-	@Override
-	public void delete(Integer id) {
-		environmentDAL.deleteById(id);
-	}
-	
-	@Override
-	public boolean existsById(Integer id) {
-		boolean result = environmentDAL.existsById(id);
-		return result;
-	}
+    @Override
+    public Environment get(Integer id) {
+        Environment environment = environmentDAL.findById(id).get();
+        return environment;
+    }
 
-	@Override
-	public boolean existsByEnvironmentName(String environmentName) {
-		boolean result = environmentDAL.findByEnvironmentName(environmentName).isEmpty();
-		return result;
-	}
+    @Override
+    public Environment getByEnvironmentName(String evironmentName) {
+        Environment environment = environmentDAL.findByEnvironmentName(evironmentName).get(0);
+        return environment;
+    }
+
+    @Override
+    public List<Environment> getAll() {
+        List<Environment> environments = new ArrayList<Environment>();
+        environments = environmentDAL.findAll();
+        return environments;
+    }
+
+    @Override
+    public void update(Environment environment) {
+        environmentDAL.save(environment);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        environmentDAL.deleteById(id);
+    }
+
+    @Override
+    public boolean existsById(Integer id) {
+        boolean result = environmentDAL.existsById(id);
+        return result;
+    }
+
+    @Override
+    public boolean existsByEnvironmentName(String environmentName) {
+        boolean result = environmentDAL.findByEnvironmentName(environmentName).isEmpty();
+        return result;
+    }
 
 }

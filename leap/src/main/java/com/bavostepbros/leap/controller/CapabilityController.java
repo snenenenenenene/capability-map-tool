@@ -1,7 +1,6 @@
 package com.bavostepbros.leap.controller;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -37,15 +36,15 @@ public class CapabilityController {
 	
 	@Autowired
 	private EnvironmentService envService;
-	
+
 	@Autowired
 	private StatusService statusService;
-	
+
 	@PostMapping(path = "/capability/add", consumes = "application/json")
 	public ResponseEntity<Void> addCapability(
 			@RequestBody Capability capability,
 			UriComponentsBuilder builder) {
-		if (capability.getCapabilityName() == null || 
+		if (capability.getCapabilityName() == null ||
 				capability.getCapabilityName().isBlank() ||
 				capability.getCapabilityName().isEmpty()) {
 			throw new InvalidInputException("Invalid input.");
@@ -53,7 +52,7 @@ public class CapabilityController {
 		if (!capService.existsByCapabilityName(capability.getCapabilityName())) {
 			throw new DuplicateValueException("Capability name already exists.");
 		}
-		
+
 		boolean flag = capService.save(capability);
 		if (flag == false) {
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
@@ -66,7 +65,7 @@ public class CapabilityController {
 		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
 	}
 	
-	@GetMapping(path = "/capability/get/{id}")
+	@GetMapping("/capability/get/{id}")
     public ResponseEntity<Capability> getCapabilityById(@PathVariable("id") Integer id) {
 		if (id == null || id.equals(0)) {
 			throw new InvalidInputException("Capability ID is not valid.");
@@ -74,7 +73,7 @@ public class CapabilityController {
 		if (!capService.existsById(id)) {
 			throw new IndexDoesNotExistException("Capability ID does not exists.");
 		}
-		
+
 		Capability capability = capService.get(id);
         return  new ResponseEntity<Capability>(capability, HttpStatus.OK);
     }
@@ -87,22 +86,22 @@ public class CapabilityController {
 		if (!envService.existsById(id)) {
 			throw new IndexDoesNotExistException("Environment ID does not exists.");
 		}
-		
+
 		List<Capability> capabilities = capService.getCapabilitiesByEnvironment(id);
 		return new ResponseEntity<List<Capability>>(capabilities, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(path = "/capability/getallbylevel/{level}")
 	public ResponseEntity<List<Capability>> getAllCapabilitiesByLevel(@PathVariable("level") CapabilityLevel level) {
 		if (level == null || level.equals(0)) {
 			throw new InvalidInputException("Level is not valid.");
 		}
 		// TODO Check if level is in bounds. (Enum class)
-		
+
 		List<Capability> capabilities = capService.getCapabilitiesByLevel(level);
 		return new ResponseEntity<List<Capability>>(capabilities, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(path = "/capability/getallbyparentcapabilityid/{parentcapabilityid}")
 	public ResponseEntity<List<Capability>> getAllCapabilitiesByParentCapabilityId(@PathVariable("parentcapabilityid") Integer parentId) {
 		if (parentId == null || parentId.equals(0)) {
@@ -111,11 +110,11 @@ public class CapabilityController {
 		if (!envService.existsById(parentId)) {
 			throw new IndexDoesNotExistException("Parent ID does not exists.");
 		}
-		
+
 		List<Capability> capabilities = capService.getCapabilityChildren(parentId);
 		return new ResponseEntity<List<Capability>>(capabilities, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(path = "/capability/getallbyparentidandlevel/{parentid}/{level}")
 	public ResponseEntity<List<Capability>> getAllCapabilitiesByParentIdAndLevel(
 			@PathVariable("parentid") Integer parentId,
@@ -130,44 +129,44 @@ public class CapabilityController {
 			throw new InvalidInputException("Level is not valid.");
 		}
 		// TODO Check if level is in bounds. (Enum class)
-		
+
 		List<Capability> capabilities = capService.getCapabilitiesByParentIdAndLevel(parentId, level);
 		return new ResponseEntity<List<Capability>>(capabilities, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(path = "/capability/all")
 	public ResponseEntity<List<Capability>> getAllCapabilities() {
 		List<Capability> capabilities = capService.getAll();
 		return new ResponseEntity<List<Capability>>(capabilities, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(path = "/capability/exists/id/{id}")
 	public ResponseEntity<Boolean> doesCapabilityExistsById(@PathVariable("id") Integer id) {
 		if (id == null || id.equals(0)) {
 			throw new InvalidInputException("Capability ID is not valid.");
 		}
-		
+
 		boolean result = capService.existsById(id);
 		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(path = "/capability/exists/capabilityname/{capabilityname}")
 	public ResponseEntity<Boolean> doesCapabilityNameExists(@PathVariable("capabilityname") String capabilityName) {
-		if (capabilityName == null || 
+		if (capabilityName == null ||
 				capabilityName.isBlank() ||
 				capabilityName.isEmpty()) {
 			throw new InvalidInputException("Input is not valid.");
 		}
-		
+
 		boolean result = (!capService.existsByCapabilityName(capabilityName));
 		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 	}
 	
 	@PutMapping(path = "/capability/update")
 	public ResponseEntity<Capability> updateCapability(@RequestBody Capability capability) {
-		if (capability.getCapabilityId() == null || 
+		if (capability.getCapabilityId() == null ||
 				capability.getCapabilityId().equals(0) ||
-				capability.getCapabilityName() == null || 
+				capability.getCapabilityName() == null ||
 				capability.getCapabilityName().isBlank() ||
 				capability.getCapabilityName().isEmpty()) {
 			throw new InvalidInputException("Invalid input.");
@@ -190,7 +189,7 @@ public class CapabilityController {
 		if (statusService.existsByValidityPeriod(capability.getStatus().getValidityPeriod())) {
 			throw new DuplicateValueException("Validity period does not exists.");
 		}
-		
+
 		capService.update(capability);
 		return new ResponseEntity<Capability>(capability, HttpStatus.OK);
 	}
@@ -203,7 +202,7 @@ public class CapabilityController {
 		if (!capService.existsById(id)) {
 			throw new IndexDoesNotExistException("Capability ID does not exists.");
 		}
-		
+
 		capService.delete(id);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}

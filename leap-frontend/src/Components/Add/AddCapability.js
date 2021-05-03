@@ -139,8 +139,8 @@ export default class AddCapability extends Component {
                                 </div>
                                 <div className="form-group col-md-6">
                                     <label htmlFor="applicationFit">Application Fit</label>
-                                    <select className="form-control" name="applicationFit" placeholder="Add Application Fit" id="applicationFit"
-                                            value={this.state.applicationFit} onChange={this.handleInputChange}>
+                                    <select className="form-control" placeholder="Add Application Fit" id="applicationFit"
+                                            ref={input => (this.state.applicationFit = input)}>
                                         <option>1</option>
                                         <option>2</option>
                                         <option>3</option>
