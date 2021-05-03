@@ -1,4 +1,4 @@
-package com.bavostepbros.leap.model;
+package com.bavostepbros.leap.domain.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,9 +9,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class Capability {
 
     @Id
@@ -33,7 +42,7 @@ public class Capability {
     private String capabilityName;
     
     @Column(name = "LEVEL")
-    private Integer level;
+    private CapabilityLevel level;
     
     @Column(name = "PACEOFCHANGE")
     private boolean paceOfChange;
@@ -53,12 +62,9 @@ public class Capability {
     @OneToMany
     private List<CapabilityItem> capabilityItems;
 
-    public Capability() {
-    }
-
     public Capability(Environment environment, Status status, Integer parentCapabilityId, String capabilityName, 
-    Integer level, boolean paceOfChange, String targetOperatingModel, Integer resourceQuality, 
-    Integer informationQuality, Integer applicationFit) {
+    		CapabilityLevel level, boolean paceOfChange, String targetOperatingModel, Integer resourceQuality, 
+    		Integer informationQuality, Integer applicationFit) {
         this.environment = environment;
         this.status = status;
         this.parentCapabilityId = parentCapabilityId;
@@ -68,98 +74,6 @@ public class Capability {
         this.targetOperatingModel = targetOperatingModel;
         this.resourceQuality = resourceQuality;
         this.informationQuality = informationQuality;
-        this.applicationFit = applicationFit;
-    }
-
-	public Integer getCapabilityId() {
-        return this.capabilityId;
-    }
-
-    public void setCapabilityId(Integer capabilityId) {
-        this.capabilityId = capabilityId;
-    }
-
-    public Environment getEnvironment() {
-        return this.environment;
-    }
-
-    public void setEnvironment(Environment environment) {
-        this.environment = environment;
-    }
-
-    public Status getStatus() {
-        return this.status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public Integer getParentCapabilityId() {
-        return this.parentCapabilityId;
-    }
-
-    public void setParentCapabilityId(Integer parentCapabilityId) {
-        this.parentCapabilityId = parentCapabilityId;
-    }
-
-    public String getCapabilityName() {
-        return this.capabilityName;
-    }
-
-    public void setCapabilityName(String capabilityName) {
-        this.capabilityName = capabilityName;
-    }
-
-    public Integer getLevel() {
-        return this.level;
-    }
-
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
-
-    public boolean isPaceOfChange() {
-        return this.paceOfChange;
-    }
-
-    public boolean getPaceOfChange() {
-        return this.paceOfChange;
-    }
-
-    public void setPaceOfChange(boolean paceOfChange) {
-        this.paceOfChange = paceOfChange;
-    }
-
-    public String getTargetOperatingModel() {
-        return this.targetOperatingModel;
-    }
-
-    public void setTargetOperatingModel(String targetOperatingModel) {
-        this.targetOperatingModel = targetOperatingModel;
-    }
-
-    public Integer getResourceQuality() {
-        return this.resourceQuality;
-    }
-
-    public void setResourceQuality(Integer resourceQuality) {
-        this.resourceQuality = resourceQuality;
-    }
-
-    public Integer getInformationQuality() {
-        return this.informationQuality;
-    }
-
-    public void setInformationQuality(Integer informationQuality) {
-        this.informationQuality = informationQuality;
-    }
-
-    public Integer getApplicationFit() {
-        return this.applicationFit;
-    }
-
-    public void setApplicationFit(Integer applicationFit) {
         this.applicationFit = applicationFit;
     }
 

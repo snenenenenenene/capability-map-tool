@@ -1,4 +1,4 @@
-package com.bavostepbros.leap.model;
+package com.bavostepbros.leap.domain.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -6,7 +6,14 @@ import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @IdClass(CapabilityItemId.class)
 public class CapabilityItem {
 
@@ -22,34 +29,7 @@ public class CapabilityItem {
 
     private Integer strategicImportance;
 
-    public CapabilityItem() {
-    }
-
     public CapabilityItem(Integer strategicImportance) {
-        this.strategicImportance = strategicImportance;
-    }
-
-    public Capability getCapability() {
-        return this.capability;
-    }
-
-    public void setCapability(Capability capability) {
-        this.capability = capability;
-    }
-
-    public StrategyItem getStrategyItem() {
-        return this.strategyItem;
-    }
-
-    public void setStrategyItem(StrategyItem strategyItem) {
-        this.strategyItem = strategyItem;
-    }
-
-    public Integer getStrategicImportance() {
-        return this.strategicImportance;
-    }
-
-    public void setStrategicImportance(Integer strategicImportance) {
         this.strategicImportance = strategicImportance;
     }
 
