@@ -1,7 +1,13 @@
 package com.bavostepbros.leap.controller;
 
+import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
+import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
+import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
 import com.bavostepbros.leap.domain.model.Strategy;
 import com.bavostepbros.leap.domain.service.StrategyService.StrategyService;
+import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
+import com.bavostepbros.leap.domain.service.statusservice.StatusService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -20,12 +26,26 @@ public class StrategyController {
 
     @Autowired
     private StrategyService strategyService;
+    
+    @Autowired
+    private EnvironmentService envService;
+    
+    @Autowired
+    private StatusService statusService;
 
     @PostMapping(path = "/strategy/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> addStrategy(
             @ModelAttribute Strategy strategy,
             UriComponentsBuilder builder) {
-
+    	if (strategy.getStrategyName() == null ||
+    			strategy.getStrategyName().isBlank() ||
+    			strategy.getStrategyName().isEmpty()) {
+    		throw new InvalidInputException("Invalid input.");
+    	}
+    	if (!strategyService.existsByStrategyName(strategy.getStrategyName())) {
+			throw new DuplicateValueException("Strategy name already exists.");
+		}
+    	
         boolean flag = strategyService.save(strategy);
         if (flag == false) {
             return new ResponseEntity<Void>(HttpStatus.CONFLICT);
@@ -38,27 +58,89 @@ public class StrategyController {
         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
 
-    @GetMapping("/strategy/{id}")
+    @GetMapping(path = "/strategy/{id}")
     public ResponseEntity<Strategy> getStrategyById(@PathVariable("id") Integer id) {
-        Strategy strategy = strategyService.get(id);
+    	if (id == null || id.equals(0)) {
+			throw new InvalidInputException("Strategy ID is not valid.");
+		}
+		if (!strategyService.existsById(id)) {
+			throw new IndexDoesNotExistException("Strategy ID does not exists.");
+		}
+    	
+    	Strategy strategy = strategyService.get(id);
         return  new ResponseEntity<Strategy>(strategy, HttpStatus.OK);
     }
 
-    @GetMapping("/strategy/all")
+    @GetMapping(path = "/strategy/all")
     public List<Strategy> getAllStrategies() {
         List<Strategy> strategies = strategyService.getAll();
         return strategies;
     }
+    
+    @GetMapping(path = "/strategy/exists/id/{id}")
+	public ResponseEntity<Boolean> doesStrategyExistsById(@PathVariable("id") Integer id) {
+		if (id == null || id.equals(0)) {
+			throw new InvalidInputException("Strategy ID is not valid.");
+		}
 
-    @PutMapping("/strategy/update")
-    public ResponseEntity<Strategy> updateStrategy(@RequestBody Strategy strategy) {
-        strategyService.update(strategy);
+		boolean result = strategyService.existsById(id);
+		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+	}
+    
+    @GetMapping(path = "/strategy/exists/strategyname/{strategyname}")
+	public ResponseEntity<Boolean> doesStrategyNameExists(@PathVariable("strategyname") String strategyName) {
+		if (strategyName == null ||
+				strategyName.isBlank() ||
+				strategyName.isEmpty()) {
+			throw new InvalidInputException("Input is not valid.");
+		}
+
+		boolean result = (!strategyService.existsByStrategyName(strategyName));
+		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+	}
+
+    @PutMapping(path = "/strategy/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Strategy> updateStrategy(@ModelAttribute Strategy strategy) {
+    	if (strategy.getStrategyId() == null ||
+    			strategy.getStrategyId().equals(0) ||
+    			strategy.getStrategyName() == null ||
+    			strategy.getStrategyName().isBlank() ||
+    			strategy.getStrategyName().isEmpty()) {
+			throw new InvalidInputException("Invalid input.");
+		}
+		if (!strategyService.existsById(strategy.getStrategyId())) {
+			throw new IndexDoesNotExistException("Can not update capability if it does not exist.");
+		}
+		if (!strategyService.existsByStrategyName(strategy.getStrategyName())) {
+			throw new DuplicateValueException("Capability name already exists.");
+		}
+		if (!envService.existsById(strategy.getEnvironment().getEnvironmentId())) {
+			throw new IndexDoesNotExistException("Environment ID does not exists.");
+		}
+		if (envService.existsByEnvironmentName(strategy.getEnvironment().getEnvironmentName())) {
+			throw new DuplicateValueException("Environment name does not exists.");
+		}
+		if (!statusService.existsById(strategy.getStatus().getStatusId())) {
+			throw new IndexDoesNotExistException("Status ID does not exists.");
+		}
+		if (statusService.existsByValidityPeriod(strategy.getStatus().getValidityPeriod())) {
+			throw new DuplicateValueException("Validity period does not exists.");
+		}
+		
+    	strategyService.update(strategy);
         return new ResponseEntity<Strategy>(strategy, HttpStatus.OK);
     }
 
-    @DeleteMapping("/strategy/{id}")
+    @DeleteMapping("/strategy/delete/{id}")
     public ResponseEntity<Void> deleteStrategy(@PathVariable("id") Integer id) {
-        strategyService.delete(id);
+    	if (id == null || id.equals(0)) {
+			throw new InvalidInputException("Strategy ID is not valid.");
+		}
+		if (!strategyService.existsById(id)) {
+			throw new IndexDoesNotExistException("Strategy ID does not exists.");
+		}
+		
+    	strategyService.delete(id);
         return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
 }

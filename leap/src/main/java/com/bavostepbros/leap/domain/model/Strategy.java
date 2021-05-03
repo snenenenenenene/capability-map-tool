@@ -1,10 +1,11 @@
 package com.bavostepbros.leap.domain.model;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -25,15 +26,21 @@ public class Strategy {
 
     @Id
     @GeneratedValue
+    @Column(name = "STRATEGYID")
     private Integer strategyId;
 
     @OneToOne
     @JoinColumn
     private Status status;
-
+    
+    @Column(name = "STRATEGYNAME")
     private String strategyName;
-    private Date timeFrameStart;
-    private Date timeFrameEnd;
+    
+    @Column(name = "TIMEFRAMESTART")
+    private LocalDate timeFrameStart;
+    
+    @Column(name = "TIMEFRAMEEND")
+    private LocalDate timeFrameEnd;
 
     @ManyToOne
     private Environment environment;
@@ -42,7 +49,7 @@ public class Strategy {
     @JoinColumn(name="STRATEGYID")
     private List<StrategyItem> items = new ArrayList<StrategyItem>();
 
-    public Strategy(Status status, String strategyName, Date timeFrameStart, Date timeFrameEnd) {
+    public Strategy(Status status, String strategyName, LocalDate timeFrameStart, LocalDate timeFrameEnd) {
         this.status = status;
         this.strategyName = strategyName;
         this.timeFrameStart = timeFrameStart;

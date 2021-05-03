@@ -11,17 +11,15 @@ import javax.transaction.Transactional;
 import com.bavostepbros.leap.domain.model.Strategy;
 import com.bavostepbros.leap.persistence.StrategyDAL;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class StrategyServiceImpl implements StrategyService {
 
-    private final StrategyDAL strategyDAL;
-
-    @Autowired
-    public StrategyServiceImpl(StrategyDAL strategyDAL) {
-        super();
-        this.strategyDAL = strategyDAL;
-    }
+	@Autowired
+    private StrategyDAL strategyDAL;
 
     @Override
     public boolean save(Strategy strategy) {
@@ -59,5 +57,17 @@ public class StrategyServiceImpl implements StrategyService {
     public void delete(Integer id) {
         strategyDAL.deleteById(id);
     }
+
+	@Override
+	public boolean existsById(Integer id) {
+		boolean result = strategyDAL.existsById(id);
+		return result;
+	}
+
+	@Override
+	public boolean existsByStrategyName(String strategyName) {
+		boolean result = strategyDAL.findByStrategyName(strategyName).isEmpty();
+		return result;
+	}
 
 }

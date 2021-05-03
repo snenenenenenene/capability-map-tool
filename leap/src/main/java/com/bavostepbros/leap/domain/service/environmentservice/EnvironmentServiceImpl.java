@@ -11,17 +11,15 @@ import org.springframework.stereotype.Service;
 import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.persistence.EnvironmentDAL;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class EnvironmentServiceImpl implements EnvironmentService {
-
-    private final EnvironmentDAL environmentDAL;
-
-    @Autowired
-    public EnvironmentServiceImpl(EnvironmentDAL environmentDAL) {
-        super();
-        this.environmentDAL = environmentDAL;
-    }
+	
+	@Autowired
+    private EnvironmentDAL environmentDAL;
 
     @Override
     public boolean save(Environment environment) {

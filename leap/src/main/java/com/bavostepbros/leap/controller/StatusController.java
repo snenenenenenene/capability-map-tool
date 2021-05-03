@@ -5,14 +5,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -32,9 +33,9 @@ public class StatusController {
 	@Autowired
 	private StatusService statusService;
 	
-	@PostMapping(path = "/status/add", consumes = "application/json")
+	@PostMapping(path = "/status/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Void> addStatus(
-			@RequestBody Status status, 
+			@ModelAttribute Status status, 
 			UriComponentsBuilder builder) {
 		if (status.getValidityPeriod() == null || status.getValidityPeriod().equals(0)) {
 			throw new InvalidInputException("Invalid input.");
@@ -94,8 +95,8 @@ public class StatusController {
 		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 	}
 	
-	@PutMapping(path = "/status/update", consumes = "application/json")
-	public ResponseEntity<Status> updateStatus(@RequestBody Status status) {
+	@PutMapping(path = "/status/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<Status> updateStatus(@ModelAttribute Status status) {
 		if (status.getStatusId() == null || status.getStatusId().equals(0) ||
 				status.getValidityPeriod() == null || status.getValidityPeriod().equals(0)) {
 			throw new InvalidInputException("Invalid input.");
@@ -111,7 +112,7 @@ public class StatusController {
 		return new ResponseEntity<Status>(status, HttpStatus.OK);
 	}
 	
-	@DeleteMapping(path = "/status/{id}")
+	@DeleteMapping(path = "/status/delete/{id}")
 	public ResponseEntity<Void> deleteStatus(@PathVariable("id") Integer id) {
 		if (id == null || id.equals(0)) {
 			throw new InvalidInputException("Status ID is not valid.");

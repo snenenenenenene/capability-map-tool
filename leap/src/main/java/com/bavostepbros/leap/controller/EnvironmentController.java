@@ -5,10 +5,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -22,16 +24,19 @@ import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
 import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
 
+import lombok.RequiredArgsConstructor;
+
 @CrossOrigin(origins = "*")
 @RestController
+@RequiredArgsConstructor
 public class EnvironmentController {
 	
 	@Autowired
 	private EnvironmentService envService;
 	
-	@PostMapping(path = "/environment/add", consumes = "application/json")
+	@PostMapping(path = "/environment/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Void> addEnvironment(
-			@RequestBody Environment environment, 
+			@ModelAttribute Environment environment, 
 			UriComponentsBuilder builder) {
 		if (environment.getEnvironmentName() == null || 
 				environment.getEnvironmentName().isBlank() || 
@@ -81,7 +86,7 @@ public class EnvironmentController {
     }
 	
 	@GetMapping(path = "/environment/exists/id/{id}")
-	public ResponseEntity<Boolean> doesEnvironmentExistsById(@PathVariable("id") Integer id) {
+	public ResponseEntity<Boolean> doesEnvironmentExistsById(@ModelAttribute("id") Integer id) {
 		if (id == null || id.equals(0)) {
 			throw new InvalidInputException("Environment ID is not valid.");
 		}
@@ -106,7 +111,7 @@ public class EnvironmentController {
 		return new ResponseEntity<List<Environment>>(environments, HttpStatus.OK);
 	}
 	
-	@PutMapping(path = "/environment/update", consumes = "application/json")
+	@PutMapping(path = "/environment/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Environment> updateEnvironment(@RequestBody Environment environment) {
 		if (environment.getEnvironmentId() == null || environment.getEnvironmentId().equals(0) ||
 				environment.getEnvironmentName().isBlank() || environment.getEnvironmentName().isEmpty()) {
@@ -123,7 +128,7 @@ public class EnvironmentController {
 		return new ResponseEntity<Environment>(environment, HttpStatus.OK);
 	}
 	
-	@DeleteMapping(path = "/environment/{id}")
+	@DeleteMapping(path = "/environment/delete/{id}")
 	public ResponseEntity<Void> deleteEnvironment(@PathVariable("id") Integer id) {
 		if (id == null || id.equals(0)) {
 			throw new InvalidInputException("Environment ID is not valid.");
