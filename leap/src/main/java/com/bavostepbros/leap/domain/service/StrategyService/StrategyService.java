@@ -10,4 +10,6 @@ public interface StrategyService {
     List<Strategy> getAll();
     void update(Strategy strategy);
     void delete(Integer id);
+    boolean existsById(Integer id);
+	boolean existsByStrategyName(String strategyName);
 }
