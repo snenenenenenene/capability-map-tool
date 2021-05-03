@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 @RequiredArgsConstructor
 public class CapabilityServiceImpl implements CapabilityService {
-	
+
 	@Autowired
 	private CapabilityDAL capabilityDAL;
 	@Autowired
