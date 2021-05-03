@@ -1,25 +1,17 @@
 package com.bavostepbros.leap.controller;
 
-import java.util.List;
-
+import com.bavostepbros.leap.domain.model.Strategy;
+import com.bavostepbros.leap.domain.service.StrategyService.StrategyService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.bavostepbros.leap.database.StrategyService;
-import com.bavostepbros.leap.model.Strategy;
-
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -27,14 +19,14 @@ import lombok.RequiredArgsConstructor;
 public class StrategyController {
 
     @Autowired
-    private StrategyService stratService;
+    private StrategyService strategyService;
 
-    @PostMapping("/strategy/add")
+    @PostMapping(path = "/strategy/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> addStrategy(
-            @RequestBody Strategy strategy,
+            @ModelAttribute Strategy strategy,
             UriComponentsBuilder builder) {
 
-        boolean flag = stratService.save(strategy);
+        boolean flag = strategyService.save(strategy);
         if (flag == false) {
             return new ResponseEntity<Void>(HttpStatus.CONFLICT);
         }
@@ -48,25 +40,25 @@ public class StrategyController {
 
     @GetMapping("/strategy/{id}")
     public ResponseEntity<Strategy> getStrategyById(@PathVariable("id") Integer id) {
-        Strategy strategy = stratService.get(id);
+        Strategy strategy = strategyService.get(id);
         return  new ResponseEntity<Strategy>(strategy, HttpStatus.OK);
     }
 
     @GetMapping("/strategy/all")
     public List<Strategy> getAllStrategies() {
-        List<Strategy> strategies = stratService.getAll();
+        List<Strategy> strategies = strategyService.getAll();
         return strategies;
     }
 
     @PutMapping("/strategy/update")
     public ResponseEntity<Strategy> updateStrategy(@RequestBody Strategy strategy) {
-        stratService.update(strategy);
+        strategyService.update(strategy);
         return new ResponseEntity<Strategy>(strategy, HttpStatus.OK);
     }
 
     @DeleteMapping("/strategy/{id}")
     public ResponseEntity<Void> deleteStrategy(@PathVariable("id") Integer id) {
-        stratService.delete(id);
+        strategyService.delete(id);
         return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
 }
