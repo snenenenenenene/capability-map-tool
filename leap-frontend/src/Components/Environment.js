@@ -30,7 +30,7 @@ export default class Environment extends Component
     }
 
     componentDidMount() {
-        const post_response = fetch(`http://localhost:8080/environment/${this.state.environmentId}`, { method: 'GET'});
+        // const post_response = fetch(`http://localhost:8080/environment/${this.state.environmentId}`, { method: 'GET'});
     }
 
     render() {

@@ -54,6 +54,13 @@ export default class NewEnvironment extends Component
 
     render() {
           return(
+              <div>
+              <nav aria-label="breadcrumb">
+                  <ol className="breadcrumb">
+                      <li className="breadcrumb-item"><Link to={`/home`}><a>Home</a></Link></li>
+                      <li className="breadcrumb-item"><Link to={`/add`}><a>Add Environment</a></Link></li>
+                  </ol>
+              </nav>
             <div class="jumbotron">
             <h1>Add Environment</h1>
             <div class="row">
@@ -82,6 +89,7 @@ export default class NewEnvironment extends Component
                 </div>
             </div>
         </div>
+              </div>
         )
     }
 }

@@ -16,6 +16,12 @@ export default class Home extends Component
 
     render() {
         return(
+            <div>
+            <nav aria-label="breadcrumb">
+                <ol className="breadcrumb">
+                    <li className="breadcrumb-item"><Link to={`/home`}><a>Home</a></Link></li>
+                </ol>
+            </nav>
             <div className="jumbotron">
                     <div className="card-deck">
                         <div className="card">
@@ -64,6 +70,7 @@ export default class Home extends Component
                             </div>
                         </div>
                     </div>
+            </div>
             </div>
         )
     }

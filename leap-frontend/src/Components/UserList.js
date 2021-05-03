@@ -23,6 +23,13 @@ export default class Home extends Component
 
     render() {
         return(
+            <div>
+            <nav aria-label="breadcrumb">
+                <ol className="breadcrumb">
+                    <li className="breadcrumb-item"><Link to={`/home`}><a>Home</a></Link></li>
+                    <li className="breadcrumb-item"><Link to={`/users`}><a>User List</a></Link></li>
+                </ol>
+            </nav>
             <div className="jumbotron">
                 <h1 className='display-4'>User List</h1>
                 <br/><br/>
@@ -37,6 +44,7 @@ export default class Home extends Component
                     { this.usersTableRow() }
                     </tbody>
                 </table>
+            </div>
             </div>
         )
     }
