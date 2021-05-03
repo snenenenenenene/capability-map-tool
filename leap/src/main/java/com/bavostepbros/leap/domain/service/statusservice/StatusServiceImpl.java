@@ -62,4 +62,10 @@ public class StatusServiceImpl implements StatusService {
 		return result;
 	}
 
+	@Override
+	public boolean existsByValidityPeriod(Integer validityPeriod) {
+		boolean result = statusDAL.findByValidityPeriod(validityPeriod).isEmpty();
+		return result;
+	}
+
 }

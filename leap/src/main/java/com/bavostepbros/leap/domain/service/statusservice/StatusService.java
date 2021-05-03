@@ -11,4 +11,5 @@ public interface StatusService {
 	void update(Status status);
 	void delete(Integer id);
 	boolean existsById(Integer id);
+	boolean existsByValidityPeriod(Integer validityPeriod);
 }
