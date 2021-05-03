@@ -1,6 +1,7 @@
 package com.bavostepbros.leap.domain.model;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,8 +34,9 @@ public class Strategy {
     private Status status;
 
     private String strategyName;
-    private Date timeFrameStart;
-    private Date timeFrameEnd;
+
+    private LocalDate timeFrameStart;
+    private LocalDate timeFrameEnd;
 
     @ManyToOne
     private Environment environment;
@@ -42,7 +45,7 @@ public class Strategy {
     @JoinColumn(name="STRATEGYID")
     private List<StrategyItem> items = new ArrayList<StrategyItem>();
 
-    public Strategy(Status status, String strategyName, Date timeFrameStart, Date timeFrameEnd) {
+    public Strategy(Status status, String strategyName, LocalDate timeFrameStart, LocalDate timeFrameEnd) {
         this.status = status;
         this.strategyName = strategyName;
         this.timeFrameStart = timeFrameStart;

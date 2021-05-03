@@ -1,9 +1,11 @@
 package com.bavostepbros.leap.controller;
 
+import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
 import com.bavostepbros.leap.domain.model.Strategy;
 import com.bavostepbros.leap.domain.service.StrategyService.StrategyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -21,7 +24,7 @@ public class StrategyController {
     @Autowired
     private StrategyService strategyService;
 
-    @PostMapping(path = "/strategy/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path = "/strategy/add" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> addStrategy(
             @ModelAttribute Strategy strategy,
             UriComponentsBuilder builder) {
@@ -30,6 +33,14 @@ public class StrategyController {
         if (flag == false) {
             return new ResponseEntity<Void>(HttpStatus.CONFLICT);
         }
+
+        LocalDate ld = LocalDate.now();
+        System.out.println(ld);
+
+        System.out.println(strategy);
+        strategy.setTimeFrameEnd(ld);
+        System.out.println(strategy.getTimeFrameEnd());
+        System.out.println(strategy);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder
@@ -61,4 +72,6 @@ public class StrategyController {
         strategyService.delete(id);
         return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
+
+
 }
