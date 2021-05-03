@@ -41,6 +41,12 @@ public class EnvironmentServiceImpl implements EnvironmentService {
 	}
 	
 	@Override
+	public Environment getByEnvironmentName(String evironmentName) {
+		Environment environment = environmentDAL.findByEnvironmentName(evironmentName).get(0);
+		return environment;
+	}
+	
+	@Override
 	public List<Environment> getAll() {
 		List<Environment> environments = new ArrayList<Environment>();
 		environments = environmentDAL.findAll();
@@ -55,6 +61,18 @@ public class EnvironmentServiceImpl implements EnvironmentService {
 	@Override
 	public void delete(Integer id) {
 		environmentDAL.deleteById(id);
+	}
+	
+	@Override
+	public boolean existsById(Integer id) {
+		boolean result = environmentDAL.existsById(id);
+		return result;
+	}
+
+	@Override
+	public boolean existsByEnvironmentName(String environmentName) {
+		boolean result = environmentDAL.findByEnvironmentName(environmentName).isEmpty();
+		return result;
 	}
 
 }

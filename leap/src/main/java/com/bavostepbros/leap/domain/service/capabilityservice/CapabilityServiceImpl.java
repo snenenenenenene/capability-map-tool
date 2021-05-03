@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Environment;
+import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 import com.bavostepbros.leap.persistence.CapabilityDAL;
 import com.bavostepbros.leap.persistence.EnvironmentDAL;
 
@@ -83,7 +84,39 @@ public class CapabilityServiceImpl implements CapabilityService {
 	@Override
 	public List<Capability> getCapabilitiesByEnvironment(Integer environmentId) {
 		Environment environment = environmentDAL.findById(environmentId).get();
-		return capabilityDAL.findByEnvironment(environment);
+		List<Capability> capabilities = capabilityDAL.findByEnvironment(environment);
+		return capabilities;
+	}
+
+	@Override
+	public List<Capability> getCapabilitiesByLevel(CapabilityLevel level) {
+		List<Capability> capabilities = capabilityDAL.findByLevel(level);
+		return capabilities;
+	}
+
+	@Override
+	public List<Capability> getCapabilityChildren(Integer parentId) {
+		List<Capability> capabilities = capabilityDAL.findByParentCapabilityId(parentId);
+		return capabilities;
+	}
+
+	@Override
+	public List<Capability> getCapabilitiesByParentIdAndLevel(Integer parentId, CapabilityLevel level) {
+		List<Capability> capabilities = capabilityDAL.findByParentCapabilityIdAndLevel(parentId, level);
+		capabilities.forEach(c -> System.out.println(c));
+		return capabilities;
+	}
+
+	@Override
+	public boolean existsById(Integer id) {
+		boolean result = capabilityDAL.existsById(id);
+		return result;
+	}
+
+	@Override
+	public boolean existsByCapabilityName(String capabilityName) {
+		boolean result = capabilityDAL.findByCapabilityName(capabilityName).isEmpty();
+		return result;
 	}
 
 }

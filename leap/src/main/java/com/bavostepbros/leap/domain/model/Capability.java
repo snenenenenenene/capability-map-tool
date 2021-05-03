@@ -9,6 +9,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,7 +42,7 @@ public class Capability {
     private String capabilityName;
     
     @Column(name = "LEVEL")
-    private Integer level;
+    private CapabilityLevel level;
     
     @Column(name = "PACEOFCHANGE")
     private boolean paceOfChange;
@@ -61,8 +63,8 @@ public class Capability {
     private List<CapabilityItem> capabilityItems;
 
     public Capability(Environment environment, Status status, Integer parentCapabilityId, String capabilityName, 
-    Integer level, boolean paceOfChange, String targetOperatingModel, Integer resourceQuality, 
-    Integer informationQuality, Integer applicationFit) {
+    		CapabilityLevel level, boolean paceOfChange, String targetOperatingModel, Integer resourceQuality, 
+    		Integer informationQuality, Integer applicationFit) {
         this.environment = environment;
         this.status = status;
         this.parentCapabilityId = parentCapabilityId;
