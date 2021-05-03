@@ -34,14 +34,14 @@ export default class AddCapability extends Component {
                     environmentId: this.state.environmentId
                 },
                 capabilityName: this.state.capabilityName,
-                parentCapabilityId: this.state.parentCapability,
-                paceOfChange: this.state.paceOfChange,
-                targetOperatingModel: this.state.TOM,
-                informationQuality: this.state.informationQuality,
-                applicationFit: this.state.applicationFit,
-                resourceQuality: this.state.resourcesQuality,
-                // status: this.state.expirationDate,
-                level: this.state.level
+                // parentCapabilityId: this.state.parentCapability,
+                // paceOfChange: this.state.paceOfChange,
+                // targetOperatingModel: this.state.TOM,
+                // informationQuality: this.state.informationQuality,
+                // applicationFit: this.state.applicationFit,
+                // resourceQuality: this.state.resourcesQuality,
+                // // status: this.state.expirationDate,
+                // level: this.state.level
             }) });
         if (!post_response.ok) {
             console.log('Failed to post capability');
