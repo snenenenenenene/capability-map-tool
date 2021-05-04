@@ -39,6 +39,11 @@ public class Environment {
     public Environment(String environmentName) {
         this.environmentName = environmentName;
     }
+    
+    public Environment(Integer environmentId, String environmentName) {
+		this.environmentId = environmentId;
+		this.environmentName = environmentName;
+	}
 
 	@Override
     public String toString() {

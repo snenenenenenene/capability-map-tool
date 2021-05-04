@@ -29,28 +29,28 @@ export default class Home extends Component
     render() {
         return(
             <div>
-            <nav aria-label="breadcrumb">
-                <ol className="breadcrumb">
-                    <li className="breadcrumb-item"><Link to={`/home`}><a>Home</a></Link></li>
-                    <li className="breadcrumb-item"><Link to={`/recent`}><a>Recent Environments</a></Link></li>
-                </ol>
-            </nav>
-            <div className="jumbotron">
-                <h1 className='display-4'>Recent Environments</h1>
-                <br/><br/>
-                <table className='table table-striped'>
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    { this.recentEnvironmentTableRow() }
-                    </tbody>
-                </table>
-            </div>
+                <nav aria-label="breadcrumb">
+                    <ol className="breadcrumb">
+                        <li className="breadcrumb-item"><Link to={`/home`}><a>Home</a></Link></li>
+                        <li className="breadcrumb-item"><Link to={`/recent`}><a>Recent Environments</a></Link></li>
+                    </ol>
+                </nav>
+                <div className="jumbotron">
+                    <h1 className='display-4'>Recent Environments</h1>
+                    <br/><br/>
+                    <table className='table table-striped'>
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        { this.recentEnvironmentTableRow() }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         )
     }

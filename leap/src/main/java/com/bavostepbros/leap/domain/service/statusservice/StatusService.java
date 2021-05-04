@@ -5,10 +5,10 @@ import java.util.List;
 import com.bavostepbros.leap.domain.model.Status;
 
 public interface StatusService {
-	boolean save(Status status);
+	Status save(Integer validityPeriod);
 	Status get(Integer id);
 	List<Status> getAll();
-	void update(Status status);
+	Status update(Integer statusId, Integer validityPeriod);
 	void delete(Integer id);
 	boolean existsById(Integer id);
 	boolean existsByValidityPeriod(Integer validityPeriod);

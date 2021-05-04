@@ -11,26 +11,21 @@ import org.springframework.stereotype.Service;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.persistence.StatusDAL;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class StatusServiceImpl implements StatusService {
-
-    private final StatusDAL statusDAL;
-
-    @Autowired
-    public StatusServiceImpl(StatusDAL statusDAL) {
-        super();
-        this.statusDAL = statusDAL;
-    }
+	
+	@Autowired
+    private StatusDAL statusDAL;
 
     @Override
-    public boolean save(Status status) {
-        try {
-            statusDAL.save(status);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+    public Status save(Integer validityPeriod) {
+        Status status = new Status(validityPeriod);
+        Status savedStatus = statusDAL.save(status);
+        return savedStatus;
     }
 
     @Override
@@ -47,8 +42,10 @@ public class StatusServiceImpl implements StatusService {
     }
 
     @Override
-    public void update(Status status) {
-        statusDAL.save(status);
+    public Status update(Integer statusId, Integer validityPeriod) {
+    	Status status = new Status(statusId, validityPeriod);
+        Status updatedStatus = statusDAL.save(status);
+        return updatedStatus;
     }
 
     @Override

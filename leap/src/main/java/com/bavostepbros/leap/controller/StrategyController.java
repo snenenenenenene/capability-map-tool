@@ -3,7 +3,6 @@ package com.bavostepbros.leap.controller;
 import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
 import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
 import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
-import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
 import com.bavostepbros.leap.domain.model.Strategy;
 import com.bavostepbros.leap.domain.service.StrategyService.StrategyService;
 import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
@@ -36,20 +35,29 @@ public class StrategyController {
     @Autowired
     private StatusService statusService;
 
-    @PostMapping(path = "/strategy/add" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path = "/strategy/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> addStrategy(
-            @ModelAttribute Strategy strategy,
+            @ModelAttribute("statusId") Integer statusId,
+            @ModelAttribute("validityPeriod") Integer validityPeriod,
+            @ModelAttribute("strategyName") String strategyName,
+			@ModelAttribute("timeFrameStart") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameStart,
+			@ModelAttribute("timeFrameEnd") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameEnd,
             UriComponentsBuilder builder) {
-    	if (strategy.getStrategyName() == null ||
-    			strategy.getStrategyName().isBlank() ||
-    			strategy.getStrategyName().isEmpty()) {
+    	if (statusId == null || statusId.equals(0) || validityPeriod == null || validityPeriod.equals(0)
+    			|| strategyName == null || strategyName.isBlank() || strategyName.isEmpty()) {
     		throw new InvalidInputException("Invalid input.");
     	}
-    	if (!strategyService.existsByStrategyName(strategy.getStrategyName())) {
+    	if (!strategyService.existsByStrategyName(strategyName)) {
 			throw new DuplicateValueException("Strategy name already exists.");
 		}
 
-        boolean flag = strategyService.save(strategy);
+		System.out.println();
+		System.out.println("\n\n\nTIMEFRAMEEND:\n\n\n " + timeFrameEnd);
+		System.out.println("\n\n\nTIMEFRAMESTART:\n\n\n " + timeFrameStart);
+    	
+        Strategy strategy = strategyService.save(statusId, validityPeriod, strategyName, timeFrameStart, timeFrameEnd);
+        Integer strategyId = strategy.getStrategyId();
+        boolean flag = (strategyId == null) ? false : true;
         if (flag == false) {
             return new ResponseEntity<Void>(HttpStatus.CONFLICT);
         }
@@ -65,7 +73,7 @@ public class StrategyController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder
                 .path("/strategy/{id}")
-                .buildAndExpand(strategy.getStrategyId()).toUri());
+                .buildAndExpand(strategyId).toUri());
         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
 
@@ -154,6 +162,4 @@ public class StrategyController {
     	strategyService.delete(id);
         return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
-
-
 }

@@ -2,7 +2,6 @@ package com.bavostepbros.leap.domain.service.capabilityservice;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Environment;
+import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 import com.bavostepbros.leap.persistence.CapabilityDAL;
 import com.bavostepbros.leap.persistence.EnvironmentDAL;
@@ -24,21 +24,20 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 	@Autowired
 	private CapabilityDAL capabilityDAL;
+
 	@Autowired
 	private EnvironmentDAL environmentDAL;
 
 	@Override
-	public boolean save(Capability capability) {
-		List<Capability> capabilities = getAll();
-		List<Capability> results = capabilities.stream()
-				.filter(cap -> capability.getCapabilityName().equals(cap.getCapabilityName()))
-				.collect(Collectors.toList());
-		if (results.size() > 0) {
-			return false;
-		} else {
-			capabilityDAL.save(capability);
-			return true;
-		}
+	public Capability save(Integer environmentId, String environmentName, Integer statusId, Integer validityPeriod,
+			Integer parentCapabilityId, String capabilityName, CapabilityLevel level, boolean paceOfChange,
+			String targetOperatingModel, Integer resourceQuality, Integer informationQuality, Integer applicationFit) {
+		Environment environment = new Environment(environmentId, environmentName);
+		Status status = new Status(statusId, validityPeriod);
+		Capability capability = new Capability(environment, status, parentCapabilityId, capabilityName, level,
+				paceOfChange, targetOperatingModel, resourceQuality, informationQuality, applicationFit);
+		Capability savedCapability = capabilityDAL.save(capability);
+		return savedCapability;
 	}
 
 	@Override
@@ -64,12 +63,16 @@ public class CapabilityServiceImpl implements CapabilityService {
 	}
 
 	@Override
-	public void update(Capability capability) {
-		try {
-			capabilityDAL.save(capability);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public Capability update(Integer capabilityId, Integer environmentId, String environmentName, Integer statusId,
+			Integer validityPeriod, Integer parentCapabilityId, String capabilityName, CapabilityLevel level,
+			boolean paceOfChange, String targetOperatingModel, Integer resourceQuality, Integer informationQuality,
+			Integer applicationFit) {
+		Environment environment = new Environment(environmentId, environmentName);
+		Status status = new Status(statusId, validityPeriod);
+		Capability capability = new Capability(capabilityId, environment, status, parentCapabilityId, capabilityName,
+				level, paceOfChange, targetOperatingModel, resourceQuality, informationQuality, applicationFit);
+		Capability updatedCapability = capabilityDAL.save(capability);
+		return updatedCapability;
 	}
 
 	@Override

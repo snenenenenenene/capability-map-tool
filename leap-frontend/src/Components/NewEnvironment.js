@@ -23,10 +23,16 @@ export default class NewEnvironment extends Component
      handleSubmit = async e => {
         e.preventDefault();
         console.log("submit")
+         console.log(this.state.environmentName)
         const post_response = await fetch(`http://localhost:8080/environment/add`,
             {
             method: 'POST',
-            body: JSON.stringify({environmentName: this.state.environmentName}) });
+                headers: {
+                    'Accept': 'multipart/form-data',
+                    'Content-Type': 'multipart/form-data'
+                },
+            body: JSON.stringify({environmentName: 'this.state.environmentName'}) });
+        console.log(post_response)
         if (!post_response.ok) {
             console.log('Failed to upload via presigned POST');
         }
