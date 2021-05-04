@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import deleteImg from '../img/delete.jpg'
-import { Redirect } from 'react-router-dom';
 
 export default class RecentEnvironmentTableRow extends Component {
 

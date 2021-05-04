@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import RecentEnvironmentTableRow from "../RecentEnvironmentTableRow";
 
 export default class AddCapability extends Component {
     constructor(props) {
@@ -62,8 +61,8 @@ export default class AddCapability extends Component {
             <div>
                 <nav aria-label="breadcrumb">
                     <ol className="breadcrumb">
-                        <li className="breadcrumb-item"><Link to={`/`}><a>Home</a></Link></li>
-                        <li className="breadcrumb-item"><Link to={`/environment/${environmentName}`}><a>{environmentName}</a></Link></li>
+                        <li className="breadcrumb-item"><Link to={`/`}>Home</Link></li>
+                        <li className="breadcrumb-item"><Link to={`/environment/${environmentName}`}>{environmentName}</Link></li>
                         <li className="breadcrumb-item active" aria-current="page">Add Capability</li>
                     </ol>
                 </nav>
@@ -140,7 +139,7 @@ export default class AddCapability extends Component {
                                 <div className="form-group col-md-6">
                                     <label htmlFor="applicationFit">Application Fit</label>
                                     <select className="form-control" placeholder="Add Application Fit" id="applicationFit"
-                                            ref={input => (this.state.applicationFit = input)}>
+                                            value={this.state.applicationFit}>
                                         <option>1</option>
                                         <option>2</option>
                                         <option>3</option>

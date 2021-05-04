@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
-import RecentTableRow from './RecentEnvironmentTableRow'
 import RecentEnvironmentTableRow from "./RecentEnvironmentTableRow";
 
 
@@ -31,8 +30,8 @@ export default class Home extends Component
             <div>
                 <nav aria-label="breadcrumb">
                     <ol className="breadcrumb">
-                        <li className="breadcrumb-item"><Link to={`/home`}><a>Home</a></Link></li>
-                        <li className="breadcrumb-item"><Link to={`/recent`}><a>Recent Environments</a></Link></li>
+                        <li className="breadcrumb-item"><Link to={`/home`}>Home</Link></li>
+                        <li className="breadcrumb-item"><Link to={`/recent`}>Recent Environments</Link></li>
                     </ol>
                 </nav>
                 <div className="jumbotron">

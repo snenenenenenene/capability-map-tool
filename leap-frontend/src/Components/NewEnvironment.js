@@ -1,11 +1,7 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
-import  { Redirect } from 'react-router-dom'
-import RecentEnvironment from './RecentEnvironments'
-import axios from "axios"
-import { Container, Col, Form, FormGroup, Label, Input } from 'reactstrap'
+import { Input } from 'reactstrap'
 import RecentEnvironmentTableRow from "./RecentEnvironmentTableRow";
-import styles from "../App.css"
 
 
 export default class NewEnvironment extends Component
@@ -63,8 +59,8 @@ export default class NewEnvironment extends Component
               <div>
               <nav aria-label="breadcrumb">
                   <ol className="breadcrumb">
-                      <li className="breadcrumb-item"><Link to={`/home`}><a>Home</a></Link></li>
-                      <li className="breadcrumb-item"><Link to={`/add`}><a>Add Environment</a></Link></li>
+                      <li className="breadcrumb-item"><Link to={`/home`}>Home</Link></li>
+                      <li className="breadcrumb-item"><Link to={`/add`}>Add Environment</Link></li>
                   </ol>
               </nav>
             <div className="jumbotron">

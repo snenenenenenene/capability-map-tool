@@ -29,8 +29,8 @@ export default class Capability extends Component
             <div className="jumbotron">
                 <nav aria-label="breadcrumb">
                     <ol className="breadcrumb">
-                        <li className="breadcrumb-item"><Link to={`/`}><a>Home</a></Link></li>
-                        <li className="breadcrumb-item"><Link to={`/environment/${environmentName}`}><a>{environmentName}</a></Link></li>
+                        <li className="breadcrumb-item"><Link to={`/`}>Home</Link></li>
+                        <li className="breadcrumb-item"><Link to={`/environment/${environmentName}`}>{environmentName}</Link></li>
                     </ol>
                 </nav>
                 <h1 className='display-4'>Capabilities</h1>

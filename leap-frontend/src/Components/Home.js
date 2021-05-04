@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
-import plusImg from "../img/plus.png";
-
 
 export default class Home extends Component
 {
@@ -13,10 +11,12 @@ export default class Home extends Component
     }
 
     async componentDidMount() {
-        const response = await fetch(`http://localhost:8080/environment/all`);
-        const data = await response.json();
-        this.setState({environments: data});
-        console.log(this.state.environments);
+        // const response = await fetch(`http://localhost:8080/environment/all`);
+        // const data = await response.json();
+        // console.log(data);
+        // console.log(response)
+        // this.setState({environments: data});
+        // console.log(this.state.environments);
     }
 
     render() {
@@ -24,7 +24,7 @@ export default class Home extends Component
             <div>
             <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">
-                    <li className="breadcrumb-item"><Link to={`/home`}><a>Home</a></Link></li>
+                    <li className="breadcrumb-item"><Link to={`/home`}>Home</Link></li>
                 </ol>
             </nav>
             <div className="jumbotron">
