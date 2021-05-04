@@ -13,8 +13,8 @@ export default class NewEnvironment extends Component
     constructor(props) {
         super(props);
         this.state = {
-            environments: [],
             environmentName: '',
+            environments: []
             };
         this.handleInputChange = this.handleInputChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -26,10 +26,6 @@ export default class NewEnvironment extends Component
         const post_response = await fetch(`http://localhost:8080/environment/add`,
             {
             method: 'POST',
-            headers:
-                {
-                    'Content-Type': "application/json",
-                    'Accept': "application/json"},
             body: JSON.stringify({environmentName: this.state.environmentName}) });
         if (!post_response.ok) {
             console.log('Failed to upload via presigned POST');
@@ -43,7 +39,11 @@ export default class NewEnvironment extends Component
         this.setState({ [event.target.name]: event.target.value })
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        const response = await fetch(`http://localhost:8080/environment/all`);
+        const data = await response.json();
+        this.setState({environments: data});
+        console.log(this.state.environments);
     }
 
     recentEnvironmentTableRow() {
@@ -61,10 +61,10 @@ export default class NewEnvironment extends Component
                       <li className="breadcrumb-item"><Link to={`/add`}><a>Add Environment</a></Link></li>
                   </ol>
               </nav>
-            <div class="jumbotron">
+            <div className="jumbotron">
             <h1>Add Environment</h1>
-            <div class="row">
-                <div class="col-sm-6">
+            <div className="row">
+                <div className="col-sm-6">
                     <div>
                         <p>Recent Environments</p>
                         <table className=' table table-striped'>
@@ -80,7 +80,7 @@ export default class NewEnvironment extends Component
                         </table>
                     </div>
                 </div>
-                <div class="col-sm-6">
+                <div className="col-sm-6">
                 <p>New Environments</p>
                 <form className="form-inline" onSubmit={this.handleSubmit}>
                     <Input type="text" name="environmentName" value={this.state.environmentName} onChange={this.handleInputChange} className="form-control" placeholder="New Environment"/>

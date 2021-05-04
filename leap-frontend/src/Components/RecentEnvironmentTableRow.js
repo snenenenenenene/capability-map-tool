@@ -1,20 +1,37 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import deleteImg from '../img/delete.jpg'
+import { Redirect } from 'react-router-dom';
 
 export default class RecentEnvironmentTableRow extends Component {
+
+    deleteEnvironment (){
+        const response = fetch(`http://localhost:8080/environment/delete/${this.props.obj.environmentId}`, {
+            method: "DELETE"
+        });
+        if (!response.ok) {
+            console.log('Failed to delete environment');
+        }
+        console.log(`Environment deleted with key: ${this.props.obj.environmentId}`);
+    }
 
     render() {
         return (
             <tr>
                 <td>
-                    <Link to={ '/delete/' + this.props.obj.name }><img src={ deleteImg } alt='delete' width='15' height='18'/></Link>&nbsp;&nbsp;
-                    <Link to={ '/edit/' + this.props.obj.name }>{ this.props.obj.name }</Link>
+                    { this.props.obj.environmentId }
                 </td>
+
+        <Link to={ '/environment/' + this.props.obj.environmentName }>
                 <td>
-                    { this.props.obj.description }
+                    { this.props.obj.environmentName }
+                </td>
+        </Link>
+                <td>
+                    <img src={ deleteImg } onClick={() => {this.deleteEnvironment(this.props.obj.environmentId)}} alt='delete' width='15' height='18'/>
                 </td>
             </tr>
+
         )
     }
 }

@@ -28,29 +28,25 @@ export default class AddCapability extends Component {
         e.preventDefault();
         console.log(this.state.environmentName)
         const post_response = await fetch(`http://localhost:8080/capability/add`, { method: 'POST',
-            headers:
-                {
-                    'Content-Type': "application/json",
-                    'Accept': "application/json"},
             body: JSON.stringify({
                 environment: {
                     environmentName: this.state.environmentName,
                     environmentId: this.state.environmentId
                 },
                 capabilityName: this.state.capabilityName,
-                parentCapabilityId: this.state.parentCapability,
-                paceOfChange: this.state.paceOfChange,
-                targetOperatingModel: this.state.TOM,
-                informationQuality: this.state.informationQuality,
-                applicationFit: this.state.applicationFit,
-                resourceQuality: this.state.resourcesQuality,
-                // status: this.state.expirationDate,
-                level: this.state.level
+                // parentCapabilityId: this.state.parentCapability,
+                // paceOfChange: this.state.paceOfChange,
+                // targetOperatingModel: this.state.TOM,
+                // informationQuality: this.state.informationQuality,
+                // applicationFit: this.state.applicationFit,
+                // resourceQuality: this.state.resourcesQuality,
+                // // status: this.state.expirationDate,
+                // level: this.state.level
             }) });
         if (!post_response.ok) {
-            console.log('Failed to upload via presigned POST');
+            console.log('Failed to post capability');
         }
-        console.log(`File uploaded via presigned POST with key: ${this.state.capabilityName}`);
+        console.log(`Capability posted with name: ${this.state.capabilityName}`);
     }
 
     componentDidMount() {

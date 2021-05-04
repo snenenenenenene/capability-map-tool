@@ -8,10 +8,15 @@ export default class Home extends Component
     constructor(props) {
         super(props);
         this.state = {
+            environments: {}
             };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        const response = await fetch(`http://localhost:8080/environment/all`);
+        const data = await response.json();
+        this.setState({environments: data});
+        console.log(this.state.environments);
     }
 
     render() {

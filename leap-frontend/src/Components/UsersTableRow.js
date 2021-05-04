@@ -15,7 +15,7 @@
                 { this.props.obj.name }
               </td>
               <td>
-                { this.props.obj.row }
+                { this.props.obj.role }
               </td>
             </tr>
         )

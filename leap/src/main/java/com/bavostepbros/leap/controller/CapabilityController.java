@@ -6,7 +6,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
@@ -156,8 +163,8 @@ public class CapabilityController {
 		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 	}
 	
-	@PutMapping(path = "/capability/update")
-	public ResponseEntity<Capability> updateCapability(@RequestBody Capability capability) {
+	@PutMapping(path = "/capability/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<Capability> updateCapability(@ModelAttribute Capability capability) {
 		if (capability.getCapabilityId() == null ||
 				capability.getCapabilityId().equals(0) ||
 				capability.getCapabilityName() == null ||

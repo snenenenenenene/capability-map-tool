@@ -13,7 +13,11 @@ export default class Home extends Component
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        const response = await fetch(`http://localhost:8080/environment/all`);
+        const data = await response.json();
+        this.setState({environments: data});
+        console.log(this.state.environments);
     }
 
     recentEnvironmentTableRow() {
@@ -37,8 +41,9 @@ export default class Home extends Component
                 <table className='table table-striped'>
                     <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Name</th>
-                        <th>Description</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
