@@ -35,16 +35,18 @@ public class StatusController {
 	
 	@PostMapping(path = "/status/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Void> addStatus(
-			@ModelAttribute Status status, 
+			@ModelAttribute("validityPeriod") Integer validityPeriod, 
 			UriComponentsBuilder builder) {
-		if (status.getValidityPeriod() == null || status.getValidityPeriod().equals(0)) {
+		if (validityPeriod == null || validityPeriod.equals(0)) {
 			throw new InvalidInputException("Invalid input.");
 		}
-		if (!statusService.existsByValidityPeriod(status.getValidityPeriod())) {
+		if (!statusService.existsByValidityPeriod(validityPeriod)) {
 			throw new DuplicateValueException("Validity period already exists.");
 		}
 		
-		boolean flag = statusService.save(status);
+		Status status = statusService.save(validityPeriod);
+		Integer statusId = status.getStatusId();
+		boolean flag = (statusId == null) ? false : true;
 		if (flag == false) {
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
@@ -52,7 +54,7 @@ public class StatusController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(builder
 				.path("/status/get/{id}")
-				.buildAndExpand(status.getStatusId()).toUri());
+				.buildAndExpand(validityPeriod).toUri());
 		return new ResponseEntity<>(headers, HttpStatus.CREATED);
 	}
 	
@@ -96,19 +98,21 @@ public class StatusController {
 	}
 	
 	@PutMapping(path = "/status/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<Status> updateStatus(@ModelAttribute Status status) {
-		if (status.getStatusId() == null || status.getStatusId().equals(0) ||
-				status.getValidityPeriod() == null || status.getValidityPeriod().equals(0)) {
+	public ResponseEntity<Status> updateStatus(
+			@ModelAttribute("statusId") Integer statusId,
+			@ModelAttribute("validityPeriod") Integer validityPeriod) {
+		if (statusId == null || statusId.equals(0) ||
+				validityPeriod == null || validityPeriod.equals(0)) {
 			throw new InvalidInputException("Invalid input.");
 		}
-		if (!statusService.existsById(status.getStatusId())) {
+		if (!statusService.existsById(statusId)) {
 			throw new IndexDoesNotExistException("Can not update status if it does not exist.");
 		}
-		if (!statusService.existsByValidityPeriod(status.getValidityPeriod())) {
+		if (!statusService.existsByValidityPeriod(validityPeriod)) {
 			throw new DuplicateValueException("Validity period already exists.");
 		}
 		
-		statusService.update(status);
+		Status status = statusService.update(statusId, validityPeriod);
 		return new ResponseEntity<Status>(status, HttpStatus.OK);
 	}
 	

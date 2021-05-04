@@ -40,21 +40,42 @@ public class CapabilityController {
 
 	@Autowired
 	private StatusService statusService;
+	
+	// Integer environmentId, String environmentName, Integer statusId, Integer validityPeriod,
+	// Integer parentCapabilityId, String capabilityName, CapabilityLevel level, boolean paceOfChange,
+	// String targetOperatingModel, Integer resourceQuality, Integer informationQuality, Integer applicationFit
 
 	@PostMapping(path = "/capability/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Void> addCapability(
-			@ModelAttribute Capability capability,
+			@ModelAttribute("environmentId") Integer environmentId,
+			@ModelAttribute("environmentName") String environmentName,
+			@ModelAttribute("statusId") Integer statusId,
+			@ModelAttribute("validityPeriod") Integer validityPeriod,
+			@ModelAttribute("parentCapabilityId") Integer parentCapabilityId,
+			@ModelAttribute("capabilityName") String capabilityName,
+			@ModelAttribute("level") CapabilityLevel level,
+			@ModelAttribute("paceOfChange") boolean paceOfChange,
+			@ModelAttribute("targetOperatingModel") String targetOperatingModel,
+			@ModelAttribute("resourceQuality") Integer resourceQuality,
+			@ModelAttribute("informationQuality") Integer informationQuality,
+			@ModelAttribute("applicationFit") Integer applicationFit,
 			UriComponentsBuilder builder) {
-		if (capability.getCapabilityName() == null ||
-				capability.getCapabilityName().isBlank() ||
-				capability.getCapabilityName().isEmpty()) {
+		if (environmentId == null || environmentId.equals(0) || environmentName == null || 
+				environmentName.isBlank() || environmentName.isEmpty() || statusId == null || 
+				statusId.equals(0) || validityPeriod == null || validityPeriod.equals(0) || 
+				parentCapabilityId == null || parentCapabilityId.equals(0) || 
+				capabilityName == null || capabilityName.isBlank() || capabilityName.isEmpty()) {
 			throw new InvalidInputException("Invalid input.");
 		}
-		if (!capService.existsByCapabilityName(capability.getCapabilityName())) {
+		if (!capService.existsByCapabilityName(capabilityName)) {
 			throw new DuplicateValueException("Capability name already exists.");
 		}
-
-		boolean flag = capService.save(capability);
+		
+		Capability capability = capService.save(environmentId, environmentName, statusId, 
+				validityPeriod, parentCapabilityId, capabilityName, level, paceOfChange, 
+				targetOperatingModel, resourceQuality, informationQuality, applicationFit);	
+		Integer capabilityId = capability.getCapabilityId();
+		boolean flag = (capabilityId == null) ? false : true;
 		if (flag == false) {
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		}
@@ -62,7 +83,7 @@ public class CapabilityController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(builder
 				.path("/capability/get/{id}")
-				.buildAndExpand(capability.getCapabilityId()).toUri());
+				.buildAndExpand(capabilityId).toUri());
 		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
 	}
 	
@@ -164,34 +185,46 @@ public class CapabilityController {
 	}
 	
 	@PutMapping(path = "/capability/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<Capability> updateCapability(@ModelAttribute Capability capability) {
-		if (capability.getCapabilityId() == null ||
-				capability.getCapabilityId().equals(0) ||
-				capability.getCapabilityName() == null ||
-				capability.getCapabilityName().isBlank() ||
-				capability.getCapabilityName().isEmpty()) {
+	public ResponseEntity<Capability> updateCapability(
+			@ModelAttribute("capabilityId") Integer capabilityId,
+			@ModelAttribute("environmentId") Integer environmentId,
+			@ModelAttribute("environmentName") String environmentName,
+			@ModelAttribute("statusId") Integer statusId,
+			@ModelAttribute("validityPeriod") Integer validityPeriod,
+			@ModelAttribute("parentCapabilityId") Integer parentCapabilityId,
+			@ModelAttribute("capabilityName") String capabilityName,
+			@ModelAttribute("level") CapabilityLevel level,
+			@ModelAttribute("paceOfChange") boolean paceOfChange,
+			@ModelAttribute("targetOperatingModel") String targetOperatingModel,
+			@ModelAttribute("resourceQuality") Integer resourceQuality,
+			@ModelAttribute("informationQuality") Integer informationQuality,
+			@ModelAttribute("applicationFit") Integer applicationFit) {
+		if (capabilityId == null || capabilityId.equals(0) || capabilityName == null ||
+				capabilityName.isBlank() || capabilityName.isEmpty()) {
 			throw new InvalidInputException("Invalid input.");
 		}
-		if (!capService.existsById(capability.getCapabilityId())) {
+		if (!capService.existsById(capabilityId)) {
 			throw new IndexDoesNotExistException("Can not update capability if it does not exist.");
 		}
-		if (!capService.existsByCapabilityName(capability.getCapabilityName())) {
+		if (!capService.existsByCapabilityName(capabilityName)) {
 			throw new DuplicateValueException("Capability name already exists.");
 		}
-		if (!envService.existsById(capability.getEnvironment().getEnvironmentId())) {
+		if (!envService.existsById(environmentId)) {
 			throw new IndexDoesNotExistException("Environment ID does not exists.");
 		}
-		if (envService.existsByEnvironmentName(capability.getEnvironment().getEnvironmentName())) {
+		if (envService.existsByEnvironmentName(environmentName)) {
 			throw new DuplicateValueException("Environment name does not exists.");
 		}
-		if (!statusService.existsById(capability.getStatus().getStatusId())) {
+		if (!statusService.existsById(statusId)) {
 			throw new IndexDoesNotExistException("Status ID does not exists.");
 		}
-		if (statusService.existsByValidityPeriod(capability.getStatus().getValidityPeriod())) {
+		if (statusService.existsByValidityPeriod(validityPeriod)) {
 			throw new DuplicateValueException("Validity period does not exists.");
 		}
 
-		capService.update(capability);
+		Capability capability = capService.update(capabilityId, environmentId, environmentName, statusId, 
+				validityPeriod, parentCapabilityId, capabilityName, level, paceOfChange, 
+				targetOperatingModel, resourceQuality, informationQuality, applicationFit);
 		return new ResponseEntity<Capability>(capability, HttpStatus.OK);
 	}
 	

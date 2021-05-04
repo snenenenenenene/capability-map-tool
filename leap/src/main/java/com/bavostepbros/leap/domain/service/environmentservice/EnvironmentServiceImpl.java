@@ -22,14 +22,10 @@ public class EnvironmentServiceImpl implements EnvironmentService {
     private EnvironmentDAL environmentDAL;
 
     @Override
-    public boolean save(Environment environment) {
-        try {
-            environmentDAL.save(environment);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+    public Environment save(String environmentName) {
+    	Environment environment = new Environment(environmentName);
+        Environment savedEnvironment = environmentDAL.save(environment);
+        return savedEnvironment;
     }
 
     @Override
@@ -52,8 +48,10 @@ public class EnvironmentServiceImpl implements EnvironmentService {
     }
 
     @Override
-    public void update(Environment environment) {
-        environmentDAL.save(environment);
+    public Environment update(Integer environmentId, String evironmentName) {
+    	Environment environment = new Environment(environmentId, evironmentName);
+    	Environment updatedEnvironment = environmentDAL.save(environment);
+        return updatedEnvironment;
     }
 
     @Override

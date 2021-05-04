@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -35,18 +36,23 @@ public class StrategyController {
 
     @PostMapping(path = "/strategy/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> addStrategy(
-            @ModelAttribute Strategy strategy,
+            @ModelAttribute("statusId") Integer statusId,
+            @ModelAttribute("validityPeriod") Integer validityPeriod,
+            @ModelAttribute("strategyName") String strategyName,
+            @ModelAttribute("timeFrameStart") LocalDate timeFrameStart,
+            @ModelAttribute("timeFrameEnd") LocalDate timeFrameEnd,
             UriComponentsBuilder builder) {
-    	if (strategy.getStrategyName() == null ||
-    			strategy.getStrategyName().isBlank() ||
-    			strategy.getStrategyName().isEmpty()) {
+    	if (statusId == null || statusId.equals(0) || validityPeriod == null || validityPeriod.equals(0) 
+    			|| strategyName == null || strategyName.isBlank() || strategyName.isEmpty()) {
     		throw new InvalidInputException("Invalid input.");
     	}
-    	if (!strategyService.existsByStrategyName(strategy.getStrategyName())) {
+    	if (!strategyService.existsByStrategyName(strategyName)) {
 			throw new DuplicateValueException("Strategy name already exists.");
 		}
     	
-        boolean flag = strategyService.save(strategy);
+        Strategy strategy = strategyService.save(statusId, validityPeriod, strategyName, timeFrameStart, timeFrameEnd);
+        Integer strategyId = strategy.getStrategyId();
+        boolean flag = (strategyId == null) ? false : true;
         if (flag == false) {
             return new ResponseEntity<Void>(HttpStatus.CONFLICT);
         }
@@ -54,7 +60,7 @@ public class StrategyController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder
                 .path("/strategy/{id}")
-                .buildAndExpand(strategy.getStrategyId()).toUri());
+                .buildAndExpand(strategyId).toUri());
         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
 
