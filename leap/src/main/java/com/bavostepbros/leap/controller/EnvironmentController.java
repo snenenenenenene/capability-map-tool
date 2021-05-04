@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -36,18 +35,18 @@ public class EnvironmentController {
 	
 	@PostMapping(path = "/environment/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Void> addEnvironment(
-			@ModelAttribute Environment environment, 
+			@ModelAttribute("environmentName") String environmentName, 
 			UriComponentsBuilder builder) {
-		if (environment.getEnvironmentName() == null || 
-				environment.getEnvironmentName().isBlank() || 
-				environment.getEnvironmentName().isEmpty()) {
+		if (environmentName == null || environmentName.isBlank() || environmentName.isEmpty()) {
 			throw new InvalidInputException("Invalid input.");
 		}
-		if (!envService.existsByEnvironmentName(environment.getEnvironmentName())) {
+		if (!envService.existsByEnvironmentName(environmentName)) {
 			throw new DuplicateValueException("Environment name already exists.");
 		}
-		
-		boolean flag = envService.save(environment);
+
+		Environment environment = envService.save(environmentName);
+		Integer environmentId = environment.getEnvironmentId();
+		boolean flag = (environmentId == null) ? false : true;
 		if (flag == false) {
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		}
@@ -55,7 +54,7 @@ public class EnvironmentController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(builder
 				.path("/environment/get/{id}")
-				.buildAndExpand(environment.getEnvironmentId()).toUri());
+				.buildAndExpand(environmentId).toUri());
 		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
 	}
 	
@@ -112,19 +111,21 @@ public class EnvironmentController {
 	}
 	
 	@PutMapping(path = "/environment/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<Environment> updateEnvironment(@RequestBody Environment environment) {
-		if (environment.getEnvironmentId() == null || environment.getEnvironmentId().equals(0) ||
-				environment.getEnvironmentName().isBlank() || environment.getEnvironmentName().isEmpty()) {
+	public ResponseEntity<Environment> updateEnvironment(
+			@ModelAttribute("environmentId") Integer environmentId,
+			@ModelAttribute("environmentName") String environmentName) {
+		if (environmentId == null || environmentId.equals(0) ||
+				environmentName.isBlank() || environmentName.isEmpty()) {
 			throw new InvalidInputException("Invalid input.");
 		}
-		if (!envService.existsById(environment.getEnvironmentId())) {
+		if (!envService.existsById(environmentId)) {
 			throw new IndexDoesNotExistException("Can not update environment if it does not exist.");
 		}
-		if (!envService.existsByEnvironmentName(environment.getEnvironmentName())) {
+		if (!envService.existsByEnvironmentName(environmentName)) {
 			throw new DuplicateValueException("Environment name already exists.");
 		}
 		
-		envService.update(environment);
+		Environment environment = envService.update(environmentId, environmentName);
 		return new ResponseEntity<Environment>(environment, HttpStatus.OK);
 	}
 	

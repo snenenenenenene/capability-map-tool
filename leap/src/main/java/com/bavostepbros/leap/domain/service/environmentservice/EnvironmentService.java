@@ -5,11 +5,11 @@ import java.util.List;
 import com.bavostepbros.leap.domain.model.Environment;
 
 public interface EnvironmentService {
-	boolean save(Environment environment);
+	Environment save(String environmentName);
 	Environment get(Integer id);
 	Environment getByEnvironmentName(String evironmentName);
 	List<Environment> getAll();
-	void update(Environment environment);
+	Environment update(Integer environmentId, String evironmentName);
 	void delete(Integer id);
 	boolean existsById(Integer id);
 	boolean existsByEnvironmentName(String environmentName);
