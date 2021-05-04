@@ -55,6 +55,16 @@ public class Strategy {
         this.timeFrameStart = timeFrameStart;
         this.timeFrameEnd = timeFrameEnd;
     }
+    
+    public Strategy(Integer strategyId, Status status, String strategyName, LocalDate timeFrameStart,
+			LocalDate timeFrameEnd) {
+		super();
+		this.strategyId = strategyId;
+		this.status = status;
+		this.strategyName = strategyName;
+		this.timeFrameStart = timeFrameStart;
+		this.timeFrameEnd = timeFrameEnd;
+	}
 
     @Override
     public String toString() {

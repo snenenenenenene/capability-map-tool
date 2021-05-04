@@ -45,8 +45,12 @@ public class StrategyServiceImpl implements StrategyService {
 	}
 
 	@Override
-	public void update(Strategy strategy) {
-		strategyDAL.save(strategy);
+	public Strategy update(Integer strategyId, Integer statusId, LocalDate validityPeriod, String strategyName,
+			LocalDate timeFrameStart, LocalDate timeFrameEnd) {
+		Status status = new Status(statusId, validityPeriod);
+		Strategy strategy = new Strategy(strategyId, status, strategyName, timeFrameStart, timeFrameEnd);
+		Strategy updatedStrategy = strategyDAL.save(strategy);
+		return updatedStrategy;
 	}
 
 	@Override

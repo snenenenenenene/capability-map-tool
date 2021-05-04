@@ -5,7 +5,6 @@ import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
 import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
 import com.bavostepbros.leap.domain.model.Strategy;
 import com.bavostepbros.leap.domain.service.StrategyService.StrategyService;
-import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
 import com.bavostepbros.leap.domain.service.statusservice.StatusService;
 
 import lombok.RequiredArgsConstructor;
@@ -28,9 +27,6 @@ public class StrategyController {
 
     @Autowired
     private StrategyService strategyService;
-
-    @Autowired
-    private EnvironmentService envService;
 
     @Autowired
     private StatusService statusService;
@@ -110,34 +106,32 @@ public class StrategyController {
 	}
 
     @PutMapping(path = "/strategy/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Strategy> updateStrategy(@ModelAttribute Strategy strategy) {
-    	if (strategy.getStrategyId() == null ||
-    			strategy.getStrategyId().equals(0) ||
-    			strategy.getStrategyName() == null ||
-    			strategy.getStrategyName().isBlank() ||
-    			strategy.getStrategyName().isEmpty()) {
+    public ResponseEntity<Strategy> updateStrategy(
+    		@ModelAttribute("strategyId") Integer strategyId,
+    		@ModelAttribute("statusId") Integer statusId,
+            @ModelAttribute("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  validityPeriod,
+            @ModelAttribute("strategyName") String strategyName,
+			@ModelAttribute("timeFrameStart") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameStart,
+			@ModelAttribute("timeFrameEnd") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameEnd) {
+    	if (strategyId == null || strategyId.equals(0) || strategyName == null || 
+    			strategyName.isBlank() || strategyName.isEmpty()) {
 			throw new InvalidInputException("Invalid input.");
 		}
-		if (!strategyService.existsById(strategy.getStrategyId())) {
-			throw new IndexDoesNotExistException("Can not update capability if it does not exist.");
+		if (!strategyService.existsById(strategyId)) {
+			throw new IndexDoesNotExistException("Can not update strategy if it does not exist.");
 		}
-		if (!strategyService.existsByStrategyName(strategy.getStrategyName())) {
-			throw new DuplicateValueException("Capability name already exists.");
+		if (!strategyService.existsByStrategyName(strategyName)) {
+			throw new DuplicateValueException("Strategy name already exists.");
 		}
-		if (!envService.existsById(strategy.getEnvironment().getEnvironmentId())) {
-			throw new IndexDoesNotExistException("Environment ID does not exists.");
-		}
-		if (envService.existsByEnvironmentName(strategy.getEnvironment().getEnvironmentName())) {
-			throw new DuplicateValueException("Environment name does not exists.");
-		}
-		if (!statusService.existsById(strategy.getStatus().getStatusId())) {
+		if (!statusService.existsById(statusId)) {
 			throw new IndexDoesNotExistException("Status ID does not exists.");
 		}
-		if (statusService.existsByValidityPeriod(strategy.getStatus().getValidityPeriod())) {
+		if (statusService.existsByValidityPeriod(validityPeriod)) {
 			throw new DuplicateValueException("Validity period does not exists.");
 		}
 
-    	strategyService.update(strategy);
+    	Strategy strategy = strategyService.update(strategyId, statusId, validityPeriod, 
+    			strategyName, timeFrameStart, timeFrameEnd);
         return new ResponseEntity<Strategy>(strategy, HttpStatus.OK);
     }
 
