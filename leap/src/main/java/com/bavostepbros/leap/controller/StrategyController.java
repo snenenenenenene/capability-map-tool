@@ -50,10 +50,6 @@ public class StrategyController {
     	if (!strategyService.existsByStrategyName(strategyName)) {
 			throw new DuplicateValueException("Strategy name already exists.");
 		}
-
-		System.out.println();
-		System.out.println("\n\n\nTIMEFRAMEEND:\n\n\n " + timeFrameEnd);
-		System.out.println("\n\n\nTIMEFRAMESTART:\n\n\n " + timeFrameStart);
     	
         Strategy strategy = strategyService.save(statusId, validityPeriod, strategyName, timeFrameStart, timeFrameEnd);
         Integer strategyId = strategy.getStrategyId();
@@ -63,12 +59,7 @@ public class StrategyController {
         }
 
         LocalDate ld = LocalDate.now();
-        System.out.println(ld);
-
-        System.out.println(strategy);
         strategy.setTimeFrameEnd(ld);
-        System.out.println(strategy.getTimeFrameEnd());
-        System.out.println(strategy);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder
