@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.transaction.Transactional;
 
+import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.Strategy;
 import com.bavostepbros.leap.persistence.StrategyDAL;
@@ -24,10 +25,10 @@ public class StrategyServiceImpl implements StrategyService {
 
 	@Override
 	public Strategy save(Integer statusId, LocalDate validityPeriod, String strategyName, LocalDate timeFrameStart,
-			LocalDate timeFrameEnd) {
+			LocalDate timeFrameEnd, Integer environmentId, String environmentName) {
 		Status status = new Status(statusId, validityPeriod);
-		Strategy strategy = new Strategy(status, strategyName, timeFrameStart, timeFrameEnd);
-
+		Environment environment = new Environment(environmentId, environmentName);
+		Strategy strategy = new Strategy(status, strategyName, timeFrameStart, timeFrameEnd, environment);
 		Strategy savedStrategy = strategyDAL.save(strategy);
 		return savedStrategy;
 	}
@@ -46,9 +47,10 @@ public class StrategyServiceImpl implements StrategyService {
 
 	@Override
 	public Strategy update(Integer strategyId, Integer statusId, LocalDate validityPeriod, String strategyName,
-			LocalDate timeFrameStart, LocalDate timeFrameEnd) {
+			LocalDate timeFrameStart, LocalDate timeFrameEnd, Integer environmentId, String environmentName) {
 		Status status = new Status(statusId, validityPeriod);
-		Strategy strategy = new Strategy(strategyId, status, strategyName, timeFrameStart, timeFrameEnd);
+		Environment environment = new Environment(environmentId, environmentName);
+		Strategy strategy = new Strategy(strategyId, status, strategyName, timeFrameStart, timeFrameEnd, environment);
 		Strategy updatedStrategy = strategyDAL.save(strategy);
 		return updatedStrategy;
 	}

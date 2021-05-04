@@ -38,6 +38,8 @@ public class StrategyController {
             @ModelAttribute("strategyName") String strategyName,
 			@ModelAttribute("timeFrameStart") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameStart,
 			@ModelAttribute("timeFrameEnd") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameEnd,
+			@ModelAttribute("environmentId") Integer environmentId,
+			@ModelAttribute("environmentName") String environmentName,
             UriComponentsBuilder builder) {
     	if (statusId == null || statusId.equals(0) || validityPeriod == null || strategyName == null 
     			|| strategyName.isBlank() || strategyName.isEmpty()) {
@@ -47,7 +49,8 @@ public class StrategyController {
 			throw new DuplicateValueException("Strategy name already exists.");
 		}
     	
-        Strategy strategy = strategyService.save(statusId, validityPeriod, strategyName, timeFrameStart, timeFrameEnd);
+        Strategy strategy = strategyService.save(statusId, validityPeriod, strategyName, timeFrameStart, 
+        		timeFrameEnd, environmentId, environmentName);
         Integer strategyId = strategy.getStrategyId();
         boolean flag = (strategyId == null) ? false : true;
         if (flag == false) {
@@ -112,7 +115,9 @@ public class StrategyController {
             @ModelAttribute("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  validityPeriod,
             @ModelAttribute("strategyName") String strategyName,
 			@ModelAttribute("timeFrameStart") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameStart,
-			@ModelAttribute("timeFrameEnd") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameEnd) {
+			@ModelAttribute("timeFrameEnd") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameEnd,
+			@ModelAttribute("environmentId") Integer environmentId,
+			@ModelAttribute("environmentName") String environmentName) {
     	if (strategyId == null || strategyId.equals(0) || strategyName == null || 
     			strategyName.isBlank() || strategyName.isEmpty()) {
 			throw new InvalidInputException("Invalid input.");
@@ -131,7 +136,7 @@ public class StrategyController {
 		}
 
     	Strategy strategy = strategyService.update(strategyId, statusId, validityPeriod, 
-    			strategyName, timeFrameStart, timeFrameEnd);
+    			strategyName, timeFrameStart, timeFrameEnd, environmentId, environmentName);
         return new ResponseEntity<Strategy>(strategy, HttpStatus.OK);
     }
 

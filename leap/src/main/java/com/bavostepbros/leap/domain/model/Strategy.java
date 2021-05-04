@@ -49,21 +49,24 @@ public class Strategy {
     @JoinColumn(name="STRATEGYID")
     private List<StrategyItem> items = new ArrayList<StrategyItem>();
 
-    public Strategy(Status status, String strategyName, LocalDate timeFrameStart, LocalDate timeFrameEnd) {
+    public Strategy(Status status, String strategyName, LocalDate timeFrameStart, 
+    		LocalDate timeFrameEnd, Environment environment) {
         this.status = status;
         this.strategyName = strategyName;
         this.timeFrameStart = timeFrameStart;
         this.timeFrameEnd = timeFrameEnd;
+        this.environment = environment;
     }
     
     public Strategy(Integer strategyId, Status status, String strategyName, LocalDate timeFrameStart,
-			LocalDate timeFrameEnd) {
+			LocalDate timeFrameEnd, Environment environment) {
 		super();
 		this.strategyId = strategyId;
 		this.status = status;
 		this.strategyName = strategyName;
 		this.timeFrameStart = timeFrameStart;
 		this.timeFrameEnd = timeFrameEnd;
+		this.environment = environment;
 	}
 
     @Override
