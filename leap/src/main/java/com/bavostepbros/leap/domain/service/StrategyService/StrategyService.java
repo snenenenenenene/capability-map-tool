@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface StrategyService {
-    Strategy save(Integer statusId, Integer validityPeriod, String strategyName, 
+    Strategy save(Integer statusId, LocalDate validityPeriod, String strategyName, 
     		LocalDate timeFrameStart, LocalDate timeFrameEnd);
     Strategy get(Integer id);
     List<Strategy> getAll();

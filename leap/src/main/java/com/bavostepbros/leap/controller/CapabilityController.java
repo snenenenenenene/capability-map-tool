@@ -1,7 +1,9 @@
 package com.bavostepbros.leap.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -39,17 +41,13 @@ public class CapabilityController {
 
 	@Autowired
 	private StatusService statusService;
-	
-	// Integer environmentId, String environmentName, Integer statusId, Integer validityPeriod,
-	// Integer parentCapabilityId, String capabilityName, CapabilityLevel level, boolean paceOfChange,
-	// String targetOperatingModel, Integer resourceQuality, Integer informationQuality, Integer applicationFit
 
 	@PostMapping(path = "/capability/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Void> addCapability(
 			@ModelAttribute("environmentId") Integer environmentId,
 			@ModelAttribute("environmentName") String environmentName,
 			@ModelAttribute("statusId") Integer statusId,
-			@ModelAttribute("validityPeriod") Integer validityPeriod,
+			@ModelAttribute("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityPeriod,
 			@ModelAttribute("parentCapabilityId") Integer parentCapabilityId,
 			@ModelAttribute("capabilityName") String capabilityName,
 			@ModelAttribute("level") CapabilityLevel level,
@@ -61,9 +59,9 @@ public class CapabilityController {
 			UriComponentsBuilder builder) {
 		if (environmentId == null || environmentId.equals(0) || environmentName == null || 
 				environmentName.isBlank() || environmentName.isEmpty() || statusId == null || 
-				statusId.equals(0) || validityPeriod == null || validityPeriod.equals(0) || 
-				parentCapabilityId == null || parentCapabilityId.equals(0) || 
-				capabilityName == null || capabilityName.isBlank() || capabilityName.isEmpty()) {
+				statusId.equals(0) || validityPeriod == null || parentCapabilityId == null || 
+				parentCapabilityId.equals(0) || capabilityName == null || 
+				capabilityName.isBlank() || capabilityName.isEmpty()) {
 			throw new InvalidInputException("Invalid input.");
 		}
 		if (!capService.existsByCapabilityName(capabilityName)) {
@@ -86,7 +84,7 @@ public class CapabilityController {
 		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/capability/get/{id}")
+	@GetMapping("/capability/{id}")
     public ResponseEntity<Capability> getCapabilityById(@PathVariable("id") Integer id) {
 		if (id == null || id.equals(0)) {
 			throw new InvalidInputException("Capability ID is not valid.");
@@ -114,7 +112,7 @@ public class CapabilityController {
 
 	@GetMapping(path = "/capability/getallbylevel/{level}")
 	public ResponseEntity<List<Capability>> getAllCapabilitiesByLevel(@PathVariable("level") CapabilityLevel level) {
-		if (level == null || level.equals(0)) {
+		if (level == null) {
 			throw new InvalidInputException("Level is not valid.");
 		}
 		// TODO Check if level is in bounds. (Enum class)
@@ -146,7 +144,7 @@ public class CapabilityController {
 		if (!envService.existsById(parentId)) {
 			throw new IndexDoesNotExistException("Parent ID does not exists.");
 		}
-		if (level == null || level.equals(0)) {
+		if (level == null) {
 			throw new InvalidInputException("Level is not valid.");
 		}
 		// TODO Check if level is in bounds. (Enum class)
@@ -189,7 +187,7 @@ public class CapabilityController {
 			@ModelAttribute("environmentId") Integer environmentId,
 			@ModelAttribute("environmentName") String environmentName,
 			@ModelAttribute("statusId") Integer statusId,
-			@ModelAttribute("validityPeriod") Integer validityPeriod,
+			@ModelAttribute("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityPeriod,
 			@ModelAttribute("parentCapabilityId") Integer parentCapabilityId,
 			@ModelAttribute("capabilityName") String capabilityName,
 			@ModelAttribute("level") CapabilityLevel level,

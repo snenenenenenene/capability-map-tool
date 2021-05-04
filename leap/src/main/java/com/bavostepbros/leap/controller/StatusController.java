@@ -1,8 +1,10 @@
 package com.bavostepbros.leap.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,9 +36,9 @@ public class StatusController {
 	
 	@PostMapping(path = "/status/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Void> addStatus(
-			@ModelAttribute("validityPeriod") Integer validityPeriod, 
+			@ModelAttribute("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityPeriod, 
 			UriComponentsBuilder builder) {
-		if (validityPeriod == null || validityPeriod.equals(0)) {
+		if (validityPeriod == null) {
 			throw new InvalidInputException("Invalid input.");
 		}
 		if (!statusService.existsByValidityPeriod(validityPeriod)) {
@@ -87,8 +89,9 @@ public class StatusController {
 	}
 	
 	@GetMapping(path = "/status/exists/validityperiod/{validityperiod}")
-	public ResponseEntity<Boolean> doesValidityPeriodExists(@PathVariable("validityperiod") Integer validityperiod) {
-		if (validityperiod == null || validityperiod.equals(0)) {
+	public ResponseEntity<Boolean> doesValidityPeriodExists(
+			@PathVariable("validityperiod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityperiod) {
+		if (validityperiod == null) {
 			throw new InvalidInputException("Validity Period is not valid.");
 		}
 		
@@ -99,9 +102,8 @@ public class StatusController {
 	@PutMapping(path = "/status/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Status> updateStatus(
 			@ModelAttribute("statusId") Integer statusId,
-			@ModelAttribute("validityPeriod") Integer validityPeriod) {
-		if (statusId == null || statusId.equals(0) ||
-				validityPeriod == null || validityPeriod.equals(0)) {
+			@ModelAttribute("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityPeriod) {
+		if (statusId == null || statusId.equals(0) || validityPeriod == null) {
 			throw new InvalidInputException("Invalid input.");
 		}
 		if (!statusService.existsById(statusId)) {

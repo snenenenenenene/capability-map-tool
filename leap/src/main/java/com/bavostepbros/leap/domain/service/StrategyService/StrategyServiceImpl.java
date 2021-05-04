@@ -23,7 +23,7 @@ public class StrategyServiceImpl implements StrategyService {
 	private StrategyDAL strategyDAL;
 
 	@Override
-	public Strategy save(Integer statusId, Integer validityPeriod, String strategyName, LocalDate timeFrameStart,
+	public Strategy save(Integer statusId, LocalDate validityPeriod, String strategyName, LocalDate timeFrameStart,
 			LocalDate timeFrameEnd) {
 		Status status = new Status(statusId, validityPeriod);
 		Strategy strategy = new Strategy(status, strategyName, timeFrameStart, timeFrameEnd);

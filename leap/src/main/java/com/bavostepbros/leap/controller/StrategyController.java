@@ -38,13 +38,13 @@ public class StrategyController {
     @PostMapping(path = "/strategy/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> addStrategy(
             @ModelAttribute("statusId") Integer statusId,
-            @ModelAttribute("validityPeriod") Integer validityPeriod,
+            @ModelAttribute("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  validityPeriod,
             @ModelAttribute("strategyName") String strategyName,
 			@ModelAttribute("timeFrameStart") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameStart,
 			@ModelAttribute("timeFrameEnd") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameEnd,
             UriComponentsBuilder builder) {
-    	if (statusId == null || statusId.equals(0) || validityPeriod == null || validityPeriod.equals(0)
-    			|| strategyName == null || strategyName.isBlank() || strategyName.isEmpty()) {
+    	if (statusId == null || statusId.equals(0) || validityPeriod == null || strategyName == null 
+    			|| strategyName.isBlank() || strategyName.isEmpty()) {
     		throw new InvalidInputException("Invalid input.");
     	}
     	if (!strategyService.existsByStrategyName(strategyName)) {

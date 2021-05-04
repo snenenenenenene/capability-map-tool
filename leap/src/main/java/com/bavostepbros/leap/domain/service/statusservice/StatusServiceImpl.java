@@ -1,5 +1,6 @@
 package com.bavostepbros.leap.domain.service.statusservice;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class StatusServiceImpl implements StatusService {
     private StatusDAL statusDAL;
 
     @Override
-    public Status save(Integer validityPeriod) {
+    public Status save(LocalDate validityPeriod) {
         Status status = new Status(validityPeriod);
         Status savedStatus = statusDAL.save(status);
         return savedStatus;
@@ -42,7 +43,7 @@ public class StatusServiceImpl implements StatusService {
     }
 
     @Override
-    public Status update(Integer statusId, Integer validityPeriod) {
+    public Status update(Integer statusId, LocalDate validityPeriod) {
     	Status status = new Status(statusId, validityPeriod);
         Status updatedStatus = statusDAL.save(status);
         return updatedStatus;
@@ -60,7 +61,7 @@ public class StatusServiceImpl implements StatusService {
     }
 
     @Override
-    public boolean existsByValidityPeriod(Integer validityPeriod) {
+    public boolean existsByValidityPeriod(LocalDate validityPeriod) {
         boolean result = statusDAL.findByValidityPeriod(validityPeriod).isEmpty();
         return result;
     }

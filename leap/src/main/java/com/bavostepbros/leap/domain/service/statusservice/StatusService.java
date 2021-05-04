@@ -1,15 +1,16 @@
 package com.bavostepbros.leap.domain.service.statusservice;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.bavostepbros.leap.domain.model.Status;
 
 public interface StatusService {
-	Status save(Integer validityPeriod);
+	Status save(LocalDate validityPeriod);
 	Status get(Integer id);
 	List<Status> getAll();
-	Status update(Integer statusId, Integer validityPeriod);
+	Status update(Integer statusId, LocalDate validityPeriod);
 	void delete(Integer id);
 	boolean existsById(Integer id);
-	boolean existsByValidityPeriod(Integer validityPeriod);
+	boolean existsByValidityPeriod(LocalDate validityPeriod);
 }
