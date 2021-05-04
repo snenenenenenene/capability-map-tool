@@ -10,6 +10,7 @@ import com.bavostepbros.leap.domain.service.statusservice.StatusService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,10 +28,10 @@ public class StrategyController {
 
     @Autowired
     private StrategyService strategyService;
-    
+
     @Autowired
     private EnvironmentService envService;
-    
+
     @Autowired
     private StatusService statusService;
 
@@ -39,16 +40,20 @@ public class StrategyController {
             @ModelAttribute("statusId") Integer statusId,
             @ModelAttribute("validityPeriod") Integer validityPeriod,
             @ModelAttribute("strategyName") String strategyName,
-            @ModelAttribute("timeFrameStart") LocalDate timeFrameStart,
-            @ModelAttribute("timeFrameEnd") LocalDate timeFrameEnd,
+			@ModelAttribute("timeFrameStart") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameStart,
+			@ModelAttribute("timeFrameEnd") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameEnd,
             UriComponentsBuilder builder) {
-    	if (statusId == null || statusId.equals(0) || validityPeriod == null || validityPeriod.equals(0) 
+    	if (statusId == null || statusId.equals(0) || validityPeriod == null || validityPeriod.equals(0)
     			|| strategyName == null || strategyName.isBlank() || strategyName.isEmpty()) {
     		throw new InvalidInputException("Invalid input.");
     	}
     	if (!strategyService.existsByStrategyName(strategyName)) {
 			throw new DuplicateValueException("Strategy name already exists.");
 		}
+
+		System.out.println();
+		System.out.println("\n\n\nTIMEFRAMEEND:\n\n\n " + timeFrameEnd);
+		System.out.println("\n\n\nTIMEFRAMESTART:\n\n\n " + timeFrameStart);
     	
         Strategy strategy = strategyService.save(statusId, validityPeriod, strategyName, timeFrameStart, timeFrameEnd);
         Integer strategyId = strategy.getStrategyId();
@@ -56,6 +61,14 @@ public class StrategyController {
         if (flag == false) {
             return new ResponseEntity<Void>(HttpStatus.CONFLICT);
         }
+
+        LocalDate ld = LocalDate.now();
+        System.out.println(ld);
+
+        System.out.println(strategy);
+        strategy.setTimeFrameEnd(ld);
+        System.out.println(strategy.getTimeFrameEnd());
+        System.out.println(strategy);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder
@@ -72,7 +85,7 @@ public class StrategyController {
 		if (!strategyService.existsById(id)) {
 			throw new IndexDoesNotExistException("Strategy ID does not exists.");
 		}
-    	
+
     	Strategy strategy = strategyService.get(id);
         return  new ResponseEntity<Strategy>(strategy, HttpStatus.OK);
     }
@@ -82,7 +95,7 @@ public class StrategyController {
         List<Strategy> strategies = strategyService.getAll();
         return strategies;
     }
-    
+
     @GetMapping(path = "/strategy/exists/id/{id}")
 	public ResponseEntity<Boolean> doesStrategyExistsById(@PathVariable("id") Integer id) {
 		if (id == null || id.equals(0)) {
@@ -92,7 +105,7 @@ public class StrategyController {
 		boolean result = strategyService.existsById(id);
 		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 	}
-    
+
     @GetMapping(path = "/strategy/exists/strategyname/{strategyname}")
 	public ResponseEntity<Boolean> doesStrategyNameExists(@PathVariable("strategyname") String strategyName) {
 		if (strategyName == null ||
@@ -132,7 +145,7 @@ public class StrategyController {
 		if (statusService.existsByValidityPeriod(strategy.getStatus().getValidityPeriod())) {
 			throw new DuplicateValueException("Validity period does not exists.");
 		}
-		
+
     	strategyService.update(strategy);
         return new ResponseEntity<Strategy>(strategy, HttpStatus.OK);
     }
@@ -145,7 +158,7 @@ public class StrategyController {
 		if (!strategyService.existsById(id)) {
 			throw new IndexDoesNotExistException("Strategy ID does not exists.");
 		}
-		
+
     	strategyService.delete(id);
         return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }

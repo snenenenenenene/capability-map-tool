@@ -86,7 +86,7 @@ public class CapabilityController {
 		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
 	}
 	
-	@GetMapping(path = "/capability/{id}")
+	@GetMapping("/capability/get/{id}")
     public ResponseEntity<Capability> getCapabilityById(@PathVariable("id") Integer id) {
 		if (id == null || id.equals(0)) {
 			throw new InvalidInputException("Capability ID is not valid.");
