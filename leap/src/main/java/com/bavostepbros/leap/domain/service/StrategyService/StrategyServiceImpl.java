@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.Strategy;
+import com.bavostepbros.leap.persistence.EnvironmentDAL;
 import com.bavostepbros.leap.persistence.StrategyDAL;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,9 @@ public class StrategyServiceImpl implements StrategyService {
 
 	@Autowired
 	private StrategyDAL strategyDAL;
+	
+	@Autowired
+	private EnvironmentDAL environmentDAL;
 
 	@Override
 	public Strategy save(Integer statusId, LocalDate validityPeriod, String strategyName, LocalDate timeFrameStart,
@@ -70,6 +74,13 @@ public class StrategyServiceImpl implements StrategyService {
 	public boolean existsByStrategyName(String strategyName) {
 		boolean result = strategyDAL.findByStrategyName(strategyName).isEmpty();
 		return result;
+	}
+
+	@Override
+	public List<Strategy> getStrategiesByEnvironment(Integer environmentId) {
+		Environment environment = environmentDAL.findById(environmentId).get();
+		List<Strategy> strategies = strategyDAL.findByEnvironment(environment);
+		return strategies;
 	}
 
 }

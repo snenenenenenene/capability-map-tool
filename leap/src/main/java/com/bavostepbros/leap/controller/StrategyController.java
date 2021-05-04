@@ -5,6 +5,7 @@ import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
 import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
 import com.bavostepbros.leap.domain.model.Strategy;
 import com.bavostepbros.leap.domain.service.StrategyService.StrategyService;
+import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
 import com.bavostepbros.leap.domain.service.statusservice.StatusService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,9 @@ public class StrategyController {
 
     @Autowired
     private StatusService statusService;
+    
+    @Autowired
+	private EnvironmentService envService;
 
     @PostMapping(path = "/strategy/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> addStrategy(
@@ -79,6 +83,19 @@ public class StrategyController {
     	Strategy strategy = strategyService.get(id);
         return  new ResponseEntity<Strategy>(strategy, HttpStatus.OK);
     }
+    
+    @GetMapping(path = "/strategy/getallbyenvironment/{id}")
+	public ResponseEntity<List<Strategy>> getAllCapabilitiesByEnvironment(@PathVariable("id") Integer id) {
+		if (id == null || id.equals(0)) {
+			throw new InvalidInputException("Environment ID is not valid.");
+		}
+		if (!envService.existsById(id)) {
+			throw new IndexDoesNotExistException("Environment ID does not exists.");
+		}
+
+		List<Strategy> strategies = strategyService.getStrategiesByEnvironment(id);
+		return new ResponseEntity<List<Strategy>>(strategies, HttpStatus.OK);
+	}
 
     @GetMapping(path = "/strategy/all")
     public List<Strategy> getAllStrategies() {

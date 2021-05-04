@@ -21,4 +21,6 @@ public interface StrategyService {
 	boolean existsById(Integer id);
 
 	boolean existsByStrategyName(String strategyName);
+	
+	List<Strategy> getStrategiesByEnvironment(Integer environmentId);
 }
