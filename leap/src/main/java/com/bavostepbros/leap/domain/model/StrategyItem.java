@@ -2,6 +2,7 @@ package com.bavostepbros.leap.domain.model;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -22,14 +23,17 @@ public class StrategyItem {
 
     @Id
     @GeneratedValue
+    @Column(name = "ITEMID")
     private Integer itemId;
 
     @ManyToOne
     private Strategy strategy;
 
+    @Column(name = "STRATEGYITEMNAME")
     private String strategyItemName;
 
     @Type(type="text")
+    @Column(name = "DESCRIPTION")
     private String description;
 
     @OneToMany
