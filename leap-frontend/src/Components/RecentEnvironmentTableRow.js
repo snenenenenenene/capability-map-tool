@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import deleteImg from '../img/delete.jpg'
-import { Redirect } from 'react-router-dom';
 
 export default class RecentEnvironmentTableRow extends Component {
 
@@ -22,11 +21,12 @@ export default class RecentEnvironmentTableRow extends Component {
                     { this.props.obj.environmentId }
                 </td>
 
-        <Link to={ '/environment/' + this.props.obj.environmentName }>
                 <td>
+                    <Link to={ '/environment/' + this.props.obj.environmentName }>
+
                     { this.props.obj.environmentName }
-                </td>
         </Link>
+                </td>
                 <td>
                     <img src={ deleteImg } onClick={() => {this.deleteEnvironment(this.props.obj.environmentId)}} alt='delete' width='15' height='18'/>
                 </td>

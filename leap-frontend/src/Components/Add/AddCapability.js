@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import RecentEnvironmentTableRow from "../RecentEnvironmentTableRow";
 
 export default class AddCapability extends Component {
     constructor(props) {
@@ -26,27 +25,27 @@ export default class AddCapability extends Component {
 
     handleSubmit = async e => {
         e.preventDefault();
-        console.log(this.state.environmentName)
-        const post_response = await fetch(`http://localhost:8080/capability/add`, { method: 'POST',
-            body: JSON.stringify({
-                environment: {
-                    environmentName: this.state.environmentName,
-                    environmentId: this.state.environmentId
-                },
-                capabilityName: this.state.capabilityName,
-                // parentCapabilityId: this.state.parentCapability,
-                // paceOfChange: this.state.paceOfChange,
-                // targetOperatingModel: this.state.TOM,
-                // informationQuality: this.state.informationQuality,
-                // applicationFit: this.state.applicationFit,
-                // resourceQuality: this.state.resourcesQuality,
-                // // status: this.state.expirationDate,
-                // level: this.state.level
-            }) });
-        if (!post_response.ok) {
-            console.log('Failed to post capability');
-        }
-        console.log(`Capability posted with name: ${this.state.capabilityName}`);
+        const formData = new FormData()
+        formData.append('environmentName', this.state.environmentName)
+        formData.append('environmentId', this.state.environmentId)
+        formData.append('capabilityName', this.state.capabilityName)
+        formData.append('parentCapabilityId', this.state.parentCapability)
+        formData.append('paceOfChange', this.state.paceOfChange)
+        formData.append('targetOperatingModel', this.state.TOM)
+        formData.append('informationQuality', this.state.informationQuality)
+        formData.append('applicationFit', this.state.applicationFit)
+        formData.append('resourceQuality', this.state.resourcesQuality)
+        // formData.append('status', this.state.expirationDate)
+        formData.append('level', this.state.level)
+        await fetch(`http://localhost:8080/capability/add`,{
+            method: "POST",
+            body: formData
+        }).then(function (res) {
+            if (res.ok) {
+                console.log("Capability added");
+            } else if (res.status === 401) {
+                console.log("Oops,, Something went wrong");
+            }})
     }
 
     componentDidMount() {
@@ -62,12 +61,12 @@ export default class AddCapability extends Component {
             <div>
                 <nav aria-label="breadcrumb">
                     <ol className="breadcrumb">
-                        <li className="breadcrumb-item"><Link to={`/`}><a>Home</a></Link></li>
-                        <li className="breadcrumb-item"><Link to={`/environment/${environmentName}`}><a>{environmentName}</a></Link></li>
+                        <li className="breadcrumb-item"><Link to={`/`}>Home</Link></li>
+                        <li className="breadcrumb-item"><Link to={`/environment/${environmentName}`}>{environmentName}</Link></li>
                         <li className="breadcrumb-item active" aria-current="page">Add Capability</li>
                     </ol>
                 </nav>
-            <div class="jumbotron">
+            <div className="jumbotron">
                 <h3>Add Capability</h3>
                 <form onSubmit={this.handleSubmit}>
                     <div className="row">
@@ -140,7 +139,7 @@ export default class AddCapability extends Component {
                                 <div className="form-group col-md-6">
                                     <label htmlFor="applicationFit">Application Fit</label>
                                     <select className="form-control" placeholder="Add Application Fit" id="applicationFit"
-                                            ref={input => (this.state.applicationFit = input)}>
+                                            value={this.state.applicationFit} onChange={this.handleInputChange}>
                                         <option>1</option>
                                         <option>2</option>
                                         <option>3</option>
@@ -151,7 +150,7 @@ export default class AddCapability extends Component {
                             </div>
 
                             <div className="form-group">
-                                <label for="resourcesQuality">Resources Quality</label>
+                                <label htmlFor="resourcesQuality">Resources Quality</label>
                                 <select id="resourcesQuality" name="resourcesQuality" className="form-control" placeholder="Resources Quality"
                                         value={this.state.resourcesQuality} onChange={this.handleInputChange}>
                                     <option>1</option>

@@ -26,8 +26,8 @@ export default class Home extends Component
             <div>
             <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">
-                    <li className="breadcrumb-item"><Link to={`/home`}><a>Home</a></Link></li>
-                    <li className="breadcrumb-item"><Link to={`/users`}><a>User List</a></Link></li>
+                    <li className="breadcrumb-item"><Link to={`/home`}>Home</Link></li>
+                    <li className="breadcrumb-item"><Link to={`/users`}>User List</Link></li>
                 </ol>
             </nav>
             <div className="jumbotron">

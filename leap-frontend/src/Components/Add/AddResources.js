@@ -1,12 +1,4 @@
 import React, {Component} from 'react';
-import { Link } from 'react-router-dom';
-import  { Redirect } from 'react-router-dom'
-import RecentEnvironment from '../RecentEnvironments'
-import axios from "axios"
-import { Container, Col, Form, FormGroup, Label, Input } from 'reactstrap'
-import RecentEnvironmentTableRow from "../RecentEnvironmentTableRow";
-import styles from "../../App.css"
-
 
 export default class AddResources extends Component
 {

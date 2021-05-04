@@ -33,13 +33,6 @@ class App extends Component {
       let user = JSON.parse(localStorage.getItem('user'))
       this.setState({ authenticated: user.authenticated })
     }
-  this.fetchEnvironments()
-  }
-
-  async fetchEnvironments() {
-    const response = await fetch(`http://localhost:8080/environment/all}`, { method: 'GET'});
-    const data = await response.json();
-    console.log(data);
   }
 
   logout() {
@@ -59,25 +52,20 @@ class App extends Component {
                   <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
-                  <Link to={ '/home' } className='navbar-brand'><img src={ LeapImg } width="80" height="22"/></Link>
+                  <Link to={ '/home' } className='navbar-brand'><img alt="leap" src={ LeapImg } width="80" height="22"/></Link>
                   <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
                     <li className="nav-item">
                       <Link to={ '/add' } className='nav-link'>Add</Link>
                     </li>
-                    <li className="nav-item">
-                      <a className="nav-link disabled" href="#">Disabled</a>
-                    </li>
                   </ul>
                   <form className="form-inline my-2 my-lg-0">
-
                     <Link to={ '' } onClick={ this.logout } style={{ color: '#fff'}} className='nav-link'>Logout</Link>
                   </form>
                 </div>
               </nav>
           <div className = 'container'>
-              <br/><br/>
               <Switch>
-                <Route exact path='/home'><Home/></Route>
+                <Route exact path='/home' component={Home}/>
                 <Route exact path='/environment/:name' component={Environment}/>
                 <Route exact path='/environment/:name/capability/add' component={AddCapability}/>
                 <Route exact path='/environment/:name/capability/:id/edit' component={EditCapability}/>
@@ -94,9 +82,8 @@ class App extends Component {
                 <Route exact path='/login' component={ Signup }/>
                 <Route exact path='/recent' component={ RecentEnvironments }/>
                 <Route exact path='/users' component={ UserList }/>
-                <Route path='/'><Home/></Route>
+                <Route path='/' component={Home}/>
               </Switch>
-
           </div>
             </BrowserRouter>
           </div>

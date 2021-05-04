@@ -47,8 +47,8 @@ export default class Environment extends Component
             <div>
                 <nav aria-label="breadcrumb">
                     <ol className="breadcrumb">
-                        <li className="breadcrumb-item"><Link to={`/`}><a>Home</a></Link></li>
-                        <li className="breadcrumb-item"><Link to={`/environment/${this.state.environmentName}`}><a>{this.state.environmentName}</a></Link></li>
+                        <li className="breadcrumb-item"><Link to={`/`}>Home</Link></li>
+                        <li className="breadcrumb-item"><Link to={`/environment/${this.state.environmentName}`}>{this.state.environmentName}</Link></li>
                     </ol>
                 </nav>
                 <div className="container jumbotron">
