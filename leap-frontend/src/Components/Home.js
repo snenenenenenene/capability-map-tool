@@ -11,12 +11,10 @@ export default class Home extends Component
     }
 
     async componentDidMount() {
-        // const response = await fetch(`http://localhost:8080/environment/all`);
-        // const data = await response.json();
-        // console.log(data);
-        // console.log(response)
-        // this.setState({environments: data});
-        // console.log(this.state.environments);
+        const response = await fetch(`http://localhost:8080/environment/all`);
+        const data = await response.json();
+        this.setState({environments: data});
+        console.log(this.state.environments);
     }
 
     render() {

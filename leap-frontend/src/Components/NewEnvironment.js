@@ -18,24 +18,19 @@ export default class NewEnvironment extends Component
 
      handleSubmit = async e => {
         e.preventDefault();
-        console.log("submit")
-         console.log(this.state.environmentName)
-        const post_response = await fetch(`http://localhost:8080/environment/add`,
-            {
-            method: 'POST',
-                headers: {
-                    'Accept': 'multipart/form-data',
-                    'Content-Type': 'multipart/form-data'
-                },
-            body: JSON.stringify({environmentName: 'this.state.environmentName'}) });
-        console.log(post_response)
-        if (!post_response.ok) {
-            console.log('Failed to upload via presigned POST');
-        }
-        console.log(`File uploaded via presigned POST with key: ${this.state.environmentName}`);
+         const formData = new FormData()
+         formData.append('environmentName', this.state.environmentName)
+        await fetch(`http://localhost:8080/environment/add`,{
+             method: "POST",
+             body: formData
+     }).then(function (res) {
+    if (res.ok) {
+        console.log("Environment added");
+    } else if (res.status === 401) {
+        console.log("Oops,, Something went wrong");
+    }})
         this.props.history.push(`environment/${this.state.environmentName}`);
     }
-
 
     handleInputChange(event) {
         this.setState({ [event.target.name]: event.target.value })
