@@ -7,13 +7,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -25,7 +25,7 @@ import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentServic
 
 import lombok.RequiredArgsConstructor;
 
-@CrossOrigin(origins = "*")
+// @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
 public class EnvironmentController {
@@ -33,10 +33,11 @@ public class EnvironmentController {
 	@Autowired
 	private EnvironmentService envService;
 	
-	@PostMapping(path = "/environment/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(path = "/environment/add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<Void> addEnvironment(
-			@ModelAttribute("environmentName") String environmentName, 
+			@RequestParam("environmentName") String environmentName, 
 			UriComponentsBuilder builder) {
+		System.out.println(environmentName);
 		if (environmentName == null || environmentName.isBlank() || environmentName.isEmpty()) {
 			throw new InvalidInputException("Invalid input.");
 		}
