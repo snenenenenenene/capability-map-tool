@@ -16,9 +16,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
-import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
-import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
 import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
 
@@ -36,12 +33,6 @@ public class EnvironmentController {
 	public ResponseEntity<Void> addEnvironment(
 			@ModelAttribute("environmentName") String environmentName, 
 			UriComponentsBuilder builder) {
-		if (environmentName == null || environmentName.isBlank() || environmentName.isEmpty()) {
-			throw new InvalidInputException("Invalid input.");
-		}
-		if (!envService.existsByEnvironmentName(environmentName)) {
-			throw new DuplicateValueException("Environment name already exists.");
-		}
 
 		Environment environment = envService.save(environmentName);
 		Integer environmentId = environment.getEnvironmentId();
@@ -58,47 +49,25 @@ public class EnvironmentController {
 	}
 	
 	@GetMapping(path = "/environment/{id}")
-    public ResponseEntity<Environment> getEnvironmentById(@PathVariable("id") Integer id) {
-		if (id == null || id.equals(0)) {
-			throw new InvalidInputException("Environment ID is not valid.");
-		}
-		if (!envService.existsById(id)) {
-			throw new IndexDoesNotExistException("Environment ID does not exists.");
-		}
-		
+    public ResponseEntity<Environment> getEnvironmentById(@PathVariable("id") Integer id) {		
 		Environment environment = envService.get(id);
         return  new ResponseEntity<Environment>(environment, HttpStatus.OK);
     }
 	
 	@GetMapping(path = "/environment/environmentname/{environmentname}")
     public ResponseEntity<Environment> getEnvironmentByEnvironmentName(@PathVariable("environmentname") String environmentName) {
-		if (environmentName == null || environmentName.isBlank() || environmentName.isEmpty()) {
-			throw new InvalidInputException("Environment name is not valid.");
-		}
-		if (envService.existsByEnvironmentName(environmentName)) {
-			throw new IndexDoesNotExistException("Environment name does not exists.");
-		}
-		
 		Environment environment = envService.getByEnvironmentName(environmentName);
         return  new ResponseEntity<Environment>(environment, HttpStatus.OK);
     }
 	
 	@GetMapping(path = "/environment/exists/id/{id}")
 	public ResponseEntity<Boolean> doesEnvironmentExistsById(@ModelAttribute("id") Integer id) {
-		if (id == null || id.equals(0)) {
-			throw new InvalidInputException("Environment ID is not valid.");
-		}
-		
 		boolean result = envService.existsById(id);
 		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 	}
 	
 	@GetMapping(path = "/environment/exists/environmentname/{environmentname}")
-	public ResponseEntity<Boolean> doesEnvironmentNameExists(@PathVariable("environmentname") String environmentName) {
-		if (environmentName.isBlank() || environmentName.isEmpty()) {
-			throw new InvalidInputException("Environment Name is not valid.");
-		}
-		
+	public ResponseEntity<Boolean> doesEnvironmentNameExists(@PathVariable("environmentname") String environmentName) {		
 		boolean result = (!envService.existsByEnvironmentName(environmentName));
 		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 	}
@@ -112,31 +81,13 @@ public class EnvironmentController {
 	@PutMapping(path = "/environment/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Environment> updateEnvironment(
 			@ModelAttribute("environmentId") Integer environmentId,
-			@ModelAttribute("environmentName") String environmentName) {
-		if (environmentId == null || environmentId.equals(0) ||
-				environmentName.isBlank() || environmentName.isEmpty()) {
-			throw new InvalidInputException("Invalid input.");
-		}
-		if (!envService.existsById(environmentId)) {
-			throw new IndexDoesNotExistException("Can not update environment if it does not exist.");
-		}
-		if (!envService.existsByEnvironmentName(environmentName)) {
-			throw new DuplicateValueException("Environment name already exists.");
-		}
-		
+			@ModelAttribute("environmentName") String environmentName) {		
 		Environment environment = envService.update(environmentId, environmentName);
 		return new ResponseEntity<Environment>(environment, HttpStatus.OK);
 	}
 	
 	@DeleteMapping(path = "/environment/delete/{id}")
-	public ResponseEntity<Void> deleteEnvironment(@PathVariable("id") Integer id) {
-		if (id == null || id.equals(0)) {
-			throw new InvalidInputException("Environment ID is not valid.");
-		}
-		if (!envService.existsById(id)) {
-			throw new IndexDoesNotExistException("Environment ID does not exists.");
-		}
-		
+	public ResponseEntity<Void> deleteEnvironment(@PathVariable("id") Integer id) {		
 		envService.delete(id);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
