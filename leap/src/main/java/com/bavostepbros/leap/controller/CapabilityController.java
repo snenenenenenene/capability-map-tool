@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -31,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 // @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/capability/")
 public class CapabilityController {
 	
 	@Autowired
@@ -42,7 +44,7 @@ public class CapabilityController {
 	@Autowired
 	private StatusService statusService;
 
-	@PostMapping(path = "/capability/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(path = "add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Void> addCapability(
 			@ModelAttribute("environmentId") Integer environmentId,
 			@ModelAttribute("environmentName") String environmentName,
@@ -84,7 +86,7 @@ public class CapabilityController {
 		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/capability/{id}")
+	@GetMapping("{id}")
     public ResponseEntity<Capability> getCapabilityById(@PathVariable("id") Integer id) {
 		if (id == null || id.equals(0)) {
 			throw new InvalidInputException("Capability ID is not valid.");
@@ -97,7 +99,7 @@ public class CapabilityController {
         return  new ResponseEntity<Capability>(capability, HttpStatus.OK);
     }
 	
-	@GetMapping(path = "/capability/getallbyenvironment/{id}")
+	@GetMapping(path = "getallbyenvironment/{id}")
 	public ResponseEntity<List<Capability>> getAllCapabilitiesByEnvironment(@PathVariable("id") Integer id) {
 		if (id == null || id.equals(0)) {
 			throw new InvalidInputException("Environment ID is not valid.");
@@ -110,7 +112,7 @@ public class CapabilityController {
 		return new ResponseEntity<List<Capability>>(capabilities, HttpStatus.OK);
 	}
 
-	@GetMapping(path = "/capability/getallbylevel/{level}")
+	@GetMapping(path = "getallbylevel/{level}")
 	public ResponseEntity<List<Capability>> getAllCapabilitiesByLevel(@PathVariable("level") CapabilityLevel level) {
 		if (level == null) {
 			throw new InvalidInputException("Level is not valid.");
@@ -121,7 +123,7 @@ public class CapabilityController {
 		return new ResponseEntity<List<Capability>>(capabilities, HttpStatus.OK);
 	}
 
-	@GetMapping(path = "/capability/getallbyparentcapabilityid/{parentcapabilityid}")
+	@GetMapping(path = "getallbyparentcapabilityid/{parentcapabilityid}")
 	public ResponseEntity<List<Capability>> getAllCapabilitiesByParentCapabilityId(@PathVariable("parentcapabilityid") Integer parentId) {
 		if (parentId == null || parentId.equals(0)) {
 			throw new InvalidInputException("Parent ID is not valid.");
@@ -134,7 +136,7 @@ public class CapabilityController {
 		return new ResponseEntity<List<Capability>>(capabilities, HttpStatus.OK);
 	}
 
-	@GetMapping(path = "/capability/getallbyparentidandlevel/{parentid}/{level}")
+	@GetMapping(path = "getallbyparentidandlevel/{parentid}/{level}")
 	public ResponseEntity<List<Capability>> getAllCapabilitiesByParentIdAndLevel(
 			@PathVariable("parentid") Integer parentId,
 			@PathVariable("level") CapabilityLevel level) {
@@ -153,13 +155,13 @@ public class CapabilityController {
 		return new ResponseEntity<List<Capability>>(capabilities, HttpStatus.OK);
 	}
 
-	@GetMapping(path = "/capability/all")
+	@GetMapping(path = "all")
 	public ResponseEntity<List<Capability>> getAllCapabilities() {
 		List<Capability> capabilities = capService.getAll();
 		return new ResponseEntity<List<Capability>>(capabilities, HttpStatus.OK);
 	}
 
-	@GetMapping(path = "/capability/exists/id/{id}")
+	@GetMapping(path = "exists/id/{id}")
 	public ResponseEntity<Boolean> doesCapabilityExistsById(@PathVariable("id") Integer id) {
 		if (id == null || id.equals(0)) {
 			throw new InvalidInputException("Capability ID is not valid.");
@@ -169,7 +171,7 @@ public class CapabilityController {
 		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 	}
 
-	@GetMapping(path = "/capability/exists/capabilityname/{capabilityname}")
+	@GetMapping(path = "exists/capabilityname/{capabilityname}")
 	public ResponseEntity<Boolean> doesCapabilityNameExists(@PathVariable("capabilityname") String capabilityName) {
 		if (capabilityName == null ||
 				capabilityName.isBlank() ||
@@ -181,7 +183,7 @@ public class CapabilityController {
 		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 	}
 	
-	@PutMapping(path = "/capability/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PutMapping(path = "update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Capability> updateCapability(
 			@ModelAttribute("capabilityId") Integer capabilityId,
 			@ModelAttribute("environmentId") Integer environmentId,
@@ -225,7 +227,7 @@ public class CapabilityController {
 		return new ResponseEntity<Capability>(capability, HttpStatus.OK);
 	}
 	
-	@DeleteMapping(path = "/capability/delete/{id}")
+	@DeleteMapping(path = "delete/{id}")
 	public ResponseEntity<Void> deleteCapability(@PathVariable("id") Integer id) {
 		if (id == null || id.equals(0)) {
 			throw new InvalidInputException("Capability ID is not valid.");

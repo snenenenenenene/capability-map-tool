@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -24,12 +25,13 @@ import lombok.RequiredArgsConstructor;
 // @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/environment/")
 public class EnvironmentController {
 	
 	@Autowired
 	private EnvironmentService envService;
 	
-	@PostMapping(path = "/environment/add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	@PostMapping(path = "add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<Void> addEnvironment(
 			@ModelAttribute("environmentName") String environmentName, 
 			UriComponentsBuilder builder) {
@@ -48,37 +50,37 @@ public class EnvironmentController {
 		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
 	}
 	
-	@GetMapping(path = "/environment/{id}")
+	@GetMapping(path = "{id}")
     public ResponseEntity<Environment> getEnvironmentById(@PathVariable("id") Integer id) {		
 		Environment environment = envService.get(id);
         return  new ResponseEntity<Environment>(environment, HttpStatus.OK);
     }
 	
-	@GetMapping(path = "/environment/environmentname/{environmentname}")
+	@GetMapping(path = "environmentname/{environmentname}")
     public ResponseEntity<Environment> getEnvironmentByEnvironmentName(@PathVariable("environmentname") String environmentName) {
 		Environment environment = envService.getByEnvironmentName(environmentName);
         return  new ResponseEntity<Environment>(environment, HttpStatus.OK);
     }
 	
-	@GetMapping(path = "/environment/exists/id/{id}")
+	@GetMapping(path = "exists/id/{id}")
 	public ResponseEntity<Boolean> doesEnvironmentExistsById(@ModelAttribute("id") Integer id) {
 		boolean result = envService.existsById(id);
 		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 	}
 	
-	@GetMapping(path = "/environment/exists/environmentname/{environmentname}")
+	@GetMapping(path = "exists/environmentname/{environmentname}")
 	public ResponseEntity<Boolean> doesEnvironmentNameExists(@PathVariable("environmentname") String environmentName) {		
 		boolean result = (!envService.existsByEnvironmentName(environmentName));
 		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 	}
 	
-	@GetMapping(path = "/environment/all")
+	@GetMapping(path = "all")
 	public ResponseEntity<List<Environment>> getAllEnvironments() {
 		List<Environment> environments = envService.getAll();
 		return new ResponseEntity<List<Environment>>(environments, HttpStatus.OK);
 	}
 	
-	@PutMapping(path = "/environment/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PutMapping(path = "update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Environment> updateEnvironment(
 			@ModelAttribute("environmentId") Integer environmentId,
 			@ModelAttribute("environmentName") String environmentName) {		
@@ -86,7 +88,7 @@ public class EnvironmentController {
 		return new ResponseEntity<Environment>(environment, HttpStatus.OK);
 	}
 	
-	@DeleteMapping(path = "/environment/delete/{id}")
+	@DeleteMapping(path = "delete/{id}")
 	public ResponseEntity<Void> deleteEnvironment(@PathVariable("id") Integer id) {		
 		envService.delete(id);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
