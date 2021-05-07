@@ -19,6 +19,7 @@ import AddStrategyItems from "./Components/Add/AddStrategyItems";
 import AddProject from "./Components/Add/AddProject";
 import EditCapability from "./Components/Edit/EditCapability";
 import Capability from "./Components/General/Capability";
+import NotFoundError from "./Components/Error/NotFound";
 
 class App extends Component {
 
@@ -82,6 +83,7 @@ class App extends Component {
                 <Route exact path='/login' component={ Signup }/>
                 <Route exact path='/recent' component={ RecentEnvironments }/>
                 <Route exact path='/users' component={ UserList }/>
+                <Route exact path='/error' component={ NotFoundError }/>
                 <Route path='/' component={Home}/>
               </Switch>
           </div>

@@ -19,27 +19,32 @@ export default class Environment extends Component
             projects: 0,
             resources: 0,
             businessProcesses: 0,
-            status: 0
+            status: 0,
+            hasError: false
         };
 
     }
 
     async componentDidMount() {
-        const response = await fetch(`http://localhost:8080/environment/environmentname/${this.state.environmentName}`);
-        const data = await response.json();
-        this.setState({
-            environmentId: data.environmentId,
-            capabilities: data.capabilities.length,
-            itApplications: data.itApplications,
-            programs: data.programs,
-            strategies: data.strategies,
-            strategyItems: data.strategyItems,
-            projects: data.projects,
-            resources: data.resources,
-            businessProcesses: data.businessProcesses,
-            status: data.status
-        });
-        console.log(data)
+        await fetch(`http://localhost:8080/environment/environmentname/${this.state.environmentName}`)
+            .then(resp => resp.json())
+            .then(data => {
+                this.setState({
+                    environmentId: data.environmentId,
+                    capabilities: data.capabilities.length,
+                    itApplications: data.itApplications,
+                    programs: data.programs,
+                    strategies: data.strategies,
+                    strategyItems: data.strategyItems,
+                    projects: data.projects,
+                    resources: data.resources,
+                    businessProcesses: data.businessProcesses,
+                    status: data.status
+                });
+            })
+            .catch(error => {
+                this.props.history.push('/error')
+            })
     }
 
     render() {

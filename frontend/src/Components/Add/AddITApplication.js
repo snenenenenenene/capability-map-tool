@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
+import Modal from 'react-modal';
 
 export default class AddITApplication extends Component {
     constructor(props) {
@@ -8,6 +9,9 @@ export default class AddITApplication extends Component {
             statuses: [],
             environments: [],
             capabilities: [],
+
+            show: false,
+            setShow: false,
 
             environmentName: this.props.match.params.name,
             environmentId:'',
@@ -82,6 +86,37 @@ export default class AddITApplication extends Component {
             return <option key={capability.capabilityId} value={capability.capabilityId}>{capability.capabilityName}</option>
         })
     }
+
+    RatingModal() {
+        const [show, setShow] = useState(false);
+
+        const handleClose = () => setShow(false);
+        const handleShow = () => setShow(true);
+
+        return (
+            <>
+                <Button variant="primary" onClick={handleShow}>
+                    Launch demo modal
+                </Button>
+
+                <Modal show={show} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Modal heading</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Close
+                        </Button>
+                        <Button variant="primary" onClick={handleClose}>
+                            Save Changes
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            </>
+        );
+    }
+
 
     render() {
         const environmentName = this.props.match.params.name;
@@ -168,8 +203,13 @@ export default class AddITApplication extends Component {
                                     </div>
                                 </div>
                             </div>
+
                         </div>
-                        <button className="btn btn-primary" type="button" onClick={this.handleSubmit}>Submit</button>
+                        <button className="btn btn-secondary" type="button" onClick={this.handleSubmit}>Submit</button>
+                        <button className="btn btn-primary float-right" type="button" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">Ratings</button>
+
+                       <RatingModal/>
+
                     </form>
                 </div>
             </div>
