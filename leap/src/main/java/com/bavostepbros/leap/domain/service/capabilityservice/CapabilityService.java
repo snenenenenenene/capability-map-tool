@@ -1,12 +1,13 @@
 package com.bavostepbros.leap.domain.service.capabilityservice;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 
 public interface CapabilityService {
-	Capability save(Integer environmentId, String environmentName, Integer statusId, Integer validityPeriod,
+	Capability save(Integer environmentId, String environmentName, Integer statusId, LocalDate validityPeriod,
 			Integer parentCapabilityId, String capabilityName, CapabilityLevel level, boolean paceOfChange,
 			String targetOperatingModel, Integer resourceQuality, Integer informationQuality, Integer applicationFit);
 
@@ -15,7 +16,7 @@ public interface CapabilityService {
 	List<Capability> getAll();
 
 	Capability update(Integer capabilityId, Integer environmentId, String environmentName, Integer statusId,
-			Integer validityPeriod, Integer parentCapabilityId, String capabilityName, CapabilityLevel level,
+			LocalDate validityPeriod, Integer parentCapabilityId, String capabilityName, CapabilityLevel level,
 			boolean paceOfChange, String targetOperatingModel, Integer resourceQuality, Integer informationQuality,
 			Integer applicationFit);
 

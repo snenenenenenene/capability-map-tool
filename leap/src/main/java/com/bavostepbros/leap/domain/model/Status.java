@@ -1,5 +1,7 @@
 package com.bavostepbros.leap.domain.model;
 
+import java.time.LocalDate;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,9 +25,9 @@ public class Status {
     private Integer statusId;
     
     @Column(name = "VALIDITYPERIOD")
-    private Integer validityPeriod;
+    private LocalDate validityPeriod;
 
-    public Status(Integer validityPeriod) {
+    public Status(LocalDate validityPeriod) {
         this.validityPeriod = validityPeriod;
     }
 

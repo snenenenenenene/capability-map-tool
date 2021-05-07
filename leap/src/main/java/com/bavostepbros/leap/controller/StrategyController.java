@@ -21,41 +21,41 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.time.LocalDate;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000")
+// @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/strategy/")
 public class StrategyController {
 
     @Autowired
     private StrategyService strategyService;
 
     @Autowired
-    private EnvironmentService envService;
-
-    @Autowired
     private StatusService statusService;
+    
+    @Autowired
+	private EnvironmentService envService;
 
-    @PostMapping(path = "/strategy/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path = "add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> addStrategy(
             @ModelAttribute("statusId") Integer statusId,
-            @ModelAttribute("validityPeriod") Integer validityPeriod,
+            @ModelAttribute("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  validityPeriod,
             @ModelAttribute("strategyName") String strategyName,
 			@ModelAttribute("timeFrameStart") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameStart,
 			@ModelAttribute("timeFrameEnd") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameEnd,
+			@ModelAttribute("environmentId") Integer environmentId,
+			@ModelAttribute("environmentName") String environmentName,
             UriComponentsBuilder builder) {
-    	if (statusId == null || statusId.equals(0) || validityPeriod == null || validityPeriod.equals(0)
-    			|| strategyName == null || strategyName.isBlank() || strategyName.isEmpty()) {
+    	if (statusId == null || statusId.equals(0) || validityPeriod == null || strategyName == null 
+    			|| strategyName.isBlank() || strategyName.isEmpty()) {
     		throw new InvalidInputException("Invalid input.");
     	}
     	if (!strategyService.existsByStrategyName(strategyName)) {
 			throw new DuplicateValueException("Strategy name already exists.");
 		}
-
-		System.out.println();
-		System.out.println("\n\n\nTIMEFRAMEEND:\n\n\n " + timeFrameEnd);
-		System.out.println("\n\n\nTIMEFRAMESTART:\n\n\n " + timeFrameStart);
     	
-        Strategy strategy = strategyService.save(statusId, validityPeriod, strategyName, timeFrameStart, timeFrameEnd);
+        Strategy strategy = strategyService.save(statusId, validityPeriod, strategyName, timeFrameStart, 
+        		timeFrameEnd, environmentId, environmentName);
         Integer strategyId = strategy.getStrategyId();
         boolean flag = (strategyId == null) ? false : true;
         if (flag == false) {
@@ -63,12 +63,7 @@ public class StrategyController {
         }
 
         LocalDate ld = LocalDate.now();
-        System.out.println(ld);
-
-        System.out.println(strategy);
         strategy.setTimeFrameEnd(ld);
-        System.out.println(strategy.getTimeFrameEnd());
-        System.out.println(strategy);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder
@@ -77,7 +72,7 @@ public class StrategyController {
         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
 
-    @GetMapping(path = "/strategy/{id}")
+    @GetMapping(path = "{id}")
     public ResponseEntity<Strategy> getStrategyById(@PathVariable("id") Integer id) {
     	if (id == null || id.equals(0)) {
 			throw new InvalidInputException("Strategy ID is not valid.");
@@ -89,14 +84,27 @@ public class StrategyController {
     	Strategy strategy = strategyService.get(id);
         return  new ResponseEntity<Strategy>(strategy, HttpStatus.OK);
     }
+    
+    @GetMapping(path = "getallbyenvironment/{id}")
+	public ResponseEntity<List<Strategy>> getAllCapabilitiesByEnvironment(@PathVariable("id") Integer id) {
+		if (id == null || id.equals(0)) {
+			throw new InvalidInputException("Environment ID is not valid.");
+		}
+		if (!envService.existsById(id)) {
+			throw new IndexDoesNotExistException("Environment ID does not exists.");
+		}
 
-    @GetMapping(path = "/strategy/all")
+		List<Strategy> strategies = strategyService.getStrategiesByEnvironment(id);
+		return new ResponseEntity<List<Strategy>>(strategies, HttpStatus.OK);
+	}
+
+    @GetMapping(path = "all")
     public List<Strategy> getAllStrategies() {
         List<Strategy> strategies = strategyService.getAll();
         return strategies;
     }
 
-    @GetMapping(path = "/strategy/exists/id/{id}")
+    @GetMapping(path = "exists/id/{id}")
 	public ResponseEntity<Boolean> doesStrategyExistsById(@PathVariable("id") Integer id) {
 		if (id == null || id.equals(0)) {
 			throw new InvalidInputException("Strategy ID is not valid.");
@@ -106,7 +114,7 @@ public class StrategyController {
 		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 	}
 
-    @GetMapping(path = "/strategy/exists/strategyname/{strategyname}")
+    @GetMapping(path = "exists/strategyname/{strategyname}")
 	public ResponseEntity<Boolean> doesStrategyNameExists(@PathVariable("strategyname") String strategyName) {
 		if (strategyName == null ||
 				strategyName.isBlank() ||
@@ -118,39 +126,39 @@ public class StrategyController {
 		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 	}
 
-    @PutMapping(path = "/strategy/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Strategy> updateStrategy(@ModelAttribute Strategy strategy) {
-    	if (strategy.getStrategyId() == null ||
-    			strategy.getStrategyId().equals(0) ||
-    			strategy.getStrategyName() == null ||
-    			strategy.getStrategyName().isBlank() ||
-    			strategy.getStrategyName().isEmpty()) {
+    @PutMapping(path = "update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Strategy> updateStrategy(
+    		@ModelAttribute("strategyId") Integer strategyId,
+    		@ModelAttribute("statusId") Integer statusId,
+            @ModelAttribute("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  validityPeriod,
+            @ModelAttribute("strategyName") String strategyName,
+			@ModelAttribute("timeFrameStart") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameStart,
+			@ModelAttribute("timeFrameEnd") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameEnd,
+			@ModelAttribute("environmentId") Integer environmentId,
+			@ModelAttribute("environmentName") String environmentName) {
+    	if (strategyId == null || strategyId.equals(0) || strategyName == null || 
+    			strategyName.isBlank() || strategyName.isEmpty()) {
 			throw new InvalidInputException("Invalid input.");
 		}
-		if (!strategyService.existsById(strategy.getStrategyId())) {
-			throw new IndexDoesNotExistException("Can not update capability if it does not exist.");
+		if (!strategyService.existsById(strategyId)) {
+			throw new IndexDoesNotExistException("Can not update strategy if it does not exist.");
 		}
-		if (!strategyService.existsByStrategyName(strategy.getStrategyName())) {
-			throw new DuplicateValueException("Capability name already exists.");
+		if (!strategyService.existsByStrategyName(strategyName)) {
+			throw new DuplicateValueException("Strategy name already exists.");
 		}
-		if (!envService.existsById(strategy.getEnvironment().getEnvironmentId())) {
-			throw new IndexDoesNotExistException("Environment ID does not exists.");
-		}
-		if (envService.existsByEnvironmentName(strategy.getEnvironment().getEnvironmentName())) {
-			throw new DuplicateValueException("Environment name does not exists.");
-		}
-		if (!statusService.existsById(strategy.getStatus().getStatusId())) {
+		if (!statusService.existsById(statusId)) {
 			throw new IndexDoesNotExistException("Status ID does not exists.");
 		}
-		if (statusService.existsByValidityPeriod(strategy.getStatus().getValidityPeriod())) {
+		if (statusService.existsByValidityPeriod(validityPeriod)) {
 			throw new DuplicateValueException("Validity period does not exists.");
 		}
 
-    	strategyService.update(strategy);
+    	Strategy strategy = strategyService.update(strategyId, statusId, validityPeriod, 
+    			strategyName, timeFrameStart, timeFrameEnd, environmentId, environmentName);
         return new ResponseEntity<Strategy>(strategy, HttpStatus.OK);
     }
 
-    @DeleteMapping("/strategy/delete/{id}")
+    @DeleteMapping("delete/{id}")
     public ResponseEntity<Void> deleteStrategy(@PathVariable("id") Integer id) {
     	if (id == null || id.equals(0)) {
 			throw new InvalidInputException("Strategy ID is not valid.");

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -25,16 +26,20 @@ public class Strategy {
 
     @Id
     @GeneratedValue
+    @Column(name = "STRATEGYID")
     private Integer strategyId;
 
     @OneToOne
     @JoinColumn
     private Status status;
-
+    
+    @Column(name = "STRATEGYNAME")
     private String strategyName;
 
-
+    @Column(name = "TIMEFRAMESTART")
     private LocalDate timeFrameStart;
+    
+    @Column(name = "TIMEFRAMEEND")
     private LocalDate timeFrameEnd;
 
     @ManyToOne
@@ -44,12 +49,25 @@ public class Strategy {
     @JoinColumn(name="STRATEGYID")
     private List<StrategyItem> items = new ArrayList<StrategyItem>();
 
-    public Strategy(Status status, String strategyName, LocalDate timeFrameStart, LocalDate timeFrameEnd) {
+    public Strategy(Status status, String strategyName, LocalDate timeFrameStart, 
+    		LocalDate timeFrameEnd, Environment environment) {
         this.status = status;
         this.strategyName = strategyName;
         this.timeFrameStart = timeFrameStart;
         this.timeFrameEnd = timeFrameEnd;
+        this.environment = environment;
     }
+    
+    public Strategy(Integer strategyId, Status status, String strategyName, LocalDate timeFrameStart,
+			LocalDate timeFrameEnd, Environment environment) {
+		super();
+		this.strategyId = strategyId;
+		this.status = status;
+		this.strategyName = strategyName;
+		this.timeFrameStart = timeFrameStart;
+		this.timeFrameEnd = timeFrameEnd;
+		this.environment = environment;
+	}
 
     @Override
     public String toString() {

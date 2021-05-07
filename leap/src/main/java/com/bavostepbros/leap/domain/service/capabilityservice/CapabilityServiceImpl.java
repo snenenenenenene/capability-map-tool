@@ -1,5 +1,6 @@
 package com.bavostepbros.leap.domain.service.capabilityservice;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 	private EnvironmentDAL environmentDAL;
 
 	@Override
-	public Capability save(Integer environmentId, String environmentName, Integer statusId, Integer validityPeriod,
+	public Capability save(Integer environmentId, String environmentName, Integer statusId, LocalDate validityPeriod,
 			Integer parentCapabilityId, String capabilityName, CapabilityLevel level, boolean paceOfChange,
 			String targetOperatingModel, Integer resourceQuality, Integer informationQuality, Integer applicationFit) {
 		Environment environment = new Environment(environmentId, environmentName);
@@ -64,7 +65,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 	@Override
 	public Capability update(Integer capabilityId, Integer environmentId, String environmentName, Integer statusId,
-			Integer validityPeriod, Integer parentCapabilityId, String capabilityName, CapabilityLevel level,
+			LocalDate validityPeriod, Integer parentCapabilityId, String capabilityName, CapabilityLevel level,
 			boolean paceOfChange, String targetOperatingModel, Integer resourceQuality, Integer informationQuality,
 			Integer applicationFit) {
 		Environment environment = new Environment(environmentId, environmentName);
