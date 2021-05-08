@@ -2,6 +2,7 @@ package com.bavostepbros.leap.domain.service.environmentservice;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
+import com.bavostepbros.leap.domain.customexceptions.EnvironmentException;
 import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
 import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
 import com.bavostepbros.leap.domain.model.Environment;
@@ -16,6 +18,11 @@ import com.bavostepbros.leap.persistence.EnvironmentDAL;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+*
+* @author Bavo Van Meel
+*
+*/
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -34,8 +41,7 @@ public class EnvironmentServiceImpl implements EnvironmentService {
 		}
 		
     	Environment environment = new Environment(environmentName);
-        Environment savedEnvironment = environmentDAL.save(environment);
-        return savedEnvironment;
+        return environmentDAL.save(environment);
     }
 
     @Override
@@ -57,11 +63,13 @@ public class EnvironmentServiceImpl implements EnvironmentService {
 			throw new InvalidInputException("Environment name is not valid.");
 		}
     	if (existsByEnvironmentName(environmentName)) {
-			throw new IndexDoesNotExistException("Environment name does not exists.");
+			throw new EnvironmentException("Environment name does not exists.");
 		}
-
-        Environment environment = environmentDAL.findByEnvironmentName(environmentName).get(0);
-        return environment;
+    	
+    	// Nullpointer naar hier trekken zodat die niet in DAL wordt gegooid
+        Optional<Environment> environment = environmentDAL.findByEnvironmentName(environmentName);
+        environment.orElseThrow(() -> new NullPointerException("Environment does not exist."));
+        return environment.get();
     }
 
     @Override
@@ -100,20 +108,12 @@ public class EnvironmentServiceImpl implements EnvironmentService {
 
     @Override
     public boolean existsById(Integer id) {
-        boolean result = environmentDAL.existsById(id);       
-        if (!result) {
-			throw new IndexDoesNotExistException("Environment ID does not exists.");
-		}
-        return result;
+    	return environmentDAL.existsById(id);
     }
 
     @Override
     public boolean existsByEnvironmentName(String environmentName) {
-        boolean result = environmentDAL.findByEnvironmentName(environmentName).isEmpty();        
-        if (!result) {
-			throw new DuplicateValueException("Environment name already exists.");
-		}
-        return result;
+        return environmentDAL.findByEnvironmentName(environmentName).isEmpty();        
     }
 
 }

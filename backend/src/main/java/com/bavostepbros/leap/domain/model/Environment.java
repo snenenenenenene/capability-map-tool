@@ -11,18 +11,26 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+*
+* @author Bavo Van Meel
+*
+*/
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Environment {
 
     @Id
     @GeneratedValue
+    @EqualsAndHashCode.Include
     @Column(name = "ENVIRONMENTID")
     private Integer environmentId;
     
@@ -52,5 +60,7 @@ public class Environment {
             ", environmentName='" + getEnvironmentName() + "'" +
             "}";
     }
+
+	
 
 }

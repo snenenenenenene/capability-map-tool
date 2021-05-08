@@ -17,6 +17,11 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+*
+* @author Bavo Van Meel
+*
+*/
 @Entity
 @Getter
 @Setter

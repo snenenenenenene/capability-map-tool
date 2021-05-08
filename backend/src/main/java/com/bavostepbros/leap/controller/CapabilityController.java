@@ -29,6 +29,11 @@ import com.bavostepbros.leap.domain.service.statusservice.StatusService;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+*
+* @author Bavo Van Meel
+*
+*/
 // @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
@@ -81,7 +86,7 @@ public class CapabilityController {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(builder
-				.path("/capability/get/{id}")
+				.path("{id}")
 				.buildAndExpand(capabilityId).toUri());
 		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
 	}
