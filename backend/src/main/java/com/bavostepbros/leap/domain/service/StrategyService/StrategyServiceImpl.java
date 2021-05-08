@@ -16,6 +16,11 @@ import com.bavostepbros.leap.persistence.StrategyDAL;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+*
+* @author Lenny Bontenakel, Bavo Van Meel
+*
+*/
 @Service
 @Transactional
 @RequiredArgsConstructor

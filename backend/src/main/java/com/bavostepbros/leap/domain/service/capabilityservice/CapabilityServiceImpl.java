@@ -18,6 +18,11 @@ import com.bavostepbros.leap.persistence.EnvironmentDAL;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+*
+* @author Bavo Van Meel
+*
+*/
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -113,14 +118,12 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 	@Override
 	public boolean existsById(Integer id) {
-		boolean result = capabilityDAL.existsById(id);
-		return result;
+		return capabilityDAL.existsById(id);
 	}
 
 	@Override
 	public boolean existsByCapabilityName(String capabilityName) {
-		boolean result = capabilityDAL.findByCapabilityName(capabilityName).isEmpty();
-		return result;
+		return capabilityDAL.findByCapabilityName(capabilityName).isEmpty();
 	}
 
 }

@@ -6,6 +6,11 @@ import java.util.List;
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 
+/**
+*
+* @author Bavo Van Meel
+*
+*/
 public interface CapabilityService {
 	Capability save(Integer environmentId, String environmentName, Integer statusId, LocalDate validityPeriod,
 			Integer parentCapabilityId, String capabilityName, CapabilityLevel level, boolean paceOfChange,
