@@ -95,20 +95,12 @@ public class StatusServiceImpl implements StatusService {
     }
 
     @Override
-    public boolean existsById(Integer id) {
-    	if (id == null || id.equals(0)) {
-			throw new InvalidInputException("Status ID is not valid.");
-		}
-    	
+    public boolean existsById(Integer id) {    	
         return statusDAL.existsById(id);
     }
 
     @Override
     public boolean existsByValidityPeriod(LocalDate validityPeriod) {
-    	if (validityPeriod == null) {
-			throw new InvalidInputException("Validity Period is not valid.");
-		}
-    	
         return statusDAL.findByValidityPeriod(validityPeriod).isEmpty();
     }
 

@@ -1,6 +1,5 @@
 package com.bavostepbros.leap.domain.service.capabilityservice;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,16 +12,18 @@ import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
+import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
+import com.bavostepbros.leap.domain.service.statusservice.StatusService;
 import com.bavostepbros.leap.persistence.CapabilityDAL;
 import com.bavostepbros.leap.persistence.EnvironmentDAL;
 
 import lombok.RequiredArgsConstructor;
 
 /**
-*
-* @author Bavo Van Meel
-*
-*/
+ *
+ * @author Bavo Van Meel
+ *
+ */
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -34,12 +35,18 @@ public class CapabilityServiceImpl implements CapabilityService {
 	@Autowired
 	private EnvironmentDAL environmentDAL;
 
+	@Autowired
+	private EnvironmentService environmentService;
+
+	@Autowired
+	private StatusService statusService;
+
 	@Override
-	public Capability save(Integer environmentId, String environmentName, Integer statusId, LocalDate validityPeriod,
-			Integer parentCapabilityId, String capabilityName, CapabilityLevel level, boolean paceOfChange,
-			String targetOperatingModel, Integer resourceQuality, Integer informationQuality, Integer applicationFit) {
-		Environment environment = new Environment(environmentId, environmentName);
-		Status status = new Status(statusId, validityPeriod);
+	public Capability save(Integer environmentId, Integer statusId, Integer parentCapabilityId, String capabilityName,
+			CapabilityLevel level, boolean paceOfChange, String targetOperatingModel, Integer resourceQuality,
+			Integer informationQuality, Integer applicationFit) {
+		Environment environment = environmentService.get(environmentId);
+		Status status = statusService.get(statusId);
 		Capability capability = new Capability(environment, status, parentCapabilityId, capabilityName, level,
 				paceOfChange, targetOperatingModel, resourceQuality, informationQuality, applicationFit);
 		Capability savedCapability = capabilityDAL.save(capability);
@@ -69,12 +76,11 @@ public class CapabilityServiceImpl implements CapabilityService {
 	}
 
 	@Override
-	public Capability update(Integer capabilityId, Integer environmentId, String environmentName, Integer statusId,
-			LocalDate validityPeriod, Integer parentCapabilityId, String capabilityName, CapabilityLevel level,
-			boolean paceOfChange, String targetOperatingModel, Integer resourceQuality, Integer informationQuality,
-			Integer applicationFit) {
-		Environment environment = new Environment(environmentId, environmentName);
-		Status status = new Status(statusId, validityPeriod);
+	public Capability update(Integer capabilityId, Integer environmentId, Integer statusId, Integer parentCapabilityId,
+			String capabilityName, CapabilityLevel level, boolean paceOfChange, String targetOperatingModel,
+			Integer resourceQuality, Integer informationQuality, Integer applicationFit) {
+		Environment environment = environmentService.get(environmentId);
+		Status status = statusService.get(statusId);
 		Capability capability = new Capability(capabilityId, environment, status, parentCapabilityId, capabilityName,
 				level, paceOfChange, targetOperatingModel, resourceQuality, informationQuality, applicationFit);
 		Capability updatedCapability = capabilityDAL.save(capability);

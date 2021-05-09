@@ -255,17 +255,6 @@ public class StatusServiceTest {
 	}
 	
 	@Test
-	void should_throwInvalidInputException_whenExistsByIdInputIsInvalid() {
-		Integer id = 0;
-		String expected = "Status ID is not valid.";
-
-		Exception exception = assertThrows(InvalidInputException.class, 
-				() -> statusService.existsById(id));
-
-		assertEquals(exception.getMessage(), expected);
-	}
-	
-	@Test
 	void should_ReturnFalse_whenEnvironmentDoesNotExistById() {
 		Integer id = status.getStatusId();
 		BDDMockito.given(statusDAL.existsById(BDDMockito.anyInt())).willReturn(false);
@@ -283,17 +272,6 @@ public class StatusServiceTest {
 		boolean result = statusService.existsById(id);
 		
 		assertTrue(result);
-	}
-	
-	@Test
-	void should_throwInvalidInputException_whenExistsByValidityPeriodInputIsInvalid() {
-		LocalDate falseValidityPeriod = null;
-		String expected = "Validity Period is not valid.";
-
-		Exception exception = assertThrows(InvalidInputException.class, 
-				() -> statusService.existsByValidityPeriod(falseValidityPeriod));
-
-		assertEquals(exception.getMessage(), expected);
 	}
 	
 	@Test
