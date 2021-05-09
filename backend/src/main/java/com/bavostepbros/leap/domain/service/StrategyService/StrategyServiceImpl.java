@@ -8,6 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.transaction.Transactional;
 
+import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
+import com.bavostepbros.leap.domain.customexceptions.ForeignKeyException;
+import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
+import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
+import com.bavostepbros.leap.domain.customexceptions.StrategyException;
 import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.Strategy;
@@ -43,6 +48,20 @@ public class StrategyServiceImpl implements StrategyService {
 	@Override
 	public Strategy save(Integer statusId, String strategyName, LocalDate timeFrameStart, LocalDate timeFrameEnd,
 			Integer environmentId) {
+		if (statusId == null || statusId.equals(0) || strategyName == null 
+    			|| strategyName.isBlank() || strategyName.isEmpty()) {
+    		throw new InvalidInputException("Invalid input.");
+    	}
+    	if (!existsByStrategyName(strategyName)) {
+			throw new DuplicateValueException("Strategy name already exists.");
+		}
+    	if (!statusService.existsById(statusId)) {
+			throw new ForeignKeyException("Status ID does not exists.");
+		}
+		if (!environmentService.existsById(environmentId)) {
+			throw new ForeignKeyException("Environment ID does not exists.");
+		}
+    	
 		Status status = statusService.get(statusId);
 		Environment environment = environmentService.get(environmentId);
 		Strategy strategy = new Strategy(status, strategyName, timeFrameStart, timeFrameEnd, environment);
@@ -52,6 +71,13 @@ public class StrategyServiceImpl implements StrategyService {
 
 	@Override
 	public Strategy get(Integer id) {
+		if (id == null || id.equals(0)) {
+			throw new InvalidInputException("Strategy ID is not valid.");
+		}
+		if (!existsById(id)) {
+			throw new IndexDoesNotExistException("Strategy ID does not exists.");
+		}
+		
 		Strategy strategy = strategyDAL.findById(id).get();
 		return strategy;
 	}
@@ -65,6 +91,23 @@ public class StrategyServiceImpl implements StrategyService {
 	@Override
 	public Strategy update(Integer strategyId, Integer statusId, String strategyName, LocalDate timeFrameStart,
 			LocalDate timeFrameEnd, Integer environmentId) {
+		if (strategyId == null || strategyId.equals(0) || strategyName == null || 
+    			strategyName.isBlank() || strategyName.isEmpty()) {
+			throw new InvalidInputException("Invalid input.");
+		}
+		if (!existsById(strategyId)) {
+			throw new StrategyException("Can not update strategy if it does not exist.");
+		}
+		if (existsByStrategyName(strategyName)) {
+			throw new DuplicateValueException("Strategy name already exists.");
+		}
+		if (!statusService.existsById(statusId)) {
+			throw new ForeignKeyException("Status ID does not exists.");
+		}
+		if (!environmentService.existsById(environmentId)) {
+			throw new ForeignKeyException("Environment ID does not exists.");
+		}
+		
 		Status status = statusService.get(statusId);
 		Environment environment = environmentService.get(environmentId);
 		Strategy strategy = new Strategy(strategyId, status, strategyName, timeFrameStart, timeFrameEnd, environment);
@@ -74,23 +117,34 @@ public class StrategyServiceImpl implements StrategyService {
 
 	@Override
 	public void delete(Integer id) {
+		if (id == null || id.equals(0)) {
+			throw new InvalidInputException("Strategy ID is not valid.");
+		}
+		if (!existsById(id)) {
+			throw new IndexDoesNotExistException("Strategy ID does not exists.");
+		}
 		strategyDAL.deleteById(id);
 	}
 
 	@Override
 	public boolean existsById(Integer id) {
-		boolean result = strategyDAL.existsById(id);
-		return result;
+		return strategyDAL.existsById(id);
 	}
 
 	@Override
 	public boolean existsByStrategyName(String strategyName) {
-		boolean result = strategyDAL.findByStrategyName(strategyName).isEmpty();
-		return result;
+		return strategyDAL.findByStrategyName(strategyName).isEmpty();
 	}
 
 	@Override
 	public List<Strategy> getStrategiesByEnvironment(Integer environmentId) {
+		if (environmentId == null || environmentId.equals(0)) {
+			throw new InvalidInputException("Environment ID is not valid.");
+		}
+		if (!environmentService.existsById(environmentId)) {
+			throw new ForeignKeyException("Environment ID does not exists.");
+		}
+		
 		Environment environment = environmentDAL.findById(environmentId).get();
 		List<Strategy> strategies = strategyDAL.findByEnvironment(environment);
 		return strategies;
