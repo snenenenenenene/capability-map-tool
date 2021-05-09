@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
 import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
 import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
+import com.bavostepbros.leap.domain.customexceptions.StatusException;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.persistence.StatusDAL;
 
@@ -72,8 +73,8 @@ public class StatusServiceImpl implements StatusService {
 		if (!existsById(statusId)) {
 			throw new IndexDoesNotExistException("Can not update status if it does not exist.");
 		}
-		if (!existsByValidityPeriod(validityPeriod)) {
-			throw new DuplicateValueException("Validity period already exists.");
+		if (existsByValidityPeriod(validityPeriod)) {
+			throw new StatusException("Validity period already exists.");
 		}
 		
     	Status status = new Status(statusId, validityPeriod);

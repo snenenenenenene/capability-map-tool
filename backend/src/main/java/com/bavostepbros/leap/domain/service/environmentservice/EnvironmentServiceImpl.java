@@ -85,11 +85,11 @@ public class EnvironmentServiceImpl implements EnvironmentService {
 				environmentName.isBlank() || environmentName.isEmpty()) {
 			throw new InvalidInputException("Invalid input.");
 		}
-    	if (existsById(environmentId)) {
+    	if (!existsById(environmentId)) {
 			throw new IndexDoesNotExistException("Can not update environment if it does not exist.");
 		}
 		if (existsByEnvironmentName(environmentName)) {
-			throw new DuplicateValueException("Environment name already exists.");
+			throw new EnvironmentException("Environment name already exists.");
 		}
 
     	Environment environment = new Environment(environmentId, environmentName);
