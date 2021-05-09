@@ -44,14 +44,12 @@ public class StrategyController {
     @PostMapping(path = "add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> addStrategy(
             @ModelAttribute("statusId") Integer statusId,
-            @ModelAttribute("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  validityPeriod,
             @ModelAttribute("strategyName") String strategyName,
 			@ModelAttribute("timeFrameStart") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameStart,
 			@ModelAttribute("timeFrameEnd") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameEnd,
 			@ModelAttribute("environmentId") Integer environmentId,
-			@ModelAttribute("environmentName") String environmentName,
             UriComponentsBuilder builder) {
-    	if (statusId == null || statusId.equals(0) || validityPeriod == null || strategyName == null 
+    	if (statusId == null || statusId.equals(0) || strategyName == null 
     			|| strategyName.isBlank() || strategyName.isEmpty()) {
     		throw new InvalidInputException("Invalid input.");
     	}
@@ -59,8 +57,8 @@ public class StrategyController {
 			throw new DuplicateValueException("Strategy name already exists.");
 		}
     	
-        Strategy strategy = strategyService.save(statusId, validityPeriod, strategyName, timeFrameStart, 
-        		timeFrameEnd, environmentId, environmentName);
+        Strategy strategy = strategyService.save(statusId, strategyName, timeFrameStart, 
+        		timeFrameEnd, environmentId);
         Integer strategyId = strategy.getStrategyId();
         boolean flag = (strategyId == null) ? false : true;
         if (flag == false) {
@@ -135,12 +133,10 @@ public class StrategyController {
     public ResponseEntity<Strategy> updateStrategy(
     		@ModelAttribute("strategyId") Integer strategyId,
     		@ModelAttribute("statusId") Integer statusId,
-            @ModelAttribute("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  validityPeriod,
             @ModelAttribute("strategyName") String strategyName,
 			@ModelAttribute("timeFrameStart") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameStart,
 			@ModelAttribute("timeFrameEnd") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameEnd,
-			@ModelAttribute("environmentId") Integer environmentId,
-			@ModelAttribute("environmentName") String environmentName) {
+			@ModelAttribute("environmentId") Integer environmentId) {
     	if (strategyId == null || strategyId.equals(0) || strategyName == null || 
     			strategyName.isBlank() || strategyName.isEmpty()) {
 			throw new InvalidInputException("Invalid input.");
@@ -154,12 +150,9 @@ public class StrategyController {
 		if (!statusService.existsById(statusId)) {
 			throw new IndexDoesNotExistException("Status ID does not exists.");
 		}
-		if (statusService.existsByValidityPeriod(validityPeriod)) {
-			throw new DuplicateValueException("Validity period does not exists.");
-		}
 
-    	Strategy strategy = strategyService.update(strategyId, statusId, validityPeriod, 
-    			strategyName, timeFrameStart, timeFrameEnd, environmentId, environmentName);
+    	Strategy strategy = strategyService.update(strategyId, statusId, 
+    			strategyName, timeFrameStart, timeFrameEnd, environmentId);
         return new ResponseEntity<Strategy>(strategy, HttpStatus.OK);
     }
 

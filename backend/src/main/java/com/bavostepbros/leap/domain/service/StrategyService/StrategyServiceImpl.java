@@ -11,16 +11,18 @@ import javax.transaction.Transactional;
 import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.Strategy;
+import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
+import com.bavostepbros.leap.domain.service.statusservice.StatusService;
 import com.bavostepbros.leap.persistence.EnvironmentDAL;
 import com.bavostepbros.leap.persistence.StrategyDAL;
 
 import lombok.RequiredArgsConstructor;
 
 /**
-*
-* @author Lenny Bontenakel, Bavo Van Meel
-*
-*/
+ *
+ * @author Lenny Bontenakel, Bavo Van Meel
+ *
+ */
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -28,15 +30,21 @@ public class StrategyServiceImpl implements StrategyService {
 
 	@Autowired
 	private StrategyDAL strategyDAL;
-	
+
 	@Autowired
 	private EnvironmentDAL environmentDAL;
 
+	@Autowired
+	private EnvironmentService environmentService;
+
+	@Autowired
+	private StatusService statusService;
+
 	@Override
-	public Strategy save(Integer statusId, LocalDate validityPeriod, String strategyName, LocalDate timeFrameStart,
-			LocalDate timeFrameEnd, Integer environmentId, String environmentName) {
-		Status status = new Status(statusId, validityPeriod);
-		Environment environment = new Environment(environmentId, environmentName);
+	public Strategy save(Integer statusId, String strategyName, LocalDate timeFrameStart, LocalDate timeFrameEnd,
+			Integer environmentId) {
+		Status status = statusService.get(statusId);
+		Environment environment = environmentService.get(environmentId);
 		Strategy strategy = new Strategy(status, strategyName, timeFrameStart, timeFrameEnd, environment);
 		Strategy savedStrategy = strategyDAL.save(strategy);
 		return savedStrategy;
@@ -55,10 +63,10 @@ public class StrategyServiceImpl implements StrategyService {
 	}
 
 	@Override
-	public Strategy update(Integer strategyId, Integer statusId, LocalDate validityPeriod, String strategyName,
-			LocalDate timeFrameStart, LocalDate timeFrameEnd, Integer environmentId, String environmentName) {
-		Status status = new Status(statusId, validityPeriod);
-		Environment environment = new Environment(environmentId, environmentName);
+	public Strategy update(Integer strategyId, Integer statusId, String strategyName, LocalDate timeFrameStart,
+			LocalDate timeFrameEnd, Integer environmentId) {
+		Status status = statusService.get(statusId);
+		Environment environment = environmentService.get(environmentId);
 		Strategy strategy = new Strategy(strategyId, status, strategyName, timeFrameStart, timeFrameEnd, environment);
 		Strategy updatedStrategy = strategyDAL.save(strategy);
 		return updatedStrategy;
