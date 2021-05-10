@@ -11,7 +11,7 @@ export default class Home extends Component
     }
 
     async componentDidMount() {
-        const response = await fetch(`http://localhost:8080/environment/all`);
+        const response = await fetch(`http://localhost:8080/api/environment/all`);
         const data = await response.json();
         this.setState({environments: data});
         console.log(this.state.environments);
