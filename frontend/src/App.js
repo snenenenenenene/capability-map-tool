@@ -45,7 +45,7 @@ class App extends Component {
   render() {
     if(this.state.authenticated === true) {
       return (
-          <div>
+          <div className="bg_image">
             <BrowserRouter>
               <nav className="navbar navbar-expand-lg navbar-dark sticky-top" style={{ backgroundColor: '#ff754f'}}>
                 <button className="navbar-toggler" type="button" data-toggle="collapse"

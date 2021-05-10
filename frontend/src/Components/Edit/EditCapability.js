@@ -13,7 +13,7 @@ export default class EditCapability extends Component {
             capabilityId: this.props.match.params.id,
             environmentId:'',
             capabilityName: '',
-            parentCapability: '',
+            parentCapabilityId: '',
             description: '',
             paceOfChange: '',
             TOM: '',
@@ -34,15 +34,17 @@ export default class EditCapability extends Component {
         formData.append('environmentName', this.state.environmentName)
         formData.append('environmentId', this.state.environmentId)
         formData.append('capabilityName', this.state.capabilityName)
-        formData.append('parentCapabilityId', this.state.parentCapability)
+        formData.append('parentCapabilityId', this.state.parentCapabilityId)
         formData.append('paceOfChange', this.state.paceOfChange)
         formData.append('targetOperatingModel', this.state.TOM)
         formData.append('informationQuality', this.state.informationQuality)
         formData.append('applicationFit', this.state.applicationFit)
-        formData.append('resourceQuality', this.state.resourcesQuality)
+        formData.append('resourceQuality', this.state.resourceQuality)
         formData.append('statusId', this.state.statusId)
         formData.append('level', this.state.capabilityLevel)
-
+        for(var pair of formData.entries()) {
+            console.log(pair[0]+ ', '+ pair[1]);
+        }
         await fetch(`http://localhost:8080/api/capability/update`,{
             method: "PUT",
             body: formData
@@ -88,7 +90,7 @@ export default class EditCapability extends Component {
                 this.setState({
                     environmentId: data.environment.environmentId,
                     capabilityName: data.capabilityName,
-                    parentCapability: data.parentCapability,
+                    parentCapabilityId: data.parentCapabilityId,
                     paceOfChange: data.paceOfChange,
                     TOM: data.targetOperatingModel,
                     informationQuality: data.informationQuality,
@@ -151,9 +153,9 @@ export default class EditCapability extends Component {
                                 <div className="form-row">
                                     <div className="form-group col-md-6">
                                         <label htmlFor="paceOfChange">Parent Capability</label>
-                                        <select className="form-control" name="parentCapability" id="parentCapability" placeholder="Add Parent Capability"
+                                        <select className="form-control" name="parentCapabilityId" id="parentCapabilityId" placeholder="Add Parent Capability"
                                                 value={this.state.parentCapabilityId} onChange={this.handleInputChange}>
-                                            <option key="-1" defaultValue="selected" hidden="hidden" value=""></option>
+                                            <option key="-1" defaultValue="selected" hidden="hidden" value={1}>None</option>
                                             {this.capabilityListRows()}
                                         </select>
                                     </div>
@@ -224,7 +226,7 @@ export default class EditCapability extends Component {
                                     <label htmlFor="resourceQuality">Resource Quality</label>
                                     <select id="resourceQuality" name="resourceQuality" className="form-control" placeholder="Resource Quality"
                                             value={this.state.resourceQuality} onChange={this.handleInputChange}>
-                                        <option key="-1" defaultValue="selected" hidden="hidden" value="">{this.state.resourceQuality}</option>
+                                        <option key="-1" defaultValue="selected" hidden="hidden">{this.state.resourceQuality}</option>
                                         <option>1</option>
                                         <option>2</option>
                                         <option>3</option>

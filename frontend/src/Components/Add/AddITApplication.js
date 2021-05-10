@@ -23,8 +23,6 @@ export default class AddITApplication extends Component {
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this)
-        this.openModal = this.openModal.bind(this)
-        this.afterOpenModal = this.afterOpenModal.bind(this)
     }
 
     handleSubmit = async e => {
@@ -189,27 +187,27 @@ export default class AddITApplication extends Component {
                         <button className="btn btn-secondary" type="button" onClick={this.handleSubmit}>Submit</button>
                         <button className="btn btn-primary float-right" type="button" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">Ratings</button>
 
-                        <div>
-                            <button onClick={this.openModal}>Open Modal</button>
-                            <Modal
-                                isOpen={this.state.modalIsOpen}
-                                onAfterOpen={this.afterOpenModal}
-                                onRequestClose={this.closeModal}
-                                contentLabel="Example Modal"
-                            >
+                        {/*<div>*/}
+                        {/*    <button onClick={this.openModal}>Open Modal</button>*/}
+                        {/*    <Modal*/}
+                        {/*        isOpen={this.state.modalIsOpen}*/}
+                        {/*        onAfterOpen={this.afterOpenModal}*/}
+                        {/*        onRequestClose={this.closeModal}*/}
+                        {/*        contentLabel="Example Modal"*/}
+                        {/*    >*/}
 
-                                <h2>Hello</h2>
-                                <button onClick={this.state.closeModal}>close</button>
-                                <div>I am a modal</div>
-                                <form>
-                                    <input />
-                                    <button>tab navigation</button>
-                                    <button>stays</button>
-                                    <button>inside</button>
-                                    <button>the modal</button>
-                                </form>
-                            </Modal>
-                        </div>
+                        {/*        <h2>Hello</h2>*/}
+                        {/*        <button onClick={this.state.closeModal}>close</button>*/}
+                        {/*        <div>I am a modal</div>*/}
+                        {/*        <form>*/}
+                        {/*            <input />*/}
+                        {/*            <button>tab navigation</button>*/}
+                        {/*            <button>stays</button>*/}
+                        {/*            <button>inside</button>*/}
+                        {/*            <button>the modal</button>*/}
+                        {/*        </form>*/}
+                        {/*    </Modal>*/}
+                        {/*</div>*/}
 
                     </form>
                 </div>

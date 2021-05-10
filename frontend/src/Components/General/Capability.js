@@ -39,6 +39,7 @@ export default class Capability extends Component
                     <ol className="breadcrumb">
                         <li className="breadcrumb-item"><Link to={`/`}>Home</Link></li>
                         <li className="breadcrumb-item"><Link to={`/environment/${environmentName}`}>{environmentName}</Link></li>
+                        <li className="breadcrumb-item">Capabilities</li>
                     </ol>
                 </nav>
                 <h1 className='display-4'>Capabilities</h1>
@@ -50,7 +51,9 @@ export default class Capability extends Component
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
-                        <td></td>
+                        <th>Parent Id</th>
+                        <th>Level</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
