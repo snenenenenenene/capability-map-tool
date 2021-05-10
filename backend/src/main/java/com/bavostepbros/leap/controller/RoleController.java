@@ -27,7 +27,6 @@ import com.bavostepbros.leap.domain.model.Role;
 import lombok.RequiredArgsConstructor;
 
 @CrossOrigin(origins = "*")
-@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/role/")
 public class RoleController {
