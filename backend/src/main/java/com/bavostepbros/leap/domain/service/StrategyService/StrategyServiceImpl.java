@@ -18,7 +18,6 @@ import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.Strategy;
 import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
 import com.bavostepbros.leap.domain.service.statusservice.StatusService;
-import com.bavostepbros.leap.persistence.EnvironmentDAL;
 import com.bavostepbros.leap.persistence.StrategyDAL;
 
 import lombok.RequiredArgsConstructor;
@@ -37,9 +36,6 @@ public class StrategyServiceImpl implements StrategyService {
 	private StrategyDAL strategyDAL;
 
 	@Autowired
-	private EnvironmentDAL environmentDAL;
-
-	@Autowired
 	private EnvironmentService environmentService;
 
 	@Autowired
@@ -48,10 +44,15 @@ public class StrategyServiceImpl implements StrategyService {
 	@Override
 	public Strategy save(Integer statusId, String strategyName, LocalDate timeFrameStart, LocalDate timeFrameEnd,
 			Integer environmentId) {
-		if (statusId == null || statusId.equals(0) || strategyName == null 
-    			|| strategyName.isBlank() || strategyName.isEmpty()) {
+		if (strategyName == null || strategyName.isBlank() || strategyName.isEmpty()) {
     		throw new InvalidInputException("Invalid input.");
     	}
+		if (statusId == null || statusId.equals(0)) {
+			throw new ForeignKeyException("Status ID is invalid.");
+		}		
+		if (environmentId == null || environmentId.equals(0)) {
+			throw new ForeignKeyException("Environment ID is invalid.");
+		}		
     	if (!existsByStrategyName(strategyName)) {
 			throw new DuplicateValueException("Strategy name already exists.");
 		}
@@ -145,7 +146,7 @@ public class StrategyServiceImpl implements StrategyService {
 			throw new ForeignKeyException("Environment ID does not exists.");
 		}
 		
-		Environment environment = environmentDAL.findById(environmentId).get();
+		Environment environment = environmentService.get(environmentId);
 		List<Strategy> strategies = strategyDAL.findByEnvironment(environment);
 		return strategies;
 	}

@@ -237,14 +237,8 @@ public class StatusServiceTest {
 	
 	@Test
 	void should_throwIndexDoesNotExistException_whenDeleteInputIsValid() {
-		LocalDate falseValidityPeriod = status.getValidityPeriod();
 		Integer id = status.getStatusId();
 		String expected = "Status ID does not exists.";
-		
-		Mockito.doReturn(true).when(spyStatusService).existsByValidityPeriod(falseValidityPeriod);
-		BDDMockito.given(statusDAL.save(BDDMockito.any(Status.class))).willReturn(status);
-		Status savedStatus = statusService.save(falseValidityPeriod);
-		assertNotNull(savedStatus);
 		
 		statusDAL.deleteById(id);
 		
