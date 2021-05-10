@@ -21,6 +21,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+*
+* @author Lenny Bontenakel, Bavo Van Meel
+*
+*/
 // @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
@@ -67,7 +72,7 @@ public class StrategyController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder
-                .path("/strategy/{id}")
+                .path("{id}")
                 .buildAndExpand(strategyId).toUri());
         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }

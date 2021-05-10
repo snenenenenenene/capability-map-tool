@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -33,7 +34,7 @@ public class RoleController {
 	@Autowired
 	private RoleService roleService;
 
-	@PostMapping(path = "/role/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(path = "add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Void> addRole(
 			@ModelAttribute Role role, 
 			UriComponentsBuilder builder) {
@@ -51,12 +52,12 @@ public class RoleController {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(builder
-				.path("/role/{id}")
+				.path("{id}")
 				.buildAndExpand(role.getRoleId()).toUri());
 		return new ResponseEntity<>(headers, HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/role/{id}")
+	@GetMapping("{id}")
     public ResponseEntity<Role> getRoleById(@PathVariable("id") Integer id) {
 		if (id == null || id.equals(0)){
 			throw new InvalidInputException("Role ID is not valid");
@@ -69,13 +70,13 @@ public class RoleController {
 		return new ResponseEntity<Role>(role, HttpStatus.OK);
     }
 	
-	@GetMapping("/role/all")
+	@GetMapping("all")
 	public ResponseEntity<List<Role>> getAllRoles() {
 		List<Role> roles = roleService.getAll();
 		return new ResponseEntity<List<Role>>(roles, HttpStatus.OK);
 	}
 	
-	@PutMapping(path = "/role/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PutMapping(path = "update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Role> updateRole(@ModelAttribute Role role) {
 		if (role.getRoleId() == null || role.getRoleId().equals(0) ||
 				role.getRoleName() == null || role.getRoleName().equals(0)){
@@ -93,7 +94,7 @@ public class RoleController {
 		return new ResponseEntity<Role>(role, HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/role/{id}")
+	@DeleteMapping("{id}")
 	public ResponseEntity<Void> deleteRole(@PathVariable("id") Integer id) {
 		if (id == null || id.equals(0)){
 			throw new InvalidInputException("Role ID is not valid.");

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -38,7 +39,7 @@ public class UserController {
 	@Autowired
 	private RoleService roleService;
 	
-	@PostMapping(path = "/user/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(path = "add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Void> addUser(
 			@ModelAttribute User user,
 			UriComponentsBuilder builder) {		
@@ -62,12 +63,12 @@ public class UserController {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(builder
-				.path("/user/get/{id}")
+				.path("{id}")
 				.buildAndExpand(user.getUserId()).toUri());
 		return new ResponseEntity<>(headers, HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/user/{id}")
+	@GetMapping("{id}")
     public ResponseEntity<User> getUserById(@PathVariable("id") Integer id) {
 		if (id == null || id.equals(0)){
 			throw new InvalidInputException("User ID is not valid.");
@@ -80,13 +81,13 @@ public class UserController {
         return  new ResponseEntity<User>(user, HttpStatus.OK);
     }
 	
-	@GetMapping(path = "/user/all")
+	@GetMapping(path = "all")
 	public ResponseEntity<List<User>> getAllUsers() {
 		List<User> users = userService.getAll();
 		return new ResponseEntity<List<User>>(users, HttpStatus.OK);
 	}
 	
-	@PutMapping(path = "/user/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PutMapping(path = "update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<User> updateUser(@ModelAttribute User user) {
 		if (user.getUserId() == null ||
 				user.getUserId().equals(0) ||
@@ -112,7 +113,7 @@ public class UserController {
 		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/user/{id}")
+	@DeleteMapping("{id}")
 	public ResponseEntity<Void> deleteUser(@PathVariable("id") Integer id) {
 		if (id == null || id.equals(0)){
 			throw new InvalidInputException("User ID is not valid.");

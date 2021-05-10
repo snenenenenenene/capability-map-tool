@@ -10,8 +10,8 @@ export default class AddITApplication extends Component {
             environments: [],
             capabilities: [],
 
-            show: false,
-            setShow: false,
+            modalIsOpen: false,
+            setIsOpen: false,
 
             environmentName: this.props.match.params.name,
             environmentId:'',
@@ -23,6 +23,8 @@ export default class AddITApplication extends Component {
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this)
+        this.openModal = this.openModal.bind(this)
+        this.afterOpenModal = this.afterOpenModal.bind(this)
     }
 
     handleSubmit = async e => {
@@ -65,7 +67,7 @@ export default class AddITApplication extends Component {
         const statusData = await statusResponse.json();
         this.setState({statuses: statusData});
 
-        const capabilityResponse = await fetch(`http://localhost:8080/capability/all`);
+        const capabilityResponse = await fetch(`http://localhost:8080/api/capability/all`);
         const capabilityData = await capabilityResponse.json();
         this.setState({capabilities: capabilityData});
     }
@@ -87,35 +89,14 @@ export default class AddITApplication extends Component {
         })
     }
 
-    RatingModal() {
-        const [show, setShow] = useState(false);
-
-        const handleClose = () => setShow(false);
-        const handleShow = () => setShow(true);
-
-        return (
-            <>
-                <Button variant="primary" onClick={handleShow}>
-                    Launch demo modal
-                </Button>
-
-                <Modal show={show} onHide={handleClose}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Modal heading</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
-                            Close
-                        </Button>
-                        <Button variant="primary" onClick={handleClose}>
-                            Save Changes
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-            </>
-        );
+    openModal() {
+        this.setState({setIsOpen: true});
     }
+
+    closeModal(){
+        this.setState({setIsOpen: false});
+    }
+
 
 
     render() {
@@ -208,7 +189,27 @@ export default class AddITApplication extends Component {
                         <button className="btn btn-secondary" type="button" onClick={this.handleSubmit}>Submit</button>
                         <button className="btn btn-primary float-right" type="button" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">Ratings</button>
 
-                       <RatingModal/>
+                        <div>
+                            <button onClick={this.openModal}>Open Modal</button>
+                            <Modal
+                                isOpen={this.state.modalIsOpen}
+                                onAfterOpen={this.afterOpenModal}
+                                onRequestClose={this.closeModal}
+                                contentLabel="Example Modal"
+                            >
+
+                                <h2>Hello</h2>
+                                <button onClick={this.state.closeModal}>close</button>
+                                <div>I am a modal</div>
+                                <form>
+                                    <input />
+                                    <button>tab navigation</button>
+                                    <button>stays</button>
+                                    <button>inside</button>
+                                    <button>the modal</button>
+                                </form>
+                            </Modal>
+                        </div>
 
                     </form>
                 </div>

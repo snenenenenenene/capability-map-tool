@@ -6,6 +6,11 @@ import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+*
+* @author Bavo Van Meel
+*
+*/
 @Getter
 @Setter
 public class CapabilityItemId implements Serializable {

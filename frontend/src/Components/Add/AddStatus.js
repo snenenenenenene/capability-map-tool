@@ -19,7 +19,7 @@ export default class AddStatus extends Component {
         e.preventDefault();
         const formData = new FormData()
         formData.append('validityPeriod', this.state.validityPeriod)
-        await fetch(`http://localhost:8080/status/add`,{
+        await fetch(`http://localhost:8080/api/status/add`,{
             method: "POST",
             body: formData
         }).then(function (res) {
@@ -31,7 +31,7 @@ export default class AddStatus extends Component {
     }
 
     async componentDidMount() {
-        const statusResponse = await fetch(`http://localhost:8080/status/all`);
+        const statusResponse = await fetch(`http://localhost:8080/api/status/all`);
         const statusData = await statusResponse.json();
         this.setState({statuses: statusData});
     }

@@ -19,14 +19,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
-import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
-import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.service.statusservice.StatusService;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+*
+* @author Bavo Van Meel
+*
+*/
 // @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
@@ -40,12 +42,6 @@ public class StatusController {
 	public ResponseEntity<Void> addStatus(
 			@ModelAttribute("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityPeriod, 
 			UriComponentsBuilder builder) {
-		if (validityPeriod == null) {
-			throw new InvalidInputException("Invalid input.");
-		}
-		if (!statusService.existsByValidityPeriod(validityPeriod)) {
-			throw new DuplicateValueException("Validity period already exists.");
-		}
 		
 		Status status = statusService.save(validityPeriod);
 		Integer statusId = status.getStatusId();
@@ -56,20 +52,13 @@ public class StatusController {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(builder
-				.path("/status/get/{id}")
+				.path("{id}")
 				.buildAndExpand(validityPeriod).toUri());
 		return new ResponseEntity<>(headers, HttpStatus.CREATED);
 	}
 	
 	@GetMapping(path = "{id}")
-    public ResponseEntity<Status> getStatusById(@PathVariable("id") Integer id) {
-		if (id == null || id.equals(0)) {
-			throw new InvalidInputException("Status ID is not valid.");
-		}
-		if (!statusService.existsById(id)) {
-			throw new IndexDoesNotExistException("Status ID does not exists.");
-		}
-		
+    public ResponseEntity<Status> getStatusById(@PathVariable("id") Integer id) {		
 		Status status = statusService.get(id);
         return  new ResponseEntity<Status>(status, HttpStatus.OK);
     }
@@ -81,53 +70,28 @@ public class StatusController {
 	}
 	
 	@GetMapping(path = "exists/id/{id}")
-	public ResponseEntity<Boolean> doesStatusExistsById(@PathVariable("id") Integer id) {
-		if (id == null || id.equals(0)) {
-			throw new InvalidInputException("Status ID is not valid.");
-		}
-		
+	public ResponseEntity<Boolean> doesStatusExistsById(@PathVariable("id") Integer id) {		
 		boolean result = statusService.existsById(id);
 		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 	}
 	
 	@GetMapping(path = "exists/validityperiod/{validityperiod}")
 	public ResponseEntity<Boolean> doesValidityPeriodExists(
-			@PathVariable("validityperiod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityperiod) {
-		if (validityperiod == null) {
-			throw new InvalidInputException("Validity Period is not valid.");
-		}
-		
-		boolean result = (!statusService.existsByValidityPeriod(validityperiod));
+			@PathVariable("validityperiod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityPeriod) {		
+		boolean result = (!statusService.existsByValidityPeriod(validityPeriod));
 		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 	}
 	
 	@PutMapping(path = "update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Status> updateStatus(
 			@ModelAttribute("statusId") Integer statusId,
-			@ModelAttribute("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityPeriod) {
-		if (statusId == null || statusId.equals(0) || validityPeriod == null) {
-			throw new InvalidInputException("Invalid input.");
-		}
-		if (!statusService.existsById(statusId)) {
-			throw new IndexDoesNotExistException("Can not update status if it does not exist.");
-		}
-		if (!statusService.existsByValidityPeriod(validityPeriod)) {
-			throw new DuplicateValueException("Validity period already exists.");
-		}
-		
+			@ModelAttribute("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityPeriod) {		
 		Status status = statusService.update(statusId, validityPeriod);
 		return new ResponseEntity<Status>(status, HttpStatus.OK);
 	}
 	
 	@DeleteMapping(path = "delete/{id}")
-	public ResponseEntity<Void> deleteStatus(@PathVariable("id") Integer id) {
-		if (id == null || id.equals(0)) {
-			throw new InvalidInputException("Status ID is not valid.");
-		}
-		if (!statusService.existsById(id)) {
-			throw new IndexDoesNotExistException("Status ID does not exists.");
-		}
-		
+	public ResponseEntity<Void> deleteStatus(@PathVariable("id") Integer id) {		
 		statusService.delete(id);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
