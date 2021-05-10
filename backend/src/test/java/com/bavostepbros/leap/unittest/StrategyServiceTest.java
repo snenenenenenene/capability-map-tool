@@ -522,18 +522,17 @@ public class StrategyServiceTest {
 		assertEquals(strategy.getEnvironment().getEnvironmentName(), fetchedEnvironment.getEnvironmentName());
 	}
 
-	/*
-	 * @Test void
-	 * should_retrieveValidStrategies_whenGetStrategiesByEnvironmentIdDoesExistAndIsValid
-	 * () { Integer environmentId = strategy.getEnvironment().getEnvironmentId();
-	 * 
-	 * BDDMockito.doReturn(true).when(spyEnvironmentService).existsById(
-	 * environmentId);
-	 * BDDMockito.given(strategyDAL.findByEnvironment(environment)).willReturn(
-	 * strategies); List<Strategy> fetchedStrategies =
-	 * strategyService.getStrategiesByEnvironment(environmentId);
-	 * 
-	 * assertNotNull(fetchedStrategies); assertEquals(strategies.size(),
-	 * fetchedStrategies.size()); }
-	 */
+	@Test
+	void should_retrieveValidStrategies_whenGetStrategiesByEnvironmentIdDoesExistAndIsValid() {
+		Integer environmentId = strategy.getEnvironment().getEnvironmentId();
+
+		BDDMockito.doReturn(true).when(spyEnvironmentService).existsById(environmentId);
+		BDDMockito.given(environmentDAL.findById(environmentId)).willReturn(optionalEnvironment);
+		BDDMockito.given(strategyDAL.findByEnvironment(environment)).willReturn(strategies);
+		List<Strategy> fetchedStrategies = strategyService.getStrategiesByEnvironment(environmentId);
+
+		assertNotNull(fetchedStrategies);
+		assertEquals(strategies.size(), fetchedStrategies.size());
+	}
+	 
 }

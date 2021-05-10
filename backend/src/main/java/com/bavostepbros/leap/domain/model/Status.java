@@ -28,6 +28,7 @@ public class Status {
 
     @Id
     @GeneratedValue
+    @EqualsAndHashCode.Include
     @Column(name = "STATUSID")
     private Integer statusId;
     

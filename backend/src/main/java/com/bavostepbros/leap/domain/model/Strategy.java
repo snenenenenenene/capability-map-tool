@@ -33,6 +33,7 @@ public class Strategy {
 
     @Id
     @GeneratedValue
+    @EqualsAndHashCode.Include
     @Column(name = "STRATEGYID")
     private Integer strategyId;
 

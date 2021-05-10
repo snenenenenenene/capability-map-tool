@@ -32,6 +32,7 @@ public class Capability {
 
     @Id
     @GeneratedValue
+    @EqualsAndHashCode.Include
     @Column(name = "CAPABILITYID")
     private Integer capabilityId;
     
