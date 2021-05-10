@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
+import com.bavostepbros.leap.domain.customexceptions.EnvironmentException;
 import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
 import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
+import com.bavostepbros.leap.domain.customexceptions.StatusException;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
@@ -34,6 +36,18 @@ public class ErrorHandlingController extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(DuplicateValueException.class)
 	protected ResponseEntity<String> handleDuplicateValueException(DuplicateValueException exception) {
 		logger.error(String.format("DuplicateValueException with message '%s' was thrown.", exception.getMessage()));
+		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(EnvironmentException.class)
+	protected ResponseEntity<String> handleEnvironmentException(EnvironmentException exception) {
+		logger.error(String.format("EnvironmentException with message '%s' was thrown.", exception.getMessage()));
+		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(StatusException.class)
+	protected ResponseEntity<String> handleStatusException(StatusException exception) {
+		logger.error(String.format("EnvironmentException with message '%s' was thrown.", exception.getMessage()));
 		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 }

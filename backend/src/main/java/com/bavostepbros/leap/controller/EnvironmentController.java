@@ -22,6 +22,11 @@ import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentServic
 
 import lombok.RequiredArgsConstructor;
 
+/**
+*
+* @author Bavo Van Meel
+*
+*/
 // @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
@@ -45,7 +50,7 @@ public class EnvironmentController {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(builder
-				.path("/environment/get/{id}")
+				.path("get/{id}")
 				.buildAndExpand(environmentId).toUri());
 		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
 	}

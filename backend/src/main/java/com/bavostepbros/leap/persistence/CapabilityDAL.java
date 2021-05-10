@@ -8,6 +8,11 @@ import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 
+/**
+*
+* @author Bavo Van Meel
+*
+*/
 public interface CapabilityDAL extends JpaRepository<Capability, Integer> {
 	List<Capability> findByEnvironment(Environment environment);
 	List<Capability> findByLevel(CapabilityLevel level);

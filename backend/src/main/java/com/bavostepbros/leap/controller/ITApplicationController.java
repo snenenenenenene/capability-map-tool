@@ -1,6 +1,5 @@
 package com.bavostepbros.leap.controller;
 
-
 import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
 import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
 import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
@@ -20,8 +19,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("itapplication")
 @RequiredArgsConstructor
+@RequestMapping("/api/itapplication/")
 public class ITApplicationController {
 
     @Autowired
@@ -29,7 +28,7 @@ public class ITApplicationController {
     private StatusService statusService;
 
     @PostMapping(path = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity addITApplication(
+    public ResponseEntity<Void> addITApplication(
             @ModelAttribute Integer statusID,
             @ModelAttribute String name,
             @ModelAttribute String technology,
@@ -55,11 +54,11 @@ public class ITApplicationController {
                 expectedScalability, currentPerformance, expectedPerformance, currentSecurityLevel,
                 expectedSecurityLevel, currentsStability, expectedStability, costCurrency,
                 currentValue, currentYearlyCost, timeValue).getId();
-        if(applicationId == null) return new ResponseEntity(HttpStatus.CONFLICT);
+        if(applicationId == null) return new ResponseEntity<>(HttpStatus.CONFLICT);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder.path("/get/{id}").buildAndExpand(applicationId).toUri());
-        return new ResponseEntity(headers, HttpStatus.CREATED);
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/get/{id}")
@@ -79,7 +78,7 @@ public class ITApplicationController {
     }
 
     @PutMapping(path = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity updateITApplication(@ModelAttribute Integer statusID,
+    public ResponseEntity<Void> updateITApplication(@ModelAttribute Integer statusID,
                                               @ModelAttribute String name,
                                               @ModelAttribute String technology,
                                               @ModelAttribute String version,
@@ -104,18 +103,18 @@ public class ITApplicationController {
                 expectedScalability, currentPerformance, expectedPerformance, currentSecurityLevel,
                 expectedSecurityLevel, currentsStability, expectedStability, costCurrency,
                 currentValue, currentYearlyCost, timeValue).getId();
-        if(applicationId == null) return new ResponseEntity(HttpStatus.CONFLICT);
+        if(applicationId == null) return new ResponseEntity<>(HttpStatus.CONFLICT);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder.path("/get/{id}").buildAndExpand(applicationId).toUri());
-        return new ResponseEntity(headers, HttpStatus.CREATED);
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "/delete/{id}")
-    public ResponseEntity deleteITApplication(@RequestParam Integer id){
+    public ResponseEntity<Void> deleteITApplication(@RequestParam Integer id){
         if(id == null || id.equals(0)) throw new InvalidInputException("Invalid input exception");
         if (!itApplicationService.existsById(id)) throw new IndexDoesNotExistException("Capability ID does not exists.");
 
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
