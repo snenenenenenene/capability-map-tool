@@ -1,0 +1,218 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: settings-__KUBE_NAME__
+  labels:
+    app: __KUBE_NAME__
+data:
+  DBHOST: "service-mariadb-studenten.mariadb"
+  DBUSER: "springuser"
+  DBPASSWORD: "ThePassword"
+  DBNAME: "bavoandstepbros"
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: nginx-config-__KUBE_NAME__
+data:
+  nginx.conf: |
+      server {
+        listen 8080 default_server;
+                
+        # Set nginx to serve files from the shared volume!
+        root /var/www/html;
+        server_name _;
+        
+        index index.html;
+
+        add_header X-Frame-Options "SAMEORIGIN";
+        add_header X-XSS-Protection "1; mode=block";
+        # add_header X-Content-Type-Options "nosniff";
+
+        charset utf-8;
+        include mime.types;
+        location / {
+          try_files $uri $uri/ /index.html?$args;
+        }
+
+        location = /favicon.ico { access_log off; log_not_found off; }
+        location = /robots.txt  { access_log off; log_not_found off; }
+
+        location ~ /\.(?!well-known).* {
+          deny all;
+        }
+      }
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-__KUBE_NAME__
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 3Gi
+  storageClassName: qtree
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-__KUBE_NAME__
+  labels:
+    app: backend-__KUBE_NAME__
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-__KUBE_NAME__
+  template:
+    metadata:
+      labels:
+        app: backend-__KUBE_NAME__
+    spec:
+      containers:
+      - name: __KUBE_NAME__-openjdk16
+        image: openjdk:16-alpine
+        imagePullPolicy: IfNotPresent
+        command: ['java','-Xmx512m', '-jar','/target/leap-0.0.1-SNAPSHOT.jar' ]
+        ports:
+        - containerPort: 8080
+        envFrom:
+            - configMapRef:
+                name: settings-__KUBE_NAME__
+        volumeMounts:
+        - name: target
+          mountPath: /target
+        - name: upload
+          mountPath: /upload
+        resources:
+          requests:
+            memory: "1024Mi"
+            cpu: "1000m"
+          limits:
+            memory: "1024Mi"
+            cpu: "2000m"
+      initContainers:
+      - name: init
+        image: __CI_REGISTRY_IMAGE__:__VERSION__
+        imagePullPolicy: Always
+        command: ['sh','-c','cp -r /source/backend/. /target/']
+        volumeMounts:
+        - name: target
+          mountPath: /target          
+      volumes:
+        - name: target
+          emptyDir: {}
+        - name: upload
+          persistentVolumeClaim:
+            claimName: pvc-__KUBE_NAME__
+      imagePullSecrets:
+      - name: ap-gitlab-registry
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-__KUBE_NAME__
+  labels:
+    app: frontend-__KUBE_NAME__
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend-__KUBE_NAME__
+  template:
+    metadata:
+      labels:
+        app: frontend-__KUBE_NAME__
+    spec:
+      containers:
+      - name: __KUBE_NAME__-nginx
+        image: nginxinc/nginx-unprivileged:alpine
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: target
+          mountPath: /var/www/html
+        - name: nginx-config-volume
+          mountPath: /etc/nginx/conf.d/default.conf
+          subPath: nginx.conf
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "500m"
+          limits:
+            memory: "512Mi"
+            cpu: "1000m"
+      initContainers:
+      - name: init
+        image: __CI_REGISTRY_IMAGE__:__VERSION__
+        imagePullPolicy: Always
+        command: ['sh','-c','cp -r /source/frontend/. /target/']
+        volumeMounts:
+        - name: target
+          mountPath: /target          
+      volumes:
+        - name: target
+          emptyDir: {}
+        - name: nginx-config-volume
+          configMap:
+            name: nginx-config-__KUBE_NAME__
+      imagePullSecrets:
+      - name: ap-gitlab-registry
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-backend-__KUBE_NAME__
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: backend-__KUBE_NAME__
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-frontend-__KUBE_NAME__
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: frontend-__KUBE_NAME__
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-__KUBE_NAME__
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+    nginx.ingress.kubernetes.io/proxy-buffers: "4 128k"
+    nginx.ingress.kubernetes.io/proxy-busy-buffers-size: "128k"
+spec:
+  rules:
+  - host: __KUBE_URL__ 
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: service-frontend-__KUBE_NAME__
+          servicePort: 8080
+      - path: /api/
+        backend:
+          serviceName: service-backend-__KUBE_NAME__
+          servicePort: 8080
+  tls:
+  - hosts:
+    - __KUBE_URL__
+---

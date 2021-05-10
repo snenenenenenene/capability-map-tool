@@ -13,7 +13,7 @@ export default class Home extends Component
     }
 
     async componentDidMount() {
-        await fetch(`http://localhost:8080/api/user/all`)
+        await fetch(`${process.env.REACT_APP_API_URL}/user/all`)
             .then(resp => resp.json())
             .then(data => {
                 this.setState({users: data});

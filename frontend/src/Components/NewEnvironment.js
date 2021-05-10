@@ -20,7 +20,7 @@ export default class NewEnvironment extends Component
         e.preventDefault();
          const formData = new FormData()
          formData.append('environmentName', this.state.environmentName)
-        await fetch(`http://localhost:8080/api/environment/add`,{
+        await fetch(`${process.env.REACT_APP_API_URL}/environment/add`,{
              method: "POST",
              body: formData
      }).then(function (res) {
@@ -37,7 +37,7 @@ export default class NewEnvironment extends Component
     }
 
     async componentDidMount() {
-        await fetch(`http://localhost:8080/api/environment/all`)
+        await fetch(`${process.env.REACT_APP_API_URL}/environment/all`)
         .then(resp => resp.json())
             .then(data => {
                 this.setState({environments: data});

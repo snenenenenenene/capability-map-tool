@@ -41,7 +41,7 @@ export default class AddCapability extends Component {
         formData.append('resourceQuality', this.state.resourcesQuality)
         formData.append('statusId', this.state.statusId)
         formData.append('level', this.state.capabilityLevel)
-        await fetch(`http://localhost:8080/api/capability/add`,{
+        await fetch(`${process.env.REACT_APP_API_URL}/capability/add`,{
             method: "POST",
             body: formData
         }).then(function (res) {
@@ -55,7 +55,7 @@ export default class AddCapability extends Component {
     }
 
     async componentDidMount() {
-        await fetch(`http://localhost:8080/api/environment/environmentname/${this.state.environmentName}`)
+        await fetch(`${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`)
             .then(resp => resp.json())
             .then(data => {
                 this.setState({environmentId: data.environmentId});
@@ -64,7 +64,7 @@ export default class AddCapability extends Component {
                 this.props.history.push('/error')
             })
 
-        await fetch(`http://localhost:8080/api/status/all`)
+        await fetch(`${process.env.REACT_APP_API_URL}/status/all`)
             .then(resp => resp.json())
             .then(data => {
                 this.setState({statuses: data});
@@ -73,7 +73,7 @@ export default class AddCapability extends Component {
                 this.props.history.push('/error')
             })
 
-        await fetch(`http://localhost:8080/api/capability/getallbyenvironment/${this.state.environmentId}`)
+        await fetch(`${process.env.REACT_APP_API_URL}/capability/getallbyenvironment/${this.state.environmentId}`)
             .then(resp => resp.json())
             .then(data => {
                 this.setState({capabilities: data});
