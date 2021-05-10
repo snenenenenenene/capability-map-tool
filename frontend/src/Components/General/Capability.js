@@ -16,11 +16,11 @@ export default class Capability extends Component
     }
 
     async componentDidMount() {
-        const environmentResponse = await fetch(`http://localhost:8080/api/environment/environmentname/${this.state.environmentName}`);
+        const environmentResponse = await fetch(`${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`);
         const environmentData = await environmentResponse.json();
         this.setState({environmentId: environmentData.environmentId});
 
-        const capabilityResponse = await fetch(`http://localhost:8080/api/capability/getallbyenvironment/${this.state.environmentId}`);
+        const capabilityResponse = await fetch(`${process.env.REACT_APP_API_URL}/capability/getallbyenvironment/${this.state.environmentId}`);
         const capabilityData = await capabilityResponse.json();
         this.setState({capabilities: capabilityData});
     }

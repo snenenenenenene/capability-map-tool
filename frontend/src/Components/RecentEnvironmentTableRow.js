@@ -5,10 +5,10 @@ import deleteImg from '../img/delete.jpg'
 export default class RecentEnvironmentTableRow extends Component {
 
     deleteEnvironment (){
-        fetch(`http://localhost:8080/api/environment/delete/${this.props.obj.environmentId}`, {
+        fetch(`${process.env.REACT_APP_API_URL}/environment/delete/${this.props.obj.environmentId}`, {
             method: "DELETE"
         });
-        this.props.history.push('http://localhost:3000/recent')
+        this.props.history.push('/recent')
     }
 
     render() {

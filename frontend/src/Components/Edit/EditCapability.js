@@ -45,7 +45,7 @@ export default class EditCapability extends Component {
         for(var pair of formData.entries()) {
             console.log(pair[0]+ ', '+ pair[1]);
         }
-        await fetch(`http://localhost:8080/api/capability/update`,{
+        await fetch(`${process.env.REACT_APP_API_URL}/capability/update`,{
             method: "PUT",
             body: formData
         }).then(function (res) {
@@ -57,7 +57,7 @@ export default class EditCapability extends Component {
     }
 
     async componentDidMount() {
-        await fetch(`http://localhost:8080/api/environment/environmentname/${this.state.environmentName}`)
+        await fetch(`${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`)
             .then(resp => resp.json())
             .then(data => {
                 this.setState({environmentId: data.environmentId});
@@ -66,7 +66,7 @@ export default class EditCapability extends Component {
                 this.props.history.push('/error')
             })
 
-        await fetch(`http://localhost:8080/api/status/all`)
+        await fetch(`${process.env.REACT_APP_API_URL}/status/all`)
             .then(resp => resp.json())
             .then(data => {
                 this.setState({statuses: data});
@@ -75,7 +75,7 @@ export default class EditCapability extends Component {
                 this.props.history.push('/error')
             })
 
-        await fetch(`http://localhost:8080/api/capability/all`)
+        await fetch(`${process.env.REACT_APP_API_URL}/capability/all`)
             .then(resp => resp.json())
             .then(data => {
                 this.setState({capabilities: data});
@@ -84,7 +84,7 @@ export default class EditCapability extends Component {
                 this.props.history.push('/error')
             })
 
-        await fetch(`http://localhost:8080/api/capability/${this.state.capabilityId}`)
+        await fetch(`${process.env.REACT_APP_API_URL}/capability/${this.state.capabilityId}`)
             .then(resp => resp.json())
             .then(data => {
                 this.setState({
