@@ -50,3 +50,8 @@
     transform: rotate(360deg);
   }
 }
+
+body {
+  /* background: #ffead9;
+  background: linear-gradient(to right, #ffead9, #ffc799); */
+}
