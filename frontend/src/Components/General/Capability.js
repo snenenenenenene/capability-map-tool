@@ -9,12 +9,20 @@ export default class Capability extends Component
         super(props);
         this.state = {
             environments: [],
-            environmentName: '',
+            environmentName: this.props.match.params.name,
+            environmentId: '',
             capabilities: []
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        const environmentResponse = await fetch(`http://localhost:8080/api/environment/environmentname/${this.state.environmentName}`);
+        const environmentData = await environmentResponse.json();
+        this.setState({environmentId: environmentData.environmentId});
+
+        const capabilityResponse = await fetch(`http://localhost:8080/api/capability/getallbyenvironment/${this.state.environmentId}`);
+        const capabilityData = await capabilityResponse.json();
+        this.setState({capabilities: capabilityData});
     }
 
     capabilityTable() {
@@ -40,8 +48,9 @@ export default class Capability extends Component
                 <table className='table table-striped'>
                     <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Name</th>
-                        <th>Description</th>
+                        <td></td>
                     </tr>
                     </thead>
                     <tbody>

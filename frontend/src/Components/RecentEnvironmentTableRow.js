@@ -5,13 +5,10 @@ import deleteImg from '../img/delete.jpg'
 export default class RecentEnvironmentTableRow extends Component {
 
     deleteEnvironment (){
-        const response = fetch(`http://localhost:8080/environment/delete/${this.props.obj.environmentId}`, {
+        fetch(`http://localhost:8080/api/environment/delete/${this.props.obj.environmentId}`, {
             method: "DELETE"
         });
-        if (!response.ok) {
-            console.log('Failed to delete environment');
-        }
-        console.log(`Environment deleted with key: ${this.props.obj.environmentId}`);
+        this.props.history.push('http://localhost:3000/recent')
     }
 
     render() {

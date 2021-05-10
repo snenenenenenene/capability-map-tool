@@ -12,7 +12,15 @@ export default class Home extends Component
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        await fetch(`http://localhost:8080/api/user/all`)
+            .then(resp => resp.json())
+            .then(data => {
+                this.setState({users: data});
+            })
+            .catch(error => {
+                this.props.history.push('/error')
+            })
     }
 
     usersTableRow() {

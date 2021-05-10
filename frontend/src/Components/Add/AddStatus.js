@@ -9,6 +9,7 @@ export default class AddStatus extends Component {
             environments: [],
             environmentName: this.props.match.params.name,
             validityPeriod: new Date(),
+            statusConfirmation: ''
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this)
@@ -19,15 +20,15 @@ export default class AddStatus extends Component {
         e.preventDefault();
         const formData = new FormData()
         formData.append('validityPeriod', this.state.validityPeriod)
-        await fetch(`http://localhost:8080/api/status/add`,{
+        await fetch(`http://localhost:8080/api/status/add`, {
             method: "POST",
             body: formData
-        }).then(function (res) {
-            if (res.ok) {
-                console.log("Status added");
-            } else if (res.status === 401) {
-                console.log("Oops,, Something went wrong");
-            }})
+        })
+        .then(resp => this.setState({statusConfirmation: "added status"}))
+        .catch(error => {
+            console.log(error)
+            this.setState({statusConfirmation: 'failed to add status'})
+        })
     }
 
     async componentDidMount() {
@@ -80,6 +81,7 @@ export default class AddStatus extends Component {
                             <div className="col-sm-6">
                             </div>
                         </div>
+                        <p style={{color: "green"}}>{this.state.statusConfirmation}</p>
                         <button className="btn btn-primary" type="button" onClick={this.handleSubmit}>Submit</button>
                     </form>
                 </div>

@@ -2,8 +2,6 @@ import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import plusImg from '../img/plus.png'
 
-
-
 export default class Environment extends Component
 {
     constructor(props) {
@@ -20,9 +18,7 @@ export default class Environment extends Component
             resources: 0,
             businessProcesses: 0,
             status: 0,
-            hasError: false
         };
-
     }
 
     async componentDidMount() {
@@ -43,7 +39,7 @@ export default class Environment extends Component
                 });
             })
             .catch(error => {
-                this.props.history.push('/error')
+                this.props.history.push('/notfound')
             })
     }
 
@@ -117,7 +113,7 @@ export default class Environment extends Component
                         </div>
                         <div className="card">
                             <div className="card-body">
-                                <h5 className="card-title text-center">Business processes</h5>
+                                <h5 className="card-title text-center">Business Processes</h5>
                                 <div className="text-center">
                                     <Link to={`${this.state.environmentName}/businessprocess/add`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
                                 </div>

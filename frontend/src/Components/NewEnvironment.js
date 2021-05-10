@@ -37,10 +37,14 @@ export default class NewEnvironment extends Component
     }
 
     async componentDidMount() {
-        const response = await fetch(`http://localhost:8080/api/environment/all`);
-        const data = await response.json();
-        this.setState({environments: data});
-        console.log(this.state.environments);
+        await fetch(`http://localhost:8080/api/environment/all`)
+        .then(resp => resp.json())
+            .then(data => {
+                this.setState({environments: data});
+            })
+            .catch(error => {
+                this.props.history.push('/error')
+            })
     }
 
     recentEnvironmentTableRow() {
@@ -67,8 +71,9 @@ export default class NewEnvironment extends Component
                         <table className=' table table-striped'>
                             <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Name</th>
-                                <th>Description</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -81,7 +86,7 @@ export default class NewEnvironment extends Component
                 <p>New Environments</p>
                 <form className="form-inline" onSubmit={this.handleSubmit}>
                     <Input type="text" name="environmentName" value={this.state.environmentName} onChange={this.handleInputChange} className="form-control" placeholder="New Environment"/>
-                    <button className="btn primary" type="button" onClick={this.handleSubmit}>Add</button>
+                    <button className="btn btn-secondary" type="button" onClick={this.handleSubmit}>Add</button>
                 </form>
                 </div>
             </div>

@@ -8,11 +8,13 @@ export default class CapabilityTableRow extends Component {
         return (
             <tr>
                 <td>
-                    <Link to={ '/delete/' + this.props.obj.name }><img src={ deleteImg } alt='delete' width='15' height='18'/></Link>&nbsp;&nbsp;
-                    <Link to={ '/edit/' + this.props.obj.name }>{ this.props.obj.name }</Link>
+                    { this.props.obj.capabilityId}
                 </td>
                 <td>
-                    { this.props.obj.description }
+                    <Link to={ /environment/ + this.props.obj.environment.environmentName + '/capability/' + this.props.obj.capabilityId+ '/edit' }>{ this.props.obj.capabilityName }</Link>
+                </td>
+                <td>
+                    <Link to={ '/delete/' + this.props.obj.capabilityName }><img src={ deleteImg } alt='delete' width='15' height='18'/></Link>&nbsp;&nbsp;
                 </td>
             </tr>
         )
