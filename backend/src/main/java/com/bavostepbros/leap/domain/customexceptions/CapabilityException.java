@@ -5,15 +5,15 @@ package com.bavostepbros.leap.domain.customexceptions;
 * @author Bavo Van MeeL
 *
 */
-public class StrategyException extends RuntimeException {
+public class CapabilityException extends RuntimeException {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public StrategyException(String message) {
+	public CapabilityException(String message) {
 		super(message);
 	}
-
+	
 }

@@ -99,7 +99,7 @@ public class StrategyServiceImpl implements StrategyService {
 		if (!existsById(strategyId)) {
 			throw new StrategyException("Can not update strategy if it does not exist.");
 		}
-		if (existsByStrategyName(strategyName)) {
+		if (!existsByStrategyName(strategyName)) {
 			throw new DuplicateValueException("Strategy name already exists.");
 		}
 		if (!statusService.existsById(statusId)) {

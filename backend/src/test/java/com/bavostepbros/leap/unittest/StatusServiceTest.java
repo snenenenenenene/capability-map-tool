@@ -186,7 +186,7 @@ public class StatusServiceTest {
 		Integer id = status.getStatusId();
 		String expected = "Validity period already exists.";
 		BDDMockito.doReturn(true).when(spyStatusService).existsById(id);
-		BDDMockito.doReturn(true).when(spyStatusService).existsByValidityPeriod(falseStatusDate);
+		BDDMockito.doReturn(false).when(spyStatusService).existsByValidityPeriod(falseStatusDate);
 		
 		Exception exception = assertThrows(StatusException.class,
 				() -> statusService.update(id, falseStatusDate));
@@ -201,7 +201,7 @@ public class StatusServiceTest {
 		statusService.save(falseStatusDate);
 		
 		BDDMockito.doReturn(true).when(spyStatusService).existsById(id);
-		BDDMockito.doReturn(false).when(spyStatusService).existsByValidityPeriod(falseStatusDate);
+		BDDMockito.doReturn(true).when(spyStatusService).existsByValidityPeriod(falseStatusDate);
 		
 		BDDMockito.given(statusDAL.save(BDDMockito.any(Status.class))).willReturn(status);
 		Status fetchedStatus = statusService.update(id, falseStatusDate);
