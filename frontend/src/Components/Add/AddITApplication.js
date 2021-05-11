@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import Modal from 'react-modal';
 
 export default class AddITApplication extends Component {
     constructor(props) {

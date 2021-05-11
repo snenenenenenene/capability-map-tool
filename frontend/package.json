@@ -18,6 +18,8 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.0",
     "react-select": "^4.3.0",
+    "react-simple-tree-menu": "^1.1.18",
+    "react-stars": "^2.2.5",
     "reactstrap": "^8.7.1",
     "web-vitals": "^0.2.4"
   },

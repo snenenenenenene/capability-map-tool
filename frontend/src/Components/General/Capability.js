@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import CapabilityTableRow from "./CapabilityTableRow";
-
+import TreeMenu from 'react-simple-tree-menu'
+// import TreeViewMenu from 'react-simple-tree-menu'
 
 export default class Capability extends Component
 {
@@ -22,8 +23,25 @@ export default class Capability extends Component
 
         const capabilityResponse = await fetch(`${process.env.REACT_APP_API_URL}/capability/getallbyenvironment/${this.state.environmentId}`);
         const capabilityData = await capabilityResponse.json();
+
+        // capabilityData.map(i=>i.children=null);
+
         this.setState({capabilities: capabilityData});
+        
+        this.createDataTree(this.state.capabilities);
     }
+
+    createDataTree(dataset) {
+      const hashTable = Object.create(null);
+      dataset.forEach(aData => hashTable[aData.ID] = {...aData, childNodes: []});
+      const dataTree = [];
+      dataset.forEach(aData => {
+        if(aData.parentID) hashTable[aData.parentID].childNodes.push(hashTable[aData.ID])
+        else dataTree.push(hashTable[aData.ID])
+      });
+      console.log(dataTree)
+      return dataTree;
+    };
 
     capabilityTable() {
         return this.state.capabilities.map((row, i) => {
@@ -46,6 +64,78 @@ export default class Capability extends Component
                 <br/><br/>
                 <div className="row">
                     <div className="col-sm-9">
+                    <TreeMenu
+  cacheSearch
+  data={[
+    {
+      key: 'mammal',
+      label: 'Mammal',
+      nodes: [
+        {
+          key: 'canidae',
+          label: 'Canidae',
+          nodes: [
+            {
+              key: 'dog',
+              label: 'Dog',
+              nodes: [],
+              url: 'https://www.google.com/search?q=dog'
+            },
+            {
+              key: 'fox',
+              label: 'Fox',
+              nodes: [],
+              url: 'https://www.google.com/search?q=fox'
+            },
+            {
+              key: 'wolf',
+              label: 'Wolf',
+              nodes: [],
+              url: 'https://www.google.com/search?q=wolf'
+            }
+          ],
+          url: 'https://www.google.com/search?q=canidae'
+        }
+      ],
+      url: 'https://www.google.com/search?q=mammal'
+    },
+    {
+      key: 'reptile',
+      label: 'Reptile',
+      nodes: [
+        {
+          key: 'squamata',
+          label: 'Squamata',
+          nodes: [
+            {
+              key: 'lizard',
+              label: 'Lizard',
+              url: 'https://www.google.com/search?q=lizard'
+            },
+            {
+              key: 'snake',
+              label: 'Snake',
+              url: 'https://www.google.com/search?q=snake'
+            },
+            {
+              key: 'gekko',
+              label: 'Gekko',
+              url: 'https://www.google.com/search?q=gekko'
+            }
+          ],
+          url: 'https://www.google.com/search?q=squamata'
+        }
+      ],
+      url: 'https://www.google.com/search?q=reptile'
+    }
+  ]}
+  debounceTime={125}
+  disableKeyboard={false}
+  hasSearch
+  onClickItem={function noRefCheck(){}}
+  resetOpenNodesOnDataUpdate={false}
+/>
+
                 <table className='table table-striped'>
                     <thead>
                     <tr>

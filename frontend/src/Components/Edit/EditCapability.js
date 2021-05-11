@@ -34,6 +34,7 @@ export default class EditCapability extends Component {
         formData.append('environmentName', this.state.environmentName)
         formData.append('environmentId', this.state.environmentId)
         formData.append('capabilityName', this.state.capabilityName)
+        formData.append('capabilityId', this.state.capabilityId)
         formData.append('parentCapabilityId', this.state.parentCapabilityId)
         formData.append('paceOfChange', this.state.paceOfChange)
         formData.append('targetOperatingModel', this.state.TOM)
@@ -42,9 +43,11 @@ export default class EditCapability extends Component {
         formData.append('resourceQuality', this.state.resourceQuality)
         formData.append('statusId', this.state.statusId)
         formData.append('level', this.state.capabilityLevel)
+        console.log(formData)
         for(var pair of formData.entries()) {
             console.log(pair[0]+ ', '+ pair[1]);
         }
+
         await fetch(`${process.env.REACT_APP_API_URL}/capability/update`,{
             method: "PUT",
             body: formData
@@ -98,7 +101,7 @@ export default class EditCapability extends Component {
                     resourceQuality: data.resourceQuality,
                     statusId: data.status.statusId,
                     capabilityLevel: data.level,
-                    validityPeriod: data.status.validityPeriod
+                    validityPeriod: data.status.validityPeriod,
                 });
             })
             .catch(error => {
