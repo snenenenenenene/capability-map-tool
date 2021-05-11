@@ -106,11 +106,9 @@ public class EnvironmentServiceTest {
 	}
 
 	@Test
-	void should_throwInvalidInputException_whenIdNotValidWithId() {
+	void should_throwInvalidInputException_whenGetEnvironmentIdNotValidWithId() {
 		Integer invalidId = 0;
-		String environmentName = "Test";
 		String expected = "Environment ID is not valid.";
-		environmentService.save(environmentName);
 
 		Exception exception = assertThrows(InvalidInputException.class, 
 				() -> environmentService.get(invalidId));
@@ -223,7 +221,7 @@ public class EnvironmentServiceTest {
 		Integer id = environment.getEnvironmentId();
 		String expected = "Environment name already exists.";
 		BDDMockito.doReturn(true).when(spyService).existsById(id);
-		BDDMockito.doReturn(true).when(spyService).existsByEnvironmentName(environmentName);
+		BDDMockito.doReturn(false).when(spyService).existsByEnvironmentName(environmentName);
 
 		Exception exception = assertThrows(EnvironmentException.class,
 				() -> environmentService.update(id, environmentName));
@@ -238,7 +236,7 @@ public class EnvironmentServiceTest {
 		environmentService.save(falseEnvironmentName);
 
 		Mockito.doReturn(true).when(spyService).existsById(id);
-		Mockito.doReturn(false).when(spyService).existsByEnvironmentName(falseEnvironmentName);
+		Mockito.doReturn(true).when(spyService).existsByEnvironmentName(falseEnvironmentName);
 
 		BDDMockito.given(environmentDAL.save(environment)).willReturn(environment);
 		Environment fetchedEnvironment = environmentService.update(id, falseEnvironmentName);
@@ -261,15 +259,9 @@ public class EnvironmentServiceTest {
 	}
 
 	@Test
-	void should_throwIndexDoesNotExistException_whenDeleteInputIsValid() {
-		String falseEnvironmentName = environment.getEnvironmentName();
+	void should_throwIndexDoesNotExistException_whenDeleteInputDoesNotExists() {
 		Integer id = environment.getEnvironmentId();
 		String expected = "Environment ID does not exists.";
-
-		Mockito.doReturn(true).when(spyService).existsByEnvironmentName(falseEnvironmentName);
-		BDDMockito.given(environmentDAL.save(BDDMockito.any(Environment.class))).willReturn(environment);
-		Environment savedEnvironment = environmentService.save(falseEnvironmentName);
-		assertNotNull(savedEnvironment);
 
 		environmentDAL.deleteById(id);
 

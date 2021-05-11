@@ -11,6 +11,7 @@ import javax.persistence.OneToOne;
 
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,10 +27,12 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Capability {
 
     @Id
     @GeneratedValue
+    @EqualsAndHashCode.Include
     @Column(name = "CAPABILITYID")
     private Integer capabilityId;
     

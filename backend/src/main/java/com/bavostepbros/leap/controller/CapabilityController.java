@@ -16,14 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
-import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
-import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
 import com.bavostepbros.leap.domain.model.Capability;
-import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 import com.bavostepbros.leap.domain.service.capabilityservice.CapabilityService;
-import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
-import com.bavostepbros.leap.domain.service.statusservice.StatusService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,30 +35,18 @@ public class CapabilityController {
 	@Autowired
 	private CapabilityService capService;
 
-	@Autowired
-	private EnvironmentService envService;
-
-	@Autowired
-	private StatusService statusService;
-
 	@PostMapping(path = "add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<Void> addCapability(@ModelAttribute("environmentId") Integer environmentId,
+	public ResponseEntity<Void> addCapability(
+			@ModelAttribute("environmentId") Integer environmentId,
 			@ModelAttribute("statusId") Integer statusId,
 			@ModelAttribute("parentCapabilityId") Integer parentCapabilityId,
-			@ModelAttribute("capabilityName") String capabilityName, @ModelAttribute("level") CapabilityLevel level,
+			@ModelAttribute("capabilityName") String capabilityName, 
+			@ModelAttribute("level") String level,
 			@ModelAttribute("paceOfChange") boolean paceOfChange,
 			@ModelAttribute("targetOperatingModel") String targetOperatingModel,
 			@ModelAttribute("resourceQuality") Integer resourceQuality,
 			@ModelAttribute("informationQuality") Integer informationQuality,
 			@ModelAttribute("applicationFit") Integer applicationFit, UriComponentsBuilder builder) {
-		if (environmentId == null || environmentId.equals(0) || statusId == null || statusId.equals(0)
-				|| parentCapabilityId == null || parentCapabilityId.equals(0) || capabilityName == null
-				|| capabilityName.isBlank() || capabilityName.isEmpty()) {
-			throw new InvalidInputException("Invalid input.");
-		}
-		if (!capService.existsByCapabilityName(capabilityName)) {
-			throw new DuplicateValueException("Capability name already exists.");
-		}
 
 		Capability capability = capService.save(environmentId, statusId, parentCapabilityId, capabilityName, level,
 				paceOfChange, targetOperatingModel, resourceQuality, informationQuality, applicationFit);
@@ -81,37 +63,18 @@ public class CapabilityController {
 
 	@GetMapping("{id}")
 	public ResponseEntity<Capability> getCapabilityById(@PathVariable("id") Integer id) {
-		if (id == null || id.equals(0)) {
-			throw new InvalidInputException("Capability ID is not valid.");
-		}
-		if (!capService.existsById(id)) {
-			throw new IndexDoesNotExistException("Capability ID does not exists.");
-		}
-
 		Capability capability = capService.get(id);
 		return new ResponseEntity<Capability>(capability, HttpStatus.OK);
 	}
 
 	@GetMapping(path = "getallbyenvironment/{id}")
 	public ResponseEntity<List<Capability>> getAllCapabilitiesByEnvironment(@PathVariable("id") Integer id) {
-		if (id == null || id.equals(0)) {
-			throw new InvalidInputException("Environment ID is not valid.");
-		}
-		if (!envService.existsById(id)) {
-			throw new IndexDoesNotExistException("Environment ID does not exists.");
-		}
-
 		List<Capability> capabilities = capService.getCapabilitiesByEnvironment(id);
 		return new ResponseEntity<List<Capability>>(capabilities, HttpStatus.OK);
 	}
 
 	@GetMapping(path = "getallbylevel/{level}")
-	public ResponseEntity<List<Capability>> getAllCapabilitiesByLevel(@PathVariable("level") CapabilityLevel level) {
-		if (level == null) {
-			throw new InvalidInputException("Level is not valid.");
-		}
-		// TODO Check if level is in bounds. (Enum class)
-
+	public ResponseEntity<List<Capability>> getAllCapabilitiesByLevel(@PathVariable("level") String level) {
 		List<Capability> capabilities = capService.getCapabilitiesByLevel(level);
 		return new ResponseEntity<List<Capability>>(capabilities, HttpStatus.OK);
 	}
@@ -119,31 +82,13 @@ public class CapabilityController {
 	@GetMapping(path = "getallbyparentcapabilityid/{parentcapabilityid}")
 	public ResponseEntity<List<Capability>> getAllCapabilitiesByParentCapabilityId(
 			@PathVariable("parentcapabilityid") Integer parentId) {
-		if (parentId == null || parentId.equals(0)) {
-			throw new InvalidInputException("Parent ID is not valid.");
-		}
-		if (!envService.existsById(parentId)) {
-			throw new IndexDoesNotExistException("Parent ID does not exists.");
-		}
-
 		List<Capability> capabilities = capService.getCapabilityChildren(parentId);
 		return new ResponseEntity<List<Capability>>(capabilities, HttpStatus.OK);
 	}
 
 	@GetMapping(path = "getallbyparentidandlevel/{parentid}/{level}")
 	public ResponseEntity<List<Capability>> getAllCapabilitiesByParentIdAndLevel(
-			@PathVariable("parentid") Integer parentId, @PathVariable("level") CapabilityLevel level) {
-		if (parentId == null || parentId.equals(0)) {
-			throw new InvalidInputException("Parent ID is not valid.");
-		}
-		if (!envService.existsById(parentId)) {
-			throw new IndexDoesNotExistException("Parent ID does not exists.");
-		}
-		if (level == null) {
-			throw new InvalidInputException("Level is not valid.");
-		}
-		// TODO Check if level is in bounds. (Enum class)
-
+			@PathVariable("parentid") Integer parentId, @PathVariable("level") String level) {
 		List<Capability> capabilities = capService.getCapabilitiesByParentIdAndLevel(parentId, level);
 		return new ResponseEntity<List<Capability>>(capabilities, HttpStatus.OK);
 	}
@@ -156,51 +101,29 @@ public class CapabilityController {
 
 	@GetMapping(path = "exists/id/{id}")
 	public ResponseEntity<Boolean> doesCapabilityExistsById(@PathVariable("id") Integer id) {
-		if (id == null || id.equals(0)) {
-			throw new InvalidInputException("Capability ID is not valid.");
-		}
-
 		boolean result = capService.existsById(id);
 		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 	}
 
 	@GetMapping(path = "exists/capabilityname/{capabilityname}")
 	public ResponseEntity<Boolean> doesCapabilityNameExists(@PathVariable("capabilityname") String capabilityName) {
-		if (capabilityName == null || capabilityName.isBlank() || capabilityName.isEmpty()) {
-			throw new InvalidInputException("Input is not valid.");
-		}
-
 		boolean result = (!capService.existsByCapabilityName(capabilityName));
 		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 	}
 
 	@PutMapping(path = "update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<Capability> updateCapability(@ModelAttribute("capabilityId") Integer capabilityId,
+	public ResponseEntity<Capability> updateCapability(
+			@ModelAttribute("capabilityId") Integer capabilityId,
 			@ModelAttribute("environmentId") Integer environmentId,
 			@ModelAttribute("statusId") Integer statusId,
 			@ModelAttribute("parentCapabilityId") Integer parentCapabilityId,
-			@ModelAttribute("capabilityName") String capabilityName, @ModelAttribute("level") CapabilityLevel level,
+			@ModelAttribute("capabilityName") String capabilityName, 
+			@ModelAttribute("level") String level,
 			@ModelAttribute("paceOfChange") boolean paceOfChange,
 			@ModelAttribute("targetOperatingModel") String targetOperatingModel,
 			@ModelAttribute("resourceQuality") Integer resourceQuality,
 			@ModelAttribute("informationQuality") Integer informationQuality,
 			@ModelAttribute("applicationFit") Integer applicationFit) {
-		if (capabilityId == null || capabilityId.equals(0) || capabilityName == null || capabilityName.isBlank()
-				|| capabilityName.isEmpty()) {
-			throw new InvalidInputException("Invalid input.");
-		}
-		if (!capService.existsById(capabilityId)) {
-			throw new IndexDoesNotExistException("Can not update capability if it does not exist.");
-		}
-		if (!capService.existsByCapabilityName(capabilityName)) {
-			throw new DuplicateValueException("Capability name already exists.");
-		}
-		if (!envService.existsById(environmentId)) {
-			throw new IndexDoesNotExistException("Environment ID does not exists.");
-		}
-		if (!statusService.existsById(statusId)) {
-			throw new IndexDoesNotExistException("Status ID does not exists.");
-		}
 
 		Capability capability = capService.update(capabilityId, environmentId, statusId, parentCapabilityId,
 				capabilityName, level, paceOfChange, targetOperatingModel, resourceQuality, informationQuality,
@@ -210,13 +133,6 @@ public class CapabilityController {
 
 	@DeleteMapping(path = "delete/{id}")
 	public ResponseEntity<Void> deleteCapability(@PathVariable("id") Integer id) {
-		if (id == null || id.equals(0)) {
-			throw new InvalidInputException("Capability ID is not valid.");
-		}
-		if (!capService.existsById(id)) {
-			throw new IndexDoesNotExistException("Capability ID does not exists.");
-		}
-
 		capService.delete(id);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}

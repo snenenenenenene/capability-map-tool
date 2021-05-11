@@ -73,7 +73,7 @@ public class StatusServiceImpl implements StatusService {
 		if (!existsById(statusId)) {
 			throw new IndexDoesNotExistException("Can not update status if it does not exist.");
 		}
-		if (existsByValidityPeriod(validityPeriod)) {
+		if (!existsByValidityPeriod(validityPeriod)) {
 			throw new StatusException("Validity period already exists.");
 		}
 		
