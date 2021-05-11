@@ -78,6 +78,26 @@ public class ITApplication {
         this.timeValue = timeValue;
     }
 
+    public ITApplication(String name, String technology, String version, LocalDate purchaseDate, LocalDate endOfLife, Byte currentScalability, Byte expectedScalability, Byte currentPerformance, Byte expectedPerformance, Byte currentSecurityLevel, Byte expectedSecurityLevel, Byte currentStability, Byte expectedStability, String costCurrency, String currentValue, Double currentYearlyCost, LocalDate timeValue) {
+        this.name = name;
+        this.technology = technology;
+        this.version = version;
+        this.purchaseDate = purchaseDate;
+        this.endOfLife = endOfLife;
+        this.currentScalability = currentScalability;
+        this.expectedScalability = expectedScalability;
+        this.currentPerformance = currentPerformance;
+        this.expectedPerformance = expectedPerformance;
+        this.currentSecurityLevel = currentSecurityLevel;
+        this.expectedSecurityLevel = expectedSecurityLevel;
+        this.currentStability = currentStability;
+        this.expectedStability = expectedStability;
+        this.costCurrency = costCurrency;
+        this.currentValue = currentValue;
+        this.currentYearlyCost = currentYearlyCost;
+        this.timeValue = timeValue;
+    }
+
     @Override
     public String toString() {
         return "ITApplication{" +

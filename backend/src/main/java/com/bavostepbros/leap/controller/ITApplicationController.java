@@ -20,13 +20,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("itapplication")
 @RequiredArgsConstructor
+@RequestMapping("/api/itapplication")
 public class ITApplicationController {
 
     @Autowired
     private ITApplicationService itApplicationService;
-    private StatusService statusService;
 
     @PostMapping(path = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity addITApplication(
@@ -51,10 +50,10 @@ public class ITApplicationController {
             UriComponentsBuilder builder) {
         if(name == null) throw new InvalidInputException("Invalid input.");
         if(itApplicationService.existsByName(name)) throw new DuplicateValueException("An application already exists with this name.");
-        Integer applicationId = itApplicationService.save(statusService.get(statusID), name, technology, version, purchaseDate, endOfLife, currentScalability,
-                expectedScalability, currentPerformance, expectedPerformance, currentSecurityLevel,
-                expectedSecurityLevel, currentsStability, expectedStability, costCurrency,
-                currentValue, currentYearlyCost, timeValue).getId();
+        Integer applicationId = itApplicationService.save(statusID, name, technology, version, purchaseDate, endOfLife,
+                currentScalability, expectedScalability, currentPerformance, expectedPerformance, currentSecurityLevel,
+                expectedSecurityLevel, currentsStability, expectedStability, costCurrency, currentValue,
+                currentYearlyCost, timeValue).getId();
         if(applicationId == null) return new ResponseEntity(HttpStatus.CONFLICT);
 
         HttpHeaders headers = new HttpHeaders();
@@ -79,29 +78,30 @@ public class ITApplicationController {
     }
 
     @PutMapping(path = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity updateITApplication(@ModelAttribute Integer statusID,
-                                              @ModelAttribute String name,
-                                              @ModelAttribute String technology,
-                                              @ModelAttribute String version,
-                                              @ModelAttribute LocalDate purchaseDate,
-                                              @ModelAttribute LocalDate endOfLife,
-                                              @ModelAttribute Byte currentScalability,
-                                              @ModelAttribute Byte expectedScalability,
-                                              @ModelAttribute Byte currentPerformance,
-                                              @ModelAttribute Byte expectedPerformance,
-                                              @ModelAttribute Byte currentSecurityLevel,
-                                              @ModelAttribute Byte expectedSecurityLevel,
-                                              @ModelAttribute Byte currentsStability,
-                                              @ModelAttribute Byte expectedStability,
-                                              @ModelAttribute String costCurrency,
-                                              @ModelAttribute String currentValue,
-                                              @ModelAttribute Double currentYearlyCost,
-                                              @ModelAttribute LocalDate timeValue,
-                                              UriComponentsBuilder builder) {
+    public ResponseEntity updateITApplication(
+            @ModelAttribute Integer statusID,
+            @ModelAttribute String name,
+            @ModelAttribute String technology,
+            @ModelAttribute String version,
+            @ModelAttribute LocalDate purchaseDate,
+            @ModelAttribute LocalDate endOfLife,
+            @ModelAttribute Byte currentScalability,
+            @ModelAttribute Byte expectedScalability,
+            @ModelAttribute Byte currentPerformance,
+            @ModelAttribute Byte expectedPerformance,
+            @ModelAttribute Byte currentSecurityLevel,
+            @ModelAttribute Byte expectedSecurityLevel,
+            @ModelAttribute Byte currentsStability,
+            @ModelAttribute Byte expectedStability,
+            @ModelAttribute String costCurrency,
+            @ModelAttribute String currentValue,
+            @ModelAttribute Double currentYearlyCost,
+            @ModelAttribute LocalDate timeValue,
+            UriComponentsBuilder builder) {
         if(name == null) throw new InvalidInputException("Invalid input.");
         if(itApplicationService.existsByName(name)) throw new DuplicateValueException("An application already exists with this name.");
-        Integer applicationId = itApplicationService.save(statusService.get(statusID), name, technology, version, purchaseDate, endOfLife, currentScalability,
-                expectedScalability, currentPerformance, expectedPerformance, currentSecurityLevel,
+        Integer applicationId = itApplicationService.save(statusID, name, technology, version, purchaseDate, endOfLife,
+                currentScalability, expectedScalability, currentPerformance, expectedPerformance, currentSecurityLevel,
                 expectedSecurityLevel, currentsStability, expectedStability, costCurrency,
                 currentValue, currentYearlyCost, timeValue).getId();
         if(applicationId == null) return new ResponseEntity(HttpStatus.CONFLICT);
