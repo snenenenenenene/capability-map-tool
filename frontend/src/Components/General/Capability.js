@@ -12,7 +12,8 @@ export default class Capability extends Component
             environments: [],
             environmentName: this.props.match.params.name,
             environmentId: '',
-            capabilities: []
+            capabilities: [],
+            tree_root: {}
         };
     }
 
@@ -26,21 +27,34 @@ export default class Capability extends Component
 
         // capabilityData.map(i=>i.children=null);
 
+        capabilityData.forEach((cap) => {
+            cap["key"] = cap.capabilityId
+            cap["label"] = cap.capabilityName
+        })
+
         this.setState({capabilities: capabilityData});
+        capabilityData[0].parentCapabilityId = null;
         
         this.createDataTree(this.state.capabilities);
     }
 
-    createDataTree(dataset) {
-      const hashTable = Object.create(null);
-      dataset.forEach(aData => hashTable[aData.ID] = {...aData, childNodes: []});
-      const dataTree = [];
-      dataset.forEach(aData => {
-        if(aData.parentID) hashTable[aData.parentID].childNodes.push(hashTable[aData.ID])
-        else dataTree.push(hashTable[aData.ID])
-      });
-      console.log(dataTree)
-      return dataTree;
+    createDataTree(data) {
+    let arr = []
+    const idMapping = data.reduce((acc, cap, i) => {
+    acc[cap.capabilityId] = i;
+    return acc;
+    }, {});
+    let root;
+    data.forEach(cap => {
+    if (cap.parentCapabilityId === null) {
+        root = cap;
+        return;
+    }
+    const parentCap = data[idMapping[cap.parentCapabilityId]];
+    parentCap.nodes = [...(parentCap.nodes || []), cap];
+    })
+    arr.push(root);
+    this.setState({tree_root: arr})
     };
 
     capabilityTable() {
@@ -51,6 +65,7 @@ export default class Capability extends Component
 
     render() {
         const environmentName = this.props.match.params.name;
+        console.log(this.state.tree_root)
         return(
             <div className="jumbotron">
                 <nav aria-label="breadcrumb">
@@ -62,80 +77,18 @@ export default class Capability extends Component
                 </nav>
                 <h1 className='display-4'>Capabilities</h1>
                 <br/><br/>
+                <TreeMenu
+                    cacheSearch
+                    data={this.state.tree_root}
+                    debounceTime={125}
+                    disableKeyboard={false}
+                    hasSearch={false}
+                    onClickItem={function noRefCheck(){}}
+                    resetOpenNodesOnDataUpdate={false}
+                    />
                 <div className="row">
-                    <div className="col-sm-9">
-                    <TreeMenu
-  cacheSearch
-  data={[
-    {
-      key: 'mammal',
-      label: 'Mammal',
-      nodes: [
-        {
-          key: 'canidae',
-          label: 'Canidae',
-          nodes: [
-            {
-              key: 'dog',
-              label: 'Dog',
-              nodes: [],
-              url: 'https://www.google.com/search?q=dog'
-            },
-            {
-              key: 'fox',
-              label: 'Fox',
-              nodes: [],
-              url: 'https://www.google.com/search?q=fox'
-            },
-            {
-              key: 'wolf',
-              label: 'Wolf',
-              nodes: [],
-              url: 'https://www.google.com/search?q=wolf'
-            }
-          ],
-          url: 'https://www.google.com/search?q=canidae'
-        }
-      ],
-      url: 'https://www.google.com/search?q=mammal'
-    },
-    {
-      key: 'reptile',
-      label: 'Reptile',
-      nodes: [
-        {
-          key: 'squamata',
-          label: 'Squamata',
-          nodes: [
-            {
-              key: 'lizard',
-              label: 'Lizard',
-              url: 'https://www.google.com/search?q=lizard'
-            },
-            {
-              key: 'snake',
-              label: 'Snake',
-              url: 'https://www.google.com/search?q=snake'
-            },
-            {
-              key: 'gekko',
-              label: 'Gekko',
-              url: 'https://www.google.com/search?q=gekko'
-            }
-          ],
-          url: 'https://www.google.com/search?q=squamata'
-        }
-      ],
-      url: 'https://www.google.com/search?q=reptile'
-    }
-  ]}
-  debounceTime={125}
-  disableKeyboard={false}
-  hasSearch
-  onClickItem={function noRefCheck(){}}
-  resetOpenNodesOnDataUpdate={false}
-/>
-
+                    <div className="col-sm-6">
+                    {/* <div><pre>{JSON.stringify(this.state.tree_root, null, 2) }</pre></div>; */}
                 <table className='table table-striped'>
                     <thead>
                     <tr>
@@ -151,7 +104,8 @@ export default class Capability extends Component
                     </tbody>
                 </table>
                     </div>
-                    <div className="col-sm-2">
+                    <div className="col-sm-6">
+                    <div><pre>{JSON.stringify(this.state.tree_root, null, 2) }</pre></div>;
 
                     <div className="text-center">
                         <Link to={'edit'}>
