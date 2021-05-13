@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import CapabilityTableRow from "./CapabilityTableRow";
-import TreeMenu from 'react-simple-tree-menu'
-// import TreeViewMenu from 'react-simple-tree-menu'
+import TreeMenu, { defaultChildren, ItemComponent } from 'react-simple-tree-menu';
+import { ListGroup, ListItem, Form, FormGroup, Label, Input } from 'reactstrap'
+// import './Capability.css'
 
 export default class Capability extends Component
 {
@@ -29,6 +30,7 @@ export default class Capability extends Component
 
         capabilityData.forEach((cap) => {
             cap["key"] = cap.capabilityId
+            // cap["parentId"] = cap.parentCapabilityId
             cap["label"] = cap.capabilityName
         })
 
@@ -77,15 +79,15 @@ export default class Capability extends Component
                 </nav>
                 <h1 className='display-4'>Capabilities</h1>
                 <br/><br/>
-                <TreeMenu
-                    cacheSearch
-                    data={this.state.tree_root}
-                    debounceTime={125}
-                    disableKeyboard={false}
-                    hasSearch={false}
-                    onClickItem={function noRefCheck(){}}
-                    resetOpenNodesOnDataUpdate={false}
-                    />
+                <TreeMenu className="list-group" data={this.state.tree_root}>
+                {({ search, items }) => (
+                    <ol class="list-group list-group-numbered">
+                        {items.map(({key, ...props}) => (
+                        <ItemComponent style={{paddingLeft: 0.75}} class="list-group-item" key={key} {...props} />
+                        ))}
+                    </ol>
+                )}
+                 </TreeMenu>
                 <div className="row">
                     <div className="col-sm-6">
                     {/* <div><pre>{JSON.stringify(this.state.tree_root, null, 2) }</pre></div>; */}
