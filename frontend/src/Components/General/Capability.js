@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import CapabilityTableRow from "./CapabilityTableRow";
-import TreeMenu, { defaultChildren, ItemComponent } from 'react-simple-tree-menu';
-import { ListGroup, ListItem, Form, FormGroup, Label, Input } from 'reactstrap'
-// import './Capability.css'
+import CapabilityHierarchy from './CapabilityHierarchy';
+
 
 export default class Capability extends Component
 {
@@ -13,8 +12,7 @@ export default class Capability extends Component
             environments: [],
             environmentName: this.props.match.params.name,
             environmentId: '',
-            capabilities: [],
-            tree_root: {}
+            capabilities: []
         };
     }
 
@@ -25,39 +23,15 @@ export default class Capability extends Component
 
         const capabilityResponse = await fetch(`${process.env.REACT_APP_API_URL}/capability/getallbyenvironment/${this.state.environmentId}`);
         const capabilityData = await capabilityResponse.json();
-
-        // capabilityData.map(i=>i.children=null);
-
         capabilityData.forEach((cap) => {
-            cap["key"] = cap.capabilityId
-            // cap["parentId"] = cap.parentCapabilityId
-            cap["label"] = cap.capabilityName
+            cap["id"] = cap.capabilityId
+            cap["name"] = cap.capabilityName
+            cap["parentId"] = cap.parentCapabilityId
         })
-
+        capabilityData[0].parentId = null;
         this.setState({capabilities: capabilityData});
-        capabilityData[0].parentCapabilityId = null;
-        
-        this.createDataTree(this.state.capabilities);
+        console.log(this.state.capabilities)
     }
-
-    createDataTree(data) {
-    let arr = []
-    const idMapping = data.reduce((acc, cap, i) => {
-    acc[cap.capabilityId] = i;
-    return acc;
-    }, {});
-    let root;
-    data.forEach(cap => {
-    if (cap.parentCapabilityId === null) {
-        root = cap;
-        return;
-    }
-    const parentCap = data[idMapping[cap.parentCapabilityId]];
-    parentCap.nodes = [...(parentCap.nodes || []), cap];
-    })
-    arr.push(root);
-    this.setState({tree_root: arr})
-    };
 
     capabilityTable() {
         return this.state.capabilities.map((row, i) => {
@@ -67,7 +41,14 @@ export default class Capability extends Component
 
     render() {
         const environmentName = this.props.match.params.name;
-        console.log(this.state.tree_root)
+        const getChildRows = (row, rootRows) => {
+            const childRows = rootRows.filter(
+              (r) => r.parentId === (row ? row.id : null)
+            );
+            return childRows.length ? childRows : null;
+          };
+        
+          console.log(this.state.capabilities);
         return(
             <div className="jumbotron">
                 <nav aria-label="breadcrumb">
@@ -79,18 +60,8 @@ export default class Capability extends Component
                 </nav>
                 <h1 className='display-4'>Capabilities</h1>
                 <br/><br/>
-                <TreeMenu className="list-group" data={this.state.tree_root}>
-                {({ search, items }) => (
-                    <ol class="list-group list-group-numbered">
-                        {items.map(({key, ...props}) => (
-                        <ItemComponent style={{paddingLeft: 0.75}} class="list-group-item" key={key} {...props} />
-                        ))}
-                    </ol>
-                )}
-                 </TreeMenu>
                 <div className="row">
-                    <div className="col-sm-6">
-                    {/* <div><pre>{JSON.stringify(this.state.tree_root, null, 2) }</pre></div>; */}
+                    <CapabilityHierarchy capabilities={this.state.capabilities}/>
                 <table className='table table-striped'>
                     <thead>
                     <tr>
@@ -107,8 +78,6 @@ export default class Capability extends Component
                 </table>
                     </div>
                     <div className="col-sm-6">
-                    <div><pre>{JSON.stringify(this.state.tree_root, null, 2) }</pre></div>;
-
                     <div className="text-center">
                         <Link to={'edit'}>
                             <input type="button" value="Edit" className="btn btn-secondary input-button hoverable"/>
@@ -122,7 +91,6 @@ export default class Capability extends Component
                     </div>
                     </div>
                 </div>
-            </div>
         )
     }
 
