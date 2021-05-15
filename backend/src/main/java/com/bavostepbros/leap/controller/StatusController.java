@@ -2,13 +2,11 @@ package com.bavostepbros.leap.controller;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,9 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.bavostepbros.leap.domain.model.Status;
+import com.bavostepbros.leap.domain.model.dto.StatusDto;
 import com.bavostepbros.leap.domain.service.statusservice.StatusService;
 
 import lombok.RequiredArgsConstructor;
@@ -39,60 +37,55 @@ public class StatusController {
 	private StatusService statusService;
 	
 	@PostMapping(path = "add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<Void> addStatus(
-			@ModelAttribute("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityPeriod, 
-			UriComponentsBuilder builder) {
-		
+	public StatusDto addStatus(
+			@ModelAttribute("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityPeriod) {		
 		Status status = statusService.save(validityPeriod);
-		Integer statusId = status.getStatusId();
-		boolean flag = (statusId == null) ? false : true;
-		if (flag == false) {
-			return new ResponseEntity<>(HttpStatus.CONFLICT);
-		}
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.setLocation(builder
-				.path("{id}")
-				.buildAndExpand(validityPeriod).toUri());
-		return new ResponseEntity<>(headers, HttpStatus.CREATED);
+		return new StatusDto(status.getStatusId(), status.getValidityPeriod());
 	}
 	
 	@GetMapping(path = "{id}")
-    public ResponseEntity<Status> getStatusById(@PathVariable("id") Integer id) {		
+    public StatusDto getStatusById(@PathVariable("id") Integer id) {		
 		Status status = statusService.get(id);
-        return  new ResponseEntity<Status>(status, HttpStatus.OK);
+        return new StatusDto(status.getStatusId(), status.getValidityPeriod());
+    }
+	
+	@GetMapping(path = "validityperiod/{validityPeriod}")
+    public StatusDto getStatusByValidityPeriod(
+    		@PathVariable("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityPeriod) {		
+		Status status = statusService.getByValidityPeriod(validityPeriod);
+        return new StatusDto(status.getStatusId(), status.getValidityPeriod());
     }
 	
 	@GetMapping(path = "all")
-	public ResponseEntity<List<Status>> getAllStatus() {
+	public List<StatusDto> getAllStatus() {
 		List<Status> status = statusService.getAll();
-		return new ResponseEntity<List<Status>>(status, HttpStatus.OK);
+		List<StatusDto> statusDto = status.stream()
+				.map(s -> new StatusDto(s.getStatusId(), s.getValidityPeriod()))
+				.collect(Collectors.toList());
+		return statusDto;
 	}
 	
 	@GetMapping(path = "exists/id/{id}")
-	public ResponseEntity<Boolean> doesStatusExistsById(@PathVariable("id") Integer id) {		
-		boolean result = statusService.existsById(id);
-		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+	public boolean doesStatusExistsById(@PathVariable("id") Integer id) {		
+		return statusService.existsById(id);
 	}
 	
 	@GetMapping(path = "exists/validityperiod/{validityperiod}")
-	public ResponseEntity<Boolean> doesValidityPeriodExists(
+	public boolean doesValidityPeriodExists(
 			@PathVariable("validityperiod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityPeriod) {		
-		boolean result = (!statusService.existsByValidityPeriod(validityPeriod));
-		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+		return statusService.existsByValidityPeriod(validityPeriod);
 	}
 	
 	@PutMapping(path = "update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<Status> updateStatus(
+	public StatusDto updateStatus(
 			@ModelAttribute("statusId") Integer statusId,
 			@ModelAttribute("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityPeriod) {		
 		Status status = statusService.update(statusId, validityPeriod);
-		return new ResponseEntity<Status>(status, HttpStatus.OK);
+		return new StatusDto(status.getStatusId(), status.getValidityPeriod());
 	}
 	
 	@DeleteMapping(path = "delete/{id}")
-	public ResponseEntity<Void> deleteStatus(@PathVariable("id") Integer id) {		
+	public void deleteStatus(@PathVariable("id") Integer id) {		
 		statusService.delete(id);
-		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 }

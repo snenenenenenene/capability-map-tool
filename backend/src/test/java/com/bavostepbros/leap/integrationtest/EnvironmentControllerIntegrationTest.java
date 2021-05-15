@@ -8,8 +8,8 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -49,7 +49,7 @@ public class EnvironmentControllerIntegrationTest {
 	
 	static final String PATH = "/api/environment/";
 	
-	private static final Logger logger = LoggerFactory.getLogger(EnvironmentControllerIntegrationTest.class);
+	// private static final Logger logger = LoggerFactory.getLogger(EnvironmentControllerIntegrationTest.class);
 	
 	@BeforeEach
 	public void init() {
@@ -123,7 +123,7 @@ public class EnvironmentControllerIntegrationTest {
 	}
 	
 	@Test
-	public void should_getBoolean_whenDoesEnvironmentExistsById() throws Exception {
+	public void should_getBoolean_whenEnvironmentExistsById() throws Exception {
 		Integer environmentId = environmentFirst.getEnvironmentId();
 		
 		mockMvc.perform(MockMvcRequestBuilders.get(PATH + "exists/id/" + environmentId))
@@ -132,7 +132,7 @@ public class EnvironmentControllerIntegrationTest {
 	}
 	
 	@Test
-	public void should_getBoolean_whenDoesEnvironmentNameExists() throws Exception {
+	public void should_getBoolean_whenEnvironmentNameExists() throws Exception {
 		String environmentName = environmentFirst.getEnvironmentName();
 		
 		mockMvc.perform(MockMvcRequestBuilders.get(PATH + "exists/environmentname/" + environmentName))
@@ -158,7 +158,7 @@ public class EnvironmentControllerIntegrationTest {
 	}
 	
 	@Test
-	public void should_postEnvironment_whenUpdateEnvironment() throws Exception {
+	public void should_putEnvironment_whenUpdateEnvironment() throws Exception {
 		String newName = "Senne";
 		
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH + "update")
