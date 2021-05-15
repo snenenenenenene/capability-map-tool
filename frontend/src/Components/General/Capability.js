@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
-import CapabilityTableRow from "./CapabilityTableRow";
 import CapabilityHierarchy from './CapabilityHierarchy';
 
 
@@ -33,22 +32,8 @@ export default class Capability extends Component
         console.log(this.state.capabilities)
     }
 
-    capabilityTable() {
-        return this.state.capabilities.map((row, i) => {
-            return <CapabilityTableRow obj={ row } key={ i }/>
-        })
-    }
-
     render() {
         const environmentName = this.props.match.params.name;
-        const getChildRows = (row, rootRows) => {
-            const childRows = rootRows.filter(
-              (r) => r.parentId === (row ? row.id : null)
-            );
-            return childRows.length ? childRows : null;
-          };
-        
-          console.log(this.state.capabilities);
         return(
             <div className="jumbotron">
                 <nav aria-label="breadcrumb">
@@ -62,34 +47,10 @@ export default class Capability extends Component
                 <br/><br/>
                 <div className="row">
                     <CapabilityHierarchy capabilities={this.state.capabilities}/>
-                <table className='table table-striped'>
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Parent Id</th>
-                        <th>Level</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    { this.capabilityTable() }
-                    </tbody>
-                </table>
                     </div>
-                    <div className="col-sm-6">
-                    <div className="text-center">
                         <Link to={'edit'}>
                             <input type="button" value="Edit" className="btn btn-secondary input-button hoverable"/>
                         </Link>
-                    </div>
-                        <br/>
-                    <div className="text-center">
-                        <Link to={'childcapability'}>
-                            <input type="button" value="Child Capability" className="btn btn-secondary input-button hoverable"/>
-                        </Link>
-                    </div>
-                    </div>
                 </div>
         )
     }

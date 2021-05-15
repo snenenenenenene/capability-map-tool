@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
-import Paper from '@material-ui/core/Paper';
+import classNames from 'clsx';
 import {
-  TreeDataState,
-  CustomTreeData,
-} from '@devexpress/dx-react-grid';
-import {
-  Grid,
-  Table,
-  TableHeaderRow,
-  TableTreeColumn,
-} from '@devexpress/dx-react-grid-material-ui';
-
-// const getChildRows = (row, rootRows) => (row ? row.items : rootRows);
+    TreeDataState,
+    CustomTreeData,
+    EditingState
+  } from '@devexpress/dx-react-grid';
+  import {
+    Grid,
+    Table,
+    TableHeaderRow,
+    TableTreeColumn,
+    TableEditRow,
+    TableEditColumn,
+  } from '@devexpress/dx-react-grid-bootstrap4';
+  import '@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css';
+  
 const getChildRows = (row, rootRows) => {
     const childRows = rootRows.filter(
       (r) => r.parentId === (row ? row.id : null)
@@ -19,33 +22,46 @@ const getChildRows = (row, rootRows) => {
     return childRows.length ? childRows : null;
   };
 
+  const TableComponent = ({ ...restProps }) => (
+    <Table.Table
+      {...restProps}
+      className="table-striped"
+    />
+  );
+
 export default (props) => {
   const [columns] = useState([
     { name: 'id', title: 'ID' },
     { name: 'name', title: 'Name' },
     { name: 'level', title: 'Level' },
   ]);
-  const [data] = useState(props.capabilities)
   const [tableColumnExtensions] = useState([
-    { columnName: 'name', width: 300 },
+    { columnName: 'name', width: 300,},
   ]);
 
-  console.log(props.capabilities)
-
-  console.log(getChildRows)
+  const commitChanges = ({ added, changed, deleted }) => {
+    if (deleted) {
+        console.log("deleted")
+    }
+  };
 
   return (
-    <Paper>
       <Grid
         rows={props.capabilities}
         columns={columns}
       >
         <TreeDataState />
         <CustomTreeData getChildRows={getChildRows}/>
-        <Table columnExtensions={tableColumnExtensions}/>
+        <Table columnExtensions={tableColumnExtensions} tableComponent={TableComponent}/>
+        <EditingState
+          onCommitChanges={commitChanges}
+        />
         <TableHeaderRow />
+        <TableEditRow />
+        <TableEditColumn
+          showDeleteCommand
+        />
         <TableTreeColumn for="id"/>
       </Grid>
-    </Paper>
   );
 };
