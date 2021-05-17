@@ -24,6 +24,12 @@ import NotFoundError from "./Components/Error/NotFound";
 import GeneralError from "./Components/Error/Error";
 import Status from './Components/General/Status';
 import NotFoundPage from "./Components/Error/NotFoundPage"
+import BusinessProcess from './Components/General/BusinessProcess';
+import EditBusinessProcess from './Components/Edit/EditBusinessProcess';
+import ITApplication from './Components/General/ITApplication';
+import EditITApplication from './Components/Edit/EditITApplication';
+import EditStatus from './Components/Edit/EditStatus';
+import EditProject from './Components/Edit/EditProject';
 
 class App extends Component {
 
@@ -79,7 +85,7 @@ class App extends Component {
               <Route exact path='/recent' component={ RecentEnvironments }/>
               {/* CAPABILITIES */}
               <Route exact path='/environment/:name/capability/add' component={AddCapability}/>
-              <Route exact path='/environment/:name/capability/:id/edit' component={EditCapability}/>
+              <Route exact path='/environment/:name/capability/:id' component={EditCapability}/>
               <Route exact path='/environment/:name/capability' component={Capability}/>
               {/* STRATEGIES */}
               <Route exact path='/environment/:name/strategy/add' component={AddStrategy}/>
@@ -87,13 +93,19 @@ class App extends Component {
               <Route exact path='/environment/:name/resource/add' component={AddResources}/>
               {/* ITAPPLICATIONS */}
               <Route exact path='/environment/:name/itapplication/add' component={AddITApplication}/>
+              <Route exact path='/environment/:name/itapplication/:id' component={EditITApplication}/>
+              <Route exact path='/environment/:name/itapplication' component={ITApplication}/>
               {/* BUSSINESSPROCESSES */}
               <Route exact path='/environment/:name/businessprocess/add' component={AddBusinessProcess}/>
+              <Route exact path='/environment/:name/businessprocess/:id' component={EditBusinessProcess}/>
+              <Route exact path='/environment/:name/businessprocess' component={BusinessProcess}/>
               {/* STATUSES */}
               <Route exact path='/environment/:name/status/add' component={AddStatus}/>
+              <Route exact path='/environment/:name/status/:id' component={EditStatus}/>
               <Route exact path='/environment/:name/status' component={Status}/>
               {/* PROJECTS */}
               <Route exact path='/environment/:name/project/add' component={AddProject}/>
+              <Route exact path='/environment/:name/project/:id' component={EditProject}/>
               <Route exact path='/environment/:name/project' component={Project}/>
               {/* STRATEGYITEMS */}
               <Route exact path='/environment/:name/strategyitem/add' component={AddStrategyItems}/>

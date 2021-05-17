@@ -36,7 +36,7 @@ export default class Capability extends Component
     }
 
     edit(capabilityId){
-        this.props.history.push(`/environment/${this.state.environmentName}/capability/${capabilityId}/edit`)
+        this.props.history.push(`/environment/${this.state.environmentName}/capability/${capabilityId}`)
     }
     //DELETE CAPABILITY AND REMOVE ALL CHILD CAPABILITIES FROM STATE
     delete = async(capabilityId) => {
