@@ -1,13 +1,21 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import deleteImg from '../img/delete.jpg'
+import axios from 'axios';
 
 export default class RecentEnvironmentTableRow extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+        };
+    }
+
     deleteEnvironment (){
-        fetch(`${process.env.REACT_APP_API_URL}/environment/delete/${this.props.obj.environmentId}`, {
-            method: "DELETE"
-        });
+        console.log(this.props.environmentId)
+        axios.delete(`${process.env.REACT_APP_API_URL}/environment/delete/${this.props.obj.environmentId}`)
+        .then(response => console.log(response))
+        .catch(error => console.log(error))
         this.props.history.push('/recent')
     }
 

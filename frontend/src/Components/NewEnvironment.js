@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import { Input } from 'reactstrap'
@@ -16,20 +17,17 @@ export default class NewEnvironment extends Component
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-     handleSubmit = async e => {
+    handleSubmit = async e => {
         e.preventDefault();
-         const formData = new FormData()
-         formData.append('environmentName', this.state.environmentName)
-        await fetch(`${process.env.REACT_APP_API_URL}/environment/add`,{
-             method: "POST",
-             body: formData
-     }).then(function (res) {
-    if (res.ok) {
-        console.log("Environment added");
-    } else if (res.status === 401) {
-        console.log("Oops,, Something went wrong");
-    }})
+        const formData = new FormData()
+        formData.append('environmentName', this.state.environmentName)
+        await axios.post(`${process.env.REACT_APP_API_URL}/environment/add`, formData)
+        .then(response => {
         this.props.history.push(`environment/${this.state.environmentName}`);
+        }).catch(error => {
+        console.log(error)
+        this.props.history.push('/error')
+        })
     }
 
     handleInputChange(event) {
@@ -37,14 +35,11 @@ export default class NewEnvironment extends Component
     }
 
     async componentDidMount() {
-        await fetch(`${process.env.REACT_APP_API_URL}/environment/all`)
-        .then(resp => resp.json())
-            .then(data => {
-                this.setState({environments: data});
-            })
-            .catch(error => {
-                this.props.history.push('/error')
-            })
+        await axios.get(`${process.env.REACT_APP_API_URL}/environment/all`)
+        .then(response => this.setState({environments: response.data}))
+        .catch(error => {
+            this.props.history.push('/error')
+        })
     }
 
     recentEnvironmentTableRow() {

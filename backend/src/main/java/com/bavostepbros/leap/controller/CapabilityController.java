@@ -79,7 +79,7 @@ public class CapabilityController {
 		return new ResponseEntity<List<Capability>>(capabilities, HttpStatus.OK);
 	}
 
-	@GetMapping(path = "getallbyparentcapabilityid/{parentcapabilityid}")
+	@GetMapping(path = "r")
 	public ResponseEntity<List<Capability>> getAllCapabilitiesByParentCapabilityId(
 			@PathVariable("parentcapabilityid") Integer parentId) {
 		List<Capability> capabilities = capService.getCapabilityChildren(parentId);

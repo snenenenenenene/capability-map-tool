@@ -21,6 +21,7 @@ import EditCapability from "./Components/Edit/EditCapability";
 import Capability from "./Components/General/Capability";
 import NotFoundError from "./Components/Error/NotFound";
 import GeneralError from "./Components/Error/Error";
+import Status from './Components/General/Status';
 
 class App extends Component {
 
@@ -68,26 +69,40 @@ class App extends Component {
               </nav>
           <div className = 'container'>
               <Switch>
-                <Route exact path='/home' component={Home}/>
-                <Route exact path='/environment/:name' component={Environment}/>
-                <Route exact path='/environment/:name/capability/add' component={AddCapability}/>
-                <Route exact path='/environment/:name/capability/:id/edit' component={EditCapability}/>
-                <Route exact path='/environment/:name/capability/all' component={Capability}/>
-                <Route exact path='/environment/:name/strategy/add' component={AddStrategy}/>
-                <Route exact path='/environment/:name/resource/add' component={AddResources}/>
-                <Route exact path='/environment/:name/itapplication/add' component={AddITApplication}/>
-                <Route exact path='/environment/:name/businessprocess/add' component={AddBusinessProcess}/>
-                <Route exact path='/environment/:name/status/add' component={AddStatus}/>
-                <Route exact path='/environment/:name/project/add' component={AddProject}/>
-                <Route exact path='/environment/:name/strategyitem/add' component={AddStrategyItems}/>
-                <Route exact path='/environment/:name/program/add' component={AddProgram}/>
-                <Route exact path='/add' component={ NewEnvironment }/>
-                <Route exact path='/login' component={ Signup }/>
-                <Route exact path='/recent' component={ RecentEnvironments }/>
-                <Route exact path='/users' component={ UserList }/>
-                <Route exact path='/error' component={ GeneralError }/>
-                <Route exact path='/notfound' component={ NotFoundError }/>
-                <Route path='/' component={Home}/>
+              {/* ROOT */}
+              <Route exact path='/home' component={Home}/>
+              {/* ENVIRONMENTS */}
+              <Route exact path='/add' component={ NewEnvironment }/>
+              <Route exact path='/environment/:name' component={Environment}/>
+              <Route exact path='/recent' component={ RecentEnvironments }/>
+              {/* CAPABILITIES */}
+              <Route exact path='/environment/:name/capability/add' component={AddCapability}/>
+              <Route exact path='/environment/:name/capability/:id/edit' component={EditCapability}/>
+              <Route exact path='/environment/:name/capability/all' component={Capability}/>
+              {/* STRATEGIES */}
+              <Route exact path='/environment/:name/strategy/add' component={AddStrategy}/>
+              {/* RESOURCES */}
+              <Route exact path='/environment/:name/resource/add' component={AddResources}/>
+              {/* ITAPPLICATIONS */}
+              <Route exact path='/environment/:name/itapplication/add' component={AddITApplication}/>
+              {/* BUSSINESSPROCESSES */}
+              <Route exact path='/environment/:name/businessprocess/add' component={AddBusinessProcess}/>
+              {/* STATUSES */}
+              <Route exact path='/environment/:name/status/add' component={AddStatus}/>
+              <Route exact path='/environment/:name/status/all' component={Status}/>
+              {/* PROJECTS */}
+              <Route exact path='/environment/:name/project/add' component={AddProject}/>
+              {/* STRATEGYITEMS */}
+              <Route exact path='/environment/:name/strategyitem/add' component={AddStrategyItems}/>
+              {/* PROGRAMS */}
+              <Route exact path='/environment/:name/program/add' component={AddProgram}/>
+              {/* USERS */}
+              <Route exact path='/login' component={ Signup }/>
+              <Route exact path='/users' component={ UserList }/>
+              {/* ERRORS */}
+              <Route exact path='/error' component={ GeneralError }/>
+              <Route exact path='/notfound' component={ NotFoundError }/>
+              <Route path='/' component={Home}/>
               </Switch>
           </div>
             </BrowserRouter>

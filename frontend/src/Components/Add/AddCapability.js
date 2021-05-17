@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import plusImg from "../../img/plus.png";
 import ReactStars from 'react-stars'
+import axios from 'axios';
 
 export default class AddCapability extends Component {
     constructor(props) {
@@ -56,32 +57,28 @@ export default class AddCapability extends Component {
     }
 
     async componentDidMount() {
-        await fetch(`${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`)
-            .then(resp => resp.json())
-            .then(data => {
-                this.setState({environmentId: data.environmentId});
-            })
-            .catch(error => {
-                this.props.history.push('/error')
-            })
+        await axios.get(`${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`)
+        .then(response => {
+            this.setState({environmentId: response.data.environmentId})
+        })
+        .catch(error => {
+            console.log(error)
+            this.props.history.push('/error')
+        })
 
-        await fetch(`${process.env.REACT_APP_API_URL}/status/all`)
-            .then(resp => resp.json())
-            .then(data => {
-                this.setState({statuses: data});
-            })
-            .catch(error => {
-                this.props.history.push('/error')
-            })
+        await axios.get(`${process.env.REACT_APP_API_URL}/status/all`)
+        .then(response => this.setState({statuses: response.data}))
+        .catch(error => {
+            console.log(error)
+            this.props.history.push('/error')
+        })
 
-        await fetch(`${process.env.REACT_APP_API_URL}/capability/getallbyenvironment/${this.state.environmentId}`)
-            .then(resp => resp.json())
-            .then(data => {
-                this.setState({capabilities: data});
-            })
-            .catch(error => {
-                this.props.history.push('/error')
-            })
+        await axios.get(`${process.env.REACT_APP_API_URL}/capability/getallbyenvironment/${this.state.environmentId}`)
+        .then(response => this.setState({capabilities: response.data}))
+        .catch(error => {
+            console.log(error)
+            this.props.history.push('/error')
+        })
     }
 
     handleInputChange(event) {
@@ -133,7 +130,7 @@ export default class AddCapability extends Component {
                                     <label htmlFor="paceOfChange">Parent Capability</label>
                                 <select className="form-control" name="parentCapability" id="parentCapability" placeholder="Add Parent Capability"
                                         value={this.state.parentCapabilityId} onChange={this.handleInputChange}>
-                                    <option key="-1" defaultValue="selected" hidden="hidden" value={0}>None</option>
+                                    <option key="-1" defaultValue="selected" value={0}>None</option>
                                     {this.capabilityListRows()}
                                 </select>
                                 </div>
@@ -141,8 +138,8 @@ export default class AddCapability extends Component {
                                     <label htmlFor="capabilityLevel">Capability Level</label>
                                 <select className="form-control" name="capabilityLevel" id="capabilityLevel" placeholder="Add Level"
                                         value={this.state.capabilityLevel} onChange={this.handleInputChange}>
-                                    <option key="-1" defaultValue="selected" hidden="hidden" value="">Select Level</option>
-                                    <option value="ONE">ONE</option>
+                                    {/* <option key="-1"  hidden="hidden" value="">Select Level</option> */}
+                                    <option defaultValue="selected" value="ONE">ONE</option>
                                     <option value="TWO">TWO</option>
                                     <option value="THREE">THREE</option>
                                 </select>
