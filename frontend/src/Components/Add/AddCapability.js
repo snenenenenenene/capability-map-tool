@@ -3,6 +3,8 @@ import {Link} from 'react-router-dom';
 import plusImg from "../../img/plus.png";
 import ReactStars from 'react-stars'
 import axios from 'axios';
+import {Modal} from 'react-bootstrap';
+import StatusQuickAdd from './QuickAdd/StatusQuickAdd'
 
 export default class AddCapability extends Component {
     constructor(props) {
@@ -24,9 +26,11 @@ export default class AddCapability extends Component {
             resourcesQuality: '',
             statusId: '',
             level: 'ONE',
+            showModal: false,
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this)
+        this.updateDate = this.updateDate.bind(this)
     }
 
     handleSubmit = async e => {
@@ -92,7 +96,20 @@ export default class AddCapability extends Component {
 
     ratingChanged = (newRating) => {
         console.log(newRating)
-      }
+    }
+
+    async updateDate(){
+        await axios.get(`${process.env.REACT_APP_API_URL}/status/`)
+        .then(response => this.setState({statuses: response.data}))
+        .catch(error => {
+            console.log(error)
+            this.props.history.push('/error')
+        })
+    }
+
+    handleModal(){
+        this.setState({showModal: !this.state.showModal})
+    }
 
     render() {
         const environmentName = this.props.match.params.name;
@@ -206,26 +223,32 @@ export default class AddCapability extends Component {
                                 </div>
                             </div>
                                 <div className="form-row">
-                                    <div className="form-group col-md-11">
-                                <div className="select-container">
-                                <label htmlFor="statusId">Validity Period</label>
-                                <select id="statusId" name="statusId" className="form-control" placeholder="Validity Period"
-                                         value={this.state.expirationDate} onChange={this.handleInputChange}>
-                                    <option key="-1" defaultValue="selected" hidden="hidden" value="">Select status</option>
-                                    {this.statusListRows()}
-                                </select>
-                                </div>
+                                    <div className="form-group col-md-12">
+                                    <label htmlFor="statusId">Validity Period</label>
+
+                                <div className="input-group">
+                                    <select id="statusId" name="statusId" className="form-control" placeholder="Validity Period"
+                                            value={this.state.expirationDate} onChange={this.handleInputChange}>
+                                        <option key="-1" defaultValue="selected" hidden="hidden" value="">Select status</option>
+                                        {this.statusListRows()}
+                                    </select>
+                                        <button type="button" className="btn btn-secondary" onClick={() => this.handleModal()}>Add Status</button>
+                                        <Modal show={this.state.showModal}>
+                                            <Modal.Header>Add Status</Modal.Header>
+                                            <Modal.Body><StatusQuickAdd environmentName={this.state.environmentName} updateDate={this.updateDate} /></Modal.Body>
+                                            <Modal.Footer>
+                                                <button type="button" className="btn btn-secondary" onClick={() => this.handleModal()}>Close Modal</button>
+                                            </Modal.Footer>
+                                        </Modal>
                                     </div>
-                                        <div className="form-group col-md-1">
-                                        <Link to={`/environment/${this.state.environmentName}/status/add`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
-                                </div>
                                 </div>
                             </div>
+                        </div>
                     </div>
                     <button className="btn btn-primary" type="button" onClick={this.handleSubmit}>Submit</button>
                 </form>
             </div>
-            </div>
+        </div>
         )
     }
 }

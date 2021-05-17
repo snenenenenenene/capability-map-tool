@@ -1,8 +1,6 @@
 import axios from 'axios';
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import Modal from 'react-modal';
-
 export default class AddStatus extends Component {
     constructor(props) {
         super(props);
@@ -47,19 +45,18 @@ export default class AddStatus extends Component {
     statusListRows() {
         return this.state.statuses.map((status) => {
             console.log(status.statusId + " " + status.validityPeriod + " Days")
-            // return <option value={status.statusId}>{status.validityPeriod} Days</option>
             return <option value={status.statusId}>{status.validityPeriod}</option>
         })
     }
 
+
     render() {
-        const environmentName = this.props.match.params.name;
         return (
             <div>
                 <nav aria-label="breadcrumb">
                     <ol className="breadcrumb">
                         <li className="breadcrumb-item"><Link to={`/`}>Home</Link></li>
-                        <li className="breadcrumb-item"><Link to={`/environment/${environmentName}`}>{environmentName}</Link></li>
+                        <li className="breadcrumb-item"><Link to={`/environment/${this.state.environmentName}`}>{this.state.environmentName}</Link></li>
                         <li className="breadcrumb-item active" aria-current="page">Add Status</li>
                     </ol>
                 </nav>
@@ -82,7 +79,9 @@ export default class AddStatus extends Component {
                         <button className="btn btn-primary" type="button" onClick={this.handleSubmit}>Submit</button>
                     </form>
                 </div>
+                <div>
             </div>
+        </div>
         )
     }
 }
