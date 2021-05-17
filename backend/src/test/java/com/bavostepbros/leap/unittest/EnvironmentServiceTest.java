@@ -83,7 +83,7 @@ public class EnvironmentServiceTest {
 	void should_throwDuplicateValueException_whenSavedEnvironmentNameExists() {
 		String environmentName = environment.getEnvironmentName();
 		String expected = "Environment name already exists.";
-		BDDMockito.doReturn(false).when(spyService).existsByEnvironmentName(environmentName);
+		BDDMockito.doReturn(true).when(spyService).existsByEnvironmentName(environmentName);
 
 		Exception exception = assertThrows(DuplicateValueException.class,
 				() -> environmentService.save(environmentName));
@@ -95,7 +95,7 @@ public class EnvironmentServiceTest {
 	void should_saveEnvironment_whenEnvironmentIsSaved() {
 		String environmentName = environment.getEnvironmentName();
 
-		Mockito.doReturn(true).when(spyService).existsByEnvironmentName(environmentName);
+		Mockito.doReturn(false).when(spyService).existsByEnvironmentName(environmentName);
 		BDDMockito.given(environmentDAL.save(BDDMockito.any(Environment.class))).willReturn(environment);
 		Environment result = environmentService.save(environmentName);
 
@@ -156,7 +156,7 @@ public class EnvironmentServiceTest {
 	void should_throwEnvironmentException_whenEnvironmentNameExists() {
 		String environmentName = environment.getEnvironmentName();
 		String expected = "Environment name does not exists.";
-		BDDMockito.doReturn(true).when(spyService).existsByEnvironmentName(environmentName);
+		BDDMockito.doReturn(false).when(spyService).existsByEnvironmentName(environmentName);
 
 		Exception exception = assertThrows(EnvironmentException.class,
 				() -> environmentService.getByEnvironmentName(environmentName));
@@ -169,7 +169,7 @@ public class EnvironmentServiceTest {
 		String falseEnvironmentName = environment.getEnvironmentName();
 		environmentService.save(falseEnvironmentName);
 
-		Mockito.doReturn(false).when(spyService).existsByEnvironmentName(falseEnvironmentName);
+		Mockito.doReturn(true).when(spyService).existsByEnvironmentName(falseEnvironmentName);
 		BDDMockito.given(environmentDAL.findByEnvironmentName(BDDMockito.any(String.class)))
 				.willReturn(Optional.of(environment));
 		Environment fetchedEnvironment = environmentService.getByEnvironmentName(falseEnvironmentName);
@@ -221,7 +221,7 @@ public class EnvironmentServiceTest {
 		Integer id = environment.getEnvironmentId();
 		String expected = "Environment name already exists.";
 		BDDMockito.doReturn(true).when(spyService).existsById(id);
-		BDDMockito.doReturn(false).when(spyService).existsByEnvironmentName(environmentName);
+		BDDMockito.doReturn(true).when(spyService).existsByEnvironmentName(environmentName);
 
 		Exception exception = assertThrows(EnvironmentException.class,
 				() -> environmentService.update(id, environmentName));
@@ -236,7 +236,7 @@ public class EnvironmentServiceTest {
 		environmentService.save(falseEnvironmentName);
 
 		Mockito.doReturn(true).when(spyService).existsById(id);
-		Mockito.doReturn(true).when(spyService).existsByEnvironmentName(falseEnvironmentName);
+		Mockito.doReturn(false).when(spyService).existsByEnvironmentName(falseEnvironmentName);
 
 		BDDMockito.given(environmentDAL.save(environment)).willReturn(environment);
 		Environment fetchedEnvironment = environmentService.update(id, falseEnvironmentName);
@@ -290,23 +290,23 @@ public class EnvironmentServiceTest {
 	}
 	
 	@Test
-	void should_ReturnFalse_whenEnvironmentDoesExistByEnvironmentName() {
+	void should_ReturnTrue_whenEnvironmentDoesExistByEnvironmentName() {
 		BDDMockito.given(environmentDAL.findByEnvironmentName(BDDMockito.any(String.class)))
 			.willReturn(optionalEnvironment);
 
 		boolean result = environmentService.existsByEnvironmentName(environment.getEnvironmentName());
 
-		assertFalse(result);
+		assertTrue(result);
 	}
 	
 	@Test
-	void should_ReturnTrue_whenEnvironmentDoesNotExistByEnvironmentName() {
+	void should_ReturnFalse_whenEnvironmentDoesNotExistByEnvironmentName() {
 		BDDMockito.given(environmentDAL.findByEnvironmentName(BDDMockito.any(String.class)))
 			.willReturn(Optional.empty());
 
 		boolean result = environmentService.existsByEnvironmentName(environment.getEnvironmentName());
 
-		assertTrue(result);
+		assertFalse(result);
 	}
 
 }

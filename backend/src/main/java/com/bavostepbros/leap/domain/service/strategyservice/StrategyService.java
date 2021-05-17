@@ -28,4 +28,6 @@ public interface StrategyService {
 	boolean existsByStrategyName(String strategyName);
 
 	List<Strategy> getStrategiesByEnvironment(Integer environmentId);
+	
+	Strategy getStrategyByStrategyname(String strategyName);
 }

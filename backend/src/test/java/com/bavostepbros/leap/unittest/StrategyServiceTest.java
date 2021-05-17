@@ -168,7 +168,7 @@ public class StrategyServiceTest {
 		Integer environmentId = environment.getEnvironmentId();
 		String expected = "Strategy name already exists.";
 
-		BDDMockito.doReturn(false).when(spyStrategyService).existsByStrategyName(falseStrategyName);
+		BDDMockito.doReturn(true).when(spyStrategyService).existsByStrategyName(falseStrategyName);
 
 		Exception exception = assertThrows(DuplicateValueException.class,
 				() -> strategyService.save(statusId, falseStrategyName, timeFrameStart, timeFrameEnd, environmentId));
@@ -219,7 +219,7 @@ public class StrategyServiceTest {
 		Integer statusId = status.getStatusId();
 		Integer environmentId = environment.getEnvironmentId();
 
-		BDDMockito.doReturn(true).when(spyStrategyService).existsByStrategyName(falseStrategyName);
+		BDDMockito.doReturn(false).when(spyStrategyService).existsByStrategyName(falseStrategyName);
 		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
 		BDDMockito.doReturn(true).when(spyEnvironmentService).existsById(environmentId);
 
@@ -339,7 +339,7 @@ public class StrategyServiceTest {
 		String expected = "Strategy name already exists.";
 
 		BDDMockito.doReturn(true).when(spyStrategyService).existsById(strategyId);
-		BDDMockito.doReturn(false).when(spyStrategyService).existsByStrategyName(falseStrategyName);
+		BDDMockito.doReturn(true).when(spyStrategyService).existsByStrategyName(falseStrategyName);
 
 		Exception exception = assertThrows(DuplicateValueException.class, () -> strategyService.update(strategyId,
 				statusId, falseStrategyName, timeFrameStart, timeFrameEnd, environmentId));
@@ -358,7 +358,7 @@ public class StrategyServiceTest {
 		String expected = "Status ID does not exists.";
 
 		BDDMockito.doReturn(true).when(spyStrategyService).existsById(strategyId);
-		BDDMockito.doReturn(true).when(spyStrategyService).existsByStrategyName(falseStrategyName);
+		BDDMockito.doReturn(false).when(spyStrategyService).existsByStrategyName(falseStrategyName);
 		BDDMockito.doReturn(false).when(spyStatusService).existsById(statusId);
 
 		Exception exception = assertThrows(ForeignKeyException.class, () -> strategyService.update(strategyId, statusId,
@@ -378,7 +378,7 @@ public class StrategyServiceTest {
 		String expected = "Environment ID does not exists.";
 
 		BDDMockito.doReturn(true).when(spyStrategyService).existsById(strategyId);
-		BDDMockito.doReturn(true).when(spyStrategyService).existsByStrategyName(falseStrategyName);
+		BDDMockito.doReturn(false).when(spyStrategyService).existsByStrategyName(falseStrategyName);
 		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
 		BDDMockito.doReturn(false).when(spyEnvironmentService).existsById(statusId);
 
@@ -399,7 +399,7 @@ public class StrategyServiceTest {
 		strategyDAL.save(strategy);
 
 		BDDMockito.doReturn(true).when(spyStrategyService).existsById(strategyId);
-		BDDMockito.doReturn(true).when(spyStrategyService).existsByStrategyName(falseStrategyName);
+		BDDMockito.doReturn(false).when(spyStrategyService).existsByStrategyName(falseStrategyName);
 		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
 		BDDMockito.doReturn(true).when(spyEnvironmentService).existsById(statusId);
 
@@ -477,21 +477,21 @@ public class StrategyServiceTest {
 	}
 
 	@Test
-	void should_ReturnFalse_whenStrategyDoesExistByStrategyName() {
+	void should_ReturnTrue_whenStrategyDoesExistByStrategyName() {
 		BDDMockito.given(strategyDAL.findByStrategyName(BDDMockito.any(String.class))).willReturn(optionalStrategy);
 
 		boolean result = strategyService.existsByStrategyName(strategy.getStrategyName());
 
-		assertFalse(result);
+		assertTrue(result);
 	}
 
 	@Test
-	void should_ReturnTrue_whenStrategyDoesNotExistByStrategyName() {
+	void should_ReturnFalse_whenStrategyDoesNotExistByStrategyName() {
 		BDDMockito.given(strategyDAL.findByStrategyName(BDDMockito.any(String.class))).willReturn(Optional.empty());
 
 		boolean result = strategyService.existsByStrategyName(strategy.getStrategyName());
 
-		assertTrue(result);
+		assertFalse(result);
 	}
 
 	@Test

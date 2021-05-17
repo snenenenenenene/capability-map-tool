@@ -2,6 +2,7 @@ package com.bavostepbros.leap.domain.service.strategyservice;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.transaction.Transactional;
 
 import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
+import com.bavostepbros.leap.domain.customexceptions.EnvironmentException;
 import com.bavostepbros.leap.domain.customexceptions.ForeignKeyException;
 import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
 import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
@@ -53,7 +55,7 @@ public class StrategyServiceImpl implements StrategyService {
 		if (environmentId == null || environmentId.equals(0)) {
 			throw new ForeignKeyException("Environment ID is invalid.");
 		}		
-    	if (!existsByStrategyName(strategyName)) {
+    	if (existsByStrategyName(strategyName)) {
 			throw new DuplicateValueException("Strategy name already exists.");
 		}
     	if (!statusService.existsById(statusId)) {
@@ -99,7 +101,7 @@ public class StrategyServiceImpl implements StrategyService {
 		if (!existsById(strategyId)) {
 			throw new StrategyException("Can not update strategy if it does not exist.");
 		}
-		if (!existsByStrategyName(strategyName)) {
+		if (existsByStrategyName(strategyName)) {
 			throw new DuplicateValueException("Strategy name already exists.");
 		}
 		if (!statusService.existsById(statusId)) {
@@ -134,7 +136,7 @@ public class StrategyServiceImpl implements StrategyService {
 
 	@Override
 	public boolean existsByStrategyName(String strategyName) {
-		return strategyDAL.findByStrategyName(strategyName).isEmpty();
+		return !strategyDAL.findByStrategyName(strategyName).isEmpty();
 	}
 
 	@Override
@@ -149,6 +151,19 @@ public class StrategyServiceImpl implements StrategyService {
 		Environment environment = environmentService.get(environmentId);
 		List<Strategy> strategies = strategyDAL.findByEnvironment(environment);
 		return strategies;
+	}
+
+	@Override
+	public Strategy getStrategyByStrategyname(String strategyName) {
+		if (strategyName == null || strategyName.isBlank() || strategyName.isEmpty()) {
+			throw new InvalidInputException("Strategy name is not valid.");
+		}
+    	if (!existsByStrategyName(strategyName)) {
+			throw new EnvironmentException("Strategy name does not exists.");
+		}
+    	Optional<Strategy> strategy = strategyDAL.findByStrategyName(strategyName);
+    	strategy.orElseThrow(() -> new NullPointerException("Strategy does not exists"));
+		return strategy.get();
 	}
 
 }
