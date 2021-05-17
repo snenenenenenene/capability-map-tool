@@ -28,7 +28,7 @@ import com.bavostepbros.leap.domain.customexceptions.StrategyException;
 import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.Strategy;
-import com.bavostepbros.leap.domain.service.StrategyService.StrategyService;
+import com.bavostepbros.leap.domain.service.strategyservice.StrategyService;
 import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
 import com.bavostepbros.leap.domain.service.statusservice.StatusService;
 import com.bavostepbros.leap.persistence.EnvironmentDAL;

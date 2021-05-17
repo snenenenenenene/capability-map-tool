@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
-import CapabilityTableRow from "./CapabilityTableRow";
+import CapabilityHierarchy from './CapabilityHierarchy';
 
 
 export default class Capability extends Component
@@ -22,13 +22,14 @@ export default class Capability extends Component
 
         const capabilityResponse = await fetch(`${process.env.REACT_APP_API_URL}/capability/getallbyenvironment/${this.state.environmentId}`);
         const capabilityData = await capabilityResponse.json();
-        this.setState({capabilities: capabilityData});
-    }
-
-    capabilityTable() {
-        return this.state.capabilities.map((row, i) => {
-            return <CapabilityTableRow obj={ row } key={ i }/>
+        capabilityData.forEach((cap) => {
+            cap["id"] = cap.capabilityId
+            cap["name"] = cap.capabilityName
+            cap["parentId"] = cap.parentCapabilityId
         })
+        capabilityData[0].parentId = null;
+        this.setState({capabilities: capabilityData});
+        console.log(this.state.capabilities)
     }
 
     render() {
@@ -45,38 +46,12 @@ export default class Capability extends Component
                 <h1 className='display-4'>Capabilities</h1>
                 <br/><br/>
                 <div className="row">
-                    <div className="col-sm-9">
-                <table className='table table-striped'>
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Parent Id</th>
-                        <th>Level</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    { this.capabilityTable() }
-                    </tbody>
-                </table>
+                    <CapabilityHierarchy capabilities={this.state.capabilities}/>
                     </div>
-                    <div className="col-sm-2">
-
-                    <div className="text-center">
                         <Link to={'edit'}>
                             <input type="button" value="Edit" className="btn btn-secondary input-button hoverable"/>
                         </Link>
-                    </div>
-                        <br/>
-                    <div className="text-center">
-                        <Link to={'childcapability'}>
-                            <input type="button" value="Child Capability" className="btn btn-secondary input-button hoverable"/>
-                        </Link>
-                    </div>
-                    </div>
                 </div>
-            </div>
         )
     }
 

@@ -1,4 +1,4 @@
-package com.bavostepbros.leap.domain.service.StrategyService;
+package com.bavostepbros.leap.domain.service.strategyservice;
 
 import com.bavostepbros.leap.domain.model.Strategy;
 
