@@ -21,7 +21,7 @@ export default class NewEnvironment extends Component
         e.preventDefault();
         const formData = new FormData()
         formData.append('environmentName', this.state.environmentName)
-        await axios.post(`${process.env.REACT_APP_API_URL}/environment/add`, formData)
+        await axios.post(`${process.env.REACT_APP_API_URL}/environment/`, formData)
         .then(response => {
         this.props.history.push(`environment/${this.state.environmentName}`);
         }).catch(error => {
@@ -35,7 +35,7 @@ export default class NewEnvironment extends Component
     }
 
     async componentDidMount() {
-        await axios.get(`${process.env.REACT_APP_API_URL}/environment/all`)
+        await axios.get(`${process.env.REACT_APP_API_URL}/environment/`)
         .then(response => this.setState({environments: response.data}))
         .catch(error => {
             this.props.history.push('/error')

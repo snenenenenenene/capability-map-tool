@@ -1,5 +1,7 @@
+import axios from 'axios';
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
+import Modal from 'react-modal';
 
 export default class AddStatus extends Component {
     constructor(props) {
@@ -19,22 +21,18 @@ export default class AddStatus extends Component {
         e.preventDefault();
         const formData = new FormData()
         formData.append('validityPeriod', this.state.validityPeriod)
-        await fetch(`http://localhost:8080/api/status/add`, {
-            method: "POST",
-            body: formData
-        })
-        .then(resp => alert("Added Status"))
+        await axios.post(`http://localhost:8080/api/status/`,formData)
+        .then(response => alert("Added Status"))
         .catch(error => {
             console.log(error)
             alert("Failed to Add Status")
         })
-        this.props.history.push('/environment/' + this.state.environmentName)
+        this.props.history.push(`/environment/${this.state.environmentName}/status`)
     }
 
     async componentDidMount() {
-        const statusResponse = await fetch(`http://localhost:8080/api/status/all`);
-        const statusData = await statusResponse.json();
-        this.setState({statuses: statusData});
+        await axios.get(`http://localhost:8080/api/status/`)
+        .then(response => this.setState({statuses: response.data}))
     }
 
     handleInputChange(event) {

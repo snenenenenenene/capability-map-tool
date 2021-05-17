@@ -24,7 +24,7 @@ export default class Status extends Component
             this.props.history.push('/error')
         })
         
-        await axios.get(`${process.env.REACT_APP_API_URL}/status/all`)
+        await axios.get(`${process.env.REACT_APP_API_URL}/status/`)
         .then(response => this.setState({statuses: response.data}))
         .catch(error => {
             console.log(error)
@@ -40,11 +40,11 @@ export default class Status extends Component
     delete = async (statusId) => {
         if (window.confirm('Are you sure you want to delete this status?')){
             
-            await axios.delete(`${process.env.REACT_APP_API_URL}/status/delete/${statusId}`)
+            await axios.delete(`${process.env.REACT_APP_API_URL}/status/${statusId}`)
             .catch(error => console.error(error))
             //REFRESH CAPABILITIES
             
-            await axios.get(`${process.env.REACT_APP_API_URL}/status/all`)
+            await axios.get(`${process.env.REACT_APP_API_URL}/status/`)
             .then(response => {
                 console.log(response.data)
                 this.setState({statuses: []})
@@ -55,7 +55,6 @@ export default class Status extends Component
                 this.props.history.push('/error')
             })
         }
-        
     }
 
     render() {
@@ -70,7 +69,8 @@ export default class Status extends Component
             </ol>
         </nav>
             <div className="jumbotron">
-                <h1 className='display-4'>Statuses</h1>
+                <h1 style={{display: 'inline-block'}} className='display-4'>Statuses</h1>
+                <Link to={`/environment/${this.state.environmentName}/status/add`}><button className="btn btn-primary float-right">Add Status</button></Link>
                 <br/><br/>
                 <MaterialTable
                 columns={[

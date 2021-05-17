@@ -19,6 +19,7 @@ import AddStrategyItems from "./Components/Add/AddStrategyItems";
 import AddProject from "./Components/Add/AddProject";
 import EditCapability from "./Components/Edit/EditCapability";
 import Capability from "./Components/General/Capability";
+import Project from "./Components/General/Project";
 import NotFoundError from "./Components/Error/NotFound";
 import GeneralError from "./Components/Error/Error";
 import Status from './Components/General/Status';
@@ -78,7 +79,7 @@ class App extends Component {
               {/* CAPABILITIES */}
               <Route exact path='/environment/:name/capability/add' component={AddCapability}/>
               <Route exact path='/environment/:name/capability/:id/edit' component={EditCapability}/>
-              <Route exact path='/environment/:name/capability/all' component={Capability}/>
+              <Route exact path='/environment/:name/capability' component={Capability}/>
               {/* STRATEGIES */}
               <Route exact path='/environment/:name/strategy/add' component={AddStrategy}/>
               {/* RESOURCES */}
@@ -89,9 +90,10 @@ class App extends Component {
               <Route exact path='/environment/:name/businessprocess/add' component={AddBusinessProcess}/>
               {/* STATUSES */}
               <Route exact path='/environment/:name/status/add' component={AddStatus}/>
-              <Route exact path='/environment/:name/status/all' component={Status}/>
+              <Route exact path='/environment/:name/status' component={Status}/>
               {/* PROJECTS */}
               <Route exact path='/environment/:name/project/add' component={AddProject}/>
+              <Route exact path='/environment/:name/project' component={Project}/>
               {/* STRATEGYITEMS */}
               <Route exact path='/environment/:name/strategyitem/add' component={AddStrategyItems}/>
               {/* PROGRAMS */}

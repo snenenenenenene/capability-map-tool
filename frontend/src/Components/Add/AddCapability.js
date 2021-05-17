@@ -23,7 +23,7 @@ export default class AddCapability extends Component {
             applicationFit: '',
             resourcesQuality: '',
             statusId: '',
-            capabilityLevel: '',
+            level: 'ONE',
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this)
@@ -42,18 +42,11 @@ export default class AddCapability extends Component {
         formData.append('applicationFit', this.state.applicationFit)
         formData.append('resourceQuality', this.state.resourcesQuality)
         formData.append('statusId', this.state.statusId)
-        formData.append('level', this.state.capabilityLevel)
-        await fetch(`${process.env.REACT_APP_API_URL}/capability/add`,{
-            method: "POST",
-            body: formData
-        }).then(function (res) {
-            if (res.ok) {
-                console.log("Capability added");
-                alert("Capability Added")
-            } else if (res.status === 401) {
-                console.log("Oops,, Something went wrong");
-            }})
-        this.props.history.push('/environment/' + this.state.environmentName)
+        formData.append('level', this.state.level)
+        await axios.post(`${process.env.REACT_APP_API_URL}/capability/`, formData)
+        .then(response => console.log(response))
+        .catch(error => this.props.history.push('/error'))
+        this.props.history.push(`/environment/${this.state.environmentName}/capability`)
     }
 
     async componentDidMount() {
@@ -66,14 +59,14 @@ export default class AddCapability extends Component {
             this.props.history.push('/error')
         })
 
-        await axios.get(`${process.env.REACT_APP_API_URL}/status/all`)
+        await axios.get(`${process.env.REACT_APP_API_URL}/status/`)
         .then(response => this.setState({statuses: response.data}))
         .catch(error => {
             console.log(error)
             this.props.history.push('/error')
         })
 
-        await axios.get(`${process.env.REACT_APP_API_URL}/capability/getallbyenvironment/${this.state.environmentId}`)
+        await axios.get(`${process.env.REACT_APP_API_URL}/capability/all-capabilities-by-environmentid/${this.state.environmentId}`)
         .then(response => this.setState({capabilities: response.data}))
         .catch(error => {
             console.log(error)
@@ -135,9 +128,9 @@ export default class AddCapability extends Component {
                                 </select>
                                 </div>
                                 <div className="form-group col-md-6">
-                                    <label htmlFor="capabilityLevel">Capability Level</label>
-                                <select className="form-control" name="capabilityLevel" id="capabilityLevel" placeholder="Add Level"
-                                        value={this.state.capabilityLevel} onChange={this.handleInputChange}>
+                                    <label htmlFor="level">Capability Level</label>
+                                <select className="form-control" name="level" id="level" placeholder="Add Level"
+                                        value={this.state.level} onChange={this.handleInputChange}>
                                     {/* <option key="-1"  hidden="hidden" value="">Select Level</option> */}
                                     <option defaultValue="selected" value="ONE">ONE</option>
                                     <option value="TWO">TWO</option>

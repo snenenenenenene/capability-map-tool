@@ -12,7 +12,8 @@ export default class Capability extends Component
             environments: [],
             environmentName: this.props.match.params.name,
             environmentId: '',
-            capabilities: [],
+            projects: [],
+            reload: false
         };
     }
 

@@ -13,7 +13,7 @@ export default class Home extends Component
     }
 
     async componentDidMount() {
-        await axios.get(`${process.env.REACT_APP_API_URL}/environment/all`)
+        await axios.get(`${process.env.REACT_APP_API_URL}/environment/`)
             .then(response => this.setState({environments: response.data}))
             .catch(error => {
                 this.props.history.push('/error')
