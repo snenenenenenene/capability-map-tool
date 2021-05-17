@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import RecentEnvironmentTableRow from "./RecentEnvironmentTableRow";
-
+import axios from 'axios';
 
 export default class Home extends Component
 {
@@ -13,11 +13,8 @@ export default class Home extends Component
     }
 
     async componentDidMount() {
-        await fetch(`${process.env.REACT_APP_API_URL}/environment/all`)
-            .then(resp => resp.json())
-            .then(data => {
-                this.setState({environments: data});
-            })
+        await axios.get(`${process.env.REACT_APP_API_URL}/environment/all`)
+            .then(response => this.setState({environments: response.data}))
             .catch(error => {
                 this.props.history.push('/error')
             })

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
+import axios from 'axios';
 
 export default class EditCapability extends Component {
     constructor(props) {
@@ -48,61 +49,49 @@ export default class EditCapability extends Component {
             console.log(pair[0]+ ', '+ pair[1]);
         }
 
-        await fetch(`${process.env.REACT_APP_API_URL}/capability/update`,{
-            method: "PUT",
-            body: formData
-        }).then(function (res) {
-            if (res.ok) {
-                console.log("Capability added");
-            } else if (res.status === 401) {
-                console.log("Oops,, Something went wrong");
-            }})
+        await axios.put(`${process.env.REACT_APP_API_URL}/capability/update`, formData)
+        .then(reponse => {
+            this.props.history.push(`/environment/${this.state.environmentName}/capability/all`)
+            })
+        .catch(error => {
+            console.log(error)
+        })
     }
 
     async componentDidMount() {
-        await fetch(`${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`)
-            .then(resp => resp.json())
-            .then(data => {
-                this.setState({environmentId: data.environmentId});
-            })
+        await axios.get(`${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`)
+            .then(response => this.setState({environmentId: response.data.environmentId}))
             .catch(error => {
                 this.props.history.push('/error')
             })
 
-        await fetch(`${process.env.REACT_APP_API_URL}/status/all`)
-            .then(resp => resp.json())
-            .then(data => {
-                this.setState({statuses: data});
-            })
+        await axios.get(`${process.env.REACT_APP_API_URL}/status/all`)
+            .then(response => this.setState({statuses: response.data}))
             .catch(error => {
                 this.props.history.push('/error')
             })
 
-        await fetch(`${process.env.REACT_APP_API_URL}/capability/all`)
-            .then(resp => resp.json())
-            .then(data => {
-                this.setState({capabilities: data});
-            })
+        await axios.get(`${process.env.REACT_APP_API_URL}/capability/all`)
+            .then(response => this.setState({capabilities: response.data}))
             .catch(error => {
                 this.props.history.push('/error')
             })
 
-        await fetch(`${process.env.REACT_APP_API_URL}/capability/${this.state.capabilityId}`)
-            .then(resp => resp.json())
-            .then(data => {
+        await axios.get(`${process.env.REACT_APP_API_URL}/capability/${this.state.capabilityId}`)
+            .then(response => {
                 this.setState({
-                    environmentId: data.environment.environmentId,
-                    capabilityName: data.capabilityName,
-                    parentCapabilityId: data.parentCapabilityId,
-                    paceOfChange: data.paceOfChange,
-                    TOM: data.targetOperatingModel,
-                    informationQuality: data.informationQuality,
-                    applicationFit: data.applicationFit,
-                    resourceQuality: data.resourceQuality,
-                    statusId: data.status.statusId,
-                    capabilityLevel: data.level,
-                    validityPeriod: data.status.validityPeriod,
-                });
+                    environmentId: response.data.environment.environmentId,
+                    capabilityName: response.data.capabilityName,
+                    parentCapabilityId: response.data.parentCapabilityId,
+                    paceOfChange: response.data.paceOfChange,
+                    TOM: response.data.targetOperatingModel,
+                    informationQuality: response.data.informationQuality,
+                    applicationFit: response.data.applicationFit,
+                    resourceQuality: response.data.resourceQuality,
+                    statusId: response.data.status.statusId,
+                    capabilityLevel: response.data.level,
+                    validityPeriod: response.data.status.validityPeriod,
+                })
             })
             .catch(error => {
                 this.props.history.push('/error')

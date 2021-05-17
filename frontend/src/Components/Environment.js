@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
-import plusImg from '../img/plus.png'
+import plusImg from '../img/plus.png';
+import axios from 'axios';
 
 export default class Environment extends Component
 {
@@ -22,20 +23,19 @@ export default class Environment extends Component
     }
 
     async componentDidMount() {
-        await fetch(`${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`)
-            .then(resp => resp.json())
-            .then(data => {
+        await axios.get(`${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`)
+            .then(response => {
                 this.setState({
-                    environmentId: data.environmentId,
-                    capabilities: data.capabilities.length,
-                    itApplications: data.itApplications,
-                    programs: data.programs,
-                    strategies: data.strategies,
-                    strategyItems: data.strategyItems,
-                    projects: data.projects,
-                    resources: data.resources,
-                    businessProcesses: data.businessProcesses,
-                    status: data.status
+                    environmentId: response.data.environmentId,
+                    capabilities: response.data.capabilities.length,
+                    itApplications: response.data.itApplications,
+                    programs: response.data.programs,
+                    strategies: response.data.strategies,
+                    strategyItems: response.data.strategyItems,
+                    projects: response.data.projects,
+                    resources: response.data.resources,
+                    businessProcesses: response.data.businessProcesses,
+                    status: response.data.status
                 });
             })
             .catch(error => {
