@@ -66,7 +66,7 @@ public class EnvironmentServiceImpl implements EnvironmentService {
 			throw new EnvironmentException("Environment name does not exists.");
 		}
     	
-    	// Nullpointer naar hier trekken zodat die niet in DAL wordt gegooid
+    	// TODO Nullpointer naar hier trekken zodat die niet in DAL wordt gegooid
         Optional<Environment> environment = environmentDAL.findByEnvironmentName(environmentName);
         environment.orElseThrow(() -> new NullPointerException("Environment does not exist."));
         return environment.get();

@@ -1,20 +1,18 @@
 package com.bavostepbros.leap.controller;
 
 import com.bavostepbros.leap.domain.model.Strategy;
+import com.bavostepbros.leap.domain.model.dto.StrategyDto;
 import com.bavostepbros.leap.domain.service.StrategyService.StrategyService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -31,60 +29,66 @@ public class StrategyController {
 	private StrategyService strategyService;
 
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<Void> addStrategy(
+	public StrategyDto addStrategy(
 			@ModelAttribute("statusId") Integer statusId,
 			@ModelAttribute("strategyName") String strategyName,
 			@ModelAttribute("timeFrameStart") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameStart,
 			@ModelAttribute("timeFrameEnd") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameEnd,
-			@ModelAttribute("environmentId") Integer environmentId, UriComponentsBuilder builder) {
+			@ModelAttribute("environmentId") Integer environmentId) {
 
 		Strategy strategy = strategyService.save(statusId, strategyName, timeFrameStart, timeFrameEnd, environmentId);
-		Integer strategyId = strategy.getStrategyId();
-		boolean flag = (strategyId == null) ? false : true;
-		if (flag == false) {
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-		}
-
-		LocalDate ld = LocalDate.now();
-		strategy.setTimeFrameEnd(ld);
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setLocation(builder.path("{id}").buildAndExpand(strategyId).toUri());
-		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+		return new StrategyDto(strategy.getStrategyId(), strategy.getStatus(), strategy.getStrategyName(), 
+				strategy.getTimeFrameStart(), strategy.getTimeFrameEnd(), strategy.getEnvironment());
 	}
 
 	@GetMapping(path = "{strategyid}")
-	public ResponseEntity<Strategy> getStrategyById(@PathVariable("strategyid") Integer id) {
+	public StrategyDto getStrategyById(@PathVariable("strategyid") Integer id) {
 		Strategy strategy = strategyService.get(id);
-		return new ResponseEntity<Strategy>(strategy, HttpStatus.OK);
+		return new StrategyDto(strategy.getStrategyId(), strategy.getStatus(), strategy.getStrategyName(), 
+				strategy.getTimeFrameStart(), strategy.getTimeFrameEnd(), strategy.getEnvironment());
+	}
+	
+	@GetMapping(path = "strategyname/{strategyname}")
+	public StrategyDto getStrategyByStrategyname(@PathVariable("strategyname") String strategyName) {
+		Strategy strategy = strategyService.getStrategyByStrategyname(strategyName);
+		return new StrategyDto(strategy.getStrategyId(), strategy.getStatus(), strategy.getStrategyName(), 
+				strategy.getTimeFrameStart(), strategy.getTimeFrameEnd(), strategy.getEnvironment());
 	}
 
-	@GetMapping(path = "all-by-environmentid/{environmentid}")
-	public ResponseEntity<List<Strategy>> getAllCapabilitiesByEnvironment(@PathVariable("environmentid") Integer id) {
+	@GetMapping(path = "all-strategies-by-environmentid/{environmentid}")
+	public List<StrategyDto> getAllCapabilitiesByEnvironment(@PathVariable("environmentid") Integer id) {
 		List<Strategy> strategies = strategyService.getStrategiesByEnvironment(id);
-		return new ResponseEntity<List<Strategy>>(strategies, HttpStatus.OK);
+		List<StrategyDto> strategiesDto = strategies.stream()
+				.map(strategy -> new StrategyDto(strategy.getStrategyId(), strategy.getStatus(), 
+						strategy.getStrategyName(), strategy.getTimeFrameStart(), 
+						strategy.getTimeFrameEnd(), strategy.getEnvironment()))
+				.collect(Collectors.toList());
+		return strategiesDto;
 	}
 
 	@GetMapping
-	public List<Strategy> getAllStrategies() {
+	public List<StrategyDto> getAllStrategies() {
 		List<Strategy> strategies = strategyService.getAll();
-		return strategies;
+		List<StrategyDto> strategiesDto = strategies.stream()
+				.map(strategy -> new StrategyDto(strategy.getStrategyId(), strategy.getStatus(), 
+						strategy.getStrategyName(), strategy.getTimeFrameStart(), 
+						strategy.getTimeFrameEnd(), strategy.getEnvironment()))
+				.collect(Collectors.toList());
+		return strategiesDto;
 	}
 
 	@GetMapping(path = "exists-by-id/{strategyid}")
-	public ResponseEntity<Boolean> doesStrategyExistsById(@PathVariable("strategyid") Integer id) {
-		boolean result = strategyService.existsById(id);
-		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+	public boolean doesStrategyExistsById(@PathVariable("strategyid") Integer id) {
+		return strategyService.existsById(id);
 	}
 
 	@GetMapping(path = "exists-by-strategyname/{strategyname}")
-	public ResponseEntity<Boolean> doesStrategyNameExists(@PathVariable("strategyname") String strategyName) {
-		boolean result = (!strategyService.existsByStrategyName(strategyName));
-		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+	public boolean doesStrategyNameExists(@PathVariable("strategyname") String strategyName) {
+		return strategyService.existsByStrategyName(strategyName);
 	}
 
 	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<Strategy> updateStrategy(
+	public StrategyDto updateStrategy(
 			@ModelAttribute("strategyId") Integer strategyId,
 			@ModelAttribute("statusId") Integer statusId, 
 			@ModelAttribute("strategyName") String strategyName,
@@ -94,12 +98,12 @@ public class StrategyController {
 
 		Strategy strategy = strategyService.update(strategyId, statusId, strategyName, timeFrameStart, timeFrameEnd,
 				environmentId);
-		return new ResponseEntity<Strategy>(strategy, HttpStatus.OK);
+		return new StrategyDto(strategy.getStrategyId(), strategy.getStatus(), strategy.getStrategyName(), 
+				strategy.getTimeFrameStart(), strategy.getTimeFrameEnd(), strategy.getEnvironment());
 	}
 
 	@DeleteMapping("{strategyid}")
-	public ResponseEntity<Void> deleteStrategy(@PathVariable("strategyid") Integer id) {
+	public void deleteStrategy(@PathVariable("strategyid") Integer id) {
 		strategyService.delete(id);
-		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 }

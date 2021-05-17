@@ -68,8 +68,8 @@ public class CapabilityControllerTest {
 	public void init() {
 		statusFirst = statusDAL.save(new Status(1, LocalDate.of(2021, 05, 15)));
 		statusSecond = statusDAL.save(new Status(2, LocalDate.of(2021, 05, 20)));
-		environmentFirst = environmentDAL.save(new Environment("Test 1"));
-		environmentSecond = environmentDAL.save(new Environment("Test 2"));
+		environmentFirst = environmentDAL.save(new Environment(1, "Test 1"));
+		environmentSecond = environmentDAL.save(new Environment(2, "Test 2"));
 		capabilityFirst = capabilityDAL.save(new Capability(1, environmentFirst,
 				statusFirst, 1, "Capability 1", CapabilityLevel.ONE, true, 
 				"Target Operating Model", 1, 1, 1));
