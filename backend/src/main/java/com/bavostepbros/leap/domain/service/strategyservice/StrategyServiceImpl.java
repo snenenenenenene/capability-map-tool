@@ -1,4 +1,4 @@
-package com.bavostepbros.leap.domain.service.StrategyService;
+package com.bavostepbros.leap.domain.service.strategyservice;
 
 import java.time.LocalDate;
 import java.util.List;

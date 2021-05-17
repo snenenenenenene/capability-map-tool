@@ -1,7 +1,7 @@
 package com.bavostepbros.leap.controller;
 
 import com.bavostepbros.leap.domain.model.Strategy;
-import com.bavostepbros.leap.domain.service.StrategyService.StrategyService;
+import com.bavostepbros.leap.domain.service.strategyservice.StrategyService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
