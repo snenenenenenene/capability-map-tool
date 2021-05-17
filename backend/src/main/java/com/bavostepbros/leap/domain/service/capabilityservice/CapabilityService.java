@@ -27,6 +27,8 @@ public interface CapabilityService {
 	boolean existsById(Integer id);
 
 	boolean existsByCapabilityName(String capabilityName);
+	
+	Capability getCapabilityByCapabilityName(String capabilityName);
 
 	List<Capability> getCapabilitiesByEnvironment(Integer environmentId);
 

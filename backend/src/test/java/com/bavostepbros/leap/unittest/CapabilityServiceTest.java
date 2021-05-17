@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -200,7 +199,7 @@ public class CapabilityServiceTest {
 		Integer environmentId = environment.getEnvironmentId();
 		String expected = "Capability name already exists.";
 		
-		BDDMockito.doReturn(false).when(spyCapabilityService).existsByCapabilityName(capabilityName);
+		BDDMockito.doReturn(true).when(spyCapabilityService).existsByCapabilityName(capabilityName);
 		
 		Exception exception = assertThrows(DuplicateValueException.class,
 				() -> capabilityService.save(environmentId, statusId, 
@@ -225,7 +224,7 @@ public class CapabilityServiceTest {
 		Integer environmentId = environment.getEnvironmentId();
 		String expected = "Status ID does not exists.";
 		
-		BDDMockito.doReturn(true).when(spyCapabilityService).existsByCapabilityName(capabilityName);
+		BDDMockito.doReturn(false).when(spyCapabilityService).existsByCapabilityName(capabilityName);
 		BDDMockito.doReturn(false).when(spyStatusService).existsById(statusId);
 		
 		Exception exception = assertThrows(ForeignKeyException.class,
@@ -251,7 +250,7 @@ public class CapabilityServiceTest {
 		Integer environmentId = environment.getEnvironmentId();
 		String expected = "Environment ID does not exists.";
 		
-		BDDMockito.doReturn(true).when(spyCapabilityService).existsByCapabilityName(capabilityName);
+		BDDMockito.doReturn(false).when(spyCapabilityService).existsByCapabilityName(capabilityName);
 		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
 		BDDMockito.doReturn(false).when(spyEnvironmentService).existsById(environmentId);
 		
@@ -278,7 +277,7 @@ public class CapabilityServiceTest {
 		Integer environmentId = environment.getEnvironmentId();
 		String expected = "CapabilityLevel is not valid.";
 		
-		BDDMockito.doReturn(true).when(spyCapabilityService).existsByCapabilityName(capabilityName);
+		BDDMockito.doReturn(false).when(spyCapabilityService).existsByCapabilityName(capabilityName);
 		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
 		BDDMockito.doReturn(true).when(spyEnvironmentService).existsById(environmentId);
 		
@@ -304,7 +303,7 @@ public class CapabilityServiceTest {
 		Integer statusId = status.getStatusId();
 		Integer environmentId = environment.getEnvironmentId();
 		
-		BDDMockito.doReturn(true).when(spyCapabilityService).existsByCapabilityName(capabilityName);
+		BDDMockito.doReturn(false).when(spyCapabilityService).existsByCapabilityName(capabilityName);
 		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
 		BDDMockito.doReturn(true).when(spyEnvironmentService).existsById(environmentId);
 		
@@ -503,7 +502,7 @@ public class CapabilityServiceTest {
 		String expected = "Capability name already exists.";
 		
 		BDDMockito.doReturn(true).when(spyCapabilityService).existsById(capabilityId);
-		BDDMockito.doReturn(false).when(spyCapabilityService).existsByCapabilityName(capabilityName);
+		BDDMockito.doReturn(true).when(spyCapabilityService).existsByCapabilityName(capabilityName);
 		
 		Exception exception = assertThrows(DuplicateValueException.class,
 				() -> capabilityService.update(capabilityId, environmentId, statusId, 
@@ -530,7 +529,7 @@ public class CapabilityServiceTest {
 		String expected = "Status ID does not exists.";
 		
 		BDDMockito.doReturn(true).when(spyCapabilityService).existsById(capabilityId);
-		BDDMockito.doReturn(true).when(spyCapabilityService).existsByCapabilityName(capabilityName);
+		BDDMockito.doReturn(false).when(spyCapabilityService).existsByCapabilityName(capabilityName);
 		BDDMockito.doReturn(false).when(spyStatusService).existsById(statusId);
 		
 		Exception exception = assertThrows(ForeignKeyException.class,
@@ -558,7 +557,7 @@ public class CapabilityServiceTest {
 		String expected = "Environment ID does not exists.";
 		
 		BDDMockito.doReturn(true).when(spyCapabilityService).existsById(capabilityId);
-		BDDMockito.doReturn(true).when(spyCapabilityService).existsByCapabilityName(capabilityName);
+		BDDMockito.doReturn(false).when(spyCapabilityService).existsByCapabilityName(capabilityName);
 		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
 		BDDMockito.doReturn(false).when(spyEnvironmentService).existsById(environmentId);
 		
@@ -587,7 +586,7 @@ public class CapabilityServiceTest {
 		String expected = "CapabilityLevel is not valid.";
 		
 		BDDMockito.doReturn(true).when(spyCapabilityService).existsById(capabilityId);
-		BDDMockito.doReturn(true).when(spyCapabilityService).existsByCapabilityName(capabilityName);
+		BDDMockito.doReturn(false).when(spyCapabilityService).existsByCapabilityName(capabilityName);
 		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
 		BDDMockito.doReturn(true).when(spyEnvironmentService).existsById(environmentId);
 		
@@ -616,7 +615,7 @@ public class CapabilityServiceTest {
 		capabilityDAL.save(capability);
 		
 		BDDMockito.doReturn(true).when(spyCapabilityService).existsById(capabilityId);
-		BDDMockito.doReturn(true).when(spyCapabilityService).existsByCapabilityName(capabilityName);
+		BDDMockito.doReturn(false).when(spyCapabilityService).existsByCapabilityName(capabilityName);
 		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
 		BDDMockito.doReturn(true).when(spyEnvironmentService).existsById(environmentId);
 		
@@ -890,21 +889,20 @@ public class CapabilityServiceTest {
 	}
 	
 	@Test
-	void should_ReturnFalse_whenCapabilityDoesExistByCapabilityName() {
-		BDDMockito.given(capabilityDAL.findByCapabilityName(BDDMockito.any(String.class))).willReturn(capabilities);
-
-		boolean result = capabilityService.existsByCapabilityName(capability.getCapabilityName());
-
-		assertFalse(result);
-	}
-
-	@Test
-	void should_ReturnTrue_whenCapabilityDoesNotExistByCapabilityName() {
-		List<Capability> emptyList = new ArrayList<Capability>();
-		BDDMockito.given(capabilityDAL.findByCapabilityName(BDDMockito.any(String.class))).willReturn(emptyList);
+	void should_ReturnTrue_whenCapabilityDoesExistByCapabilityName() {
+		BDDMockito.given(capabilityDAL.findByCapabilityName(BDDMockito.any(String.class))).willReturn(optionalCapability);
 
 		boolean result = capabilityService.existsByCapabilityName(capability.getCapabilityName());
 
 		assertTrue(result);
+	}
+
+	@Test
+	void should_ReturnFalse_whenCapabilityDoesNotExistByCapabilityName() {
+		BDDMockito.given(capabilityDAL.findByCapabilityName(BDDMockito.any(String.class))).willReturn(Optional.empty());
+
+		boolean result = capabilityService.existsByCapabilityName(capability.getCapabilityName());
+
+		assertFalse(result);
 	}
 }
