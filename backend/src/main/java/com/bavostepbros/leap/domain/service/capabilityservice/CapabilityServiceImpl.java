@@ -57,7 +57,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 		if (statusId == null || statusId.equals(0)) {
 			throw new ForeignKeyException("Status ID is invalid.");
 		}
-		if (!existsByCapabilityName(capabilityName)) {
+		if (existsByCapabilityName(capabilityName)) {
 			throw new DuplicateValueException("Capability name already exists.");
 		}
 		if (!statusService.existsById(statusId)) {
@@ -116,7 +116,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 		if (!existsById(capabilityId)) {
 			throw new CapabilityException("Can not update capability if it does not exist.");
 		}
-		if (!existsByCapabilityName(capabilityName)) {
+		if (existsByCapabilityName(capabilityName)) {
 			throw new DuplicateValueException("Capability name already exists.");
 		}
 		if (!statusService.existsById(statusId)) {
@@ -219,7 +219,17 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 	@Override
 	public boolean existsByCapabilityName(String capabilityName) {
-		return capabilityDAL.findByCapabilityName(capabilityName).isEmpty();
+		return !capabilityDAL.findByCapabilityName(capabilityName).isEmpty();
+	}
+	
+	// TODO write unit tests for this one!
+	@Override
+	public Capability getCapabilityByCapabilityName(String capabilityName) {
+		if (capabilityName == null || capabilityName.isBlank() || capabilityName.isEmpty()) {
+			throw new InvalidInputException("Invalid input.");
+		}
+		
+		return capabilityDAL.findByCapabilityName(capabilityName).get();
 	}
 
 }

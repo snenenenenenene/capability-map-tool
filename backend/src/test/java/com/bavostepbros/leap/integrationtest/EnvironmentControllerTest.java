@@ -30,7 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
-public class EnvironmentControllerIntegrationTest {
+public class EnvironmentControllerTest {
 
 	@Autowired
     private MockMvc mockMvc;
@@ -53,8 +53,8 @@ public class EnvironmentControllerIntegrationTest {
 	
 	@BeforeEach
 	public void init() {
-		environmentFirst = environmentDAL.save(new Environment("Test 1"));
-		environmentSecond = environmentDAL.save(new Environment("Test 2"));
+		environmentFirst = environmentDAL.save(new Environment(1, "Test 1"));
+		environmentSecond = environmentDAL.save(new Environment(2, "Test 2"));
 	}
 	
 	@AfterEach
@@ -73,7 +73,7 @@ public class EnvironmentControllerIntegrationTest {
 	
 	@Test
 	public void should_postEnvironment_whenSaveEnvironment() throws Exception {		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(PATH + "add")
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(PATH)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("environmentName", "Senne")
 				.accept(MediaType.APPLICATION_JSON))
@@ -126,7 +126,7 @@ public class EnvironmentControllerIntegrationTest {
 	public void should_getBoolean_whenEnvironmentExistsById() throws Exception {
 		Integer environmentId = environmentFirst.getEnvironmentId();
 		
-		mockMvc.perform(MockMvcRequestBuilders.get(PATH + "exists/id/" + environmentId))
+		mockMvc.perform(MockMvcRequestBuilders.get(PATH + "exists-by-id/" + environmentId))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().string("true"));		
 	}
@@ -135,14 +135,14 @@ public class EnvironmentControllerIntegrationTest {
 	public void should_getBoolean_whenEnvironmentNameExists() throws Exception {
 		String environmentName = environmentFirst.getEnvironmentName();
 		
-		mockMvc.perform(MockMvcRequestBuilders.get(PATH + "exists/environmentname/" + environmentName))
+		mockMvc.perform(MockMvcRequestBuilders.get(PATH + "exists-by-environmentname/" + environmentName))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().string("true"));		
 	}
 	
 	@Test
 	public void should_getAllEnvironments_whenGetAllEnvironments() throws Exception {
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + "all"))
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
@@ -161,7 +161,7 @@ public class EnvironmentControllerIntegrationTest {
 	public void should_putEnvironment_whenUpdateEnvironment() throws Exception {
 		String newName = "Senne";
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH + "update")
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("environmentId", environmentFirst.getEnvironmentId().toString())
 				.param("environmentName", newName)
@@ -183,7 +183,7 @@ public class EnvironmentControllerIntegrationTest {
 	public void should_deleteEnvironment_whenDeleteEnvironment() throws Exception {
 		Integer environmentId = environmentFirst.getEnvironmentId();
 		
-		mockMvc.perform(MockMvcRequestBuilders.delete(PATH + "delete/" + environmentId))
+		mockMvc.perform(MockMvcRequestBuilders.delete(PATH + environmentId))
 				.andExpect(MockMvcResultMatchers.status().isOk());	
 	}
 }

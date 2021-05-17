@@ -30,7 +30,7 @@ public class StrategyController {
 	@Autowired
 	private StrategyService strategyService;
 
-	@PostMapping(path = "add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Void> addStrategy(
 			@ModelAttribute("statusId") Integer statusId,
 			@ModelAttribute("strategyName") String strategyName,
@@ -53,37 +53,37 @@ public class StrategyController {
 		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
 	}
 
-	@GetMapping(path = "{id}")
-	public ResponseEntity<Strategy> getStrategyById(@PathVariable("id") Integer id) {
+	@GetMapping(path = "{strategyid}")
+	public ResponseEntity<Strategy> getStrategyById(@PathVariable("strategyid") Integer id) {
 		Strategy strategy = strategyService.get(id);
 		return new ResponseEntity<Strategy>(strategy, HttpStatus.OK);
 	}
 
-	@GetMapping(path = "getallbyenvironment/{id}")
-	public ResponseEntity<List<Strategy>> getAllCapabilitiesByEnvironment(@PathVariable("id") Integer id) {
+	@GetMapping(path = "all-by-environmentid/{environmentid}")
+	public ResponseEntity<List<Strategy>> getAllCapabilitiesByEnvironment(@PathVariable("environmentid") Integer id) {
 		List<Strategy> strategies = strategyService.getStrategiesByEnvironment(id);
 		return new ResponseEntity<List<Strategy>>(strategies, HttpStatus.OK);
 	}
 
-	@GetMapping(path = "all")
+	@GetMapping
 	public List<Strategy> getAllStrategies() {
 		List<Strategy> strategies = strategyService.getAll();
 		return strategies;
 	}
 
-	@GetMapping(path = "exists/id/{id}")
-	public ResponseEntity<Boolean> doesStrategyExistsById(@PathVariable("id") Integer id) {
+	@GetMapping(path = "exists-by-id/{strategyid}")
+	public ResponseEntity<Boolean> doesStrategyExistsById(@PathVariable("strategyid") Integer id) {
 		boolean result = strategyService.existsById(id);
 		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 	}
 
-	@GetMapping(path = "exists/strategyname/{strategyname}")
+	@GetMapping(path = "exists-by-strategyname/{strategyname}")
 	public ResponseEntity<Boolean> doesStrategyNameExists(@PathVariable("strategyname") String strategyName) {
 		boolean result = (!strategyService.existsByStrategyName(strategyName));
 		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 	}
 
-	@PutMapping(path = "update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Strategy> updateStrategy(
 			@ModelAttribute("strategyId") Integer strategyId,
 			@ModelAttribute("statusId") Integer statusId, 
@@ -97,8 +97,8 @@ public class StrategyController {
 		return new ResponseEntity<Strategy>(strategy, HttpStatus.OK);
 	}
 
-	@DeleteMapping("delete/{id}")
-	public ResponseEntity<Void> deleteStrategy(@PathVariable("id") Integer id) {
+	@DeleteMapping("{strategyid}")
+	public ResponseEntity<Void> deleteStrategy(@PathVariable("strategyid") Integer id) {
 		strategyService.delete(id);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}

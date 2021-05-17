@@ -34,16 +34,16 @@ public class EnvironmentController {
 	@Autowired
 	private EnvironmentService envService;
 	
-	@PostMapping(path = "add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public EnvironmentDto addEnvironment(
 			@ModelAttribute("environmentName") String environmentName) {
 		Environment environment = envService.save(environmentName);
 		return new EnvironmentDto(environment.getEnvironmentId(), environment.getEnvironmentName());
 	}
 	
-	@GetMapping(path = "{id}")
-    public EnvironmentDto getEnvironmentById(@PathVariable("id") Integer id) {		
-		Environment environment = envService.get(id);
+	@GetMapping(path = "{environmentId}")
+    public EnvironmentDto getEnvironmentById(@PathVariable("environmentId") Integer environmentId) {		
+		Environment environment = envService.get(environmentId);
         return new EnvironmentDto(environment.getEnvironmentId(), environment.getEnvironmentName());
     }
 	
@@ -53,17 +53,17 @@ public class EnvironmentController {
         return new EnvironmentDto(environment.getEnvironmentId(), environment.getEnvironmentName());
     }
 	
-	@GetMapping(path = "exists/id/{id}")
-	public boolean doesEnvironmentExistsById(@ModelAttribute("id") Integer id) {
-		return envService.existsById(id);
+	@GetMapping(path = "exists-by-id/{environmentId}")
+	public boolean doesEnvironmentExistsById(@ModelAttribute("environmentId") Integer environmentId) {
+		return envService.existsById(environmentId);
 	}
 	
-	@GetMapping(path = "exists/environmentname/{environmentname}")
+	@GetMapping(path = "exists-by-environmentname/{environmentname}")
 	public boolean doesEnvironmentNameExists(@PathVariable("environmentname") String environmentName) {		
-		return !envService.existsByEnvironmentName(environmentName);
+		return envService.existsByEnvironmentName(environmentName);
 	}
 	
-	@GetMapping(path = "all")
+	@GetMapping
 	public List<EnvironmentDto> getAllEnvironments() {
 		List<Environment> environments = envService.getAll();
 		List<EnvironmentDto> environmentsDto = environments.stream()
@@ -72,7 +72,7 @@ public class EnvironmentController {
 		return environmentsDto;
 	}
 	
-	@PutMapping(path = "update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public EnvironmentDto updateEnvironment(
 			@ModelAttribute("environmentId") Integer environmentId,
 			@ModelAttribute("environmentName") String environmentName) {		
@@ -80,7 +80,7 @@ public class EnvironmentController {
 		return new EnvironmentDto(environment.getEnvironmentId(), environment.getEnvironmentName());
 	}
 	
-	@DeleteMapping(path = "delete/{environmentId}")
+	@DeleteMapping(path = "{environmentId}")
 	public void deleteEnvironment(@PathVariable("environmentId") Integer environmentId) {		
 		envService.delete(environmentId);
 	}

@@ -29,7 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
-public class StatusControllerIntegrationTest {
+public class StatusControllerTest {
 	
 	@Autowired
     private MockMvc mockMvc;
@@ -72,7 +72,7 @@ public class StatusControllerIntegrationTest {
 	public void should_postStatus_whenSaveStatus() throws Exception {
 		LocalDate validityPeriod = LocalDate.of(2021, 05, 27);
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(PATH + "add")
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(PATH)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("validityPeriod", validityPeriod.toString())
 				.accept(MediaType.APPLICATION_JSON))
@@ -123,7 +123,7 @@ public class StatusControllerIntegrationTest {
 	
 	@Test
 	public void should_getAllStatus_whenGetAllStatus() throws Exception {		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + "all"))
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH))
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andReturn();
 		
@@ -142,7 +142,7 @@ public class StatusControllerIntegrationTest {
 	public void should_getBoolean_whenStatusIdExists() throws Exception {
 		Integer statusId = statusFirst.getStatusId();
 		
-		mockMvc.perform(MockMvcRequestBuilders.get(PATH + "exists/id/" + statusId))
+		mockMvc.perform(MockMvcRequestBuilders.get(PATH + "exists-by-id/" + statusId))
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(MockMvcResultMatchers.content().string("true"));	
 	}
@@ -151,7 +151,7 @@ public class StatusControllerIntegrationTest {
 	public void should_getBoolean_whenValidityPeriodExists() throws Exception {
 		LocalDate validityPeriod = statusFirst.getValidityPeriod();
 		
-		mockMvc.perform(MockMvcRequestBuilders.get(PATH + "exists/validityperiod/" + validityPeriod))
+		mockMvc.perform(MockMvcRequestBuilders.get(PATH + "exists-by-validityperiod/" + validityPeriod))
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(MockMvcResultMatchers.content().string("true"));	
 	}
@@ -161,7 +161,7 @@ public class StatusControllerIntegrationTest {
 		Integer statusId = statusFirst.getStatusId();
 		LocalDate validityPeriod = LocalDate.of(2021, 12, 13);
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH + "update")
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("statusId", statusId.toString())
 				.param("validityPeriod", validityPeriod.toString())
@@ -183,7 +183,7 @@ public class StatusControllerIntegrationTest {
 	public void should_deleteStatus_whenDeleteStatus() throws Exception {
 		Integer statusId = statusFirst.getStatusId();
 		
-		mockMvc.perform(MockMvcRequestBuilders.delete(PATH + "delete/" + statusId))
+		mockMvc.perform(MockMvcRequestBuilders.delete(PATH + statusId))
 			.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 }
