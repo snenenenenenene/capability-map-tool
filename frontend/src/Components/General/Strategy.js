@@ -4,7 +4,7 @@ import MaterialTable from 'material-table';
 import './GeneralTable.css'
 import axios from 'axios';
 
-export default class ITApplication extends Component
+export default class Strategy extends Component
 {
     constructor(props) {
         super(props);
@@ -49,7 +49,7 @@ export default class ITApplication extends Component
                 })
             .catch(error => {
                 console.log(error)
-                this.props.history.push('/error')
+                // this.props.history.push('/error')
             })
         }
     }
@@ -61,12 +61,12 @@ export default class ITApplication extends Component
             <ol className="breadcrumb">
                 <li className="breadcrumb-item"><Link to={`/`}>Home</Link></li>
                 <li className="breadcrumb-item"><Link to={`/environment/${this.state.environmentName}`}>{this.state.environmentName}</Link></li>
-                <li className="breadcrumb-item">Strategys</li>
+                <li className="breadcrumb-item">Strategies</li>
             </ol>
         </nav>
             <div className="jumbotron">
                 <div>
-                    <h1 className='display-4' style={{display: 'inline-block'}}>Strategys</h1>
+                    <h1 className='display-4' style={{display: 'inline-block'}}>Strategies</h1>
                     <Link to={`/environment/${this.state.environmentName}/strategy/add`}><button className="btn btn-primary float-right">Add Strategy</button></Link>
                 </div>
                 <br/><br/>

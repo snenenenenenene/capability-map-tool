@@ -70,7 +70,7 @@ export default class Environment extends Component
                             </div>
                         </div>
                         <div className="card">
-                        <Link to={`${this.state.environmentName}/resources`}>
+                        <Link to={`${this.state.environmentName}/resource`}>
 
                             <div className="card-body">
                                 <h5 className="card-title text-center">Resources</h5>
@@ -122,7 +122,7 @@ export default class Environment extends Component
                     </div>
                     <div className="card-deck">
                         <div className="card">
-                        <Link to={`${this.state.environmentName}/programs`}>
+                        <Link to={`${this.state.environmentName}/program`}>
                             <div className="card-body">
                                 <h5 className="card-title text-center">Programs</h5>
                                 <div className="text-center">
@@ -134,7 +134,7 @@ export default class Environment extends Component
                         </div>
                         </div>
                         <div className="card">
-                        <Link to={`${this.state.environmentName}/projects`}>
+                        <Link to={`${this.state.environmentName}/project`}>
                             <div className="card-body">
                                 <h5 className="card-title text-center">Projects</h5>
                                 <div className="text-center">

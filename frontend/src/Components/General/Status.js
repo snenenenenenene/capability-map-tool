@@ -28,7 +28,7 @@ export default class Status extends Component
         .then(response => this.setState({statuses: response.data}))
         .catch(error => {
             console.log(error)
-            this.props.history.push('/error')
+            // this.props.history.push('/error')
         })
     }
 

@@ -31,7 +31,7 @@ export default class Capability extends Component
             })
         .catch(error => {
             console.log(error)
-            this.props.history.push('/error')
+            // this.props.history.push('/error')
         })
     }
 

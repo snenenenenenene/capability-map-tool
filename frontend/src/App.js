@@ -30,6 +30,14 @@ import ITApplication from './Components/General/ITApplication';
 import EditITApplication from './Components/Edit/EditITApplication';
 import EditStatus from './Components/Edit/EditStatus';
 import EditProject from './Components/Edit/EditProject';
+import EditStrategy from './Components/Edit/EditStrategy';
+import StrategyItem from './Components/General/StrategyItem';
+import Strategy from './Components/General/Strategy';
+import EditResource from './Components/Edit/EditResource';
+import Resource from './Components/General/Resource';
+import EditStrategyItem from './Components/Edit/EditStrategyItem';
+import EditProgram from './Components/Edit/EditProgram';
+import Program from './Components/General/Program';
 
 class App extends Component {
 
@@ -69,6 +77,19 @@ class App extends Component {
                       <Link to={ '/add' } className='nav-link'>Add</Link>
                     </li>
                   </ul>
+                  <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+                  <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                    <i className="bi bi-gear-fill" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    </i>
+                      <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
                   <form className="form-inline my-2 my-lg-0">
                     <Link to={ '' } onClick={ this.logout } style={{ color: '#fff'}} className='nav-link'>Logout</Link>
                   </form>
@@ -89,8 +110,14 @@ class App extends Component {
               <Route exact path='/environment/:name/capability' component={Capability}/>
               {/* STRATEGIES */}
               <Route exact path='/environment/:name/strategy/add' component={AddStrategy}/>
+              <Route exact path='/environment/:name/strategy/:id' component={EditStrategy}/>
+              <Route exact path='/environment/:name/strategy' component={Strategy}/>
+
               {/* RESOURCES */}
               <Route exact path='/environment/:name/resource/add' component={AddResources}/>
+              <Route exact path='/environment/:name/strategy/:id' component={EditResource}/>
+              <Route exact path='/environment/:name/strategy' component={Resource}/>
+
               {/* ITAPPLICATIONS */}
               <Route exact path='/environment/:name/itapplication/add' component={AddITApplication}/>
               <Route exact path='/environment/:name/itapplication/:id' component={EditITApplication}/>
@@ -109,8 +136,14 @@ class App extends Component {
               <Route exact path='/environment/:name/project' component={Project}/>
               {/* STRATEGYITEMS */}
               <Route exact path='/environment/:name/strategyitem/add' component={AddStrategyItems}/>
+              <Route exact path='/environment/:name/strategyitem/:id' component={EditStrategyItem}/>
+              <Route exact path='/environment/:name/strategyitem' component={StrategyItem}/>
+
               {/* PROGRAMS */}
               <Route exact path='/environment/:name/program/add' component={AddProgram}/>
+              <Route exact path='/environment/:name/program/:id' component={EditProgram}/>
+              <Route exact path='/environment/:name/program' component={Program}/>
+
               {/* USERS */}
               <Route exact path='/login' component={ Signup }/>
               <Route exact path='/users' component={ UserList }/>

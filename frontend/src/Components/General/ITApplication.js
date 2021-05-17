@@ -24,7 +24,7 @@ export default class ITApplication extends Component
             this.props.history.push('/error')
         })
         
-        await axios.get(`${process.env.REACT_APP_API_URL}/itApplications/`)
+        await axios.get(`${process.env.REACT_APP_API_URL}/itApplication/`)
         .then(response => {
                 this.setState({itApplications: response.data});
             })
