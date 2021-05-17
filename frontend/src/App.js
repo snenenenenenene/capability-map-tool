@@ -8,7 +8,7 @@ import AddCapability from './Components/Add/AddCapability'
 import './App.css';
 import Signup from './auth/Login'
 import LeapImg from './img/LEAP logo.png'
-import { BrowserRouter, Switch, Route, Link } from 'react-router-dom'
+import { BrowserRouter, Switch, Route, Link, Redirect, Router } from 'react-router-dom'
 import AddResources from "./Components/Add/AddResources";
 import AddStrategy from "./Components/Add/AddStrategy";
 import AddBusinessProcess from "./Components/Add/AddBusinessProcess";
@@ -23,12 +23,14 @@ import Project from "./Components/General/Project";
 import NotFoundError from "./Components/Error/NotFound";
 import GeneralError from "./Components/Error/Error";
 import Status from './Components/General/Status';
+import NotFoundPage from "./Components/Error/NotFoundPage"
 
 class App extends Component {
 
   constructor(props) {
     super(props)
-    this.state = { authenticated: false }
+    this.state = { 
+      authenticated: false}
     this.logout = this.logout.bind(this)
   }
 
@@ -41,8 +43,6 @@ class App extends Component {
 
   logout() {
     localStorage.removeItem('user')
-    this.props.history.push('/')
-    // window.location.reload()
   }
 
   render() {
@@ -72,6 +72,7 @@ class App extends Component {
               <Switch>
               {/* ROOT */}
               <Route exact path='/home' component={Home}/>
+              <Route exact path='/' component={Home}/>
               {/* ENVIRONMENTS */}
               <Route exact path='/add' component={ NewEnvironment }/>
               <Route exact path='/environment/:name' component={Environment}/>
@@ -104,7 +105,7 @@ class App extends Component {
               {/* ERRORS */}
               <Route exact path='/error' component={ GeneralError }/>
               <Route exact path='/notfound' component={ NotFoundError }/>
-              <Route path='/' component={Home}/>
+              <Route component={NotFoundPage} />
               </Switch>
           </div>
             </BrowserRouter>
