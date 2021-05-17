@@ -23,7 +23,7 @@ import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.Strategy;
 import com.bavostepbros.leap.domain.model.dto.StrategyDto;
-import com.bavostepbros.leap.domain.service.StrategyService.StrategyService;
+import com.bavostepbros.leap.domain.service.strategyservice.StrategyService;
 import com.bavostepbros.leap.persistence.EnvironmentDAL;
 import com.bavostepbros.leap.persistence.StatusDAL;
 import com.bavostepbros.leap.persistence.StrategyDAL;
