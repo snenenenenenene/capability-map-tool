@@ -39,7 +39,8 @@ class App extends Component {
 
   logout() {
     localStorage.removeItem('user')
-    window.location.reload()
+    this.props.history.push('/')
+    // window.location.reload()
   }
 
   render() {

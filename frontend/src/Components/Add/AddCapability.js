@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import plusImg from "../../img/plus.png";
+import ReactStars from 'react-stars'
 
 export default class AddCapability extends Component {
     constructor(props) {
@@ -99,6 +100,10 @@ export default class AddCapability extends Component {
         })
     }
 
+    ratingChanged = (newRating) => {
+        console.log(newRating)
+      }
+
     render() {
         const environmentName = this.props.match.params.name;
 
@@ -193,6 +198,7 @@ export default class AddCapability extends Component {
                                         <option>4</option>
                                         <option>5</option>
                                     </select>
+                                    <ReactStars count={5} onChange={this.ratingChanged} size={24} color2={'#ffd700'} />
                                 </div>
                             </div>
                             <div className="form-row">

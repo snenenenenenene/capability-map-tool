@@ -9,7 +9,6 @@ export default class AddStatus extends Component {
             environments: [],
             environmentName: this.props.match.params.name,
             validityPeriod: new Date(),
-            statusConfirmation: ''
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this)
@@ -24,11 +23,12 @@ export default class AddStatus extends Component {
             method: "POST",
             body: formData
         })
-        .then(resp => this.setState({statusConfirmation: "added status"}))
+        .then(resp => alert("Added Status"))
         .catch(error => {
             console.log(error)
-            this.setState({statusConfirmation: 'failed to add status'})
+            alert("Failed to Add Status")
         })
+        this.props.history.push('/environment/' + this.state.environmentName)
     }
 
     async componentDidMount() {
@@ -81,7 +81,6 @@ export default class AddStatus extends Component {
                             <div className="col-sm-6">
                             </div>
                         </div>
-                        <p style={{color: "green"}}>{this.state.statusConfirmation}</p>
                         <button className="btn btn-primary" type="button" onClick={this.handleSubmit}>Submit</button>
                     </form>
                 </div>
