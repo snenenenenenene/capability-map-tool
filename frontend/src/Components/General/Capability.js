@@ -9,12 +9,20 @@ export default class Capability extends Component
         super(props);
         this.state = {
             environments: [],
-            environmentName: '',
+            environmentName: this.props.match.params.name,
+            environmentId: '',
             capabilities: []
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        const environmentResponse = await fetch(`${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`);
+        const environmentData = await environmentResponse.json();
+        this.setState({environmentId: environmentData.environmentId});
+
+        const capabilityResponse = await fetch(`${process.env.REACT_APP_API_URL}/capability/getallbyenvironment/${this.state.environmentId}`);
+        const capabilityData = await capabilityResponse.json();
+        this.setState({capabilities: capabilityData});
     }
 
     capabilityTable() {
@@ -31,6 +39,7 @@ export default class Capability extends Component
                     <ol className="breadcrumb">
                         <li className="breadcrumb-item"><Link to={`/`}>Home</Link></li>
                         <li className="breadcrumb-item"><Link to={`/environment/${environmentName}`}>{environmentName}</Link></li>
+                        <li className="breadcrumb-item">Capabilities</li>
                     </ol>
                 </nav>
                 <h1 className='display-4'>Capabilities</h1>
@@ -40,8 +49,11 @@ export default class Capability extends Component
                 <table className='table table-striped'>
                     <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Name</th>
-                        <th>Description</th>
+                        <th>Parent Id</th>
+                        <th>Level</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>

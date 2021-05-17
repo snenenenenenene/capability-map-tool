@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
+import Modal from 'react-modal';
 
 export default class AddITApplication extends Component {
     constructor(props) {
@@ -8,6 +9,9 @@ export default class AddITApplication extends Component {
             statuses: [],
             environments: [],
             capabilities: [],
+
+            modalIsOpen: false,
+            setIsOpen: false,
 
             environmentName: this.props.match.params.name,
             environmentId:'',
@@ -61,7 +65,7 @@ export default class AddITApplication extends Component {
         const statusData = await statusResponse.json();
         this.setState({statuses: statusData});
 
-        const capabilityResponse = await fetch(`http://localhost:8080/capability/all`);
+        const capabilityResponse = await fetch(`http://localhost:8080/api/capability/all`);
         const capabilityData = await capabilityResponse.json();
         this.setState({capabilities: capabilityData});
     }
@@ -82,6 +86,16 @@ export default class AddITApplication extends Component {
             return <option key={capability.capabilityId} value={capability.capabilityId}>{capability.capabilityName}</option>
         })
     }
+
+    openModal() {
+        this.setState({setIsOpen: true});
+    }
+
+    closeModal(){
+        this.setState({setIsOpen: false});
+    }
+
+
 
     render() {
         const environmentName = this.props.match.params.name;
@@ -168,8 +182,33 @@ export default class AddITApplication extends Component {
                                     </div>
                                 </div>
                             </div>
+
                         </div>
-                        <button className="btn btn-primary" type="button" onClick={this.handleSubmit}>Submit</button>
+                        <button className="btn btn-secondary" type="button" onClick={this.handleSubmit}>Submit</button>
+                        <button className="btn btn-primary float-right" type="button" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">Ratings</button>
+
+                        {/*<div>*/}
+                        {/*    <button onClick={this.openModal}>Open Modal</button>*/}
+                        {/*    <Modal*/}
+                        {/*        isOpen={this.state.modalIsOpen}*/}
+                        {/*        onAfterOpen={this.afterOpenModal}*/}
+                        {/*        onRequestClose={this.closeModal}*/}
+                        {/*        contentLabel="Example Modal"*/}
+                        {/*    >*/}
+
+                        {/*        <h2>Hello</h2>*/}
+                        {/*        <button onClick={this.state.closeModal}>close</button>*/}
+                        {/*        <div>I am a modal</div>*/}
+                        {/*        <form>*/}
+                        {/*            <input />*/}
+                        {/*            <button>tab navigation</button>*/}
+                        {/*            <button>stays</button>*/}
+                        {/*            <button>inside</button>*/}
+                        {/*            <button>the modal</button>*/}
+                        {/*        </form>*/}
+                        {/*    </Modal>*/}
+                        {/*</div>*/}
+
                     </form>
                 </div>
             </div>

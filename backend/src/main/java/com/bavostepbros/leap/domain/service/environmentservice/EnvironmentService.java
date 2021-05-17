@@ -4,6 +4,11 @@ import java.util.List;
 
 import com.bavostepbros.leap.domain.model.Environment;
 
+/**
+*
+* @author Bavo Van Meel
+*
+*/
 public interface EnvironmentService {
 	Environment save(String environmentName);
 	Environment get(Integer id);

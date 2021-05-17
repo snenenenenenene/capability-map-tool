@@ -2,8 +2,6 @@ import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import plusImg from '../img/plus.png'
 
-
-
 export default class Environment extends Component
 {
     constructor(props) {
@@ -19,27 +17,30 @@ export default class Environment extends Component
             projects: 0,
             resources: 0,
             businessProcesses: 0,
-            status: 0
+            status: 0,
         };
-
     }
 
     async componentDidMount() {
-        const response = await fetch(`http://localhost:8080/environment/environmentname/${this.state.environmentName}`);
-        const data = await response.json();
-        this.setState({
-            environmentId: data.environmentId,
-            capabilities: data.capabilities.length,
-            itApplications: data.itApplications,
-            programs: data.programs,
-            strategies: data.strategies,
-            strategyItems: data.strategyItems,
-            projects: data.projects,
-            resources: data.resources,
-            businessProcesses: data.businessProcesses,
-            status: data.status
-        });
-        console.log(data)
+        await fetch(`${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`)
+            .then(resp => resp.json())
+            .then(data => {
+                this.setState({
+                    environmentId: data.environmentId,
+                    capabilities: data.capabilities.length,
+                    itApplications: data.itApplications,
+                    programs: data.programs,
+                    strategies: data.strategies,
+                    strategyItems: data.strategyItems,
+                    projects: data.projects,
+                    resources: data.resources,
+                    businessProcesses: data.businessProcesses,
+                    status: data.status
+                });
+            })
+            .catch(error => {
+                this.props.history.push('/notfound')
+            })
     }
 
     render() {
@@ -112,7 +113,7 @@ export default class Environment extends Component
                         </div>
                         <div className="card">
                             <div className="card-body">
-                                <h5 className="card-title text-center">Business processes</h5>
+                                <h5 className="card-title text-center">Business Processes</h5>
                                 <div className="text-center">
                                     <Link to={`${this.state.environmentName}/businessprocess/add`}><img src={ plusImg } alt='add' width='30' height='30'/></Link>
                                 </div>

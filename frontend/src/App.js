@@ -19,6 +19,8 @@ import AddStrategyItems from "./Components/Add/AddStrategyItems";
 import AddProject from "./Components/Add/AddProject";
 import EditCapability from "./Components/Edit/EditCapability";
 import Capability from "./Components/General/Capability";
+import NotFoundError from "./Components/Error/NotFound";
+import GeneralError from "./Components/Error/Error";
 
 class App extends Component {
 
@@ -43,7 +45,7 @@ class App extends Component {
   render() {
     if(this.state.authenticated === true) {
       return (
-          <div>
+          <div className="bg_image">
             <BrowserRouter>
               <nav className="navbar navbar-expand-lg navbar-dark sticky-top" style={{ backgroundColor: '#ff754f'}}>
                 <button className="navbar-toggler" type="button" data-toggle="collapse"
@@ -82,6 +84,8 @@ class App extends Component {
                 <Route exact path='/login' component={ Signup }/>
                 <Route exact path='/recent' component={ RecentEnvironments }/>
                 <Route exact path='/users' component={ UserList }/>
+                <Route exact path='/error' component={ GeneralError }/>
+                <Route exact path='/notfound' component={ NotFoundError }/>
                 <Route path='/' component={Home}/>
               </Switch>
           </div>

@@ -36,7 +36,7 @@ export default class AddBusinessProcess extends Component {
             level: this.state.level.value
         }
         console.log(Capability)
-        const post_response = await fetch(`http://localhost:8080/strategy/add`, { method: 'POST', body: Capability });
+        const post_response = await fetch(`${process.env.REACT_APP_API_URL}/strategy/add`, { method: 'POST', body: Capability });
         if (!post_response.ok) {
             console.log('Failed to upload via presigned POST');
         }

@@ -1,5 +1,10 @@
 package com.bavostepbros.leap.domain.model.capabilitylevel;
 
+/**
+*
+* @author Bavo Van Meel
+*
+*/
 public enum CapabilityLevel {
 	ONE(1), TWO(2), THREE(3);
 	

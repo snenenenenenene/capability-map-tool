@@ -5,6 +5,11 @@ import java.util.stream.Stream;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
+/**
+*
+* @author Bavo Van Meel
+*
+*/
 @Converter(autoApply = true)
 public class CapabilityLevelConverter implements AttributeConverter<CapabilityLevel, Integer> {
 

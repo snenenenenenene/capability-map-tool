@@ -17,7 +17,7 @@ export default class NewEnvironment extends Component
     handleSubmit = async e => {
         e.preventDefault();
         console.log(this.state.environmentName)
-        const post_response = await fetch(`http://localhost:8080/program/add`, { method: 'POST',
+        const post_response = await fetch(`${process.env.REACT_APP_API_URL}/program/add`, { method: 'POST',
             body: JSON.stringify({
                 environment: {
                     environmentName: this.state.environmentName,

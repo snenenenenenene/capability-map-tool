@@ -1,14 +1,13 @@
 package com.bavostepbros.leap.controller;
 
-
 import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
 import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
 import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
 import com.bavostepbros.leap.domain.model.ITApplication;
-import com.bavostepbros.leap.domain.service.itapplicationService.ITApplicationService;
-import com.bavostepbros.leap.domain.service.statusservice.StatusService;
+import com.bavostepbros.leap.domain.service.itapplicationservice.ITApplicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,37 +27,35 @@ public class ITApplicationController {
     private ITApplicationService itApplicationService;
 
     @PostMapping(path = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity addITApplication(
-            @ModelAttribute Integer statusID,
-            @ModelAttribute String name,
-            @ModelAttribute String technology,
-            @ModelAttribute String version,
-            @ModelAttribute LocalDate purchaseDate,
-            @ModelAttribute LocalDate endOfLife,
-            @ModelAttribute Byte currentScalability,
-            @ModelAttribute Byte expectedScalability,
-            @ModelAttribute Byte currentPerformance,
-            @ModelAttribute Byte expectedPerformance,
-            @ModelAttribute Byte currentSecurityLevel,
-            @ModelAttribute Byte expectedSecurityLevel,
-            @ModelAttribute Byte currentsStability,
-            @ModelAttribute Byte expectedStability,
-            @ModelAttribute String costCurrency,
-            @ModelAttribute String currentValue,
-            @ModelAttribute Double currentYearlyCost,
-            @ModelAttribute LocalDate timeValue,
+    public ResponseEntity<Void> addITApplication(
+            @ModelAttribute("statusId") Integer statusID,
+            @ModelAttribute("name") String name,
+            @ModelAttribute("technology") String technology,
+            @ModelAttribute("version") String version,
+            @ModelAttribute("purchaseDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate purchaseDate,
+            @ModelAttribute("endOfLife") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endOfLife,
+            @ModelAttribute("currentScalability") Integer currentScalability,
+            @ModelAttribute("expectedScalability") Integer expectedScalability,
+            @ModelAttribute("currentPerformance") Integer currentPerformance,
+            @ModelAttribute("expectedPerformance") Integer expectedPerformance,
+            @ModelAttribute("currentSecurityLevel") Integer currentSecurityLevel,
+            @ModelAttribute("expectedSecurityLevel") Integer expectedSecurityLevel,
+            @ModelAttribute("currentStability") Integer currentsStability,
+            @ModelAttribute("expectedStability") Integer expectedStability,
+            @ModelAttribute("costCurrency") String costCurrency,
+            @ModelAttribute("currentValue") String currentValue,
+            @ModelAttribute("currentYearlyCost") Double currentYearlyCost,
+            @ModelAttribute("timeValue") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeValue,
             UriComponentsBuilder builder) {
-        if(name == null) throw new InvalidInputException("Invalid input.");
         if(itApplicationService.existsByName(name)) throw new DuplicateValueException("An application already exists with this name.");
-        Integer applicationId = itApplicationService.save(statusID, name, technology, version, purchaseDate, endOfLife,
+        long applicationId = itApplicationService.save(statusID, name, technology, version, purchaseDate, endOfLife,
                 currentScalability, expectedScalability, currentPerformance, expectedPerformance, currentSecurityLevel,
                 expectedSecurityLevel, currentsStability, expectedStability, costCurrency, currentValue,
                 currentYearlyCost, timeValue).getId();
-        if(applicationId == null) return new ResponseEntity(HttpStatus.CONFLICT);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder.path("/get/{id}").buildAndExpand(applicationId).toUri());
-        return new ResponseEntity(headers, HttpStatus.CREATED);
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/get/{id}")
@@ -79,43 +76,38 @@ public class ITApplicationController {
 
     @PutMapping(path = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity updateITApplication(
-            @ModelAttribute Integer statusID,
-            @ModelAttribute String name,
-            @ModelAttribute String technology,
-            @ModelAttribute String version,
-            @ModelAttribute LocalDate purchaseDate,
-            @ModelAttribute LocalDate endOfLife,
-            @ModelAttribute Byte currentScalability,
-            @ModelAttribute Byte expectedScalability,
-            @ModelAttribute Byte currentPerformance,
-            @ModelAttribute Byte expectedPerformance,
-            @ModelAttribute Byte currentSecurityLevel,
-            @ModelAttribute Byte expectedSecurityLevel,
-            @ModelAttribute Byte currentsStability,
-            @ModelAttribute Byte expectedStability,
-            @ModelAttribute String costCurrency,
-            @ModelAttribute String currentValue,
-            @ModelAttribute Double currentYearlyCost,
-            @ModelAttribute LocalDate timeValue,
-            UriComponentsBuilder builder) {
-        if(name == null) throw new InvalidInputException("Invalid input.");
-        if(itApplicationService.existsByName(name)) throw new DuplicateValueException("An application already exists with this name.");
-        Integer applicationId = itApplicationService.save(statusID, name, technology, version, purchaseDate, endOfLife,
+            @ModelAttribute("id") long id,
+            @ModelAttribute("statusId") Integer statusID,
+            @ModelAttribute("name") String name,
+            @ModelAttribute("technology") String technology,
+            @ModelAttribute("version") String version,
+            @ModelAttribute("purchaseDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate purchaseDate,
+            @ModelAttribute("endOfLife") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endOfLife,
+            @ModelAttribute("currentScalability") Integer currentScalability,
+            @ModelAttribute("expectedScalability") Integer expectedScalability,
+            @ModelAttribute("currentPerformance") Integer currentPerformance,
+            @ModelAttribute("expectedPerformance") Integer expectedPerformance,
+            @ModelAttribute("currentSecurityLevel") Integer currentSecurityLevel,
+            @ModelAttribute("expectedSecurityLevel") Integer expectedSecurityLevel,
+            @ModelAttribute("currentStability") Integer currentsStability,
+            @ModelAttribute("expectedStability") Integer expectedStability,
+            @ModelAttribute("costCurrency") String costCurrency,
+            @ModelAttribute("currentValue") String currentValue,
+            @ModelAttribute("currentYearlyCost") Double currentYearlyCost,
+            @ModelAttribute("timeValue") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeValue) {
+        ITApplication updatedITApplication = itApplicationService.update(id, statusID, name, technology, version, purchaseDate, endOfLife,
                 currentScalability, expectedScalability, currentPerformance, expectedPerformance, currentSecurityLevel,
                 expectedSecurityLevel, currentsStability, expectedStability, costCurrency,
-                currentValue, currentYearlyCost, timeValue).getId();
-        if(applicationId == null) return new ResponseEntity(HttpStatus.CONFLICT);
+                currentValue, currentYearlyCost, timeValue);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(builder.path("/get/{id}").buildAndExpand(applicationId).toUri());
-        return new ResponseEntity(headers, HttpStatus.CREATED);
+        return new ResponseEntity<>(updatedITApplication, HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/delete/{id}")
-    public ResponseEntity deleteITApplication(@RequestParam Integer id){
+    public ResponseEntity<Void> deleteITApplication(@RequestParam Integer id){
         if(id == null || id.equals(0)) throw new InvalidInputException("Invalid input exception");
-        if (!itApplicationService.existsById(id)) throw new IndexDoesNotExistException("Capability ID does not exists.");
-
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        if (!itApplicationService.existsById(id)) throw new IndexDoesNotExistException("ID does not exist.");
+        itApplicationService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

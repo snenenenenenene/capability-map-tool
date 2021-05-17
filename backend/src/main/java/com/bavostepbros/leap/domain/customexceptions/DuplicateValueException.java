@@ -1,5 +1,10 @@
 package com.bavostepbros.leap.domain.customexceptions;
 
+/**
+*
+* @author Bavo Van MeeL
+*
+*/
 public class DuplicateValueException extends RuntimeException {
 
 	/**
