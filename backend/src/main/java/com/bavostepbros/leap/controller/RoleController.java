@@ -1,13 +1,13 @@
 package com.bavostepbros.leap.controller;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -26,6 +26,7 @@ import com.bavostepbros.leap.domain.model.Role;
 
 import lombok.RequiredArgsConstructor;
 
+@RestController
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @RequestMapping("/api/role/")
@@ -36,16 +37,18 @@ public class RoleController {
 
 	@PostMapping(path = "add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Void> addRole(
-			@ModelAttribute Role role, 
+			@ModelAttribute String roleName,
 			UriComponentsBuilder builder) {
-		if (role.getRoleName() == null) {
+		if (roleName == null) {
 			throw new InvalidInputException("Invalid input.");
 		}
-		if (!roleService.existsByRoleName(role.getRoleName())) {
+		if (!roleService.existsByRoleName(roleName)) {
 			throw new DuplicateValueException("Role name already exists.");
 		}
 		
-		boolean flag = roleService.save(role);
+		Role role = roleService.save(roleName);
+		Integer roleId = role.getRoleId();
+		boolean flag = (roleId == null) ? false : true;
 		if (flag == false) {
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}

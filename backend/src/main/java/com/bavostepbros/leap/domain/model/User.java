@@ -31,19 +31,24 @@ public class User {
     @Column(name = "PASSWORD")
     private String password;
 
-    public User(String username, Integer roleId, String password) {       
+    @Column(name = "EMAIL", unique = true)
+    private String email;
+
+    public User(String username, Integer roleId, String password, String email) {       
         this.roleId = roleId;
         this.username = username;
         this.password = password;
+        this.email = email;
     }
 
     @Override
     public String toString() {
         return "{" +
-            " roleId='" + getUserId() + "'" +
+            " userId='" + getUserId() + "'" +
             " roleId='" + getRoleId() + "'" +
+            " email= '" + getEmail() + "'" +
             " roleId='" + getUsername() + "'" +
-            ", description='" + getPassword() + "'" +
+            ", password='" + getPassword() + "'" +
             "}";
     }
 }
