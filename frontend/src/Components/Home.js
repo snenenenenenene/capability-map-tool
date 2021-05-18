@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 export default class Home extends Component
 {
     constructor(props) {
@@ -14,7 +15,7 @@ export default class Home extends Component
         await axios.get(`${process.env.REACT_APP_API_URL}/environment/`)
             .then(response => this.setState({environments: response.data}) )
             .catch(error => {
-                this.props.history.push('/error')
+                toast.error("Could not Connect to Backend!")
             })
     }
 

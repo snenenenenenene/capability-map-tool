@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default class EditCapability extends Component {
     constructor(props) {
@@ -13,6 +14,7 @@ export default class EditCapability extends Component {
             environmentName: this.props.match.params.name,
             capabilityId: this.props.match.params.id,
             environmentId:'',
+            oldCapabilityName: '',
             capabilityName: '',
             parentCapabilityId: '',
             description: '',
@@ -31,6 +33,11 @@ export default class EditCapability extends Component {
 
     handleSubmit = async e => {
         e.preventDefault();
+
+        if(this.state.capabilityName === this.state.oldCapabilityName){
+            toast.error("The Capability Name Can't be the Same")
+            return;
+        }
         const formData = new FormData()
         formData.append('environmentName', this.state.environmentName)
         formData.append('environmentId', this.state.environmentId)
@@ -45,16 +52,13 @@ export default class EditCapability extends Component {
         formData.append('statusId', this.state.statusId)
         formData.append('level', this.state.capabilityLevel)
         console.log(formData)
-        for(var pair of formData.entries()) {
-            console.log(pair[0]+ ', '+ pair[1]);
-        }
-
         await axios.put(`${process.env.REACT_APP_API_URL}/capability/`, formData)
         .then(response => {
+            toast.success("Capability Successfully Updated!")
             this.props.history.push(`/environment/${this.state.environmentName}/capability`)
             })
         .catch(error => {
-            console.log(error)
+            toast.error("Could not Update Capability")
         })
     }
 
@@ -62,25 +66,26 @@ export default class EditCapability extends Component {
         await axios.get(`${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`)
             .then(response => this.setState({environmentId: response.data.environmentId}))
             .catch(error => {
-                this.props.history.push('/error')
+                this.props.history.push('/notfounderror')
             })
 
         await axios.get(`${process.env.REACT_APP_API_URL}/status/`)
             .then(response => this.setState({statuses: response.data}))
             .catch(error => {
-                // this.props.history.push('/error')
+                toast.error("Could not Load Statuses")
             })
 
         await axios.get(`${process.env.REACT_APP_API_URL}/capability/`)
             .then(response => this.setState({capabilities: response.data}))
             .catch(error => {
-                // this.props.history.push('/error')
+                toast.error("Could not Load Capabilities")
             })
 
         await axios.get(`${process.env.REACT_APP_API_URL}/capability/${this.state.capabilityId}`)
             .then(response => {
                 this.setState({
                     environmentId: response.data.environment.environmentId,
+                    oldCapabilityName: response.data.capabilityName,
                     capabilityName: response.data.capabilityName,
                     parentCapabilityId: response.data.parentCapabilityId,
                     paceOfChange: response.data.paceOfChange,
@@ -94,7 +99,7 @@ export default class EditCapability extends Component {
                 })
             })
             .catch(error => {
-                // this.props.history.push('/error')
+                toast.error("Could not Find Capability")
             })
     }
 
@@ -107,7 +112,6 @@ export default class EditCapability extends Component {
             return <option key={status.statusId} value={status.statusId}>{status.validityPeriod}</option>
         })
     }
-
 
     capabilityListRows() {
         return this.state.capabilities.map((capability) => {

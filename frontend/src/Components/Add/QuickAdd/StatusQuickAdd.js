@@ -56,7 +56,6 @@ export default class AddStatus extends Component {
     render() {
         return (
             <div>
-                <Toaster position="top-right"/>
                 <form onSubmit={this.handleSubmit}>
                     <label htmlFor="validityPeriod">Validity Period</label>
                     <input type="date" id="validityPeriod" name="validityPeriod" className="form-control" placeholder="End Date"

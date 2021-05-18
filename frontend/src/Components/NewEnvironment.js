@@ -3,8 +3,7 @@ import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import { Input } from 'reactstrap'
 import RecentEnvironmentTableRow from "./RecentEnvironmentTableRow";
-
-
+import toast, { Toaster } from 'react-hot-toast';
 export default class NewEnvironment extends Component
 {
     constructor(props) {
@@ -23,10 +22,10 @@ export default class NewEnvironment extends Component
         formData.append('environmentName', this.state.environmentName)
         await axios.post(`${process.env.REACT_APP_API_URL}/environment/`, formData)
         .then(response => {
+        toast.success("Environment Successfully Created!")
         this.props.history.push(`environment/${this.state.environmentName}`);
         }).catch(error => {
-        console.log(error)
-        this.props.history.push('/error')
+        this.props.history.push('/notfounderror')
         })
     }
 
@@ -38,7 +37,7 @@ export default class NewEnvironment extends Component
         await axios.get(`${process.env.REACT_APP_API_URL}/environment/`)
         .then(response => this.setState({environments: response.data}))
         .catch(error => {
-            this.props.history.push('/error')
+            toast.error("Could not Load Environments")
         })
     }
 

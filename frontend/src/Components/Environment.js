@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import plusImg from '../img/plus.png';
 import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default class Environment extends Component
 {
