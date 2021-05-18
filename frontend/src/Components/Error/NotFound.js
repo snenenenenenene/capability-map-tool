@@ -11,8 +11,9 @@ export default class NotFound extends Component {
 
     render() {
         return (
-            <div>
-                <h1>Error</h1>
+            <div className="text-center">
+                <h1>Not Found Error</h1>
+                <p className="jumbotron">Environment Does not exist</p>
             </div>
         )
     }

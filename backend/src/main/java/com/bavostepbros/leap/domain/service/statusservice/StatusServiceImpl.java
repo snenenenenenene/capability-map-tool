@@ -1,7 +1,6 @@
 package com.bavostepbros.leap.domain.service.statusservice;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -36,13 +35,12 @@ public class StatusServiceImpl implements StatusService {
     	if (validityPeriod == null) {
 			throw new InvalidInputException("Invalid input.");
 		}
-		if (!existsByValidityPeriod(validityPeriod)) {
+		if (existsByValidityPeriod(validityPeriod)) {
 			throw new DuplicateValueException("Validity period already exists.");
 		}
 		
         Status status = new Status(validityPeriod);
-        Status savedStatus = statusDAL.save(status);
-        return savedStatus;
+        return statusDAL.save(status);
     }
 
     @Override
@@ -60,9 +58,7 @@ public class StatusServiceImpl implements StatusService {
 
     @Override
     public List<Status> getAll() {
-        List<Status> status = new ArrayList<Status>();
-        status = statusDAL.findAll();
-        return status;
+        return statusDAL.findAll();
     }
 
     @Override
@@ -78,8 +74,7 @@ public class StatusServiceImpl implements StatusService {
 		}
 		
     	Status status = new Status(statusId, validityPeriod);
-        Status updatedStatus = statusDAL.save(status);
-        return updatedStatus;
+        return statusDAL.save(status);
     }
 
     @Override
@@ -101,7 +96,19 @@ public class StatusServiceImpl implements StatusService {
 
     @Override
     public boolean existsByValidityPeriod(LocalDate validityPeriod) {
-        return statusDAL.findByValidityPeriod(validityPeriod).isEmpty();
+        return !statusDAL.findByValidityPeriod(validityPeriod).isEmpty();
+    }
+    
+    // TODO Write unit test!
+    @Override
+    public Status getByValidityPeriod(LocalDate validityPeriod) {
+    	if (validityPeriod == null) {
+			throw new InvalidInputException("Status ID is not valid.");
+		}    	
+		if (!existsByValidityPeriod(validityPeriod)) {
+			throw new IndexDoesNotExistException("Validity period does not exists.");
+		}
+        return statusDAL.findByValidityPeriod(validityPeriod).get();
     }
 
 }

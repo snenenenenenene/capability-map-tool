@@ -20,6 +20,7 @@
       <mapping class = "com.bavostepbros.leap.domain.model.Status"/>
       <mapping class = "com.bavostepbros.leap.domain.model.Strategy"/>
       <mapping class = "com.bavostepbros.leap.domain.model.StrategyItem"/>
+      <mapping class = "com.bavostepbros.leap.domain.model.ITApplication"/>
       
    </session-factory>
 </hibernate-configuration>

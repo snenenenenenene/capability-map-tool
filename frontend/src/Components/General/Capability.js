@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
-import CapabilityTableRow from "./CapabilityTableRow";
-
+import MaterialTable from 'material-table';
+import './GeneralTable.css'
+import axios from 'axios';
 
 export default class Capability extends Component
 {
@@ -9,70 +10,97 @@ export default class Capability extends Component
         super(props);
         this.state = {
             environments: [],
-            environmentName: '',
-            capabilities: []
+            environmentName: this.props.match.params.name,
+            environmentId: '',
+            capabilities: [],
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        await axios.get(`${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`)
+        .then(response => this.setState({environmentId: response.data.environmentId}))
+        .catch(error => {
+            console.log(error)
+            this.props.history.push('/error')
+        })
+        
+        await axios.get(`${process.env.REACT_APP_API_URL}/capability/all-capabilities-by-environmentid/${this.state.environmentId}`)
+        .then(response => {
+                response.data[0].parentCapabilityId = null; // REMOVE WHEN PARENTID CAN BE NULL
+                this.setState({capabilities: response.data});
+            })
+        .catch(error => {
+            console.log(error)
+            // this.props.history.push('/error')
+        })
     }
 
-    capabilityTable() {
-        return this.state.capabilities.map((row, i) => {
-            return <CapabilityTableRow obj={ row } key={ i }/>
-        })
+    edit(capabilityId){
+        this.props.history.push(`/environment/${this.state.environmentName}/capability/${capabilityId}`)
+    }
+    //DELETE CAPABILITY AND REMOVE ALL CHILD CAPABILITIES FROM STATE
+    delete = async(capabilityId) => {
+        if (window.confirm('Are you sure you want to delete this capability?')){
+            await axios.delete(`${process.env.REACT_APP_API_URL}/capability/${capabilityId}`)
+            .catch(error => console.error(error))
+            //REFRESH CAPABILITIES
+            await axios.get(`${process.env.REACT_APP_API_URL}/capability/all-capabilities-by-environmentid/${this.state.environmentId}`)
+            .then(response => {
+                    response.data[0].parentCapabilityId = null; // REMOVE WHEN PARENTID CAN BE NULL
+                    this.setState({capabilities: []})
+                    this.setState({capabilities: response.data});
+                })
+            .catch(error => {
+                console.log(error)
+                this.props.history.push('/error')
+            })
+        }
     }
 
     render() {
         const environmentName = this.props.match.params.name;
         return(
+            <div>
+            <nav aria-label="breadcrumb">
+            <ol className="breadcrumb">
+                <li className="breadcrumb-item"><Link to={`/`}>Home</Link></li>
+                <li className="breadcrumb-item"><Link to={`/environment/${environmentName}`}>{environmentName}</Link></li>
+                <li className="breadcrumb-item">Capabilities</li>
+            </ol>
+        </nav>
             <div className="jumbotron">
-                <nav aria-label="breadcrumb">
-                    <ol className="breadcrumb">
-                        <li className="breadcrumb-item"><Link to={`/`}>Home</Link></li>
-                        <li className="breadcrumb-item"><Link to={`/environment/${environmentName}`}>{environmentName}</Link></li>
-                    </ol>
-                </nav>
-                <h1 className='display-4'>Capabilities</h1>
-                <br/><br/>
-                <div className="row">
-                    <div className="col-sm-9">
-                <table className='table table-striped'>
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Description</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    { this.capabilityTable() }
-                    </tbody>
-                </table>
-                    </div>
-                    <div className="col-sm-2">
-
-                    <div className="text-center">
-                        <Link to={'edit'}>
-                            <input type="button" value="Edit" className="btn btn-secondary input-button hoverable"/>
-                        </Link>
-                    </div>
-                        <br/>
-                    <div className="text-center">
-                        <Link to={'childcapability'}>
-                            <input type="button" value="Child Capability" className="btn btn-secondary input-button hoverable"/>
-                        </Link>
-                    </div>
-                    </div>
+                <div>
+                    <h1 className='display-4' style={{display: 'inline-block'}}>Capabilities</h1>
+                    <Link to={`/environment/${this.state.environmentName}/capability/add`}><button className="btn btn-primary float-right">Add Capability</button></Link>
                 </div>
-            </div>
+                <br/><br/>
+                <MaterialTable
+            columns={[
+              
+            { title: "ID", field: "capabilityId" },
+            { title: "Name", field: "capabilityName" },
+            { title: "Parent ID", field: "parentCapabilityId" },
+            { title: "Level", field: "level" },
+            {
+                title: '', 
+                name: 'delete',
+                render: rowData => <button className="btn btn-secondary"><i onClick={this.delete.bind(this, rowData.capabilityId)} className="bi bi-trash"></i></button>
+            },
+            {
+                title: '', 
+                name: 'edit',
+                render: rowData => <button className="btn btn-secondary"><i onClick={this.edit.bind(this, rowData.capabilityId)} className="bi bi-pencil"></i></button>
+            },
+          ]}
+          data={this.state.capabilities}
+          parentChildData={(row, rows) => rows.find(a => a.capabilityId === row.parentCapabilityId)}
+          options={{
+              showTitle: false,
+              search: false
+          }}
+        />
+        </div>
+        </div>
         )
     }
-
-
-
-
-
-
-
-
 }

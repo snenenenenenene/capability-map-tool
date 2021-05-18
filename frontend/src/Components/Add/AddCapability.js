@@ -1,5 +1,10 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
+import plusImg from "../../img/plus.png";
+import ReactStars from 'react-stars'
+import axios from 'axios';
+import {Modal} from 'react-bootstrap';
+import StatusQuickAdd from './QuickAdd/StatusQuickAdd'
 
 export default class AddCapability extends Component {
     constructor(props) {
@@ -12,7 +17,7 @@ export default class AddCapability extends Component {
             environmentName: this.props.match.params.name,
             environmentId:'',
             capabilityName: '',
-            parentCapability: '',
+            parentCapability: 1,
             description: '',
             paceOfChange: '',
             TOM: '',
@@ -20,10 +25,12 @@ export default class AddCapability extends Component {
             applicationFit: '',
             resourcesQuality: '',
             statusId: '',
-            capabilityLevel: '',
+            level: 'ONE',
+            showModal: false,
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this)
+        this.updateDate = this.updateDate.bind(this)
     }
 
     handleSubmit = async e => {
@@ -32,43 +39,43 @@ export default class AddCapability extends Component {
         formData.append('environmentName', this.state.environmentName)
         formData.append('environmentId', this.state.environmentId)
         formData.append('capabilityName', this.state.capabilityName)
-        formData.append('parentCapabilityId', 1)
-        // formData.append('parentCapabilityId', this.state.parentCapability)
+        formData.append('parentCapabilityId', this.state.parentCapability)
         formData.append('paceOfChange', this.state.paceOfChange)
-        // formData.append('targetOperatingModel', this.state.TOM)
-        formData.append('targetOperatingModel', "soepke")
+        formData.append('targetOperatingModel', this.state.TOM)
         formData.append('informationQuality', this.state.informationQuality)
         formData.append('applicationFit', this.state.applicationFit)
         formData.append('resourceQuality', this.state.resourcesQuality)
         formData.append('statusId', this.state.statusId)
-        formData.append('level', this.state.capabilityLevel)
-        for(let [name, value] of formData) {
-            console.log(`${name} = ${value}`);
-        }
-        await fetch(`http://localhost:8080/capability/add`,{
-            method: "POST",
-            body: formData
-        }).then(function (res) {
-            if (res.ok) {
-                console.log("Capability added");
-            } else if (res.status === 401) {
-                console.log("Oops,, Something went wrong");
-            }})
-
+        formData.append('level', this.state.level)
+        await axios.post(`${process.env.REACT_APP_API_URL}/capability/`, formData)
+        .then(response => console.log(response))
+        .catch(error => this.props.history.push('/error'))
+        this.props.history.push(`/environment/${this.state.environmentName}/capability`)
     }
 
     async componentDidMount() {
-        const environmentResponse = await fetch(`http://localhost:8080/environment/environmentname/${this.state.environmentName}`);
-        const environmentData = await environmentResponse.json();
-        this.setState({environmentId: environmentData.environmentId});
+        await axios.get(`${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`)
+        .then(response => {
+            this.setState({environmentId: response.data.environmentId})
+        })
+        .catch(error => {
+            console.log(error)
+            this.props.history.push('/error')
+        })
 
-        const statusResponse = await fetch(`http://localhost:8080/status/all`)
-        const statusData = await statusResponse.json();
-        this.setState({statuses: statusData});
+        await axios.get(`${process.env.REACT_APP_API_URL}/status/`)
+        .then(response => this.setState({statuses: response.data}))
+        .catch(error => {
+            console.log(error)
+            this.props.history.push('/error')
+        })
 
-        const capabilityResponse = await fetch(`http://localhost:8080/capability/all`);
-        const capabilityData = await capabilityResponse.json();
-        this.setState({capabilities: capabilityData});
+        await axios.get(`${process.env.REACT_APP_API_URL}/capability/all-capabilities-by-environmentid/${this.state.environmentId}`)
+        .then(response => this.setState({capabilities: response.data}))
+        .catch(error => {
+            console.log(error)
+            this.props.history.push('/error')
+        })
     }
 
     handleInputChange(event) {
@@ -81,11 +88,27 @@ export default class AddCapability extends Component {
         })
     }
 
-
     capabilityListRows() {
         return this.state.capabilities.map((capability) => {
             return <option key={capability.capabilityId} value={capability.capabilityId}>{capability.capabilityName}</option>
         })
+    }
+
+    ratingChanged = (newRating) => {
+        console.log(newRating)
+    }
+
+    async updateDate(){
+        await axios.get(`${process.env.REACT_APP_API_URL}/status/`)
+        .then(response => this.setState({statuses: response.data}))
+        .catch(error => {
+            console.log(error)
+            this.props.history.push('/error')
+        })
+    }
+
+    handleModal(){
+        this.setState({showModal: !this.state.showModal})
     }
 
     render() {
@@ -117,16 +140,16 @@ export default class AddCapability extends Component {
                                     <label htmlFor="paceOfChange">Parent Capability</label>
                                 <select className="form-control" name="parentCapability" id="parentCapability" placeholder="Add Parent Capability"
                                         value={this.state.parentCapabilityId} onChange={this.handleInputChange}>
-                                    <option key="-1" defaultValue="selected" hidden="hidden" value="">Select Parent Capability</option>
+                                    <option key="-1" defaultValue="selected" value={0}>None</option>
                                     {this.capabilityListRows()}
                                 </select>
                                 </div>
                                 <div className="form-group col-md-6">
-                                    <label htmlFor="capabilityLevel">Capability Level</label>
-                                <select className="form-control" name="capabilityLevel" id="capabilityLevel" placeholder="Add Level"
-                                        value={this.state.capabilityLevel} onChange={this.handleInputChange}>
-                                    <option key="-1" defaultValue="selected" hidden="hidden" value="">Select Level</option>
-                                    <option value="ONE">ONE</option>
+                                    <label htmlFor="level">Capability Level</label>
+                                <select className="form-control" name="level" id="level" placeholder="Add Level"
+                                        value={this.state.level} onChange={this.handleInputChange}>
+                                    {/* <option key="-1"  hidden="hidden" value="">Select Level</option> */}
+                                    <option defaultValue="selected" value="ONE">ONE</option>
                                     <option value="TWO">TWO</option>
                                     <option value="THREE">THREE</option>
                                 </select>
@@ -134,7 +157,7 @@ export default class AddCapability extends Component {
                             </div>
                             <div className="form-group">
                                 <label htmlFor="description">Description</label>
-                                <textarea type="text" id="description" name="description" className="form-control" rows="4" placeholder="Description"
+                                <textarea type="text" id="description" name="description" className="form-control" rows="5" placeholder="Description"
                                           value={this.state.description} onChange={this.handleInputChange}/>
                             </div>
                         </div>
@@ -168,9 +191,7 @@ export default class AddCapability extends Component {
                                     <select className="form-control" name="TOM" placeholder="Add TOM" id="TOM"
                                             value={this.state.TOM} onChange={this.handleInputChange}>
                                         <option key="-1" defaultValue="selected" hidden="hidden" value="">Select TOM</option>
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
+                                        <option value="TOM">TOM</option>
                                     </select>
                                 </div>
                                 <div className="form-group col-md-6">
@@ -184,9 +205,11 @@ export default class AddCapability extends Component {
                                         <option>4</option>
                                         <option>5</option>
                                     </select>
+                                    <ReactStars count={5} onChange={this.ratingChanged} size={24} color2={'#ffd700'} />
                                 </div>
                             </div>
-                            <div className="form-group">
+                            <div className="form-row">
+                                <div className="form-group col-md-12">
                                 <label htmlFor="resourcesQuality">Resources Quality</label>
                                 <select id="resourcesQuality" name="resourcesQuality" className="form-control" placeholder="Resources Quality"
                                         value={this.state.resourcesQuality} onChange={this.handleInputChange}>
@@ -197,13 +220,27 @@ export default class AddCapability extends Component {
                                     <option>4</option>
                                     <option>5</option>
                                 </select>
-                                <div className="select-container">
-                                <label htmlFor="statusId">Validity Period</label>
-                                <select id="statusId" name="statusId" className="form-control" placeholder="Validity Period"
-                                         value={this.state.expirationDate} onChange={this.handleInputChange}>
-                                    <option key="-1" defaultValue="selected" hidden="hidden" value="">Select status</option>
-                                    {this.statusListRows()}
-                                </select>
+                                </div>
+                            </div>
+                                <div className="form-row">
+                                    <div className="form-group col-md-12">
+                                    <label htmlFor="statusId">Validity Period</label>
+
+                                <div className="input-group">
+                                    <select id="statusId" name="statusId" className="form-control" placeholder="Validity Period"
+                                            value={this.state.expirationDate} onChange={this.handleInputChange}>
+                                        <option key="-1" defaultValue="selected" hidden="hidden" value="">Select status</option>
+                                        {this.statusListRows()}
+                                    </select>
+                                        <button type="button" className="btn btn-secondary" onClick={() => this.handleModal()}>Add Status</button>
+                                        <Modal show={this.state.showModal}>
+                                            <Modal.Header>Add Status</Modal.Header>
+                                            <Modal.Body><StatusQuickAdd environmentName={this.state.environmentName} updateDate={this.updateDate} /></Modal.Body>
+                                            <Modal.Footer>
+                                                <button type="button" className="btn btn-secondary" onClick={() => this.handleModal()}>Close Modal</button>
+                                            </Modal.Footer>
+                                        </Modal>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -211,7 +248,7 @@ export default class AddCapability extends Component {
                     <button className="btn btn-primary" type="button" onClick={this.handleSubmit}>Submit</button>
                 </form>
             </div>
-            </div>
+        </div>
         )
     }
 }

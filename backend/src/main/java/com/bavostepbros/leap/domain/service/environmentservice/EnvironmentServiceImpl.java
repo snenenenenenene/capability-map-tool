@@ -36,7 +36,7 @@ public class EnvironmentServiceImpl implements EnvironmentService {
     	if (environmentName == null || environmentName.isBlank() || environmentName.isEmpty()) {
 			throw new InvalidInputException("Invalid input.");
 		}
-    	if (!existsByEnvironmentName(environmentName)) {
+    	if (existsByEnvironmentName(environmentName)) {
 			throw new DuplicateValueException("Environment name already exists.");
 		}
 		
@@ -62,11 +62,11 @@ public class EnvironmentServiceImpl implements EnvironmentService {
     	if (environmentName == null || environmentName.isBlank() || environmentName.isEmpty()) {
 			throw new InvalidInputException("Environment name is not valid.");
 		}
-    	if (existsByEnvironmentName(environmentName)) {
+    	if (!existsByEnvironmentName(environmentName)) {
 			throw new EnvironmentException("Environment name does not exists.");
 		}
     	
-    	// Nullpointer naar hier trekken zodat die niet in DAL wordt gegooid
+    	// TODO Nullpointer naar hier trekken zodat die niet in DAL wordt gegooid
         Optional<Environment> environment = environmentDAL.findByEnvironmentName(environmentName);
         environment.orElseThrow(() -> new NullPointerException("Environment does not exist."));
         return environment.get();
@@ -113,7 +113,7 @@ public class EnvironmentServiceImpl implements EnvironmentService {
 
     @Override
     public boolean existsByEnvironmentName(String environmentName) {
-        return environmentDAL.findByEnvironmentName(environmentName).isEmpty();        
+        return !environmentDAL.findByEnvironmentName(environmentName).isEmpty();        
     }
 
 }

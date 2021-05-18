@@ -85,7 +85,7 @@ public class StatusServiceTest {
 	void should_throwDuplicateValueException_whenSavedStatusNameExists() {
 		LocalDate falseValidityPeriod = LocalDate.of(2021, 8, 10);
 		String expected = "Validity period already exists.";
-		BDDMockito.doReturn(false).when(spyStatusService).existsByValidityPeriod(falseValidityPeriod);
+		BDDMockito.doReturn(true).when(spyStatusService).existsByValidityPeriod(falseValidityPeriod);
 
 		Exception exception = assertThrows(DuplicateValueException.class,
 				() -> statusService.save(falseValidityPeriod));
@@ -97,7 +97,7 @@ public class StatusServiceTest {
 	void should_saveEnvironment_whenEnvironmentIsSaved() {
 		LocalDate falseValidityPeriod = status.getValidityPeriod();
 
-		Mockito.doReturn(true).when(spyStatusService).existsByValidityPeriod(falseValidityPeriod);
+		Mockito.doReturn(false).when(spyStatusService).existsByValidityPeriod(falseValidityPeriod);
 		BDDMockito.given(statusDAL.save(BDDMockito.any(Status.class))).willReturn(status);
 		Status result = statusService.save(falseValidityPeriod);
 
@@ -237,14 +237,8 @@ public class StatusServiceTest {
 	
 	@Test
 	void should_throwIndexDoesNotExistException_whenDeleteInputIsValid() {
-		LocalDate falseValidityPeriod = status.getValidityPeriod();
 		Integer id = status.getStatusId();
 		String expected = "Status ID does not exists.";
-		
-		Mockito.doReturn(true).when(spyStatusService).existsByValidityPeriod(falseValidityPeriod);
-		BDDMockito.given(statusDAL.save(BDDMockito.any(Status.class))).willReturn(status);
-		Status savedStatus = statusService.save(falseValidityPeriod);
-		assertNotNull(savedStatus);
 		
 		statusDAL.deleteById(id);
 		
@@ -255,7 +249,7 @@ public class StatusServiceTest {
 	}
 	
 	@Test
-	void should_ReturnFalse_whenEnvironmentDoesNotExistById() {
+	void should_ReturnFalse_whenStatusDoesNotExistById() {
 		Integer id = status.getStatusId();
 		BDDMockito.given(statusDAL.existsById(BDDMockito.anyInt())).willReturn(false);
 		
@@ -275,14 +269,14 @@ public class StatusServiceTest {
 	}
 	
 	@Test
-	void should_ReturnFalse_whenStatusDoesExistByValidityPeriod() {
+	void should_ReturnTrue_whenStatusDoesExistByValidityPeriod() {
 		LocalDate falseValidityPeriod = status.getValidityPeriod();
 		BDDMockito.given(statusDAL.findByValidityPeriod(BDDMockito.any(LocalDate.class)))
 			.willReturn(optionalStatus);
 		
 		boolean result = statusService.existsByValidityPeriod(falseValidityPeriod);
 		
-		assertFalse(result);
+		assertTrue(result);
 	}
 	
 	@Test
@@ -293,7 +287,7 @@ public class StatusServiceTest {
 		
 		boolean result = statusService.existsByValidityPeriod(falseValidityPeriod);
 		
-		assertTrue(result);
+		assertFalse(result);
 	}
 
 }

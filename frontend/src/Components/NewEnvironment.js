@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import { Input } from 'reactstrap'
@@ -16,20 +17,17 @@ export default class NewEnvironment extends Component
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-     handleSubmit = async e => {
+    handleSubmit = async e => {
         e.preventDefault();
-         const formData = new FormData()
-         formData.append('environmentName', this.state.environmentName)
-        await fetch(`http://localhost:8080/api/environment/add`,{
-             method: "POST",
-             body: formData
-     }).then(function (res) {
-    if (res.ok) {
-        console.log("Environment added");
-    } else if (res.status === 401) {
-        console.log("Oops,, Something went wrong");
-    }})
+        const formData = new FormData()
+        formData.append('environmentName', this.state.environmentName)
+        await axios.post(`${process.env.REACT_APP_API_URL}/environment/`, formData)
+        .then(response => {
         this.props.history.push(`environment/${this.state.environmentName}`);
+        }).catch(error => {
+        console.log(error)
+        this.props.history.push('/error')
+        })
     }
 
     handleInputChange(event) {
@@ -37,10 +35,11 @@ export default class NewEnvironment extends Component
     }
 
     async componentDidMount() {
-        const response = await fetch(`http://localhost:8080/api/environment/all`);
-        const data = await response.json();
-        this.setState({environments: data});
-        console.log(this.state.environments);
+        await axios.get(`${process.env.REACT_APP_API_URL}/environment/`)
+        .then(response => this.setState({environments: response.data}))
+        .catch(error => {
+            this.props.history.push('/error')
+        })
     }
 
     recentEnvironmentTableRow() {
@@ -67,8 +66,9 @@ export default class NewEnvironment extends Component
                         <table className=' table table-striped'>
                             <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Name</th>
-                                <th>Description</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -81,7 +81,7 @@ export default class NewEnvironment extends Component
                 <p>New Environments</p>
                 <form className="form-inline" onSubmit={this.handleSubmit}>
                     <Input type="text" name="environmentName" value={this.state.environmentName} onChange={this.handleInputChange} className="form-control" placeholder="New Environment"/>
-                    <button className="btn primary" type="button" onClick={this.handleSubmit}>Add</button>
+                    <button className="btn btn-secondary" type="button" onClick={this.handleSubmit}>Add</button>
                 </form>
                 </div>
             </div>

@@ -13,6 +13,7 @@ import com.bavostepbros.leap.domain.model.Status;
 public interface StatusService {
 	Status save(LocalDate validityPeriod);
 	Status get(Integer id);
+	Status getByValidityPeriod(LocalDate validityPeriod);
 	List<Status> getAll();
 	Status update(Integer statusId, LocalDate validityPeriod);
 	void delete(Integer id);

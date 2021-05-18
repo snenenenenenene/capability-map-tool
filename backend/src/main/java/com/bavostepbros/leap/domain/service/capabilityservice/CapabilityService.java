@@ -3,7 +3,6 @@ package com.bavostepbros.leap.domain.service.capabilityservice;
 import java.util.List;
 
 import com.bavostepbros.leap.domain.model.Capability;
-import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 
 /**
  *
@@ -12,7 +11,7 @@ import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
  */
 public interface CapabilityService {
 	Capability save(Integer environmentId, Integer statusId, Integer parentCapabilityId, String capabilityName,
-			CapabilityLevel level, boolean paceOfChange, String targetOperatingModel, Integer resourceQuality,
+			String level, boolean paceOfChange, String targetOperatingModel, Integer resourceQuality,
 			Integer informationQuality, Integer applicationFit);
 
 	Capability get(Integer id);
@@ -20,7 +19,7 @@ public interface CapabilityService {
 	List<Capability> getAll();
 
 	Capability update(Integer capabilityId, Integer environmentId, Integer statusId, Integer parentCapabilityId,
-			String capabilityName, CapabilityLevel level, boolean paceOfChange, String targetOperatingModel,
+			String capabilityName, String level, boolean paceOfChange, String targetOperatingModel,
 			Integer resourceQuality, Integer informationQuality, Integer applicationFit);
 
 	void delete(Integer id);
@@ -28,12 +27,14 @@ public interface CapabilityService {
 	boolean existsById(Integer id);
 
 	boolean existsByCapabilityName(String capabilityName);
+	
+	Capability getCapabilityByCapabilityName(String capabilityName);
 
 	List<Capability> getCapabilitiesByEnvironment(Integer environmentId);
 
-	List<Capability> getCapabilitiesByLevel(CapabilityLevel level);
+	List<Capability> getCapabilitiesByLevel(String level);
 
 	List<Capability> getCapabilityChildren(Integer parentId);
 
-	List<Capability> getCapabilitiesByParentIdAndLevel(Integer parentId, CapabilityLevel level);
+	List<Capability> getCapabilitiesByParentIdAndLevel(Integer parentId, String level);
 }

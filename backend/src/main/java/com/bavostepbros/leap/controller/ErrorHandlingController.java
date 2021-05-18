@@ -11,11 +11,19 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
+import com.bavostepbros.leap.domain.customexceptions.EnumException;
 import com.bavostepbros.leap.domain.customexceptions.EnvironmentException;
+import com.bavostepbros.leap.domain.customexceptions.ForeignKeyException;
 import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
 import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
 import com.bavostepbros.leap.domain.customexceptions.StatusException;
+import com.bavostepbros.leap.domain.customexceptions.StrategyException;
 
+/**
+*
+* @author Bavo Van Meel
+*
+*/
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 public class ErrorHandlingController extends ResponseEntityExceptionHandler {
@@ -39,6 +47,18 @@ public class ErrorHandlingController extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 	
+	@ExceptionHandler(ForeignKeyException.class)
+	protected ResponseEntity<String> handleForeignKeyException(ForeignKeyException exception) {
+		logger.error(String.format("ForeignKeyException with message '%s' was thrown.", exception.getMessage()));
+		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(EnumException.class)
+	protected ResponseEntity<String> handleEnumException(EnumException exception) {
+		logger.error(String.format("EnumException with message '%s' was thrown.", exception.getMessage()));
+		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+	
 	@ExceptionHandler(EnvironmentException.class)
 	protected ResponseEntity<String> handleEnvironmentException(EnvironmentException exception) {
 		logger.error(String.format("EnvironmentException with message '%s' was thrown.", exception.getMessage()));
@@ -48,6 +68,12 @@ public class ErrorHandlingController extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(StatusException.class)
 	protected ResponseEntity<String> handleStatusException(StatusException exception) {
 		logger.error(String.format("EnvironmentException with message '%s' was thrown.", exception.getMessage()));
+		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(StrategyException.class)
+	protected ResponseEntity<String> handleStrategyException(StrategyException exception) {
+		logger.error(String.format("StrategyException with message '%s' was thrown.", exception.getMessage()));
 		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 }

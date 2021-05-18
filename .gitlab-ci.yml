@@ -1,0 +1,105 @@
+# Version: 1.0
+# Rename to .gitlab-ci.yml
+variables:
+  MANIFEST_PATH: k8s
+  EXTRA_MANIFEST_PATH: extra-manifests
+
+stages:
+  - build
+  - deploy
+
+build-containers:
+  stage: build
+  tags:
+    - kaniko
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+
+  script:
+    - |
+      echo "Build multiple containers using kaniko"
+      BUILDLIST=$(ls -1 Dockerfile* | xargs)
+      echo "Buildlist: $BUILDLIST"
+      for DOCKERFILE in $BUILDLIST; do
+        echo "Building dockerfile: $DOCKERFILE"
+        CONTAINER=$(echo $DOCKERFILE | awk -F"-" '{print $2}')
+        ADDITIONALTAGLIST=""
+        FORMATTEDTAGLIST=""
+        REGISTRY_IMAGE=$(if [ -z "$CONTAINER" ]; then echo "$CI_REGISTRY_IMAGE"; else echo "$CI_REGISTRY_IMAGE/$CONTAINER"; fi)
+        ADDITIONALTAGLIST="$ADDITIONALTAGLIST $CI_COMMIT_REF_NAME $CI_COMMIT_SHORT_SHA"
+        if [[ "$CI_COMMIT_BRANCH" == "$CI_DEFAULT_BRANCH" ]]; then ADDITIONALTAGLIST="$ADDITIONALTAGLIST latest"; fi
+        if [[ -n "$ADDITIONALTAGLIST" ]]; then
+          for TAG in $ADDITIONALTAGLIST; do
+            FORMATTEDTAGLIST="${FORMATTEDTAGLIST} --destination $REGISTRY_IMAGE:$TAG";
+          done; 
+        fi
+        echo $FORMATTEDTAGLIST
+        mkdir -p /kaniko/.docker
+        echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(echo -n $CI_REGISTRY_USER:$CI_REGISTRY_PASSWORD | base64)\"}}}" > /kaniko/.docker/config.json
+        /kaniko/executor --cache=true --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/$DOCKERFILE $FORMATTEDTAGLIST $IMAGE_LABELS
+      done
+
+  only:
+    - master
+
+.deploy-app:
+  stage: deploy
+  variables:
+    KUBEDEPLOY: deploy.yml
+  tags:
+    - deploy
+  image: 
+    name: bitnami/kubectl:latest
+    entrypoint: [""]
+
+  script:
+    - |
+      echo "Deploy naar Kubernetes:"
+      echo "======================="
+      GENERICAPPNAME=${GL_APPNAME:-$CI_PROJECT_NAME}
+      APPNAME=${GENERICAPPNAME}${DEPLOY_ENV}
+      GENERICNAMESPACE=${GL_NAMESPACE:-$CI_PROJECT_NAME}
+      NAMESPACE=${GENERICNAMESPACE}${DEPLOY_ENV}
+      BASEURLSUFFIX=${GL_URLSUFFIX:-$URLSUFFIX}
+      OLDIFS=$IFS
+      IFS="/" read -ra GROUP_ARRAY <<< "$CI_PROJECT_NAMESPACE"
+      for i in "${GROUP_ARRAY[@]}"
+      do
+        echo $i | grep -q "groep-" && APPNAME=$i
+      done
+      IFS=$OLDIFS
+      KUBE_URL=${APPNAME}${BASEURLSUFFIX}
+      echo "APPNAME: $APPNAME | NAMESPACE: $NAMESPACE | KUBE_URL: $KUBE_URL"
+      echo "Include manifests settings/secrets from CI variables"
+      [ -d ../${CI_PROJECT_NAME}.tmp ] && find ../${CI_PROJECT_NAME}.tmp/ -type f -name KUBE_* -print0 | xargs -0 cat > ${KUBEDEPLOY}
+      echo "Include extra manifests"
+      [ -d "./${MANIFEST_PATH}/${EXTRA_MANIFEST_PATH}${DEPLOY_ENV}" ] && find ./${MANIFEST_PATH}/${EXTRA_MANIFEST_PATH}${DEPLOY_ENV}/ -type f -iregex '.*\.\(yml\|yaml\)' -print0 | xargs -0 cat >> ${KUBEDEPLOY}
+      echo "Include common manifests"
+      [ -d "./$MANIFEST_PATH/" ] && find ./$MANIFEST_PATH/ -maxdepth 1 -type f -iregex '.*\.\(yml\|yaml\)' -print0 | xargs -0 cat >> ${KUBEDEPLOY}
+      sed -i "s/__KUBE_NAME__/${APPNAME}/" ${KUBEDEPLOY}
+      sed -i "s~__CI_REGISTRY_IMAGE__~${CI_REGISTRY_IMAGE}~" ${KUBEDEPLOY}
+      sed -i "s/__VERSION__/${CI_COMMIT_SHORT_SHA}/" ${KUBEDEPLOY}
+      sed -i "s/__KUBE_URL__/${KUBE_URL}/" ${KUBEDEPLOY}
+      echo ${KUBE_DEPLOYCONFIG} | base64 -d > kubeconfig
+      export KUBECONFIG=$(pwd)/kubeconfig
+      echo "KUBECONFIG: $KUBECONFIG"
+      echo "Deploy $GENERICAPPNAME to $(kubectl config current-context) in namespace $NAMESPACE"
+      kubectl apply -f ${KUBEDEPLOY} -n $NAMESPACE
+
+  only:
+    - master
+
+deploy-production:
+  extends: .deploy-app
+  stage: deploy
+  environment:
+    name: production
+  variables:
+    DEPLOY_ENV: ""
+    URLSUFFIX: .project.ap.be
+
+before_script:
+- |
+  echo ${GL_HASHCMP} | base64 -d > hash
+  #sh hash
