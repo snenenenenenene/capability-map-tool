@@ -8,7 +8,7 @@ import AddCapability from './Components/Add/AddCapability'
 import './App.css';
 import Signup from './auth/Login'
 import LeapImg from './img/LEAP logo.png'
-import { BrowserRouter, Switch, Route, Link } from 'react-router-dom'
+import { BrowserRouter, Switch, Route, Link, Redirect, Router } from 'react-router-dom'
 import AddResources from "./Components/Add/AddResources";
 import AddStrategy from "./Components/Add/AddStrategy";
 import AddBusinessProcess from "./Components/Add/AddBusinessProcess";
@@ -19,15 +19,32 @@ import AddStrategyItems from "./Components/Add/AddStrategyItems";
 import AddProject from "./Components/Add/AddProject";
 import EditCapability from "./Components/Edit/EditCapability";
 import Capability from "./Components/General/Capability";
+import Project from "./Components/General/Project";
 import NotFoundError from "./Components/Error/NotFound";
 import GeneralError from "./Components/Error/Error";
 import Status from './Components/General/Status';
+import NotFoundPage from "./Components/Error/NotFoundPage"
+import BusinessProcess from './Components/General/BusinessProcess';
+import EditBusinessProcess from './Components/Edit/EditBusinessProcess';
+import ITApplication from './Components/General/ITApplication';
+import EditITApplication from './Components/Edit/EditITApplication';
+import EditStatus from './Components/Edit/EditStatus';
+import EditProject from './Components/Edit/EditProject';
+import EditStrategy from './Components/Edit/EditStrategy';
+import StrategyItem from './Components/General/StrategyItem';
+import Strategy from './Components/General/Strategy';
+import EditResource from './Components/Edit/EditResource';
+import Resource from './Components/General/Resource';
+import EditStrategyItem from './Components/Edit/EditStrategyItem';
+import EditProgram from './Components/Edit/EditProgram';
+import Program from './Components/General/Program';
 
 class App extends Component {
 
   constructor(props) {
     super(props)
-    this.state = { authenticated: false }
+    this.state = { 
+      authenticated: false}
     this.logout = this.logout.bind(this)
   }
 
@@ -40,8 +57,6 @@ class App extends Component {
 
   logout() {
     localStorage.removeItem('user')
-    this.props.history.push('/')
-    // window.location.reload()
   }
 
   render() {
@@ -62,6 +77,19 @@ class App extends Component {
                       <Link to={ '/add' } className='nav-link'>Add</Link>
                     </li>
                   </ul>
+                  <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+                  <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                    <i className="bi bi-gear-fill" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    </i>
+                      <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
                   <form className="form-inline my-2 my-lg-0">
                     <Link to={ '' } onClick={ this.logout } style={{ color: '#fff'}} className='nav-link'>Logout</Link>
                   </form>
@@ -71,38 +99,58 @@ class App extends Component {
               <Switch>
               {/* ROOT */}
               <Route exact path='/home' component={Home}/>
+              <Route exact path='/' component={Home}/>
               {/* ENVIRONMENTS */}
               <Route exact path='/add' component={ NewEnvironment }/>
               <Route exact path='/environment/:name' component={Environment}/>
               <Route exact path='/recent' component={ RecentEnvironments }/>
               {/* CAPABILITIES */}
               <Route exact path='/environment/:name/capability/add' component={AddCapability}/>
-              <Route exact path='/environment/:name/capability/:id/edit' component={EditCapability}/>
-              <Route exact path='/environment/:name/capability/all' component={Capability}/>
+              <Route exact path='/environment/:name/capability/:id' component={EditCapability}/>
+              <Route exact path='/environment/:name/capability' component={Capability}/>
               {/* STRATEGIES */}
               <Route exact path='/environment/:name/strategy/add' component={AddStrategy}/>
+              <Route exact path='/environment/:name/strategy/:id' component={EditStrategy}/>
+              <Route exact path='/environment/:name/strategy' component={Strategy}/>
+
               {/* RESOURCES */}
               <Route exact path='/environment/:name/resource/add' component={AddResources}/>
+              <Route exact path='/environment/:name/strategy/:id' component={EditResource}/>
+              <Route exact path='/environment/:name/strategy' component={Resource}/>
+
               {/* ITAPPLICATIONS */}
               <Route exact path='/environment/:name/itapplication/add' component={AddITApplication}/>
+              <Route exact path='/environment/:name/itapplication/:id' component={EditITApplication}/>
+              <Route exact path='/environment/:name/itapplication' component={ITApplication}/>
               {/* BUSSINESSPROCESSES */}
               <Route exact path='/environment/:name/businessprocess/add' component={AddBusinessProcess}/>
+              <Route exact path='/environment/:name/businessprocess/:id' component={EditBusinessProcess}/>
+              <Route exact path='/environment/:name/businessprocess' component={BusinessProcess}/>
               {/* STATUSES */}
               <Route exact path='/environment/:name/status/add' component={AddStatus}/>
-              <Route exact path='/environment/:name/status/all' component={Status}/>
+              <Route exact path='/environment/:name/status/:id' component={EditStatus}/>
+              <Route exact path='/environment/:name/status' component={Status}/>
               {/* PROJECTS */}
               <Route exact path='/environment/:name/project/add' component={AddProject}/>
+              <Route exact path='/environment/:name/project/:id' component={EditProject}/>
+              <Route exact path='/environment/:name/project' component={Project}/>
               {/* STRATEGYITEMS */}
               <Route exact path='/environment/:name/strategyitem/add' component={AddStrategyItems}/>
+              <Route exact path='/environment/:name/strategyitem/:id' component={EditStrategyItem}/>
+              <Route exact path='/environment/:name/strategyitem' component={StrategyItem}/>
+
               {/* PROGRAMS */}
               <Route exact path='/environment/:name/program/add' component={AddProgram}/>
+              <Route exact path='/environment/:name/program/:id' component={EditProgram}/>
+              <Route exact path='/environment/:name/program' component={Program}/>
+
               {/* USERS */}
               <Route exact path='/login' component={ Signup }/>
               <Route exact path='/users' component={ UserList }/>
               {/* ERRORS */}
               <Route exact path='/error' component={ GeneralError }/>
               <Route exact path='/notfound' component={ NotFoundError }/>
-              <Route path='/' component={Home}/>
+              <Route component={NotFoundPage} />
               </Switch>
           </div>
             </BrowserRouter>

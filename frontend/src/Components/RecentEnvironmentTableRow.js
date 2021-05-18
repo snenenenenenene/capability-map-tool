@@ -13,7 +13,7 @@ export default class RecentEnvironmentTableRow extends Component {
 
     deleteEnvironment (){
         console.log(this.props.environmentId)
-        axios.delete(`${process.env.REACT_APP_API_URL}/environment/delete/${this.props.obj.environmentId}`)
+        axios.delete(`${process.env.REACT_APP_API_URL}/${this.props.obj.environmentId}`)
         .then(response => console.log(response))
         .catch(error => console.log(error))
         this.props.history.push('/recent')

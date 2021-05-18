@@ -12,7 +12,7 @@ export default class Home extends Component
     }
 
     async componentDidMount() {
-        await axios.get(`${process.env.REACT_APP_API_URL}/environment/all`)
+        await axios.get(`${process.env.REACT_APP_API_URL}/environment/`)
             .then(response => this.setState({environments: response.data}) )
             .catch(error => {
                 this.props.history.push('/error')
@@ -32,7 +32,6 @@ export default class Home extends Component
                         <div className="card">
                             <div className="card-body">
                                 <h4 className="card-title text-center">User List</h4>
-
                             </div>
                             <div className="card-footer">
                                 <form>
@@ -47,7 +46,6 @@ export default class Home extends Component
                         <div className="card">
                             <div className="card-body">
                                 <h4 className="card-title text-center">Environment</h4>
-
                             </div>
                             <div className="card-footer">
                                 <form>

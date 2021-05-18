@@ -13,7 +13,6 @@ export default class Capability extends Component
             environmentName: this.props.match.params.name,
             environmentId: '',
             capabilities: [],
-            reload: false
         };
     }
 
@@ -25,27 +24,27 @@ export default class Capability extends Component
             this.props.history.push('/error')
         })
         
-        await axios.get(`${process.env.REACT_APP_API_URL}/capability/getallbyenvironment/${this.state.environmentId}`)
+        await axios.get(`${process.env.REACT_APP_API_URL}/capability/all-capabilities-by-environmentid/${this.state.environmentId}`)
         .then(response => {
                 response.data[0].parentCapabilityId = null; // REMOVE WHEN PARENTID CAN BE NULL
                 this.setState({capabilities: response.data});
             })
         .catch(error => {
             console.log(error)
-            this.props.history.push('/error')
+            // this.props.history.push('/error')
         })
     }
 
     edit(capabilityId){
-        this.props.history.push(`/environment/${this.state.environmentName}/capability/${capabilityId}/edit`)
+        this.props.history.push(`/environment/${this.state.environmentName}/capability/${capabilityId}`)
     }
     //DELETE CAPABILITY AND REMOVE ALL CHILD CAPABILITIES FROM STATE
     delete = async(capabilityId) => {
         if (window.confirm('Are you sure you want to delete this capability?')){
-            await axios.delete(`${process.env.REACT_APP_API_URL}/capability/delete/${capabilityId}`)
+            await axios.delete(`${process.env.REACT_APP_API_URL}/capability/${capabilityId}`)
             .catch(error => console.error(error))
             //REFRESH CAPABILITIES
-            await axios.get(`${process.env.REACT_APP_API_URL}/capability/getallbyenvironment/${this.state.environmentId}`)
+            await axios.get(`${process.env.REACT_APP_API_URL}/capability/all-capabilities-by-environmentid/${this.state.environmentId}`)
             .then(response => {
                     response.data[0].parentCapabilityId = null; // REMOVE WHEN PARENTID CAN BE NULL
                     this.setState({capabilities: []})
@@ -70,7 +69,10 @@ export default class Capability extends Component
             </ol>
         </nav>
             <div className="jumbotron">
-                <h1 className='display-4'>Capabilities</h1>
+                <div>
+                    <h1 className='display-4' style={{display: 'inline-block'}}>Capabilities</h1>
+                    <Link to={`/environment/${this.state.environmentName}/capability/add`}><button className="btn btn-primary float-right">Add Capability</button></Link>
+                </div>
                 <br/><br/>
                 <MaterialTable
             columns={[
@@ -101,12 +103,4 @@ export default class Capability extends Component
         </div>
         )
     }
-
-
-
-
-
-
-
-
 }

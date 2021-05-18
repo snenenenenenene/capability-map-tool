@@ -1,6 +1,6 @@
+import axios from 'axios';
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-
 export default class AddStatus extends Component {
     constructor(props) {
         super(props);
@@ -19,22 +19,18 @@ export default class AddStatus extends Component {
         e.preventDefault();
         const formData = new FormData()
         formData.append('validityPeriod', this.state.validityPeriod)
-        await fetch(`http://localhost:8080/api/status/add`, {
-            method: "POST",
-            body: formData
-        })
-        .then(resp => alert("Added Status"))
+        await axios.post(`http://localhost:8080/api/status/`,formData)
+        .then(response => alert("Added Status"))
         .catch(error => {
             console.log(error)
             alert("Failed to Add Status")
         })
-        this.props.history.push('/environment/' + this.state.environmentName)
+        this.props.history.push(`/environment/${this.state.environmentName}/status`)
     }
 
     async componentDidMount() {
-        const statusResponse = await fetch(`http://localhost:8080/api/status/all`);
-        const statusData = await statusResponse.json();
-        this.setState({statuses: statusData});
+        await axios.get(`http://localhost:8080/api/status/`)
+        .then(response => this.setState({statuses: response.data}))
     }
 
     handleInputChange(event) {
@@ -49,19 +45,18 @@ export default class AddStatus extends Component {
     statusListRows() {
         return this.state.statuses.map((status) => {
             console.log(status.statusId + " " + status.validityPeriod + " Days")
-            // return <option value={status.statusId}>{status.validityPeriod} Days</option>
             return <option value={status.statusId}>{status.validityPeriod}</option>
         })
     }
 
+
     render() {
-        const environmentName = this.props.match.params.name;
         return (
             <div>
                 <nav aria-label="breadcrumb">
                     <ol className="breadcrumb">
                         <li className="breadcrumb-item"><Link to={`/`}>Home</Link></li>
-                        <li className="breadcrumb-item"><Link to={`/environment/${environmentName}`}>{environmentName}</Link></li>
+                        <li className="breadcrumb-item"><Link to={`/environment/${this.state.environmentName}`}>{this.state.environmentName}</Link></li>
                         <li className="breadcrumb-item active" aria-current="page">Add Status</li>
                     </ol>
                 </nav>
@@ -84,7 +79,9 @@ export default class AddStatus extends Component {
                         <button className="btn btn-primary" type="button" onClick={this.handleSubmit}>Submit</button>
                     </form>
                 </div>
+                <div>
             </div>
+        </div>
         )
     }
 }
