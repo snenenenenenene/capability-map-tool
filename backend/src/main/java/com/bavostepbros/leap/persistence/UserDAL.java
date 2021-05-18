@@ -8,4 +8,5 @@ import com.bavostepbros.leap.domain.model.User;
 
 public interface UserDAL extends JpaRepository<User, Integer> {
 	List<User> findByUsername(String username);
+	List<User> findByEmail(String email);
 }

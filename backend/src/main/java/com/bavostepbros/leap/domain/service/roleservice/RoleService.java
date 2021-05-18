@@ -5,7 +5,7 @@ import java.util.List;
 import com.bavostepbros.leap.domain.model.Role;
 
 public interface RoleService {
-	boolean save(Role role);
+	Role save(String roleName);
 	Role get(Integer id);
 	List<Role> getAll();
 	void update(Role role);

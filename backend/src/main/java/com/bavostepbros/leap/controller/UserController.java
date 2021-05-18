@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -39,7 +40,7 @@ public class UserController {
 	@Autowired
 	private RoleService roleService;
 	
-	@PostMapping(path = "add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(path = "register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Void> addUser(
 			@ModelAttribute User user,
 			UriComponentsBuilder builder) {		
@@ -48,12 +49,20 @@ public class UserController {
 				user.getUsername().isEmpty() ||
 				user.getPassword() == null ||
 				user.getPassword().isBlank() ||
-				user.getPassword().isEmpty()){
+				user.getPassword().isEmpty() ||
+				user.getEmail() == null ||
+				user.getEmail().isBlank() ||
+				user.getEmail().isEmpty())
+				{
 			throw new InvalidInputException("Invalid input.");
 		}
 
 		if(!userService.existsByUsername(user.getUsername())){
 			throw new DuplicateValueException("Username already exists.");
+		}
+
+		if(!userService.existsByEmail(user.getEmail())) {
+			throw new DuplicateValueException("Email already exists.");
 		}
 
 		boolean flag = userService.save(user);
@@ -69,7 +78,8 @@ public class UserController {
 	}
 	
 	@GetMapping("{id}")
-    public ResponseEntity<User> getUserById(@PathVariable("id") Integer id) {
+    public ResponseEntity<User> getUserById(
+		@PathVariable("id") Integer id) {
 		if (id == null || id.equals(0)){
 			throw new InvalidInputException("User ID is not valid.");
 		}
@@ -96,7 +106,10 @@ public class UserController {
 				user.getUsername().isEmpty() ||
 				user.getPassword() == null ||
 				user.getPassword().isBlank() ||
-				user.getPassword().isEmpty()){
+				user.getPassword().isEmpty() ||
+				user.getEmail() == null ||
+				user.getEmail().isBlank() ||
+				user.getEmail().isEmpty()){
 			throw new InvalidInputException("Invalid input.");
 		}
 		if (!userService.existsById(user.getUserId())){
@@ -104,6 +117,9 @@ public class UserController {
 		}
 		if (!userService.existsByUsername(user.getUsername())){
 			throw new DuplicateValueException("User name already exists.");
+		}
+		if (!userService.existsByEmail(user.getEmail())) {
+			throw new DuplicateValueException("Email already exists");
 		}
 		if (!roleService.existsById(user.getRoleId())) {
 			throw new IndexDoesNotExistException("Role ID does not exist.");
@@ -124,5 +140,19 @@ public class UserController {
 		
 		userService.delete(id);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+	}
+
+	@PostMapping(path = "authenticate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<User> login(
+		@ModelAttribute("email") String email) {
+		
+		System.out.println(email);
+		if (email == null || email.isBlank() || email.isEmpty() || userService.existsByEmail(email)) {
+			throw new InvalidInputException("Invalid input.");
+		}
+
+		User user = null;
+		user = userService.getByEmail(email);
+		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
 }

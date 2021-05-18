@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
+import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
+import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
 import com.bavostepbros.leap.domain.model.Role;
 import com.bavostepbros.leap.persistence.RoleDAL;
 
@@ -20,17 +23,29 @@ public class RoleServiceImpl implements RoleService {
 	private final RoleDAL roleDAL;
 
 	@Override
-	public boolean save(Role role) {
-		try {
-            roleDAL.save(role);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+	public Role save(String roleName) {
+		if (roleName == null || roleName.isBlank() || roleName.isEmpty()) {
+			throw new InvalidInputException("Invalid input.");
+		}
+
+		if (!existsByRoleName(roleName)) {
+			throw new DuplicateValueException("Role name already exists.");
+		}
+
+		Role role = new Role(roleName);
+		Role savedRole = roleDAL.save(role);
+		return savedRole;
 	}
 
 	@Override
 	public Role get(Integer id) {
+		if (id == null || id.equals(0)) {
+			throw new InvalidInputException("Role ID is not valid.");
+		}
+		if (!existsById(id)) {
+			throw new IndexDoesNotExistException("Role ID does not exist.");
+		}
+
 		Role role = roleDAL.findById(id).get();
 		return role;
 	}

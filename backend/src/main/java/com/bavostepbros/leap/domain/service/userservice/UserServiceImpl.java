@@ -42,6 +42,19 @@ public class UserServiceImpl implements UserService {
 		}
 		return user;
 	}
+
+	
+	@Override
+	public User getByEmail(String email) {
+		User user = null;
+		try {
+			user = userDAL.findByEmail(email).get(0);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return user;
+	}
 	
 	@Override
 	public List<User> getAll() {
@@ -81,6 +94,12 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean existsByUsername(String username){
 		boolean result = userDAL.findByUsername(username).isEmpty();
+		return result;
+	}
+
+	@Override
+	public boolean existsByEmail(String email){
+		boolean result = userDAL.findByEmail(email).isEmpty();
 		return result;
 	}
 }
