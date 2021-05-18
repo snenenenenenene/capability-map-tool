@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import MaterialTable from 'material-table';
 import './GeneralTable.css'
 import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default class StrategyItem extends Component
 {
@@ -13,7 +14,6 @@ export default class StrategyItem extends Component
             environmentName: this.props.match.params.name,
             environmentId: '',
             strategyItems: [],
-            reload: false
         };
     }
 
@@ -21,8 +21,7 @@ export default class StrategyItem extends Component
         await axios.get(`${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`)
         .then(response => this.setState({environmentId: response.data.environmentId}))
         .catch(error => {
-            console.log(error)
-            this.props.history.push('/error')
+            this.props.history.push('/notfounderror')
         })
         
         await axios.get(`${process.env.REACT_APP_API_URL}/strategyitem/`)
@@ -30,32 +29,49 @@ export default class StrategyItem extends Component
                 this.setState({strategyItems: response.data});
             })
         .catch(error => {
-            console.log(error)
-            // this.props.history.push('/error')
+            toast.error('Could Not Find Strategy Items')
         })
     }
 
     edit(strategyItemId){
-        this.props.history.push(`/environment/${this.state.environmentName}/strategyItem/${strategyItemId}/edit`)
+        this.props.history.push(`/environment/${this.state.environmentName}/strategyitem/${strategyItemId}`)
     }
-    //DELETE strategyItem AND REMOVE ALL CHILD strategyItems FROM STATE
-    delete = async(strategyItemId) => {
-        if (window.confirm('Are you sure you want to delete this strategyItem?')){
-            await axios.delete(`${process.env.REACT_APP_API_URL}/strategyItem/${strategyItemId}`)
-            .catch(error => console.error(error))
-            //REFRESH strategyItems
-            await axios.get(`${process.env.REACT_APP_API_URL}/strategyItem/`)
-            .then(response => {
-                    this.setState({strategyItems: []})
-                    this.setState({strategyItems: response.data});
-                })
-            .catch(error => {
-                console.log(error)
-                this.props.history.push('/error')
+    
+    fetchDeleteStrategyItems = async(strategyItemId) => {
+        await axios.delete(`${process.env.REACT_APP_API_URL}/strategyItem/${strategyItemId}`)
+        .then(response => toast.success("Succesfully Deleted Strategy Item"))
+        .catch(error => toast.error("Could not Delete Strategy Item"))
+        //REFRESH Strategy Items
+        await axios.get(`${process.env.REACT_APP_API_URL}/strategyItem/all-strategyItems-by-environmentid/${this.state.environmentId}`)
+        .then(response => {
+                this.setState({strategyItems: []})
+                this.setState({strategyItems: response.data});
             })
-        }
+        .catch(error => {
+            toast.error("Could not Find Strategy Items")
+        })
     }
 
+    delete = async(strategyItemId) => {
+        toast((t) => (
+            <span>
+                <p className="text-center">Are you sure you want to remove this strategyItem?</p>
+                <div className="text-center">
+            <button className="btn btn-primary btn-sm m-3" stlye={{width: 50, height:30}} onClick={() => 
+            {
+                toast.dismiss(t.id)
+                this.fetchDeleteStrategyItems(strategyItemId)
+            }}>
+                Yes!
+              </button>
+              <button className="btn btn-secondary btn-sm m-3" stlye={{width: 50, height:30}} onClick={() => toast.dismiss(t.id)}>
+                No!
+              </button>
+              </div>
+            </span>
+          ), {duration: 50000})
+        }
+    
     render() {
         return(
             <div>
@@ -63,7 +79,7 @@ export default class StrategyItem extends Component
             <ol className="breadcrumb">
                 <li className="breadcrumb-item"><Link to={`/`}>Home</Link></li>
                 <li className="breadcrumb-item"><Link to={`/environment/${this.state.environmentName}`}>{this.state.environmentName}</Link></li>
-                <li className="breadcrumb-item">Strategy Items</li>
+                <li className="breadcrumb-item"><Link to={`/environment/${this.state.environmentName}/strategyItem`}>Strategy Item</Link></li>
             </ol>
         </nav>
             <div className="jumbotron">
@@ -77,6 +93,9 @@ export default class StrategyItem extends Component
               
             { title: "ID", field: "strategyItemId" },
             { title: "Name", field: "strategyItemName" },
+            { title: "Start", field: "timeFrameStart" },
+            { title: "End", field: "timeFrameEnd" },
+            { title: "Environment", field: "status.environmentId"},
             {
                 title: '', 
                 name: 'delete',

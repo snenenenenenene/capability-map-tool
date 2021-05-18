@@ -27,7 +27,6 @@ export default class Capability extends Component
         
         await axios.get(`${process.env.REACT_APP_API_URL}/capability/all-capabilities-by-environmentid/${this.state.environmentId}`)
         .then(response => {
-                response.data[0].parentCapabilityId = null; // REMOVE WHEN PARENTID CAN BE NULL
                 this.setState({capabilities: response.data});
             })
         .catch(error => {
@@ -82,6 +81,7 @@ export default class Capability extends Component
             <ol className="breadcrumb">
                 <li className="breadcrumb-item"><Link to={`/`}>Home</Link></li>
                 <li className="breadcrumb-item"><Link to={`/environment/${this.state.environmentName}`}>{this.state.environmentName}</Link></li>
+                <li className="breadcrumb-item"><Link to={`/environment/${this.state.environmentName}/capability`}>Capability</Link></li>
                 <li className="breadcrumb-item">Capabilities</li>
             </ol>
         </nav>

@@ -18,7 +18,7 @@ export default class AddCapability extends Component {
             environmentName: this.props.match.params.name,
             environmentId:'',
             capabilityName: '',
-            parentCapability: 1,
+            parentCapability: 0,
             description: '',
             paceOfChange: '',
             TOM: '',

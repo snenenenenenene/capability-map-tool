@@ -9,13 +9,13 @@ import './App.css';
 import Signup from './auth/Login'
 import LeapImg from './img/LEAP logo.png'
 import { BrowserRouter, Switch, Route, Link, Redirect, Router } from 'react-router-dom'
-import AddResources from "./Components/Add/AddResources";
+import AddResource from "./Components/Add/AddResource";
 import AddStrategy from "./Components/Add/AddStrategy";
 import AddBusinessProcess from "./Components/Add/AddBusinessProcess";
 import AddITApplication from "./Components/Add/AddITApplication";
 import AddProgram from "./Components/Add/AddProgram";
 import AddStatus from "./Components/Add/AddStatus";
-import AddStrategyItems from "./Components/Add/AddStrategyItems";
+import AddStrategyItem from "./Components/Add/AddStrategyItem";
 import AddProject from "./Components/Add/AddProject";
 import EditCapability from "./Components/Edit/EditCapability";
 import Capability from "./Components/General/Capability";
@@ -125,7 +125,7 @@ class App extends Component {
               <Route exact path='/environment/:name/strategy' component={Strategy}/>
 
               {/* RESOURCES */}
-              <Route exact path='/environment/:name/resource/add' component={AddResources}/>
+              <Route exact path='/environment/:name/resource/add' component={AddResource}/>
               <Route exact path='/environment/:name/resource/:id' component={EditResource}/>
               <Route exact path='/environment/:name/resource' component={Resource}/>
 
@@ -146,7 +146,7 @@ class App extends Component {
               <Route exact path='/environment/:name/project/:id' component={EditProject}/>
               <Route exact path='/environment/:name/project' component={Project}/>
               {/* STRATEGYITEMS */}
-              <Route exact path='/environment/:name/strategyitem/add' component={AddStrategyItems}/>
+              <Route exact path='/environment/:name/strategyitem/add' component={AddStrategyItem}/>
               <Route exact path='/environment/:name/strategyitem/:id' component={EditStrategyItem}/>
               <Route exact path='/environment/:name/strategyitem' component={StrategyItem}/>
 
