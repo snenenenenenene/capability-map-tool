@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 export default class AddStatus extends Component {
     constructor(props) {
         super(props);
@@ -21,12 +22,12 @@ export default class AddStatus extends Component {
         formData.append('validityPeriod', this.state.validityPeriod)
         await axios.post(`http://localhost:8080/api/status/`,formData)
         .then(response => {
-            alert("Added Status")
+            toast.success("Added Status")
             this.props.updateDate()
         })
         .catch(error => {
             console.log(error)
-            alert("Failed to Add Status")
+            toast.error("Failed to Add Status")
         })
     }
 
@@ -55,6 +56,7 @@ export default class AddStatus extends Component {
     render() {
         return (
             <div>
+                <Toaster position="top-right"/>
                 <form onSubmit={this.handleSubmit}>
                     <label htmlFor="validityPeriod">Validity Period</label>
                     <input type="date" id="validityPeriod" name="validityPeriod" className="form-control" placeholder="End Date"

@@ -58,13 +58,12 @@ export default class Capability extends Component
     }
 
     render() {
-        const environmentName = this.props.match.params.name;
         return(
             <div>
             <nav aria-label="breadcrumb">
             <ol className="breadcrumb">
                 <li className="breadcrumb-item"><Link to={`/`}>Home</Link></li>
-                <li className="breadcrumb-item"><Link to={`/environment/${environmentName}`}>{environmentName}</Link></li>
+                <li className="breadcrumb-item"><Link to={`/environment/${this.state.environmentName}`}>{this.state.environmentName}</Link></li>
                 <li className="breadcrumb-item">Capabilities</li>
             </ol>
         </nav>
@@ -81,6 +80,7 @@ export default class Capability extends Component
             { title: "Name", field: "capabilityName" },
             { title: "Parent ID", field: "parentCapabilityId" },
             { title: "Level", field: "level" },
+            { title: "Expiration", field: "status.validityPeriod"},
             {
                 title: '', 
                 name: 'delete',

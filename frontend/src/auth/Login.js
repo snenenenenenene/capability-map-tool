@@ -2,27 +2,34 @@ import React, { Component } from 'react'
 import * as sha1 from 'js-sha1'
 import './Login.css';
 import LeapImg from '../img/LEAP logo.png'
+import axios from 'axios';
 
 export default class Login extends Component {
 
     constructor(props) {
         super(props)
-        this.state =  { username: '', password: '', authenticated: false }
-        this.login = this.login.bind(this)
+        this.state =  { 
+          email: '',
+          password: '',
+          authenticated: false }
+        this.authenticateUser = this.authenticateUser.bind(this)
         this.handleInputChange = this.handleInputChange.bind(this)
     }
 
-    login() {
+    authenticateUser() {
+      let formData = new FormData();
+      formData.append("email", this.state.email)
+      formData.append("password", this.state.password)
+      axios.post(`${process.env.REACT_APP_API_URL}/authenticate`)
         const pwd = sha1(this.state.password)
-        if(this.state.username === 'test'
+        if(this.state.email === 'test'
             && pwd === 'a94a8fe5ccb19ba61c4c0873d391e987982fbbd3') {
-            this.setState({ username: this.state.username, password: pwd, authenticated: true })
-            localStorage.setItem('user', JSON.stringify({ username: this.state.username, password: pwd, authenticated: true }))
+            this.setState({ email: this.state.email, password: pwd, authenticated: true })
+            localStorage.setItem('user', JSON.stringify({ email: this.state.email, password: pwd, authenticated: true }))
             window.location.reload()
         }
         else {
-            // clear user / pwd
-            this.setState({ username: '', password: '' })
+            this.setState({ email: '', password: '' })
         }
     }
 
@@ -44,7 +51,7 @@ export default class Login extends Component {
               <div className="form-label-group">
               <label htmlFor="inputEmail">Email address</label>
                 <input type="text" id="inputEmail" className="form-control" placeholder="Email address" required autoFocus 
-                name='username' value={ this.state.username } onChange={ this.handleInputChange }/>
+                name='email' value={ this.state.email } onChange={ this.handleInputChange }/>
               </div>
               <div className="form-label-group">
               <label htmlFor="inputPassword">Password</label>
@@ -55,7 +62,7 @@ export default class Login extends Component {
                 <input type="checkbox" className="custom-control-input" id="customCheck1"/>
                 <label className="custom-control-label" htmlFor="customCheck1">Remember password</label>
               </div>
-              <button onClick={ this.login } className="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign in</button>
+              <button onClick={ this.authenticateUser } className="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign in</button>
             </form>
           </div>
         </div>
@@ -68,8 +75,8 @@ export default class Login extends Component {
                     <Col>
                         <FormGroup row>
                             <Label htmlFor='name'>Name</Label>
-                            <Input type='text' className='form-control' name='username' value={ this.state.username }
-                                   onChange={ this.handleInputChange } placeholder='Enter username' />
+                            <Input type='text' className='form-control' name='email' value={ this.state.email }
+                                   onChange={ this.handleInputChange } placeholder='Enter email' />
                         </FormGroup>
                         <FormGroup row>
                             <Label htmlFor='name'>Password</Label>
@@ -79,7 +86,7 @@ export default class Login extends Component {
                     </Col>
                     <Col>
                         <FormGroup row>
-                            <button type='button' onClick={ this.login } className='btn btn-dark btn-lg btn-block'>Login</button>
+                            <button type='button' onClick={ this.authenticateUser } className='btn btn-dark btn-lg btn-block'>Login</button>
                         </FormGroup>
                     </Col>
                 </Form> */

@@ -34,20 +34,21 @@ export default class Status extends Component
 
     edit(id){
         console.log("edit")
-        this.props.history.push(`/environment/${this.state.environmentName}/capability/${id}/edit`)
+        this.props.history.push(`/environment/${this.state.environmentName}/status/${id}`)
     }
 
     delete = async (statusId) => {
         if (window.confirm('Are you sure you want to delete this status?')){
             
             await axios.delete(`${process.env.REACT_APP_API_URL}/status/${statusId}`)
-            .catch(error => console.error(error))
+            .catch(error => {
+                if (error.response.status === 500) alert("This status is in use by a capability and could not be deleted!")
+                console.error(error)})
             //REFRESH CAPABILITIES
             
             await axios.get(`${process.env.REACT_APP_API_URL}/status/`)
             .then(response => {
                 console.log(response.data)
-                this.setState({statuses: []})
                 this.setState({statuses: response.data});
                 })
             .catch(error => {

@@ -38,13 +38,16 @@ import Resource from './Components/General/Resource';
 import EditStrategyItem from './Components/Edit/EditStrategyItem';
 import EditProgram from './Components/Edit/EditProgram';
 import Program from './Components/General/Program';
-
+import Admin from './Components/Admin';
+import toast, { Toaster } from 'react-hot-toast';
 class App extends Component {
 
   constructor(props) {
     super(props)
     this.state = { 
-      authenticated: false}
+      authenticated: false,
+      isOnline: window ? window.navigator.onLine : false
+    }
     this.logout = this.logout.bind(this)
   }
 
@@ -59,10 +62,19 @@ class App extends Component {
     localStorage.removeItem('user')
   }
 
+  toastError(object) {
+    toast.error(`Could Not Add ${object}`)
+  }
+  
+  toastSuccess(object) {
+    toast.success(`Sucessfully Added ${object}`)
+  }
+
   render() {
     if(this.state.authenticated === true) {
       return (
           <div className="bg_image">
+            <Toaster/>
             <BrowserRouter>
               <nav className="navbar navbar-expand-lg navbar-dark sticky-top" style={{ backgroundColor: '#ff754f'}}>
                 <button className="navbar-toggler" type="button" data-toggle="collapse"
@@ -77,21 +89,20 @@ class App extends Component {
                       <Link to={ '/add' } className='nav-link'>Add</Link>
                     </li>
                   </ul>
-                  <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+                  <form className="form-inline my-2 my-lg-0">
+                    <Link to={ '' } onClick={ this.logout } style={{ color: '#fff'}} className='nav-link'>Logout</Link>
+                    <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
                   <ul class="navbar-nav">
                     <li class="nav-item dropdown">
                     <i className="bi bi-gear-fill" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     </i>
                       <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        <Link to="/settings"><li><a class="dropdown-item" href="#">Settings</a></li></Link>
+                        <Link to="/admin"><li><a class="dropdown-item" href="#">Admin</a></li></Link>
                       </ul>
                     </li>
                   </ul>
                 </div>
-                  <form className="form-inline my-2 my-lg-0">
-                    <Link to={ '' } onClick={ this.logout } style={{ color: '#fff'}} className='nav-link'>Logout</Link>
                   </form>
                 </div>
               </nav>
@@ -115,8 +126,8 @@ class App extends Component {
 
               {/* RESOURCES */}
               <Route exact path='/environment/:name/resource/add' component={AddResources}/>
-              <Route exact path='/environment/:name/strategy/:id' component={EditResource}/>
-              <Route exact path='/environment/:name/strategy' component={Resource}/>
+              <Route exact path='/environment/:name/resource/:id' component={EditResource}/>
+              <Route exact path='/environment/:name/resource' component={Resource}/>
 
               {/* ITAPPLICATIONS */}
               <Route exact path='/environment/:name/itapplication/add' component={AddITApplication}/>
@@ -147,6 +158,7 @@ class App extends Component {
               {/* USERS */}
               <Route exact path='/login' component={ Signup }/>
               <Route exact path='/users' component={ UserList }/>
+              <Route exact path='/admin' component={ Admin }/>              
               {/* ERRORS */}
               <Route exact path='/error' component={ GeneralError }/>
               <Route exact path='/notfound' component={ NotFoundError }/>

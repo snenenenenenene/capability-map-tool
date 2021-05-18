@@ -5,6 +5,7 @@ import ReactStars from 'react-stars'
 import axios from 'axios';
 import {Modal} from 'react-bootstrap';
 import StatusQuickAdd from './QuickAdd/StatusQuickAdd'
+import toast, { Toaster } from 'react-hot-toast';
 
 export default class AddCapability extends Component {
     constructor(props) {
@@ -60,21 +61,21 @@ export default class AddCapability extends Component {
         })
         .catch(error => {
             console.log(error)
-            this.props.history.push('/error')
+            toast.error("Could not load Environment")
         })
 
         await axios.get(`${process.env.REACT_APP_API_URL}/status/`)
         .then(response => this.setState({statuses: response.data}))
         .catch(error => {
             console.log(error)
-            this.props.history.push('/error')
+            toast.error("Could not load Status")
         })
 
         await axios.get(`${process.env.REACT_APP_API_URL}/capability/all-capabilities-by-environmentid/${this.state.environmentId}`)
         .then(response => this.setState({capabilities: response.data}))
         .catch(error => {
             console.log(error)
-            this.props.history.push('/error')
+            toast.error("Could not load Capabilities")
         })
     }
 
@@ -116,6 +117,7 @@ export default class AddCapability extends Component {
 
         return (
             <div>
+                <Toaster position="top-right"/>
                 <nav aria-label="breadcrumb">
                     <ol className="breadcrumb">
                         <li className="breadcrumb-item"><Link to={`/`}>Home</Link></li>

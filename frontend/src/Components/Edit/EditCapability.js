@@ -49,9 +49,9 @@ export default class EditCapability extends Component {
             console.log(pair[0]+ ', '+ pair[1]);
         }
 
-        await axios.put(`${process.env.REACT_APP_API_URL}/capability/update`, formData)
-        .then(reponse => {
-            this.props.history.push(`/environment/${this.state.environmentName}/capability/all`)
+        await axios.put(`${process.env.REACT_APP_API_URL}/capability/`, formData)
+        .then(response => {
+            this.props.history.push(`/environment/${this.state.environmentName}/capability`)
             })
         .catch(error => {
             console.log(error)
@@ -65,16 +65,16 @@ export default class EditCapability extends Component {
                 this.props.history.push('/error')
             })
 
-        await axios.get(`${process.env.REACT_APP_API_URL}/status/all`)
+        await axios.get(`${process.env.REACT_APP_API_URL}/status/`)
             .then(response => this.setState({statuses: response.data}))
             .catch(error => {
-                this.props.history.push('/error')
+                // this.props.history.push('/error')
             })
 
-        await axios.get(`${process.env.REACT_APP_API_URL}/capability/all`)
+        await axios.get(`${process.env.REACT_APP_API_URL}/capability/`)
             .then(response => this.setState({capabilities: response.data}))
             .catch(error => {
-                this.props.history.push('/error')
+                // this.props.history.push('/error')
             })
 
         await axios.get(`${process.env.REACT_APP_API_URL}/capability/${this.state.capabilityId}`)
@@ -94,7 +94,7 @@ export default class EditCapability extends Component {
                 })
             })
             .catch(error => {
-                this.props.history.push('/error')
+                // this.props.history.push('/error')
             })
     }
 
@@ -116,22 +116,19 @@ export default class EditCapability extends Component {
     }
 
     render() {
-        const environmentName = this.props.match.params.name;
-        const capabilityID = this.props.match.params.id;
-
         return (
             <div>
                 <nav aria-label="breadcrumb">
                     <ol className="breadcrumb">
                         <li className="breadcrumb-item"><Link to={`/`}>Home</Link></li>
-                        <li className="breadcrumb-item"><Link to={`/environment/${environmentName}`}>{environmentName}</Link></li>
-                        <li className="breadcrumb-item"><Link to={`/environment/${environmentName}/capability/all`}>Capability</Link></li>
-                        <li className="breadcrumb-item">{capabilityID}</li>
+                        <li className="breadcrumb-item"><Link to={`/environment/${this.state.environmentName}`}>{this.state.environmentName}</Link></li>
+                        <li className="breadcrumb-item"><Link to={`/environment/${this.state.environmentName}/capability`}>Capability</Link></li>
+                        <li className="breadcrumb-item">{this.state.capabilityID}</li>
                         <li className="breadcrumb-item active" aria-current="page">Edit Capability</li>
                     </ol>
                 </nav>
                 <div className="jumbotron">
-                    <h3>Add Capability</h3>
+                    <h3>Edit Capability</h3>
                     <form onSubmit={this.handleSubmit}>
                         <div className="row">
                             <div className="col-sm-6">
