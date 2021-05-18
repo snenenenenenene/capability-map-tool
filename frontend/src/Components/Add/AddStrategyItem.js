@@ -73,6 +73,12 @@ export default class StrategyItem extends Component {
         })
     }
 
+    strategyListRows() {
+        return this.state.strategies.map((strategy) => {
+            return <option key={strategy.strategyId} value={strategy.strategyId}>{strategy.strategyName}</option>
+        })
+    }
+
     render() {
         return (
             <div>
@@ -96,28 +102,27 @@ export default class StrategyItem extends Component {
                                        value={this.state.strategyItemName} onChange={this.handleInputChange}/>
                                 </div>
                                 <div className="form-group col-md-6">
-                                    <label htmlFor="paceOfChange">Strategy</label>
-                                <select className="form-control" name="strategyId" id="strategyId" placeholder="Add Parent Capability"
+                                    <label htmlFor="strategyId">Strategy</label>
+                                <select className="form-control" name="strategyId" id="strategyId" placeholder="Add Status"
                                         value={this.state.strategyId} onChange={this.handleInputChange}>
                                     <option key="-1" defaultValue="selected" value={0}>None</option>
-                                    {this.capabilityListRows()}
+                                    {this.strategyListRows()}
                                 </select>
                                 </div>
                             </div>
                             <div className="form-row">
                                 <div className="form-group col-md-6">
-                                    <label htmlFor="paceOfChange">Parent Capability</label>
-                                <select className="form-control" name="parentCapability" id="parentCapability" placeholder="Add Parent Capability"
-                                        value={this.state.parentCapabilityId} onChange={this.handleInputChange}>
+                                    <label htmlFor="capabilityId">Capability</label>
+                                <select className="form-control" name="capabilityId" id="capabilityId" placeholder="Add Capability"
+                                        value={this.state.capabilityId} onChange={this.handleInputChange}>
                                     <option key="-1" defaultValue="selected" value={0}>None</option>
                                     {this.capabilityListRows()}
                                 </select>
                                 </div>
                                 <div className="form-group col-md-6">
-                                    <label htmlFor="level">Capability Level</label>
-                                <select className="form-control" name="level" id="level" placeholder="Add Level"
-                                        value={this.state.level} onChange={this.handleInputChange}>
-                                    {/* <option key="-1"  hidden="hidden" value="">Select Level</option> */}
+                                    <label htmlFor="strategicImportance">Importance</label>
+                                <select className="form-control" name="strategicImportance" id="strategicImportance" placeholder="Add Importance"
+                                        value={this.state.strategicImportance} onChange={this.handleInputChange}>
                                     <option defaultValue="selected" value="ONE">ONE</option>
                                     <option value="TWO">TWO</option>
                                     <option value="THREE">THREE</option>
@@ -125,9 +130,9 @@ export default class StrategyItem extends Component {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label htmlFor="description">Description</label>
-                                <textarea type="text" id="description" name="description" className="form-control" rows="5" placeholder="Description"
-                                          value={this.state.description} onChange={this.handleInputChange}/>
+                                <label htmlFor="strategyItemDescription">Description</label>
+                                <textarea type="text" id="strategyItemDescription" name="strategyItemDescription" className="form-control" rows="5" placeholder="Description"
+                                          value={this.state.strategyItemDescription} onChange={this.handleInputChange}/>
                             </div>
                         </div>
                         <div className="col-sm-6">
