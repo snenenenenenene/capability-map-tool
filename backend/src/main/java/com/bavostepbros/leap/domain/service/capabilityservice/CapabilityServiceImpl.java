@@ -47,8 +47,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 	public Capability save(Integer environmentId, Integer statusId, Integer parentCapabilityId, String capabilityName,
 			String level, boolean paceOfChange, String targetOperatingModel, Integer resourceQuality,
 			Integer informationQuality, Integer applicationFit) {
-		if (parentCapabilityId == null || parentCapabilityId.equals(0) || capabilityName == null
-				|| capabilityName.isBlank() || capabilityName.isEmpty()) {
+		if (capabilityName == null || capabilityName.isBlank() || capabilityName.isEmpty()) {
 			throw new InvalidInputException("Invalid input.");
 		}
 		if (environmentId == null || environmentId.equals(0)) {
@@ -139,6 +138,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 		return updatedCapability;
 	}
 
+	// TODO write unit tests!
 	@Override
 	public void delete(Integer id) {
 		if (id == null || id.equals(0)) {
@@ -147,7 +147,16 @@ public class CapabilityServiceImpl implements CapabilityService {
 		if (!existsById(id)) {
 			throw new IndexDoesNotExistException("Capability ID does not exists.");
 		}
-		capabilityDAL.deleteById(id);
+
+		Capability capability = get(id);
+		CapabilityLevel capabilityLevel = capability.getLevel();
+		for (int i = CapabilityLevel.getMax(); i >= capabilityLevel.getLevel(); i--) {
+			if (i > capabilityLevel.getLevel()) {
+				capabilityDAL.deleteByParentCapabilityIdAndLevel(id, CapabilityLevel.getValue(i));
+			} else {
+				capabilityDAL.deleteById(id);
+			}
+		}
 	}
 
 	@Override

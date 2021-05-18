@@ -20,4 +20,5 @@ public interface CapabilityDAL extends JpaRepository<Capability, Integer> {
 	List<Capability> findByLevel(CapabilityLevel level);
 	List<Capability> findByParentCapabilityId(Integer parentId);
 	List<Capability> findByParentCapabilityIdAndLevel(Integer parentId, CapabilityLevel level);
+	void deleteByParentCapabilityIdAndLevel(Integer parentId, CapabilityLevel level);
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.bavostepbros.leap.domain.model.Capability;
+import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 import com.bavostepbros.leap.domain.model.dto.CapabilityDto;
 import com.bavostepbros.leap.domain.service.capabilityservice.CapabilityService;
 
@@ -169,8 +170,8 @@ public class CapabilityController {
 				capability.getInformationQuality(), capability.getApplicationFit());
 	}
 
-	@DeleteMapping("{capabilityid}")
-	public void deleteCapability(@PathVariable("capabilityid") Integer id) {
-		capService.delete(id);
+	@DeleteMapping(path = "{capabilityid}")
+	public void deleteCapability(@PathVariable("capabilityid") Integer capabilityId) {
+		capService.delete(capabilityId);
 	}
 }
