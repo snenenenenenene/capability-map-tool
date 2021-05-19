@@ -81,8 +81,7 @@ export default class Capability extends Component
             <ol className="breadcrumb">
                 <li className="breadcrumb-item"><Link to={`/`}>Home</Link></li>
                 <li className="breadcrumb-item"><Link to={`/environment/${this.state.environmentName}`}>{this.state.environmentName}</Link></li>
-                <li className="breadcrumb-item"><Link to={`/environment/${this.state.environmentName}/capability`}>Capability</Link></li>
-                <li className="breadcrumb-item">Capabilities</li>
+                <li className="breadcrumb-item">Capability</li>
             </ol>
         </nav>
             <div className="jumbotron">
