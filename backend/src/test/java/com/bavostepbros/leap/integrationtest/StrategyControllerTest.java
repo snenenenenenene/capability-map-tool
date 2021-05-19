@@ -236,8 +236,8 @@ public class StrategyControllerTest {
 		Integer strategyId = strategyFirst.getStrategyId();
 		
 		mockMvc.perform(MockMvcRequestBuilders.get(PATH + "exists-by-id/" + strategyId))
-		.andExpect(MockMvcResultMatchers.status().isOk())
-		.andExpect(MockMvcResultMatchers.content().string("true"));	
+			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(MockMvcResultMatchers.content().string("true"));	
 	}
 	
 	@Test
