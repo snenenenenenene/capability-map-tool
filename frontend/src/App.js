@@ -8,7 +8,7 @@ import AddCapability from './Components/Add/AddCapability'
 import './App.css';
 import Signup from './auth/Login'
 import LeapImg from './img/LEAP logo.png'
-import { BrowserRouter, Switch, Route, Link, Redirect, Router } from 'react-router-dom'
+import { BrowserRouter, Switch, Route, Link } from 'react-router-dom'
 import AddResource from "./Components/Add/AddResource";
 import AddStrategy from "./Components/Add/AddStrategy";
 import AddBusinessProcess from "./Components/Add/AddBusinessProcess";
@@ -97,8 +97,8 @@ class App extends Component {
                     <i className="bi bi-gear-fill" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     </i>
                       <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-                        <Link to="/settings"><li><a class="dropdown-item" href="#">Settings</a></li></Link>
-                        <Link to="/admin"><li><a class="dropdown-item" href="#">Admin</a></li></Link>
+                        <Link to="/settings"><li className="dropdown-item">Settings</li></Link>
+                        <Link to="/admin"><li className="dropdown-item">Admin</li></Link>
                       </ul>
                     </li>
                   </ul>

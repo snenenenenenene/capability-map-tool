@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import * as sha1 from 'js-sha1'
 import './Login.css';
 import LeapImg from '../img/LEAP logo.png'
 import axios from 'axios';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 export default class ChoosePassword extends Component {
 

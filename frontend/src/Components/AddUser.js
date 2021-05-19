@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
-import {Modal} from 'react-bootstrap';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 export default class AddUser extends Component {
     constructor(props) {
@@ -22,11 +21,10 @@ export default class AddUser extends Component {
         const formData = new FormData()
         formData.append("username",this.state.username)
         formData.append("email",this.state.email)
-        formData.append("password",null)
+        formData.append("password","newUser")
         formData.append("roleId",this.state.roleId)
 
         console.log(this.state.roleId)
-        console.log(this.state.password)
         console.log(this.state.email)
         console.log(this.state.username)
         await axios.post(`${process.env.REACT_APP_API_URL}/user/register`, formData)

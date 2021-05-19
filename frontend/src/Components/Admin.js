@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, {Component} from 'react';
 import './Admin.css'
 import { Link } from 'react-router-dom';

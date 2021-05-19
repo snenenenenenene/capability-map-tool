@@ -1,11 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import plusImg from "../../img/plus.png";
-import ReactStars from 'react-stars'
 import axios from 'axios';
-import {Modal} from 'react-bootstrap';
-import StatusQuickAdd from './QuickAdd/StatusQuickAdd'
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 export default class StrategyItem extends Component {
     constructor(props) {

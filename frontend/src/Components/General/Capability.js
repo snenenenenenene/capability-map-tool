@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import MaterialTable from 'material-table';
 import './GeneralTable.css'
 import axios from 'axios';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 export default class Capability extends Component
 {

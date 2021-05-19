@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import * as sha1 from 'js-sha1'
 import './Login.css';
 import LeapImg from '../img/LEAP logo.png'
 import axios from 'axios';
-import toast, { Toaster } from 'react-hot-toast';
+import toast,{Toaster} from 'react-hot-toast';
 
 export default class Login extends Component {
 
@@ -17,25 +16,32 @@ export default class Login extends Component {
         this.handleInputChange = this.handleInputChange.bind(this)
     }
 
-    authenticateUser() {
+    authenticateUser = async e => {
+      e.preventDefault();
       if(this.state.email === 'test' && this.state.password === 'test') {
       this.setState({ email: this.state.email, password: this.state.password, authenticated: true })
       this.setState({ email: this.state.email, password: this.state.password, authenticated: true })
       localStorage.setItem('user', JSON.stringify({ email: this.state.email, password: this.state.password, authenticated: true }))
       window.location.reload()
       } else {
+
       console.log(this.state.username)
+
       console.log(this.state.password)
+      
       console.log(this.state.email)
+
       let formData = new FormData()
       formData.append("email", this.state.email)
       axios.post(`${process.env.REACT_APP_API_URL}/user/authenticate`, formData)
       .then(response => {
-        if (response.password === null){
-          this.props.history.push("/choosePassword")
-        }
+        console.log("newUser" === response.data.password)
+        if ("newUser" === response.data.password){
+          toast.success(`Welcome ${this.state.email} Let's Pick a Password!`)
 
-        console.log(response.data)
+          this.props.history.push("/choosePassword")
+          return;
+        }
       }
       ).catch(error => toast.error("Auth Servers are Down"))
     }
@@ -48,6 +54,7 @@ export default class Login extends Component {
     render() {
         return (
             <div className="container">
+              <Toaster/>
                 <div className="row">
       <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
           <br></br>
@@ -55,7 +62,7 @@ export default class Login extends Component {
         <div className="card card-signin my-5">
           <div className="card-body">
             <h5 className="card-title text-center">Sign In</h5>
-            <form className="form-signin">
+            <form onSubmit={ this.authenticateUser }className="form-signin">
               <div className="form-label-group">
               <label htmlFor="inputEmail">Email address</label>
                 <input type="text" id="inputEmail" className="form-control" placeholder="Email address" required autoFocus 

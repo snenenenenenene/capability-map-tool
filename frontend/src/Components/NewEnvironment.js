@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import { Input } from 'reactstrap'
 import RecentEnvironmentTableRow from "./RecentEnvironmentTableRow";
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 export default class NewEnvironment extends Component
 {
     constructor(props) {
