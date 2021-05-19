@@ -41,7 +41,8 @@ import Program from './Components/General/Program';
 import Admin from './Components/Admin';
 import toast, { Toaster } from 'react-hot-toast';
 import AddUser from './Components/AddUser';
-import ChoosePassword from './auth/ChoosePassword';
+import ChoosePassword from './auth/ConfigurePassword';
+import ConfigurePassword from './auth/ConfigurePassword';
 class App extends Component {
 
   constructor(props) {
@@ -157,6 +158,7 @@ class App extends Component {
 
               {/* USERS */}
               <Route exact path='/login' component={ Signup }/>
+              <Route exact path='/configurePassword' component={ ConfigurePassword }/>
               <Route exact path='/user' component={ User }/>
               <Route exact path='/user/add' component={ AddUser }/>
               <Route exact path='/choosePassword' component={ ChoosePassword }/>

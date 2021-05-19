@@ -3,18 +3,25 @@ import './Login.css';
 import LeapImg from '../img/LEAP logo.png'
 import axios from 'axios';
 import toast,{Toaster} from 'react-hot-toast';
+import {Modal} from 'react-bootstrap';
+import ConfigurePassword from './ConfigurePassword';
 
 export default class Login extends Component {
 
     constructor(props) {
         super(props)
         this.state =  { 
+          showModal: false,
           email: '',
           password: '',
           authenticated: false }
         this.authenticateUser = this.authenticateUser.bind(this)
         this.handleInputChange = this.handleInputChange.bind(this)
     }
+
+    handleModal(){
+      this.setState({showModal: !this.state.showModal})
+  }
 
     authenticateUser = async e => {
       e.preventDefault();
@@ -38,8 +45,7 @@ export default class Login extends Component {
         console.log("newUser" === response.data.password)
         if ("newUser" === response.data.password){
           toast.success(`Welcome ${this.state.email} Let's Pick a Password!`)
-
-          this.props.history.push("/choosePassword")
+          this.handleModal()
           return;
         }
       }
@@ -79,6 +85,13 @@ export default class Login extends Component {
               </div>
               <button onClick={ this.authenticateUser } className="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign in</button>
             </form>
+            <Modal show={this.state.showModal}>
+                <Modal.Header>Configure Password</Modal.Header>
+                <Modal.Body><ConfigurePassword fetchConfigurePassword={this.fetchConfigurePassword} /></Modal.Body>
+            {/* <Modal.Footer>
+                    <button type="button" className="btn btn-secondary" onClick={() => this.handleModal()}>Close Modal</button>
+                </Modal.Footer>      */}
+            </Modal>
           </div>
         </div>
       </div>
