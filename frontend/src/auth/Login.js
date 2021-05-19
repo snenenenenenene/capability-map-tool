@@ -24,8 +24,8 @@ export default class Login extends Component {
       localStorage.setItem('user', JSON.stringify({ email: this.state.email, password: this.state.password, authenticated: true }))
       window.location.reload()
       } else {
-        console.log(this.state.username)
-        console.log(this.state.password)
+      console.log(this.state.username)
+      console.log(this.state.password)
       console.log(this.state.email)
       let formData = new FormData()
       formData.append("email", this.state.email)
