@@ -5,7 +5,7 @@ import LeapImg from '../img/LEAP logo.png'
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 
-export default class Login extends Component {
+export default class ChoosePassword extends Component {
 
     constructor(props) {
         super(props)
@@ -18,27 +18,20 @@ export default class Login extends Component {
     }
 
     authenticateUser() {
-      if(this.state.email === 'test' && this.state.password === 'test') {
-      this.setState({ email: this.state.email, password: this.state.password, authenticated: true })
-      this.setState({ email: this.state.email, password: this.state.password, authenticated: true })
-      localStorage.setItem('user', JSON.stringify({ email: this.state.email, password: this.state.password, authenticated: true }))
-      window.location.reload()
-      } else {
-        console.log(this.state.username)
-        console.log(this.state.password)
       console.log(this.state.email)
       let formData = new FormData()
       formData.append("email", this.state.email)
       axios.post(`${process.env.REACT_APP_API_URL}/user/authenticate`, formData)
       .then(response => {
         if (response.password === null){
-          this.props.history.push("/choosePassword")
+          
         }
 
         console.log(response.data)
+        // this.setState({ email: this.state.email, password: pwd, authenticated: true })
+        // localStorage.setItem('user', JSON.stringify({ email: this.state.email, password: pwd, authenticated: true }))
       }
       ).catch(error => toast.error("Auth Servers are Down"))
-    }
     }
 
     handleInputChange(event) {

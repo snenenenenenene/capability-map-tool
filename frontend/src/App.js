@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Home from './Components/Home'
 import Environment from "./Components/Environment";
 import NewEnvironment from "./Components/NewEnvironment";
-import UserList from "./Components/UserList"
+import User from "./Components/User"
 import RecentEnvironments from './Components/RecentEnvironments'
 import AddCapability from './Components/Add/AddCapability'
 import './App.css';
@@ -40,6 +40,8 @@ import EditProgram from './Components/Edit/EditProgram';
 import Program from './Components/General/Program';
 import Admin from './Components/Admin';
 import toast, { Toaster } from 'react-hot-toast';
+import AddUser from './Components/AddUser';
+import ChoosePassword from './auth/ChoosePassword';
 class App extends Component {
 
   constructor(props) {
@@ -60,6 +62,7 @@ class App extends Component {
 
   logout() {
     localStorage.removeItem('user')
+    window.location.reload()
   }
 
   toastError(object) {
@@ -85,9 +88,6 @@ class App extends Component {
                 <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
                   <Link to={ '/home' } className='navbar-brand'><img alt="leap" src={ LeapImg } width="80" height="22"/></Link>
                   <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
-                    <li className="nav-item">
-                      <Link to={ '/add' } className='nav-link'>Add</Link>
-                    </li>
                   </ul>
                   <form className="form-inline my-2 my-lg-0">
                     <Link to={ '' } onClick={ this.logout } style={{ color: '#fff'}} className='nav-link'>Logout</Link>
@@ -157,7 +157,9 @@ class App extends Component {
 
               {/* USERS */}
               <Route exact path='/login' component={ Signup }/>
-              <Route exact path='/users' component={ UserList }/>
+              <Route exact path='/user' component={ User }/>
+              <Route exact path='/user/add' component={ AddUser }/>
+              <Route exact path='/choosePassword' component={ ChoosePassword }/>
               <Route exact path='/admin' component={ Admin }/>              
               {/* ERRORS */}
               <Route exact path='/error' component={ GeneralError }/>

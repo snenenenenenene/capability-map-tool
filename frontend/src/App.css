@@ -30,7 +30,7 @@
 
 .splitScreen {
   display: flex;
-  flexDirection: row;
+  flexdirection: row;
 }
 
 .topPane {
@@ -51,7 +51,7 @@
   }
 }
 
-body {
-  /* background: #ffead9;
+/* body { */
+/* background: #ffead9;
   background: linear-gradient(to right, #ffead9, #ffc799); */
-}
+/* } */

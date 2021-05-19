@@ -36,7 +36,7 @@ export default class Home extends Component
                             <div className="card-footer">
                                 <form>
                                     <div className="text-center">
-                                        <Link to={'/users'}>
+                                        <Link to={'/user'}>
                                             <input type="button" value="User list" className="input-button hoverable"/>
                                         </Link>
                                     </div>
