@@ -102,4 +102,5 @@ public class UserServiceImpl implements UserService {
 		boolean result = userDAL.findByEmail(email).isEmpty();
 		return result;
 	}
+
 }
