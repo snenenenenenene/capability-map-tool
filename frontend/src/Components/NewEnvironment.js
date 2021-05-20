@@ -18,14 +18,24 @@ export default class NewEnvironment extends Component
 
     handleSubmit = async e => {
         e.preventDefault();
-        const formData = new FormData()
-        formData.append('environmentName', this.state.environmentName)
-        await axios.post(`${process.env.REACT_APP_API_URL}/environment/`, formData)
+        await axios.get(`${process.env.REACT_APP_API_URL}/environment/exists-by-environmentname/${this.state.environmentName}`)
         .then(response => {
-        toast.success("Environment Successfully Created!")
-        this.props.history.push(`environment/${this.state.environmentName}`);
+            if(response.data === true){
+                this.props.history.push(`/environment/${this.state.environmentName}`)
+                return;
+            }
+            const formData = new FormData()
+            formData.append('environmentName', this.state.environmentName)
+            axios.post(`${process.env.REACT_APP_API_URL}/environment/`, formData)
+        .then(response => {
+            toast.success("Environment Successfully Created!")
+            this.props.history.push(`environment/${this.state.environmentName}`);
         }).catch(error => {
-        this.props.history.push('/notfounderror')
+            this.props.history.push('/notfounderror')
+        })
+        })
+        .catch( error => {
+            toast.error("Failed to Connect to Environments")
         })
     }
 

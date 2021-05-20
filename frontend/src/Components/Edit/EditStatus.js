@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 export default class EditStatus extends Component {
     constructor(props) {
@@ -22,10 +23,10 @@ export default class EditStatus extends Component {
         formData.append('validityPeriod', this.state.validityPeriod)
         formData.append('statusId', this.state.statusId)
         await axios.put(`http://localhost:8080/api/status/`,formData)
-        .then(response => alert("Updated Status"))
+        .then(response => toast.success("Updated Status"))
         .catch(error => {
             console.log(error)
-            alert("Failed to Update Status")
+            toast.error("Failed to Update Status")
         })
         this.props.history.push(`/environment/${this.state.environmentName}/status`)
     }

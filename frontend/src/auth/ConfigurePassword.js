@@ -1,23 +1,43 @@
 import React, { Component } from 'react'
 import './Login.css';
-import LeapImg from '../img/LEAP logo.png'
 import axios from 'axios';
-import toast,{Toaster} from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 export default class ConfigurePassword extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
+      username: props.username,
+      email: props.email,
+      roleId: props.roleId,
       password: '',
+      userId: props.userId,
       confirmNewPassword: ''
     };
+
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this)
 }
 
 handleSubmit = async e => {
   e.preventDefault();
+  const formData = new FormData()
+  formData.append('username', this.state.username)
+  formData.append('email', this.state.email)
+  formData.append('roleId', this.state.roleId)
+  formData.append('password', this.state.password)
+  formData.append('userId', this.state.userId)
+
+  await axios.put(`http://localhost:8080/api/user/update`,formData)
+  .then(response => {
+      toast.success("Successfully Changed Password")
+      this.props.handleModal();
+      return;
+  })
+  .catch(error => {
+      toast.error("Failed to Change Password")
+      return;
+  })
 }
 
 handleInputChange(event) {
@@ -25,9 +45,7 @@ handleInputChange(event) {
 }
 
 fetchConfigurePassword(){
-
 }
-
     render() {
         return (
           <div>
@@ -43,7 +61,7 @@ fetchConfigurePassword(){
                 name='confirmNewPassword' value={ this.state.confirmNewPassword } onChange={ this.handleInputChange }/>
               </div>
               <br></br>
-              <button onClick={ this.authenticateUser } className="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Configure Password</button>
+              <button onClick={ this.handleSubmit } className="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Configure Password</button>
             </form>
         </div>
         )
