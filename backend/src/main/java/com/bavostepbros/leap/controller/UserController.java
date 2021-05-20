@@ -115,12 +115,12 @@ public class UserController {
 		if (!userService.existsById(user.getUserId())){
 			throw new IndexDoesNotExistException("Can not update user if it does not exist.");
 		}
-		if (!userService.existsByUsername(user.getUsername())){
-			throw new DuplicateValueException("User name already exists.");
-		}
-		if (!userService.existsByEmail(user.getEmail())) {
-			throw new DuplicateValueException("Email already exists");
-		}
+//		if (!userService.existsByUsername(user.getUsername())){
+//			throw new DuplicateValueException("User name already exists.");
+//		}
+//		if (!userService.existsByEmail(user.getEmail())) {
+//			throw new DuplicateValueException("Email already exists");
+//		}
 		if (!roleService.existsById(user.getRoleId())) {
 			throw new IndexDoesNotExistException("Role ID does not exist.");
 		}

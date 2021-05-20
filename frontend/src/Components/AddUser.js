@@ -9,7 +9,7 @@ export default class AddUser extends Component {
         this.state = {
             roles: [],
             username: '',
-            roleId: '',
+            roleId: 1,
             email: '',
         };
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -23,10 +23,6 @@ export default class AddUser extends Component {
         formData.append("email",this.state.email)
         formData.append("password","newUser")
         formData.append("roleId",this.state.roleId)
-
-        console.log(this.state.roleId)
-        console.log(this.state.email)
-        console.log(this.state.username)
         await axios.post(`${process.env.REACT_APP_API_URL}/user/register`, formData)
         .then(response => toast.success("User Added Successfully!"))
         .catch(error => toast.error("Could not Add User"))
@@ -84,9 +80,8 @@ export default class AddUser extends Component {
                                         <label htmlFor="paceOfChange">Role</label>
                                         <select className="form-control" name="roleId" id="roleId" placeholder="Role"
                                                 value={this.state.roleId} onChange={this.handleInputChange}>
-                                            <option key="1" value={1}>Viewer</option>
-                                            <option key="2" value={2}>Editor</option>
-                                            <option key="3" value={3}>Admin</option>
+                                            <option key="1" value={1}>User</option>
+                                            <option key="2" value={2}>Admin</option>
                                             {/* {this.roleListRows()} */}
                                         </select>
                                     </div>
