@@ -11,6 +11,7 @@ import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.Type;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,10 +25,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class StrategyItem {
 
     @Id
     @GeneratedValue
+    @EqualsAndHashCode.Include
     @Column(name = "ITEMID")
     private Integer itemId;
 
@@ -44,11 +47,21 @@ public class StrategyItem {
     @OneToMany
     private List<CapabilityItem> capabilityItems;
 
-    public StrategyItem(Strategy strategy, String strategyItemName, String description) {
+    public StrategyItem(Strategy strategy, String strategyItemName, 
+    		String description) {
         this.strategy = strategy;
         this.strategyItemName = strategyItemName;
         this.description = description;
     }
+    
+    public StrategyItem(Integer itemId, Strategy strategy, 
+    		String strategyItemName, String description) {
+		super();
+		this.itemId = itemId;
+		this.strategy = strategy;
+		this.strategyItemName = strategyItemName;
+		this.description = description;
+	}
 
     @Override
     public String toString() {

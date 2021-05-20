@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
-
+import toast from 'react-hot-toast';
 export default class Home extends Component
 {
     constructor(props) {
@@ -15,7 +15,7 @@ export default class Home extends Component
         await axios.get(`${process.env.REACT_APP_API_URL}/environment/`)
             .then(response => this.setState({environments: response.data}) )
             .catch(error => {
-                this.props.history.push('/error')
+                toast.error("Could not Connect to Backend!")
             })
     }
 
@@ -36,7 +36,7 @@ export default class Home extends Component
                             <div className="card-footer">
                                 <form>
                                     <div className="text-center">
-                                        <Link to={'/users'}>
+                                        <Link to={'/user'}>
                                             <input type="button" value="User list" className="input-button hoverable"/>
                                         </Link>
                                     </div>

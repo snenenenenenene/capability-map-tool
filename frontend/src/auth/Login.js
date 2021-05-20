@@ -1,29 +1,56 @@
 import React, { Component } from 'react'
-import * as sha1 from 'js-sha1'
 import './Login.css';
 import LeapImg from '../img/LEAP logo.png'
+import axios from 'axios';
+import toast,{Toaster} from 'react-hot-toast';
+import {Modal} from 'react-bootstrap';
+import ConfigurePassword from './ConfigurePassword';
 
 export default class Login extends Component {
 
     constructor(props) {
         super(props)
-        this.state =  { username: '', password: '', authenticated: false }
-        this.login = this.login.bind(this)
+        this.state =  { 
+          showModal: false,
+          email: '',
+          password: '',
+          authenticated: false }
+        this.authenticateUser = this.authenticateUser.bind(this)
         this.handleInputChange = this.handleInputChange.bind(this)
     }
 
-    login() {
-        const pwd = sha1(this.state.password)
-        if(this.state.username === 'test'
-            && pwd === 'a94a8fe5ccb19ba61c4c0873d391e987982fbbd3') {
-            this.setState({ username: this.state.username, password: pwd, authenticated: true })
-            localStorage.setItem('user', JSON.stringify({ username: this.state.username, password: pwd, authenticated: true }))
-            window.location.reload()
+    handleModal(){
+      this.setState({showModal: !this.state.showModal})
+  }
+
+    authenticateUser = async e => {
+      e.preventDefault();
+      if(this.state.email === 'test' && this.state.password === 'test') {
+      this.setState({ email: this.state.email, password: this.state.password, authenticated: true })
+      this.setState({ email: this.state.email, password: this.state.password, authenticated: true })
+      localStorage.setItem('user', JSON.stringify({ email: this.state.email, password: this.state.password, authenticated: true }))
+      window.location.reload()
+      } else {
+
+      console.log(this.state.username)
+
+      console.log(this.state.password)
+      
+      console.log(this.state.email)
+
+      let formData = new FormData()
+      formData.append("email", this.state.email)
+      axios.post(`${process.env.REACT_APP_API_URL}/user/authenticate`, formData)
+      .then(response => {
+        console.log("newUser" === response.data.password)
+        if ("newUser" === response.data.password){
+          toast.success(`Welcome ${this.state.email} Let's Pick a Password!`)
+          this.handleModal()
+          return;
         }
-        else {
-            // clear user / pwd
-            this.setState({ username: '', password: '' })
-        }
+      }
+      ).catch(error => toast.error("Auth Servers are Down"))
+    }
     }
 
     handleInputChange(event) {
@@ -33,6 +60,7 @@ export default class Login extends Component {
     render() {
         return (
             <div className="container">
+              <Toaster/>
                 <div className="row">
       <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
           <br></br>
@@ -40,11 +68,11 @@ export default class Login extends Component {
         <div className="card card-signin my-5">
           <div className="card-body">
             <h5 className="card-title text-center">Sign In</h5>
-            <form className="form-signin">
+            <form onSubmit={ this.authenticateUser }className="form-signin">
               <div className="form-label-group">
               <label htmlFor="inputEmail">Email address</label>
                 <input type="text" id="inputEmail" className="form-control" placeholder="Email address" required autoFocus 
-                name='username' value={ this.state.username } onChange={ this.handleInputChange }/>
+                name='email' value={ this.state.email } onChange={ this.handleInputChange }/>
               </div>
               <div className="form-label-group">
               <label htmlFor="inputPassword">Password</label>
@@ -55,8 +83,15 @@ export default class Login extends Component {
                 <input type="checkbox" className="custom-control-input" id="customCheck1"/>
                 <label className="custom-control-label" htmlFor="customCheck1">Remember password</label>
               </div>
-              <button onClick={ this.login } className="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign in</button>
+              <button onClick={ this.authenticateUser } className="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign in</button>
             </form>
+            <Modal show={this.state.showModal}>
+                <Modal.Header>Configure Password</Modal.Header>
+                <Modal.Body><ConfigurePassword fetchConfigurePassword={this.fetchConfigurePassword} /></Modal.Body>
+            {/* <Modal.Footer>
+                    <button type="button" className="btn btn-secondary" onClick={() => this.handleModal()}>Close Modal</button>
+                </Modal.Footer>      */}
+            </Modal>
           </div>
         </div>
       </div>
@@ -68,8 +103,8 @@ export default class Login extends Component {
                     <Col>
                         <FormGroup row>
                             <Label htmlFor='name'>Name</Label>
-                            <Input type='text' className='form-control' name='username' value={ this.state.username }
-                                   onChange={ this.handleInputChange } placeholder='Enter username' />
+                            <Input type='text' className='form-control' name='email' value={ this.state.email }
+                                   onChange={ this.handleInputChange } placeholder='Enter email' />
                         </FormGroup>
                         <FormGroup row>
                             <Label htmlFor='name'>Password</Label>
@@ -79,7 +114,7 @@ export default class Login extends Component {
                     </Col>
                     <Col>
                         <FormGroup row>
-                            <button type='button' onClick={ this.login } className='btn btn-dark btn-lg btn-block'>Login</button>
+                            <button type='button' onClick={ this.authenticateUser } className='btn btn-dark btn-lg btn-block'>Login</button>
                         </FormGroup>
                     </Col>
                 </Form> */

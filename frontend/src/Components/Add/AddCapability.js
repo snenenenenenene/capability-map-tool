@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import plusImg from "../../img/plus.png";
 import ReactStars from 'react-stars'
 import axios from 'axios';
 import {Modal} from 'react-bootstrap';
 import StatusQuickAdd from './QuickAdd/StatusQuickAdd'
+import toast from 'react-hot-toast';
 
 export default class AddCapability extends Component {
     constructor(props) {
@@ -17,7 +17,7 @@ export default class AddCapability extends Component {
             environmentName: this.props.match.params.name,
             environmentId:'',
             capabilityName: '',
-            parentCapability: 1,
+            parentCapability: 0,
             description: '',
             paceOfChange: '',
             TOM: '',
@@ -48,8 +48,8 @@ export default class AddCapability extends Component {
         formData.append('statusId', this.state.statusId)
         formData.append('level', this.state.level)
         await axios.post(`${process.env.REACT_APP_API_URL}/capability/`, formData)
-        .then(response => console.log(response))
-        .catch(error => this.props.history.push('/error'))
+        .then(response => toast.success("Capability Added Successfully!"))
+        .catch(error => toast.error("Could not Add Capability"))
         this.props.history.push(`/environment/${this.state.environmentName}/capability`)
     }
 
@@ -60,21 +60,19 @@ export default class AddCapability extends Component {
         })
         .catch(error => {
             console.log(error)
-            this.props.history.push('/error')
+            this.props.history.push('/notfounderror')
         })
 
         await axios.get(`${process.env.REACT_APP_API_URL}/status/`)
         .then(response => this.setState({statuses: response.data}))
         .catch(error => {
-            console.log(error)
-            this.props.history.push('/error')
+            toast.error("Could not load Statuses")
         })
 
         await axios.get(`${process.env.REACT_APP_API_URL}/capability/all-capabilities-by-environmentid/${this.state.environmentId}`)
         .then(response => this.setState({capabilities: response.data}))
         .catch(error => {
-            console.log(error)
-            this.props.history.push('/error')
+            toast.error("Could not load Capabilities")
         })
     }
 
@@ -103,7 +101,7 @@ export default class AddCapability extends Component {
         .then(response => this.setState({statuses: response.data}))
         .catch(error => {
             console.log(error)
-            this.props.history.push('/error')
+            toast.error("Could not Update Statuses")
         })
     }
 
@@ -112,14 +110,12 @@ export default class AddCapability extends Component {
     }
 
     render() {
-        const environmentName = this.props.match.params.name;
-
         return (
             <div>
                 <nav aria-label="breadcrumb">
                     <ol className="breadcrumb">
                         <li className="breadcrumb-item"><Link to={`/`}>Home</Link></li>
-                        <li className="breadcrumb-item"><Link to={`/environment/${environmentName}`}>{environmentName}</Link></li>
+                        <li className="breadcrumb-item"><Link to={`/environment/${this.state.environmentName}`}>{this.state.environmentName}</Link></li>
                         <li className="breadcrumb-item active" aria-current="page">Add Capability</li>
                     </ol>
                 </nav>

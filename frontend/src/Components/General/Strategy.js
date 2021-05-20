@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import MaterialTable from 'material-table';
 import './GeneralTable.css'
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 export default class Strategy extends Component
 {
@@ -20,40 +21,57 @@ export default class Strategy extends Component
         await axios.get(`${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`)
         .then(response => this.setState({environmentId: response.data.environmentId}))
         .catch(error => {
-            console.log(error)
-            this.props.history.push('/error')
+            this.props.history.push('/notfounderror')
         })
         
-        await axios.get(`${process.env.REACT_APP_API_URL}/strategies/`)
+        await axios.get(`${process.env.REACT_APP_API_URL}/strategy/`)
         .then(response => {
                 this.setState({strategies: response.data});
             })
         .catch(error => {
-            console.log(error)
+            toast.error('Could Not Find Strategies')
         })
     }
 
     edit(strategyId){
         this.props.history.push(`/environment/${this.state.environmentName}/strategy/${strategyId}`)
     }
-    //DELETE CAPABILITY AND REMOVE ALL CHILD CAPABILITIES FROM STATE
-    delete = async(strategyId) => {
-        if (window.confirm('Are you sure you want to delete this Strategy?')){
-            await axios.delete(`${process.env.REACT_APP_API_URL}/strategy/${strategyId}`)
-            .catch(error => console.error(error))
-            //REFRESH CAPABILITIES
-            await axios.get(`${process.env.REACT_APP_API_URL}/strategy/`)
-            .then(response => {
-                    this.setState({strategies: []})
-                    this.setState({strategies: response.data});
-                })
-            .catch(error => {
-                console.log(error)
-                // this.props.history.push('/error')
+    
+    fetchDeleteStrategies = async(strategyId) => {
+        await axios.delete(`${process.env.REACT_APP_API_URL}/strategy/${strategyId}`)
+        .then(response => toast.success("Succesfully Deleted Strategy"))
+        .catch(error => toast.error("Could not Delete Strategy"))
+        //REFRESH Strategies
+        await axios.get(`${process.env.REACT_APP_API_URL}/strategy/all-strategies-by-environmentid/${this.state.environmentId}`)
+        .then(response => {
+                this.setState({strategies: []})
+                this.setState({strategies: response.data});
             })
-        }
+        .catch(error => {
+            toast.error("Could not Find Strategies")
+        })
     }
 
+    delete = async(strategyId) => {
+        toast((t) => (
+            <span>
+                <p className="text-center">Are you sure you want to remove this strategy?</p>
+                <div className="text-center">
+            <button className="btn btn-primary btn-sm m-3" stlye={{width: 50, height:30}} onClick={() => 
+            {
+                toast.dismiss(t.id)
+                this.fetchDeleteStrategies(strategyId)
+            }}>
+                Yes!
+              </button>
+              <button className="btn btn-secondary btn-sm m-3" stlye={{width: 50, height:30}} onClick={() => toast.dismiss(t.id)}>
+                No!
+              </button>
+              </div>
+            </span>
+          ), {duration: 50000})
+        }
+    
     render() {
         return(
             <div>
@@ -61,7 +79,7 @@ export default class Strategy extends Component
             <ol className="breadcrumb">
                 <li className="breadcrumb-item"><Link to={`/`}>Home</Link></li>
                 <li className="breadcrumb-item"><Link to={`/environment/${this.state.environmentName}`}>{this.state.environmentName}</Link></li>
-                <li className="breadcrumb-item">Strategies</li>
+                <li className="breadcrumb-item"><Link to={`/environment/${this.state.environmentName}/strategy`}>Strategy</Link></li>
             </ol>
         </nav>
             <div className="jumbotron">
@@ -75,6 +93,9 @@ export default class Strategy extends Component
               
             { title: "ID", field: "strategyId" },
             { title: "Name", field: "strategyName" },
+            { title: "Start", field: "timeFrameStart" },
+            { title: "End", field: "timeFrameEnd" },
+            { title: "Environment", field: "status.environmentId"},
             {
                 title: '', 
                 name: 'delete',

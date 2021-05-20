@@ -94,8 +94,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 	@Override
 	public List<Capability> getAll() {
-		List<Capability> capabilities = capabilityDAL.findAll();
-		return capabilities;
+		return capabilityDAL.findAll();
 	}
 
 	@Override

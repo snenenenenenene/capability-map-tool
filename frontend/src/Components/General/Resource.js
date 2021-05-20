@@ -36,7 +36,7 @@ export default class Resource extends Component
     }
 
     edit(resourceId){
-        this.props.history.push(`/environment/${this.state.environmentName}/resource/${resourceId}/edit`)
+        this.props.history.push(`/environment/${this.state.environmentName}/resource/${resourceId}`)
     }
     //DELETE resource AND REMOVE ALL CHILD resources FROM STATE
     delete = async(resourceId) => {
