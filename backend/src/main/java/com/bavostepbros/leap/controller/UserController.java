@@ -113,7 +113,7 @@ public class UserController {
 			throw new InvalidInputException("Invalid input.");
 		}
 		if (!userService.existsById(user.getUserId())){
-			throw new IndexDoesNotExistException("Can not update capability if it does not exist.");
+			throw new IndexDoesNotExistException("Can not update user if it does not exist.");
 		}
 		if (!userService.existsByUsername(user.getUsername())){
 			throw new DuplicateValueException("User name already exists.");

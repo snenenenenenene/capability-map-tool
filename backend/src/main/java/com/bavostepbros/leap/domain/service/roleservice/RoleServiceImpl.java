@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
 import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
 import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
+import com.bavostepbros.leap.domain.customexceptions.RoleException;
 import com.bavostepbros.leap.domain.model.Role;
 import com.bavostepbros.leap.persistence.RoleDAL;
 
@@ -58,8 +59,19 @@ public class RoleServiceImpl implements RoleService {
 	}
 	
 	@Override
-	public void update(Role role) {
-		roleDAL.save(role);
+	public Role update(Integer roleId, String roleName) {
+		if (roleId == null || roleId.equals(0) || roleName == null) {
+			throw new InvalidInputException("Invalid input.");
+		}
+		if (!existsById(roleId)) {
+			throw new IndexDoesNotExistException("Can not update role if it does not exist.");
+		}
+		if (existsByRoleName(roleName)) {
+			throw new RoleException("Role name already exists.");
+		}
+		
+		Role role = new Role(roleId, roleName);
+		return roleDAL.save(role);
 	}
 
 	@Override

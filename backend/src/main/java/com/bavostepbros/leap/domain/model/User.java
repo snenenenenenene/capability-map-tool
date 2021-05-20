@@ -8,6 +8,7 @@ import javax.persistence.ManyToOne;
 
 import com.bavostepbros.leap.domain.service.roleservice.RoleService;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue

@@ -37,7 +37,7 @@ public class RoleController {
 
 	@PostMapping(path = "add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Void> addRole(
-			@ModelAttribute String roleName,
+			@ModelAttribute("roleName") String roleName,
 			UriComponentsBuilder builder) {
 		if (roleName == null) {
 			throw new InvalidInputException("Invalid input.");
@@ -92,8 +92,9 @@ public class RoleController {
 			throw new DuplicateValueException("Rolename already exists.");
 		}
 		
-		
-		roleService.update(role);
+		Integer id = role.getRoleId();
+		String roleName = role.getRoleName();
+		roleService.update(id, roleName);
 		return new ResponseEntity<Role>(role, HttpStatus.OK);
 	}
 	

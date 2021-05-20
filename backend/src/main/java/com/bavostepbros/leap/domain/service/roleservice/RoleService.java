@@ -8,7 +8,7 @@ public interface RoleService {
 	Role save(String roleName);
 	Role get(Integer id);
 	List<Role> getAll();
-	void update(Role role);
+	Role update(Integer id, String roleName);
 	void delete(Integer id);
 	boolean existsById(Integer id);
 	boolean existsByRoleName(String roleName);
