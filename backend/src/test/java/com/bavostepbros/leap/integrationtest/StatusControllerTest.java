@@ -85,8 +85,7 @@ public class StatusControllerTest {
 		Status status = statusService.getByValidityPeriod(validityPeriod);
 		
 		assertNotNull(resultStatus);
-		assertEquals(status.getStatusId(), resultStatus.getStatusId());
-		assertEquals(status.getValidityPeriod(), resultStatus.getValidityPeriod());
+		testStatus(status, resultStatus);
 	}
 	
 	@Test
@@ -101,8 +100,7 @@ public class StatusControllerTest {
 				mvcResult.getResponse().getContentAsString(), StatusDto.class);
 		
 		assertNotNull(resultStatus);
-		assertEquals(statusFirst.getStatusId(), resultStatus.getStatusId());
-		assertEquals(statusFirst.getValidityPeriod(), resultStatus.getValidityPeriod());
+		testStatus(statusFirst, resultStatus);
 	}
 	
 	@Test
@@ -117,8 +115,7 @@ public class StatusControllerTest {
 				mvcResult.getResponse().getContentAsString(), StatusDto.class);
 		
 		assertNotNull(resultStatus);
-		assertEquals(statusFirst.getStatusId(), resultStatus.getStatusId());
-		assertEquals(statusFirst.getValidityPeriod(), resultStatus.getValidityPeriod());
+		testStatus(statusFirst, resultStatus);
 	}
 	
 	@Test
@@ -132,10 +129,8 @@ public class StatusControllerTest {
 		
 		assertNotNull(resultStatus);
 		assertEquals(2, resultStatus.size());
-		assertEquals(statusFirst.getStatusId(), resultStatus.get(0).getStatusId());
-		assertEquals(statusFirst.getValidityPeriod(), resultStatus.get(0).getValidityPeriod());
-		assertEquals(statusSecond.getStatusId(), resultStatus.get(1).getStatusId());
-		assertEquals(statusSecond.getValidityPeriod(), resultStatus.get(1).getValidityPeriod());
+		testStatus(statusFirst, resultStatus.get(0));
+		testStatus(statusSecond, resultStatus.get(1));
 	}
 	
 	@Test
@@ -174,8 +169,7 @@ public class StatusControllerTest {
 		Status status = statusService.getByValidityPeriod(validityPeriod);
 		
 		assertNotNull(resultStatus);
-		assertEquals(status.getStatusId(), resultStatus.getStatusId());
-		assertEquals(status.getValidityPeriod(), resultStatus.getValidityPeriod());
+		testStatus(status, resultStatus);
 	}
 	
 	@Test
@@ -184,5 +178,11 @@ public class StatusControllerTest {
 		
 		mockMvc.perform(MockMvcRequestBuilders.delete(PATH + statusId))
 			.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+	
+	@Test
+	private void testStatus(Status expectedObject, StatusDto actualObject) {
+		assertEquals(expectedObject.getStatusId(), actualObject.getStatusId());
+		assertEquals(expectedObject.getValidityPeriod(), actualObject.getValidityPeriod());
 	}
 }

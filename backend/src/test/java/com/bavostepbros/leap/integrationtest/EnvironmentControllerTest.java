@@ -86,8 +86,7 @@ public class EnvironmentControllerTest {
 		Environment environment = environmentService.getByEnvironmentName("Senne");
 		
 		assertNotNull(resultEnvironment);
-		assertEquals(environment.getEnvironmentId(), resultEnvironment.getEnvironmentId());
-		assertEquals(environment.getEnvironmentName(), resultEnvironment.getEnvironmentName());
+		testEnvironment(environment, resultEnvironment);
 	}
 	
 	@Test
@@ -102,8 +101,7 @@ public class EnvironmentControllerTest {
 				mvcResult.getResponse().getContentAsString(), EnvironmentDto.class);
 		
 		assertNotNull(resultEnvironment);
-		assertEquals(environmentFirst.getEnvironmentId(), resultEnvironment.getEnvironmentId());
-		assertEquals(environmentFirst.getEnvironmentName(), resultEnvironment.getEnvironmentName());
+		testEnvironment(environmentFirst, resultEnvironment);
 	}
 	
 	@Test
@@ -118,8 +116,7 @@ public class EnvironmentControllerTest {
 				mvcResult.getResponse().getContentAsString(), EnvironmentDto.class);
 		
 		assertNotNull(resultEnvironment);
-		assertEquals(environmentFirst.getEnvironmentId(), resultEnvironment.getEnvironmentId());
-		assertEquals(environmentFirst.getEnvironmentName(), resultEnvironment.getEnvironmentName());
+		testEnvironment(environmentFirst, resultEnvironment);
 	}
 	
 	@Test
@@ -151,10 +148,8 @@ public class EnvironmentControllerTest {
 		
 		assertNotNull(resultEnvironments);
 		assertEquals(2, resultEnvironments.size());
-		assertEquals(environmentFirst.getEnvironmentId(), resultEnvironments.get(0).getEnvironmentId());
-		assertEquals(environmentFirst.getEnvironmentName(), resultEnvironments.get(0).getEnvironmentName());
-		assertEquals(environmentSecond.getEnvironmentId(), resultEnvironments.get(1).getEnvironmentId());
-		assertEquals(environmentSecond.getEnvironmentName(), resultEnvironments.get(1).getEnvironmentName());
+		testEnvironment(environmentFirst, resultEnvironments.get(0));
+		testEnvironment(environmentSecond, resultEnvironments.get(1));
 	}
 	
 	@Test
@@ -175,8 +170,7 @@ public class EnvironmentControllerTest {
 		Environment environment = environmentService.getByEnvironmentName(newName);
 		
 		assertNotNull(resultEnvironment);
-		assertEquals(environment.getEnvironmentId(), resultEnvironment.getEnvironmentId());
-		assertEquals(environment.getEnvironmentName(), resultEnvironment.getEnvironmentName());
+		testEnvironment(environment, resultEnvironment);
 	}
 	
 	@Test
@@ -185,5 +179,11 @@ public class EnvironmentControllerTest {
 		
 		mockMvc.perform(MockMvcRequestBuilders.delete(PATH + environmentId))
 				.andExpect(MockMvcResultMatchers.status().isOk());	
+	}
+	
+	@Test
+	private void testEnvironment(Environment expectedObject, EnvironmentDto actualObject) {
+		assertEquals(expectedObject.getEnvironmentId(), actualObject.getEnvironmentId());
+		assertEquals(expectedObject.getEnvironmentName(), actualObject.getEnvironmentName());
 	}
 }

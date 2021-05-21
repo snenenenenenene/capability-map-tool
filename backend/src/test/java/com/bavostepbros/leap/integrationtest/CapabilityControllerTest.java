@@ -141,19 +141,7 @@ public class CapabilityControllerTest {
 		Capability capability = capabilityService.getCapabilityByCapabilityName(capabilityName);
 		
 		assertNotNull(resultCapability);
-		assertEquals(capability.getCapabilityId(), resultCapability.getCapabilityId());
-		assertEquals(capability.getEnvironment().getEnvironmentId(), resultCapability.getEnvironment().getEnvironmentId());
-		assertEquals(capability.getEnvironment().getEnvironmentName(), resultCapability.getEnvironment().getEnvironmentName());
-		assertEquals(capability.getStatus().getStatusId(), resultCapability.getStatus().getStatusId());
-		assertEquals(capability.getStatus().getValidityPeriod(), resultCapability.getStatus().getValidityPeriod());
-		assertEquals(capability.getParentCapabilityId(), resultCapability.getParentCapabilityId());
-		assertEquals(capability.getCapabilityName(), resultCapability.getCapabilityName());
-		assertEquals(capability.getLevel(), resultCapability.getLevel());
-		assertEquals(capability.isPaceOfChange(), resultCapability.isPaceOfChange());
-		assertEquals(capability.getTargetOperatingModel(), resultCapability.getTargetOperatingModel());
-		assertEquals(capability.getResourceQuality(), resultCapability.getResourceQuality());
-		assertEquals(capability.getInformationQuality(), resultCapability.getInformationQuality());
-		assertEquals(capability.getApplicationFit(), resultCapability.getApplicationFit());
+		testCapability(capability, resultCapability);
 	}
 	
 	@Test
@@ -168,19 +156,7 @@ public class CapabilityControllerTest {
 				mvcResult.getResponse().getContentAsString(), CapabilityDto.class);
 		
 		assertNotNull(resultCapability);
-		assertEquals(capabilityFirst.getCapabilityId(), resultCapability.getCapabilityId());
-		assertEquals(capabilityFirst.getEnvironment().getEnvironmentId(), resultCapability.getEnvironment().getEnvironmentId());
-		assertEquals(capabilityFirst.getEnvironment().getEnvironmentName(), resultCapability.getEnvironment().getEnvironmentName());
-		assertEquals(capabilityFirst.getStatus().getStatusId(), resultCapability.getStatus().getStatusId());
-		assertEquals(capabilityFirst.getStatus().getValidityPeriod(), resultCapability.getStatus().getValidityPeriod());
-		assertEquals(capabilityFirst.getParentCapabilityId(), resultCapability.getParentCapabilityId());
-		assertEquals(capabilityFirst.getCapabilityName(), resultCapability.getCapabilityName());
-		assertEquals(capabilityFirst.getLevel(), resultCapability.getLevel());
-		assertEquals(capabilityFirst.isPaceOfChange(), resultCapability.isPaceOfChange());
-		assertEquals(capabilityFirst.getTargetOperatingModel(), resultCapability.getTargetOperatingModel());
-		assertEquals(capabilityFirst.getResourceQuality(), resultCapability.getResourceQuality());
-		assertEquals(capabilityFirst.getInformationQuality(), resultCapability.getInformationQuality());
-		assertEquals(capabilityFirst.getApplicationFit(), resultCapability.getApplicationFit());
+		testCapability(capabilityFirst, resultCapability);
 	}
 	
 	@Test
@@ -195,19 +171,7 @@ public class CapabilityControllerTest {
 				mvcResult.getResponse().getContentAsString(), CapabilityDto.class);
 		
 		assertNotNull(resultCapability);
-		assertEquals(capabilityFirst.getCapabilityId(), resultCapability.getCapabilityId());
-		assertEquals(capabilityFirst.getEnvironment().getEnvironmentId(), resultCapability.getEnvironment().getEnvironmentId());
-		assertEquals(capabilityFirst.getEnvironment().getEnvironmentName(), resultCapability.getEnvironment().getEnvironmentName());
-		assertEquals(capabilityFirst.getStatus().getStatusId(), resultCapability.getStatus().getStatusId());
-		assertEquals(capabilityFirst.getStatus().getValidityPeriod(), resultCapability.getStatus().getValidityPeriod());
-		assertEquals(capabilityFirst.getParentCapabilityId(), resultCapability.getParentCapabilityId());
-		assertEquals(capabilityFirst.getCapabilityName(), resultCapability.getCapabilityName());
-		assertEquals(capabilityFirst.getLevel(), resultCapability.getLevel());
-		assertEquals(capabilityFirst.isPaceOfChange(), resultCapability.isPaceOfChange());
-		assertEquals(capabilityFirst.getTargetOperatingModel(), resultCapability.getTargetOperatingModel());
-		assertEquals(capabilityFirst.getResourceQuality(), resultCapability.getResourceQuality());
-		assertEquals(capabilityFirst.getInformationQuality(), resultCapability.getInformationQuality());
-		assertEquals(capabilityFirst.getApplicationFit(), resultCapability.getApplicationFit());
+		testCapability(capabilityFirst, resultCapability);
 	}
 	
 	@Test
@@ -223,32 +187,8 @@ public class CapabilityControllerTest {
 		
 		assertNotNull(resultCapabilities);
 		assertEquals(2, resultCapabilities.size());
-		assertEquals(capabilityFirst.getCapabilityId(), resultCapabilities.get(0).getCapabilityId());
-		assertEquals(capabilityFirst.getEnvironment().getEnvironmentId(), resultCapabilities.get(0).getEnvironment().getEnvironmentId());
-		assertEquals(capabilityFirst.getEnvironment().getEnvironmentName(), resultCapabilities.get(0).getEnvironment().getEnvironmentName());
-		assertEquals(capabilityFirst.getStatus().getStatusId(), resultCapabilities.get(0).getStatus().getStatusId());
-		assertEquals(capabilityFirst.getStatus().getValidityPeriod(), resultCapabilities.get(0).getStatus().getValidityPeriod());
-		assertEquals(capabilityFirst.getParentCapabilityId(), resultCapabilities.get(0).getParentCapabilityId());
-		assertEquals(capabilityFirst.getCapabilityName(), resultCapabilities.get(0).getCapabilityName());
-		assertEquals(capabilityFirst.getLevel(), resultCapabilities.get(0).getLevel());
-		assertEquals(capabilityFirst.isPaceOfChange(), resultCapabilities.get(0).isPaceOfChange());
-		assertEquals(capabilityFirst.getTargetOperatingModel(), resultCapabilities.get(0).getTargetOperatingModel());
-		assertEquals(capabilityFirst.getResourceQuality(), resultCapabilities.get(0).getResourceQuality());
-		assertEquals(capabilityFirst.getInformationQuality(), resultCapabilities.get(0).getInformationQuality());
-		assertEquals(capabilityFirst.getApplicationFit(), resultCapabilities.get(0).getApplicationFit());
-		assertEquals(capabilitySecond.getCapabilityId(), resultCapabilities.get(1).getCapabilityId());
-		assertEquals(capabilitySecond.getEnvironment().getEnvironmentId(), resultCapabilities.get(1).getEnvironment().getEnvironmentId());
-		assertEquals(capabilitySecond.getEnvironment().getEnvironmentName(), resultCapabilities.get(1).getEnvironment().getEnvironmentName());
-		assertEquals(capabilitySecond.getStatus().getStatusId(), resultCapabilities.get(1).getStatus().getStatusId());
-		assertEquals(capabilitySecond.getStatus().getValidityPeriod(), resultCapabilities.get(1).getStatus().getValidityPeriod());
-		assertEquals(capabilitySecond.getParentCapabilityId(), resultCapabilities.get(1).getParentCapabilityId());
-		assertEquals(capabilitySecond.getCapabilityName(), resultCapabilities.get(1).getCapabilityName());
-		assertEquals(capabilitySecond.getLevel(), resultCapabilities.get(1).getLevel());
-		assertEquals(capabilitySecond.isPaceOfChange(), resultCapabilities.get(1).isPaceOfChange());
-		assertEquals(capabilitySecond.getTargetOperatingModel(), resultCapabilities.get(1).getTargetOperatingModel());
-		assertEquals(capabilitySecond.getResourceQuality(), resultCapabilities.get(1).getResourceQuality());
-		assertEquals(capabilitySecond.getInformationQuality(), resultCapabilities.get(1).getInformationQuality());
-		assertEquals(capabilitySecond.getApplicationFit(), resultCapabilities.get(1).getApplicationFit());
+		testCapability(capabilityFirst, resultCapabilities.get(0));
+		testCapability(capabilitySecond, resultCapabilities.get(1));
 	}
 	
 	@Test
@@ -264,19 +204,7 @@ public class CapabilityControllerTest {
 		
 		assertNotNull(resultCapabilities);
 		assertEquals(1, resultCapabilities.size());
-		assertEquals(capabilityFirst.getCapabilityId(), resultCapabilities.get(0).getCapabilityId());
-		assertEquals(capabilityFirst.getEnvironment().getEnvironmentId(), resultCapabilities.get(0).getEnvironment().getEnvironmentId());
-		assertEquals(capabilityFirst.getEnvironment().getEnvironmentName(), resultCapabilities.get(0).getEnvironment().getEnvironmentName());
-		assertEquals(capabilityFirst.getStatus().getStatusId(), resultCapabilities.get(0).getStatus().getStatusId());
-		assertEquals(capabilityFirst.getStatus().getValidityPeriod(), resultCapabilities.get(0).getStatus().getValidityPeriod());
-		assertEquals(capabilityFirst.getParentCapabilityId(), resultCapabilities.get(0).getParentCapabilityId());
-		assertEquals(capabilityFirst.getCapabilityName(), resultCapabilities.get(0).getCapabilityName());
-		assertEquals(capabilityFirst.getLevel(), resultCapabilities.get(0).getLevel());
-		assertEquals(capabilityFirst.isPaceOfChange(), resultCapabilities.get(0).isPaceOfChange());
-		assertEquals(capabilityFirst.getTargetOperatingModel(), resultCapabilities.get(0).getTargetOperatingModel());
-		assertEquals(capabilityFirst.getResourceQuality(), resultCapabilities.get(0).getResourceQuality());
-		assertEquals(capabilityFirst.getInformationQuality(), resultCapabilities.get(0).getInformationQuality());
-		assertEquals(capabilityFirst.getApplicationFit(), resultCapabilities.get(0).getApplicationFit());
+		testCapability(capabilityFirst, resultCapabilities.get(0));
 	}
 	
 	@Test
@@ -292,32 +220,8 @@ public class CapabilityControllerTest {
 		
 		assertNotNull(resultCapabilities);
 		assertEquals(2, resultCapabilities.size());
-		assertEquals(capabilitySecond.getCapabilityId(), resultCapabilities.get(0).getCapabilityId());
-		assertEquals(capabilitySecond.getEnvironment().getEnvironmentId(), resultCapabilities.get(0).getEnvironment().getEnvironmentId());
-		assertEquals(capabilitySecond.getEnvironment().getEnvironmentName(), resultCapabilities.get(0).getEnvironment().getEnvironmentName());
-		assertEquals(capabilitySecond.getStatus().getStatusId(), resultCapabilities.get(0).getStatus().getStatusId());
-		assertEquals(capabilitySecond.getStatus().getValidityPeriod(), resultCapabilities.get(0).getStatus().getValidityPeriod());
-		assertEquals(capabilitySecond.getParentCapabilityId(), resultCapabilities.get(0).getParentCapabilityId());
-		assertEquals(capabilitySecond.getCapabilityName(), resultCapabilities.get(0).getCapabilityName());
-		assertEquals(capabilitySecond.getLevel(), resultCapabilities.get(0).getLevel());
-		assertEquals(capabilitySecond.isPaceOfChange(), resultCapabilities.get(0).isPaceOfChange());
-		assertEquals(capabilitySecond.getTargetOperatingModel(), resultCapabilities.get(0).getTargetOperatingModel());
-		assertEquals(capabilitySecond.getResourceQuality(), resultCapabilities.get(0).getResourceQuality());
-		assertEquals(capabilitySecond.getInformationQuality(), resultCapabilities.get(0).getInformationQuality());
-		assertEquals(capabilitySecond.getApplicationFit(), resultCapabilities.get(0).getApplicationFit());		
-		assertEquals(capabilityThirth.getCapabilityId(), resultCapabilities.get(1).getCapabilityId());
-		assertEquals(capabilityThirth.getEnvironment().getEnvironmentId(), resultCapabilities.get(1).getEnvironment().getEnvironmentId());
-		assertEquals(capabilityThirth.getEnvironment().getEnvironmentName(), resultCapabilities.get(1).getEnvironment().getEnvironmentName());
-		assertEquals(capabilityThirth.getStatus().getStatusId(), resultCapabilities.get(1).getStatus().getStatusId());
-		assertEquals(capabilityThirth.getStatus().getValidityPeriod(), resultCapabilities.get(1).getStatus().getValidityPeriod());
-		assertEquals(capabilityThirth.getParentCapabilityId(), resultCapabilities.get(1).getParentCapabilityId());
-		assertEquals(capabilityThirth.getCapabilityName(), resultCapabilities.get(1).getCapabilityName());
-		assertEquals(capabilityThirth.getLevel(), resultCapabilities.get(1).getLevel());
-		assertEquals(capabilityThirth.isPaceOfChange(), resultCapabilities.get(1).isPaceOfChange());
-		assertEquals(capabilityThirth.getTargetOperatingModel(), resultCapabilities.get(1).getTargetOperatingModel());
-		assertEquals(capabilityThirth.getResourceQuality(), resultCapabilities.get(1).getResourceQuality());
-		assertEquals(capabilityThirth.getInformationQuality(), resultCapabilities.get(1).getInformationQuality());
-		assertEquals(capabilityThirth.getApplicationFit(), resultCapabilities.get(1).getApplicationFit());
+		testCapability(capabilitySecond, resultCapabilities.get(0));
+		testCapability(capabilityThirth, resultCapabilities.get(1));
 	}
 	
 	@Test
@@ -334,32 +238,8 @@ public class CapabilityControllerTest {
 		
 		assertNotNull(resultCapabilities);
 		assertEquals(2, resultCapabilities.size());
-		assertEquals(capabilitySecond.getCapabilityId(), resultCapabilities.get(0).getCapabilityId());
-		assertEquals(capabilitySecond.getEnvironment().getEnvironmentId(), resultCapabilities.get(0).getEnvironment().getEnvironmentId());
-		assertEquals(capabilitySecond.getEnvironment().getEnvironmentName(), resultCapabilities.get(0).getEnvironment().getEnvironmentName());
-		assertEquals(capabilitySecond.getStatus().getStatusId(), resultCapabilities.get(0).getStatus().getStatusId());
-		assertEquals(capabilitySecond.getStatus().getValidityPeriod(), resultCapabilities.get(0).getStatus().getValidityPeriod());
-		assertEquals(capabilitySecond.getParentCapabilityId(), resultCapabilities.get(0).getParentCapabilityId());
-		assertEquals(capabilitySecond.getCapabilityName(), resultCapabilities.get(0).getCapabilityName());
-		assertEquals(capabilitySecond.getLevel(), resultCapabilities.get(0).getLevel());
-		assertEquals(capabilitySecond.isPaceOfChange(), resultCapabilities.get(0).isPaceOfChange());
-		assertEquals(capabilitySecond.getTargetOperatingModel(), resultCapabilities.get(0).getTargetOperatingModel());
-		assertEquals(capabilitySecond.getResourceQuality(), resultCapabilities.get(0).getResourceQuality());
-		assertEquals(capabilitySecond.getInformationQuality(), resultCapabilities.get(0).getInformationQuality());
-		assertEquals(capabilitySecond.getApplicationFit(), resultCapabilities.get(0).getApplicationFit());		
-		assertEquals(capabilityThirth.getCapabilityId(), resultCapabilities.get(1).getCapabilityId());
-		assertEquals(capabilityThirth.getEnvironment().getEnvironmentId(), resultCapabilities.get(1).getEnvironment().getEnvironmentId());
-		assertEquals(capabilityThirth.getEnvironment().getEnvironmentName(), resultCapabilities.get(1).getEnvironment().getEnvironmentName());
-		assertEquals(capabilityThirth.getStatus().getStatusId(), resultCapabilities.get(1).getStatus().getStatusId());
-		assertEquals(capabilityThirth.getStatus().getValidityPeriod(), resultCapabilities.get(1).getStatus().getValidityPeriod());
-		assertEquals(capabilityThirth.getParentCapabilityId(), resultCapabilities.get(1).getParentCapabilityId());
-		assertEquals(capabilityThirth.getCapabilityName(), resultCapabilities.get(1).getCapabilityName());
-		assertEquals(capabilityThirth.getLevel(), resultCapabilities.get(1).getLevel());
-		assertEquals(capabilityThirth.isPaceOfChange(), resultCapabilities.get(1).isPaceOfChange());
-		assertEquals(capabilityThirth.getTargetOperatingModel(), resultCapabilities.get(1).getTargetOperatingModel());
-		assertEquals(capabilityThirth.getResourceQuality(), resultCapabilities.get(1).getResourceQuality());
-		assertEquals(capabilityThirth.getInformationQuality(), resultCapabilities.get(1).getInformationQuality());
-		assertEquals(capabilityThirth.getApplicationFit(), resultCapabilities.get(1).getApplicationFit());
+		testCapability(capabilitySecond, resultCapabilities.get(0));
+		testCapability(capabilityThirth, resultCapabilities.get(1));
 	}
 	
 	@Test
@@ -373,45 +253,9 @@ public class CapabilityControllerTest {
 		
 		assertNotNull(resultCapabilities);
 		assertEquals(3, resultCapabilities.size());
-		assertEquals(capabilityFirst.getCapabilityId(), resultCapabilities.get(0).getCapabilityId());
-		assertEquals(capabilityFirst.getEnvironment().getEnvironmentId(), resultCapabilities.get(0).getEnvironment().getEnvironmentId());
-		assertEquals(capabilityFirst.getEnvironment().getEnvironmentName(), resultCapabilities.get(0).getEnvironment().getEnvironmentName());
-		assertEquals(capabilityFirst.getStatus().getStatusId(), resultCapabilities.get(0).getStatus().getStatusId());
-		assertEquals(capabilityFirst.getStatus().getValidityPeriod(), resultCapabilities.get(0).getStatus().getValidityPeriod());
-		assertEquals(capabilityFirst.getParentCapabilityId(), resultCapabilities.get(0).getParentCapabilityId());
-		assertEquals(capabilityFirst.getCapabilityName(), resultCapabilities.get(0).getCapabilityName());
-		assertEquals(capabilityFirst.getLevel(), resultCapabilities.get(0).getLevel());
-		assertEquals(capabilityFirst.isPaceOfChange(), resultCapabilities.get(0).isPaceOfChange());
-		assertEquals(capabilityFirst.getTargetOperatingModel(), resultCapabilities.get(0).getTargetOperatingModel());
-		assertEquals(capabilityFirst.getResourceQuality(), resultCapabilities.get(0).getResourceQuality());
-		assertEquals(capabilityFirst.getInformationQuality(), resultCapabilities.get(0).getInformationQuality());
-		assertEquals(capabilityFirst.getApplicationFit(), resultCapabilities.get(0).getApplicationFit());
-		assertEquals(capabilitySecond.getCapabilityId(), resultCapabilities.get(1).getCapabilityId());
-		assertEquals(capabilitySecond.getEnvironment().getEnvironmentId(), resultCapabilities.get(1).getEnvironment().getEnvironmentId());
-		assertEquals(capabilitySecond.getEnvironment().getEnvironmentName(), resultCapabilities.get(1).getEnvironment().getEnvironmentName());
-		assertEquals(capabilitySecond.getStatus().getStatusId(), resultCapabilities.get(1).getStatus().getStatusId());
-		assertEquals(capabilitySecond.getStatus().getValidityPeriod(), resultCapabilities.get(1).getStatus().getValidityPeriod());
-		assertEquals(capabilitySecond.getParentCapabilityId(), resultCapabilities.get(1).getParentCapabilityId());
-		assertEquals(capabilitySecond.getCapabilityName(), resultCapabilities.get(1).getCapabilityName());
-		assertEquals(capabilitySecond.getLevel(), resultCapabilities.get(1).getLevel());
-		assertEquals(capabilitySecond.isPaceOfChange(), resultCapabilities.get(1).isPaceOfChange());
-		assertEquals(capabilitySecond.getTargetOperatingModel(), resultCapabilities.get(1).getTargetOperatingModel());
-		assertEquals(capabilitySecond.getResourceQuality(), resultCapabilities.get(1).getResourceQuality());
-		assertEquals(capabilitySecond.getInformationQuality(), resultCapabilities.get(1).getInformationQuality());
-		assertEquals(capabilitySecond.getApplicationFit(), resultCapabilities.get(1).getApplicationFit());		
-		assertEquals(capabilityThirth.getCapabilityId(), resultCapabilities.get(2).getCapabilityId());
-		assertEquals(capabilityThirth.getEnvironment().getEnvironmentId(), resultCapabilities.get(2).getEnvironment().getEnvironmentId());
-		assertEquals(capabilityThirth.getEnvironment().getEnvironmentName(), resultCapabilities.get(2).getEnvironment().getEnvironmentName());
-		assertEquals(capabilityThirth.getStatus().getStatusId(), resultCapabilities.get(2).getStatus().getStatusId());
-		assertEquals(capabilityThirth.getStatus().getValidityPeriod(), resultCapabilities.get(2).getStatus().getValidityPeriod());
-		assertEquals(capabilityThirth.getParentCapabilityId(), resultCapabilities.get(2).getParentCapabilityId());
-		assertEquals(capabilityThirth.getCapabilityName(), resultCapabilities.get(2).getCapabilityName());
-		assertEquals(capabilityThirth.getLevel(), resultCapabilities.get(2).getLevel());
-		assertEquals(capabilityThirth.isPaceOfChange(), resultCapabilities.get(2).isPaceOfChange());
-		assertEquals(capabilityThirth.getTargetOperatingModel(), resultCapabilities.get(2).getTargetOperatingModel());
-		assertEquals(capabilityThirth.getResourceQuality(), resultCapabilities.get(2).getResourceQuality());
-		assertEquals(capabilityThirth.getInformationQuality(), resultCapabilities.get(2).getInformationQuality());
-		assertEquals(capabilityThirth.getApplicationFit(), resultCapabilities.get(2).getApplicationFit());
+		testCapability(capabilityFirst, resultCapabilities.get(0));
+		testCapability(capabilitySecond, resultCapabilities.get(1));
+		testCapability(capabilityThirth, resultCapabilities.get(2));
 	}
 	
 	@Test
@@ -468,19 +312,7 @@ public class CapabilityControllerTest {
 		Capability capability = capabilityService.getCapabilityByCapabilityName(capabilityName);
 		
 		assertNotNull(resultCapability);
-		assertEquals(capability.getCapabilityId(), resultCapability.getCapabilityId());
-		assertEquals(capability.getEnvironment().getEnvironmentId(), resultCapability.getEnvironment().getEnvironmentId());
-		assertEquals(capability.getEnvironment().getEnvironmentName(), resultCapability.getEnvironment().getEnvironmentName());
-		assertEquals(capability.getStatus().getStatusId(), resultCapability.getStatus().getStatusId());
-		assertEquals(capability.getStatus().getValidityPeriod(), resultCapability.getStatus().getValidityPeriod());
-		assertEquals(capability.getParentCapabilityId(), resultCapability.getParentCapabilityId());
-		assertEquals(capability.getCapabilityName(), resultCapability.getCapabilityName());
-		assertEquals(capability.getLevel(), resultCapability.getLevel());
-		assertEquals(capability.isPaceOfChange(), resultCapability.isPaceOfChange());
-		assertEquals(capability.getTargetOperatingModel(), resultCapability.getTargetOperatingModel());
-		assertEquals(capability.getResourceQuality(), resultCapability.getResourceQuality());
-		assertEquals(capability.getInformationQuality(), resultCapability.getInformationQuality());
-		assertEquals(capability.getApplicationFit(), resultCapability.getApplicationFit());
+		testCapability(capability, resultCapability);
 	}
 	
 	@Test
@@ -489,5 +321,22 @@ public class CapabilityControllerTest {
 		
 		mockMvc.perform(MockMvcRequestBuilders.delete(PATH + capabilityId))
 			.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+	
+	@Test
+	private void testCapability(Capability expectedObject, CapabilityDto actualObject) {
+		assertEquals(expectedObject.getCapabilityId(), actualObject.getCapabilityId());
+		assertEquals(expectedObject.getEnvironment().getEnvironmentId(), actualObject.getEnvironment().getEnvironmentId());
+		assertEquals(expectedObject.getEnvironment().getEnvironmentName(), actualObject.getEnvironment().getEnvironmentName());
+		assertEquals(expectedObject.getStatus().getStatusId(), actualObject.getStatus().getStatusId());
+		assertEquals(expectedObject.getStatus().getValidityPeriod(), actualObject.getStatus().getValidityPeriod());
+		assertEquals(expectedObject.getParentCapabilityId(), actualObject.getParentCapabilityId());
+		assertEquals(expectedObject.getCapabilityName(), actualObject.getCapabilityName());
+		assertEquals(expectedObject.getLevel(), actualObject.getLevel());
+		assertEquals(expectedObject.isPaceOfChange(), actualObject.isPaceOfChange());
+		assertEquals(expectedObject.getTargetOperatingModel(), actualObject.getTargetOperatingModel());
+		assertEquals(expectedObject.getResourceQuality(), actualObject.getResourceQuality());
+		assertEquals(expectedObject.getInformationQuality(), actualObject.getInformationQuality());
+		assertEquals(expectedObject.getApplicationFit(), actualObject.getApplicationFit());
 	}
 }
