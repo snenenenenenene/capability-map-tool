@@ -1,50 +1,19 @@
-/* * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@media all and (min-width: 480px) {
+  .Login {
+    padding: 60px 0;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .Login form {
+    margin: 0 auto;
+    max-width: 320px;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
-html,
-body {
+html body {
   min-height: 100vh;
-  background: linear-gradient(
-    to right top,
-    rgb(255, 170, 136),
-    rgb(255, 137, 26)
-  );
-  display: flex;
-  alight-items: center;
-  justify-content: center;
+  /* background-image: linear-gradient(to bottom right, red, #aeaeff); */
 }
-
-input,
-button {
-  appearance: none;
-  background: none;
-  border: none;
-  outline: none;
-}
-
-form {
-  display: block;
-  position: relative;
-}
-
-form:after {
-  content: "";
-  display: block;
-  position: absolute;
-  top: -5px;
-  left: -5px;
-  right: -5px;
-  bottom: -5px;
-  z-index: 1;
-  background-image: linear-gradient(
-    to bottom right,
-    rgb(255, 155, 24),
-    rgb(235, 235, 235)
-  );
-}
-
-form:inline {
-} */
