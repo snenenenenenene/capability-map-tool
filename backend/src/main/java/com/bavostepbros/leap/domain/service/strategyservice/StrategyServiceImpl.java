@@ -101,7 +101,7 @@ public class StrategyServiceImpl implements StrategyService {
 		if (!existsById(strategyId)) {
 			throw new StrategyException("Can not update strategy if it does not exist.");
 		}
-		Strategy oldStrategy = strategyDAL.findById(statusId).get();
+		Strategy oldStrategy = strategyDAL.findById(strategyId).get();
 		if (strategyName != oldStrategy.getStrategyName() && existsByStrategyName(strategyName)) {
 			throw new DuplicateValueException("Strategy name already exists.");
 		}
