@@ -21,6 +21,7 @@
     "mocha": "^8.4.0",
     "node-sass": "^4.14.1",
     "npm": "^7.12.1",
+    "password-validator": "^5.1.1",
     "popper.js": "^1.16.1",
     "react": "^17.0.2",
     "react-bootstrap": "^1.6.0",
