@@ -69,7 +69,8 @@ public class StatusServiceImpl implements StatusService {
 		if (!existsById(statusId)) {
 			throw new IndexDoesNotExistException("Can not update status if it does not exist.");
 		}
-		if (existsByValidityPeriod(validityPeriod)) {
+		Status oldStatus = statusDAL.findById(statusId).get();
+		if (validityPeriod != oldStatus.getValidityPeriod() && existsByValidityPeriod(validityPeriod)) {
 			throw new StatusException("Validity period already exists.");
 		}
 		

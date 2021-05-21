@@ -61,7 +61,7 @@ public class StrategyItemServiceImpl implements StrategyItemService {
 		StrategyItem strategyItem = strategyItemDAL.findById(itemId).get();
 		return strategyItem;
 	}
-
+	
 	@Override
 	public StrategyItem update(Integer itemId, Integer strategyId, String strategyItemName, String description) {
 		if (itemId == null || itemId.equals(0) || strategyItemName == null || 

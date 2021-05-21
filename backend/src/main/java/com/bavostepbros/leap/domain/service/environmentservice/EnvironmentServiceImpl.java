@@ -88,7 +88,8 @@ public class EnvironmentServiceImpl implements EnvironmentService {
     	if (!existsById(environmentId)) {
 			throw new IndexDoesNotExistException("Can not update environment if it does not exist.");
 		}
-		if (existsByEnvironmentName(environmentName)) {
+    	Environment oldEnvironment = environmentDAL.findById(environmentId).get();
+		if (environmentName != oldEnvironment.getEnvironmentName() && existsByEnvironmentName(environmentName)) {
 			throw new EnvironmentException("Environment name already exists.");
 		}
 
