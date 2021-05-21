@@ -40,7 +40,7 @@ public class UserController {
 	@Autowired
 	private RoleService roleService;
 	
-	@PostMapping(path = "register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Void> addUser(
 			@ModelAttribute User user,
 			UriComponentsBuilder builder) {		
@@ -146,7 +146,6 @@ public class UserController {
 	public ResponseEntity<User> login(
 		@ModelAttribute("email") String email) {
 		
-		System.out.println(email);
 		if (email == null || email.isBlank() || email.isEmpty() || userService.existsByEmail(email)) {
 			throw new InvalidInputException("Invalid input.");
 		}
@@ -154,5 +153,21 @@ public class UserController {
 		User user = null;
 		user = userService.getByEmail(email);
 		return new ResponseEntity<User>(user, HttpStatus.OK);
+	}
+
+	@PutMapping(path = "changePassword", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public String changePassword(
+		@ModelAttribute("password") String password,
+		@ModelAttribute("id") Integer id) {
+		
+		if (password == null || password.isBlank() || password.isEmpty()) {
+			throw new InvalidInputException("Password is not valid.");
+		}
+
+		User user = userService.get(id);
+		user.setPassword(password);
+		userService.save(user);
+		String result = "Password saved";
+		return result;
 	}
 }
