@@ -73,7 +73,7 @@ class App extends Component {
   }
 
   toastSuccess(object) {
-    toast.success(`Sucessfully Added ${object}`);
+    toast.success(`Successfully Added ${object}`);
   }
 
   adminSettings() {
