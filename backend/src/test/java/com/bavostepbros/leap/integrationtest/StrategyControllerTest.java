@@ -258,9 +258,8 @@ public class StrategyControllerTest {
 		LocalDate timeFrameEnd = strategyFirst.getTimeFrameEnd();
 		Integer environmentId = strategyFirst.getEnvironment().getEnvironmentId();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH)
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH + strategyId)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-				.param("strategyId", strategyId.toString())
 				.param("statusId", statusId.toString())
 				.param("strategyName", strategyName)
 				.param("timeFrameStart", timeFrameStart.toString())

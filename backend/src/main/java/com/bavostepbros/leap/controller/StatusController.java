@@ -76,9 +76,9 @@ public class StatusController {
 		return statusService.existsByValidityPeriod(validityPeriod);
 	}
 	
-	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PutMapping(path = "{statusId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public StatusDto updateStatus(
-			@ModelAttribute("statusId") Integer statusId,
+			@PathVariable("statusId") Integer statusId,
 			@ModelAttribute("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityPeriod) {		
 		Status status = statusService.update(statusId, validityPeriod);
 		return new StatusDto(status.getStatusId(), status.getValidityPeriod());
