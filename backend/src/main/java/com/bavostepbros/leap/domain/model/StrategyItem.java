@@ -11,6 +11,8 @@ import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.Type;
 
+import com.bavostepbros.leap.domain.model.strategicimportance.StrategicImportance;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

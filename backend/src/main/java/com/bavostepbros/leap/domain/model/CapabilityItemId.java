@@ -3,7 +3,11 @@ package com.bavostepbros.leap.domain.model;
 import java.io.Serializable;
 import java.util.Objects;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -13,11 +17,22 @@ import lombok.Setter;
 */
 @Getter
 @Setter
+@NoArgsConstructor
+@Embeddable
 public class CapabilityItemId implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private Integer capability;
-    private Integer strategyItem;
+	
+	@Column(name = "CAPABILITYID")
+	private Integer capabilityId;
+	
+	@Column(name = "ITEMID")
+    private Integer itemId;
+	
+	public CapabilityItemId(Integer capabilityId, Integer itemId) {
+		this.capabilityId = capabilityId;
+		this.itemId = itemId;
+	}
 
     @Override
     public boolean equals(Object o) {
@@ -27,13 +42,13 @@ public class CapabilityItemId implements Serializable {
             return false;
         }
         CapabilityItemId capabilityItemId = (CapabilityItemId) o;
-        return Objects.equals(capability, capabilityItemId.capability) 
-        && Objects.equals(strategyItem, capabilityItemId.strategyItem);
+        return Objects.equals(capabilityId, capabilityItemId.capabilityId) 
+        		&& Objects.equals(itemId, capabilityItemId.itemId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(capability, strategyItem);
+        return Objects.hash(capabilityId, itemId);
     }
 
 }
