@@ -198,10 +198,8 @@ public class CapabilityItemControllerTest {
 		Integer itemId = strategyItemFirst.getItemId();
 		String strategicImportance = "HIGH";
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH)
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH + capabilityId + "/" + itemId)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-				.param("capabilityId", capabilityId.toString())
-				.param("itemId", itemId.toString())
 				.param("strategicImportance", strategicImportance)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk())

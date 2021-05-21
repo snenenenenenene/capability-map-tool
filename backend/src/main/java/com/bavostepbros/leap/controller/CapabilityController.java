@@ -149,8 +149,8 @@ public class CapabilityController {
 		return capService.existsByCapabilityName(capabilityName);
 	}
 
-	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public CapabilityDto updateCapability(@ModelAttribute("capabilityId") Integer capabilityId,
+	@PutMapping(path = "{capabilityId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public CapabilityDto updateCapability(@PathVariable("capabilityId") Integer capabilityId,
 			@ModelAttribute("environmentId") Integer environmentId, @ModelAttribute("statusId") Integer statusId,
 			@ModelAttribute("parentCapabilityId") Integer parentCapabilityId,
 			@ModelAttribute("capabilityName") String capabilityName, @ModelAttribute("level") String level,

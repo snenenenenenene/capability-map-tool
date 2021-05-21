@@ -50,10 +50,10 @@ public class CapabilityItemController {
 				capabilityItem.getStrategyItem(), capabilityItem.getStrategicImportance());
 	}
 	
-	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PutMapping(path = "{capabilityId}/{itemId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public CapabilityItemDto updateCapabilityItem(
-			@ModelAttribute("capabilityId") Integer capabilityId,
-			@ModelAttribute("itemId") Integer itemId,
+			@PathVariable("capabilityId") Integer capabilityId,
+			@PathVariable("itemId") Integer itemId,
 			@ModelAttribute("strategicImportance") String strategicImportance) {
 		
 		CapabilityItem capabilityItem = capabilityItemService.save(capabilityId, itemId, 

@@ -187,9 +187,8 @@ public class StrategyItemControllerTest {
 		String strategyItemName = "StrategyItem update test";
 		String strategyItemDescription = strategyItemFirst.getDescription();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH)
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH + strategyItemId)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-				.param("itemId", strategyItemId.toString())
 				.param("strategyId", strategyId.toString())
 				.param("strategyItemName", strategyItemName)
 				.param("description", strategyItemDescription)
