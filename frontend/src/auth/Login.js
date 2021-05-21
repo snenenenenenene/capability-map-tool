@@ -7,6 +7,8 @@ import ConfigurePassword from "./ConfigurePassword";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "./Login.css";
+import * as sha1 from "js-sha1";
+// import * as bcrypt from "bcrypt";
 
 export default class Login extends Component {
   constructor(props) {
@@ -31,69 +33,48 @@ export default class Login extends Component {
 
   authenticateUser = async (e) => {
     e.preventDefault();
-    if (this.state.email === "test" && this.state.password === "test") {
-      this.setState({
-        email: this.state.email,
-        password: this.state.password,
-        authenticated: true,
-      });
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          email: this.state.email,
-          password: this.state.password,
-          authenticated: true,
-        })
-      );
-      window.location.reload();
-    } else {
-      let formData = new FormData();
-      formData.append("email", this.state.email);
-      axios
-        .post(`${process.env.REACT_APP_API_URL}/user/authenticate`, formData)
-        .then((response) => {
-          if ("newUser" === response.data.password) {
-            this.setState({
-              username: response.data.username,
-              roleId: response.data.roleId,
+    const pwd = sha1(this.state.password);
+    let formData = new FormData();
+    formData.append("email", this.state.email);
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/user/authenticate`, formData)
+      .then((response) => {
+        if (sha1("newUser") === response.data.password) {
+          toast.success(`Welcome ${this.state.email} Let's Pick a Password!`);
+          this.handleModal();
+          return;
+        }
+        if (pwd === response.data.password) {
+          toast.success(`Successful Login! \n Welcome ${this.state.username}`);
+          this.setState({ authenticated: true });
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              email: this.state.email,
               userId: response.data.userId,
-            });
-            toast.success(`Welcome ${this.state.email} Let's Pick a Password!`);
-            this.handleModal();
+              authenticated: true,
+              roleId: response.data.roleId,
+              username: response.data.username,
+            })
+          );
+          this.props.history.push(`/home`);
+          window.location.reload();
+          return;
+        } else if (pwd !== response.data.password) {
+          toast.error("Wrong password!");
+          return;
+        }
+        toast.error("Something went Wrong");
+      })
+      .catch((error) => {
+        if (error.response) {
+          if (error.response.status === 400) {
+            toast.error("Wrong Email Address");
             return;
           }
-          if (this.state.password === response.data.password) {
-            toast.success(
-              `Successful Login! \n Welcome ${this.state.username}`
-            );
-            this.setState({ authenticated: true });
-            localStorage.setItem(
-              "user",
-              JSON.stringify({
-                email: this.state.email,
-                password: this.state.password,
-                authenticated: true,
-              })
-            );
-            this.props.history.push(`/home`);
-            window.location.reload();
-            return;
-          } else if (this.state.password !== response.data.password) {
-            toast.error("Wrong password!");
-            return;
-          }
-          toast.error("Something went Wrong");
-        })
-        .catch((error) => {
-          if (error.response) {
-            if (error.response.status === 400) {
-              toast.error("Wrong Email Address");
-              return;
-            }
-          }
-          toast.error("Something went Wrong");
-        });
-    }
+        }
+        toast.error("Something went Wrong");
+      });
   };
 
   handleInputChange(event) {
@@ -104,7 +85,7 @@ export default class Login extends Component {
     return (
       <div className='container'>
         <Toaster />
-
+        <pre>{this.state.response}</pre>
         <div className='Login'>
           <img
             alt='leap'

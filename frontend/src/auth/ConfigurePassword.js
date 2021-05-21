@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import passwordValidator from "password-validator";
+import * as sha1 from "js-sha1";
 
 export default class ConfigurePassword extends Component {
   constructor(props) {
@@ -20,24 +22,46 @@ export default class ConfigurePassword extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("username", this.state.username);
-    formData.append("email", this.state.email);
-    formData.append("roleId", this.state.roleId);
-    formData.append("password", this.state.password);
-    formData.append("userId", this.state.userId);
+    var schema = new passwordValidator();
+    schema
+      .is()
+      .min(8)
+      .is()
+      .max(100)
+      .has()
+      .uppercase()
+      .has()
+      .lowercase()
+      .has()
+      .digits(2)
+      .has()
+      .not()
+      .spaces();
 
-    await axios
-      .put(`http://localhost:8080/api/user/update`, formData)
-      .then((response) => {
-        toast.success("Successfully Changed Password");
-        this.props.handleModal();
-        return;
-      })
-      .catch((error) => {
-        toast.error("Failed to Change Password");
-        return;
-      });
+    if (schema.validate(this.state.password)) {
+      var pwd = sha1(this.state.password);
+      const formData = new FormData();
+      formData.append("username", this.state.username);
+      formData.append("email", this.state.email);
+      formData.append("roleId", this.state.roleId);
+      formData.append("password", pwd);
+      formData.append("userId", this.state.userId);
+      await axios
+        .put(`http://localhost:8080/api/user/update`, formData)
+        .then((response) => {
+          toast.success("Successfully Changed Password");
+          this.props.handleModal();
+          return;
+        })
+        .catch((error) => {
+          toast.error("Failed to Change Password");
+          return;
+        });
+    } else {
+      toast.error(
+        "Password must be 8 letters, have 1 uppercase letter, 2 numbers"
+      );
+    }
   };
 
   handleInputChange(event) {

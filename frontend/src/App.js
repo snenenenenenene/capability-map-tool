@@ -50,6 +50,7 @@ class App extends Component {
       authenticated: false,
       isOnline: window ? window.navigator.onLine : false,
       roleId: "",
+      user: {},
     };
     this.logout = this.logout.bind(this);
   }
@@ -58,7 +59,7 @@ class App extends Component {
     if (localStorage.getItem("user")) {
       let user = JSON.parse(localStorage.getItem("user"));
       this.setState({ authenticated: user.authenticated });
-      this.setState({ roleId: user.roleId });
+      this.setState({ user: user });
     }
   }
 
@@ -76,34 +77,13 @@ class App extends Component {
   }
 
   adminSettings() {
-    toast.success(this.state.roleId);
-    if (this.state.roleId === 2) {
+    console.log(this.state.user);
+
+    if (this.state.user.roleId === 2) {
       return (
-        <div className='collapse navbar-collapse' id='navbarNavDarkDropdown'>
-          <ul className='navbar-nav'>
-            <li className='nav-item dropdown'>
-              <i
-                className='bi bi-gear-fill'
-                href='#'
-                id='navbarDarkDropdownMenuLink'
-                role='button'
-                data-bs-toggle='dropdown'
-                aria-expanded='false'
-              ></i>
-              <ul
-                className='dropdown-menu dropdown-menu-dark'
-                aria-labelledby='navbarDarkDropdownMenuLink'
-              >
-                <Link to='/settings'>
-                  <li className='dropdown-item'>Settings</li>
-                </Link>
-                <Link to='/admin'>
-                  <li className='dropdown-item'>Admin</li>
-                </Link>
-              </ul>
-            </li>
-          </ul>
-        </div>
+        <Link to='/admin'>
+          <li className='dropdown-item'>User List</li>
+        </Link>
       );
     }
     return;
@@ -139,15 +119,37 @@ class App extends Component {
                 </Link>
                 <ul className='navbar-nav mr-auto mt-2 mt-lg-0'></ul>
                 <form className='form-inline my-2 my-lg-0'>
-                  <Link
-                    to={""}
-                    onClick={this.logout}
-                    style={{ color: "#fff" }}
-                    className='nav-link'
+                  <div
+                    className='collapse navbar-collapse'
+                    id='navbarNavDarkDropdown'
                   >
-                    Logout
-                  </Link>
-                  {this.adminSettings()}
+                    <ul className='navbar-nav'>
+                      <li className='nav-item dropdown'>
+                        <li
+                          style={{ color: "#fff" }}
+                          href='#'
+                          id='navbarDarkDropdownMenuLink'
+                          role='button'
+                          data-bs-toggle='dropdown'
+                          aria-expanded='false'
+                        >
+                          {this.state.user.username}
+                        </li>
+                        <ul
+                          className='dropdown-menu dropdown-menu-right dropdown-menu-dark'
+                          aria-labelledby='navbarDarkDropdownMenuLink'
+                        >
+                          <Link to='/settings'>
+                            <li className='dropdown-item'>Settings</li>
+                          </Link>
+                          {this.adminSettings()}
+                          <Link to={""} onClick={this.logout}>
+                            <li className='dropdown-item'>Logout</li>
+                          </Link>
+                        </ul>
+                      </li>
+                    </ul>
+                  </div>
                 </form>
               </div>
             </nav>
