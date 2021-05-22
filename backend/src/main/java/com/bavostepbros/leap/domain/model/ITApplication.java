@@ -25,7 +25,7 @@ public class ITApplication {
     @GeneratedValue
     @EqualsAndHashCode.Include
     @Column(name = "ITAPPLICATIONID")
-    private long id;
+    private Integer itApplicationId;
 
     @OneToOne
     @JoinColumn
@@ -33,38 +33,55 @@ public class ITApplication {
 
     @Column(name = "NAME")
     private String name;
+    
     @Column(name = "TECHNOLOGY")
     private String technology;
+    
     @Column(name = "VERSION")
     private String version;
+    
     @Column(name = "PURCHASEDATE")
     private LocalDate purchaseDate;
+    
     @Column(name = "ENDOFLIFE")
     private LocalDate endOfLife;
+    
     @Column(name = "CURRENTSCALABLITY")
     private Integer currentScalability;
+    
     @Column(name = "EXPECTEDSCALABILITY")
     private Integer expectedScalability;
+    
     @Column(name = "CURRENTPERFORMANCE")
     private Integer currentPerformance;
+    
     @Column(name = "EXPECTEDPERFORMANCE")
     private Integer expectedPerformance;
+    
     @Column(name = "CURRENTSECURITYLEVEL")
     private Integer currentSecurityLevel;
+    
     @Column(name = "EXPECTEDSECURITYLEVEL")
     private Integer expectedSecurityLevel;
+    
     @Column(name = "CURRENTSTABILITY")
     private Integer currentStability;
+    
     @Column(name = "EXPECTEDSTABILITY")
     private Integer expectedStability;
+    
     @Column(name = "COSTCURRENCY")
     private String costCurrency;
+    
     @Column(name = "CURRENTVALUE")
     private String currentValue;
+    
     @Column(name = "CURRENTYEARLYCOST")
     private Double currentYearlyCost;
+    
     @Column(name = "TIMEVALUE")
     private LocalDate timeValue;
+    
 
     public ITApplication(Status status, String name, String technology, String version, LocalDate purchaseDate,
                          LocalDate endOfLife, Integer currentScalability, Integer expectedScalability,
@@ -118,7 +135,7 @@ public class ITApplication {
     @Override
     public String toString() {
         return "ITApplication{" +
-                "id=" + id +
+                "id=" + itApplicationId +
                 ", status=" + status +
                 ", applicationName='" + name + '\'' +
                 ", version='" + version + '\'' +

@@ -37,7 +37,7 @@ public class ITApplicationServiceImpl implements ITApplicationService {
         return itApplicationDAL.save(itApplication);
     }
 
-    public ITApplication get(long itapplicationID) {
+    public ITApplication get(Integer itapplicationID) {
         try {
             return itApplicationDAL.findById(itapplicationID).get();
         } catch (Exception e) {
@@ -67,10 +67,10 @@ public class ITApplicationServiceImpl implements ITApplicationService {
     }
 
     @Override
-    public ITApplication update(long id, Integer statusID, String name, String technology, String version, LocalDate purchaseDate, LocalDate endOfLife, Integer currentScalability, Integer expectedScalability, Integer currentPerformance, Integer expectedPerformance, Integer currentSecurityLevel, Integer expectedSecurityLevel, Integer currentStability, Integer expectedStability, String costCurrency, String currentValue, Double currentYearlyCost, LocalDate timeValue) {
+    public ITApplication update(Integer id, Integer statusID, String name, String technology, String version, LocalDate purchaseDate, LocalDate endOfLife, Integer currentScalability, Integer expectedScalability, Integer currentPerformance, Integer expectedPerformance, Integer currentSecurityLevel, Integer expectedSecurityLevel, Integer currentStability, Integer expectedStability, String costCurrency, String currentValue, Double currentYearlyCost, LocalDate timeValue) {
         try {
             ITApplication itApplication = new ITApplication(statusService.get(statusID), name, technology, version, purchaseDate, endOfLife, currentScalability, expectedScalability, currentPerformance, expectedPerformance, currentSecurityLevel, expectedSecurityLevel, currentStability, expectedStability, costCurrency, currentValue, currentYearlyCost, timeValue);
-            itApplication.setId(id);
+            itApplication.setItApplicationId(id);
             return itApplicationDAL.save(itApplication);
         } catch (Exception e) {
             e.printStackTrace();
@@ -79,7 +79,7 @@ public class ITApplicationServiceImpl implements ITApplicationService {
     }
 
     @Override
-    public void delete(long id){
+    public void delete(Integer id){
         try {
             itApplicationDAL.deleteById(id);
         } catch (Exception e) {
@@ -87,7 +87,7 @@ public class ITApplicationServiceImpl implements ITApplicationService {
         }
     }
 
-    public boolean existsById(long id) {
+    public boolean existsById(Integer id) {
         return itApplicationDAL.existsById(id);
     }
 

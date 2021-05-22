@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ITApplicationDAL extends JpaRepository<ITApplication, Long> {
+public interface ITApplicationDAL extends JpaRepository<ITApplication, Integer> {
     List<ITApplication> findByName(String name);
 }

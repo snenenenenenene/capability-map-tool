@@ -51,7 +51,7 @@ public class ITApplicationController {
         long applicationId = itApplicationService.save(statusID, name, technology, version, purchaseDate, endOfLife,
                 currentScalability, expectedScalability, currentPerformance, expectedPerformance, currentSecurityLevel,
                 expectedSecurityLevel, currentsStability, expectedStability, costCurrency, currentValue,
-                currentYearlyCost, timeValue).getId();
+                currentYearlyCost, timeValue).getItApplicationId();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder.path("/get/{id}").buildAndExpand(applicationId).toUri());
@@ -76,7 +76,7 @@ public class ITApplicationController {
 
     @PutMapping(path = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity updateITApplication(
-            @ModelAttribute("id") long id,
+            @ModelAttribute("id") Integer id,
             @ModelAttribute("statusId") Integer statusID,
             @ModelAttribute("name") String name,
             @ModelAttribute("technology") String technology,
