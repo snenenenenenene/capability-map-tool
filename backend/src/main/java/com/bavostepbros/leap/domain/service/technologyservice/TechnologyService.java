@@ -9,5 +9,8 @@ public interface TechnologyService {
 	Technology get(Integer technologyId);
 	Technology update(Integer technologyId, String technologyName);
 	void delete(Integer technologyId);
+	Technology getByTechnologyName(String technologyName);
 	List<Technology> getAll();
+	boolean existsById(Integer technologyId);
+	boolean existsByTechnologyName(String technologyName);
 }

@@ -22,7 +22,7 @@ public class Technology {
 	@Column(name = "TECHNOLOGYID")
 	private Integer technologyId;
 	
-	@Column(name = "TECHNOLOGYNAME")
+	@Column(name = "TECHNOLOGYNAME", unique = true, nullable = false)
 	private String technologyName;
 	
 	public Technology(String technologyName) {
