@@ -94,7 +94,7 @@ class App extends Component {
       return (
         <div className='bg_image'>
           <Toaster />
-          <BrowserRouter basename={process.env.PUBLIC_URL}>
+          <BrowserRouter>
             <nav
               className='navbar navbar-expand-lg navbar-dark sticky-top'
               style={{ backgroundColor: "#ff754f" }}
