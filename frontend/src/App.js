@@ -94,7 +94,7 @@ class App extends Component {
       return (
         <div className='bg_image'>
           <Toaster />
-          <BrowserRouter>
+          <BrowserRouter basename="/React">
             <nav
               className='navbar navbar-expand-lg navbar-dark sticky-top'
               style={{ backgroundColor: "#ff754f" }}
