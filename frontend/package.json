@@ -1,6 +1,6 @@
 {
   "name": "leap-frontend",
-  "homepage": "https://groep-5.project.ap.be/",
+  "homepage": ".",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
