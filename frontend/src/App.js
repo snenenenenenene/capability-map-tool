@@ -94,7 +94,7 @@ class App extends Component {
       return (
         <div className='bg_image'>
           <Toaster />
-          <BrowserRouter basename='/app'>
+          <BrowserRouter basename={process.env.PUBLIC_URL}>
             <nav
               className='navbar navbar-expand-lg navbar-dark sticky-top'
               style={{ backgroundColor: "#ff754f" }}
@@ -157,7 +157,7 @@ class App extends Component {
               <Switch>
                 {/* ROOT */}
                 <Route exact path='/home' component={Home} />
-                {/* <Route exact path='/' component={Home} /> */}
+                <Route exact path='/' component={Home} />
                 {/* ENVIRONMENTS */}
                 <Route exact path='/add' component={NewEnvironment} />
                 <Route
