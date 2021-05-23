@@ -74,9 +74,7 @@ public class EnvironmentServiceImpl implements EnvironmentService {
 
     @Override
     public List<Environment> getAll() {
-        List<Environment> environments = new ArrayList<Environment>();
-        environments = environmentDAL.findAll();
-        return environments;
+        return environmentDAL.findAll();
     }
 
     @Override

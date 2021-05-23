@@ -5,14 +5,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
@@ -33,9 +37,6 @@ public class ITApplication {
 
     @Column(name = "NAME")
     private String name;
-    
-    @Column(name = "TECHNOLOGY")
-    private String technology;
     
     @Column(name = "VERSION")
     private String version;
@@ -82,55 +83,83 @@ public class ITApplication {
     @Column(name = "TIMEVALUE")
     private LocalDate timeValue;
     
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "ITAPPLICATION_TECHNOLOGY", 
+    	joinColumns = {@JoinColumn(name = "ITAPPLICATIONID")}, 
+    	inverseJoinColumns = {@JoinColumn(name = "TECHNOLOGYID")})
+    private List<Technology> technologies;
+    
+    public ITApplication(Integer itApplicationId, Status status, String name, String version, LocalDate purchaseDate,
+			LocalDate endOfLife, Integer currentScalability, Integer expectedScalability, Integer currentPerformance,
+			Integer expectedPerformance, Integer currentSecurityLevel, Integer expectedSecurityLevel,
+			Integer currentStability, Integer expectedStability, String costCurrency, String currentValue,
+			Double currentYearlyCost, LocalDate timeValue) {
+    	this.itApplicationId = itApplicationId;
+		this.status = status;
+		this.name = name;
+		this.version = version;
+		this.purchaseDate = purchaseDate;
+		this.endOfLife = endOfLife;
+		this.currentScalability = currentScalability;
+		this.expectedScalability = expectedScalability;
+		this.currentPerformance = currentPerformance;
+		this.expectedPerformance = expectedPerformance;
+		this.currentSecurityLevel = currentSecurityLevel;
+		this.expectedSecurityLevel = expectedSecurityLevel;
+		this.currentStability = currentStability;
+		this.expectedStability = expectedStability;
+		this.costCurrency = costCurrency;
+		this.currentValue = currentValue;
+		this.currentYearlyCost = currentYearlyCost;
+		this.timeValue = timeValue;
+	}
 
-    public ITApplication(Status status, String name, String technology, String version, LocalDate purchaseDate,
-                         LocalDate endOfLife, Integer currentScalability, Integer expectedScalability,
-                         Integer currentPerformance, Integer expectedPerformance, Integer currentSecurityLevel,
-                         Integer expectedSecurityLevel, Integer currentStability, Integer expectedStability,
-                         String costCurrency, String currentValue, Double currentYearlyCost, LocalDate timeValue) {
-        this.status = status;
-        this.name = name;
-        this.technology = technology;
-        this.version = version;
-        this.purchaseDate = purchaseDate;
-        this.endOfLife = endOfLife;
-        this.currentScalability = currentScalability;
-        this.expectedScalability = expectedScalability;
-        this.currentPerformance = currentPerformance;
-        this.expectedPerformance = expectedPerformance;
-        this.currentSecurityLevel = currentSecurityLevel;
-        this.expectedSecurityLevel = expectedSecurityLevel;
-        this.currentStability = currentStability;
-        this.expectedStability = expectedStability;
-        this.costCurrency = costCurrency;
-        this.currentValue = currentValue;
-        this.currentYearlyCost = currentYearlyCost;
-        this.timeValue = timeValue;
-    }
+	public ITApplication(Status status, String name, String version, LocalDate purchaseDate,
+			LocalDate endOfLife, Integer currentScalability, Integer expectedScalability, Integer currentPerformance,
+			Integer expectedPerformance, Integer currentSecurityLevel, Integer expectedSecurityLevel,
+			Integer currentStability, Integer expectedStability, String costCurrency, String currentValue,
+			Double currentYearlyCost, LocalDate timeValue) {
+		this.status = status;
+		this.name = name;
+		this.version = version;
+		this.purchaseDate = purchaseDate;
+		this.endOfLife = endOfLife;
+		this.currentScalability = currentScalability;
+		this.expectedScalability = expectedScalability;
+		this.currentPerformance = currentPerformance;
+		this.expectedPerformance = expectedPerformance;
+		this.currentSecurityLevel = currentSecurityLevel;
+		this.expectedSecurityLevel = expectedSecurityLevel;
+		this.currentStability = currentStability;
+		this.expectedStability = expectedStability;
+		this.costCurrency = costCurrency;
+		this.currentValue = currentValue;
+		this.currentYearlyCost = currentYearlyCost;
+		this.timeValue = timeValue;
+	}
 
-    public ITApplication(String name, String technology, String version, LocalDate purchaseDate, LocalDate endOfLife,
-                         Integer currentScalability, Integer expectedScalability, Integer currentPerformance,
-                         Integer expectedPerformance, Integer currentSecurityLevel, Integer expectedSecurityLevel,
-                         Integer currentStability, Integer expectedStability, String costCurrency, String currentValue,
-                         Double currentYearlyCost, LocalDate timeValue) {
-        this.name = name;
-        this.technology = technology;
-        this.version = version;
-        this.purchaseDate = purchaseDate;
-        this.endOfLife = endOfLife;
-        this.currentScalability = currentScalability;
-        this.expectedScalability = expectedScalability;
-        this.currentPerformance = currentPerformance;
-        this.expectedPerformance = expectedPerformance;
-        this.currentSecurityLevel = currentSecurityLevel;
-        this.expectedSecurityLevel = expectedSecurityLevel;
-        this.currentStability = currentStability;
-        this.expectedStability = expectedStability;
-        this.costCurrency = costCurrency;
-        this.currentValue = currentValue;
-        this.currentYearlyCost = currentYearlyCost;
-        this.timeValue = timeValue;
-    }
+	public ITApplication(String name, String version, LocalDate purchaseDate, LocalDate endOfLife,
+			Integer currentScalability, Integer expectedScalability, Integer currentPerformance,
+			Integer expectedPerformance, Integer currentSecurityLevel, Integer expectedSecurityLevel,
+			Integer currentStability, Integer expectedStability, String costCurrency, String currentValue,
+			Double currentYearlyCost, LocalDate timeValue) {
+		this.name = name;
+		this.version = version;
+		this.purchaseDate = purchaseDate;
+		this.endOfLife = endOfLife;
+		this.currentScalability = currentScalability;
+		this.expectedScalability = expectedScalability;
+		this.currentPerformance = currentPerformance;
+		this.expectedPerformance = expectedPerformance;
+		this.currentSecurityLevel = currentSecurityLevel;
+		this.expectedSecurityLevel = expectedSecurityLevel;
+		this.currentStability = currentStability;
+		this.expectedStability = expectedStability;
+		this.costCurrency = costCurrency;
+		this.currentValue = currentValue;
+		this.currentYearlyCost = currentYearlyCost;
+		this.timeValue = timeValue;
+	}
 
     @Override
     public String toString() {

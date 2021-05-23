@@ -30,7 +30,6 @@ public class ITApplicationController {
     public ResponseEntity<Void> addITApplication(
             @ModelAttribute("statusId") Integer statusID,
             @ModelAttribute("name") String name,
-            @ModelAttribute("technology") String technology,
             @ModelAttribute("version") String version,
             @ModelAttribute("purchaseDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate purchaseDate,
             @ModelAttribute("endOfLife") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endOfLife,
@@ -48,7 +47,7 @@ public class ITApplicationController {
             @ModelAttribute("timeValue") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeValue,
             UriComponentsBuilder builder) {
         if(itApplicationService.existsByName(name)) throw new DuplicateValueException("An application already exists with this name.");
-        long applicationId = itApplicationService.save(statusID, name, technology, version, purchaseDate, endOfLife,
+        long applicationId = itApplicationService.save(statusID, name, version, purchaseDate, endOfLife,
                 currentScalability, expectedScalability, currentPerformance, expectedPerformance, currentSecurityLevel,
                 expectedSecurityLevel, currentsStability, expectedStability, costCurrency, currentValue,
                 currentYearlyCost, timeValue).getItApplicationId();
@@ -64,10 +63,12 @@ public class ITApplicationController {
         return new ResponseEntity<ITApplication>(itApplicationService.get(id), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/{name}")
-    public ResponseEntity<List<ITApplication>> getITApplicationByName(@RequestParam String name){
-        return new ResponseEntity<List<ITApplication>>(itApplicationService.get(name), HttpStatus.OK);
-    }
+	/*
+	 * @GetMapping(path = "/{name}") public ResponseEntity<List<ITApplication>>
+	 * getITApplicationByName(@RequestParam String name){ return new
+	 * ResponseEntity<List<ITApplication>>(itApplicationService.get(name),
+	 * HttpStatus.OK); }
+	 */
 
     @GetMapping(path = "/all")
     public ResponseEntity<List<ITApplication>> getAllITApplications(){
@@ -79,7 +80,6 @@ public class ITApplicationController {
             @ModelAttribute("id") Integer id,
             @ModelAttribute("statusId") Integer statusID,
             @ModelAttribute("name") String name,
-            @ModelAttribute("technology") String technology,
             @ModelAttribute("version") String version,
             @ModelAttribute("purchaseDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate purchaseDate,
             @ModelAttribute("endOfLife") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endOfLife,
@@ -95,7 +95,7 @@ public class ITApplicationController {
             @ModelAttribute("currentValue") String currentValue,
             @ModelAttribute("currentYearlyCost") Double currentYearlyCost,
             @ModelAttribute("timeValue") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeValue) {
-        ITApplication updatedITApplication = itApplicationService.update(id, statusID, name, technology, version, purchaseDate, endOfLife,
+        ITApplication updatedITApplication = itApplicationService.update(id, statusID, name, version, purchaseDate, endOfLife,
                 currentScalability, expectedScalability, currentPerformance, expectedPerformance, currentSecurityLevel,
                 expectedSecurityLevel, currentsStability, expectedStability, costCurrency,
                 currentValue, currentYearlyCost, timeValue);

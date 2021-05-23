@@ -1,11 +1,13 @@
 package com.bavostepbros.leap.domain.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +16,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Technology {
 	
 	@Id
@@ -22,10 +23,18 @@ public class Technology {
 	@Column(name = "TECHNOLOGYID")
 	private Integer technologyId;
 	
-	@Column(name = "TECHNOLOGYNAME", unique = true, nullable = false)
+	@Column(name = "TECHNOLOGYNAME", unique = true)
 	private String technologyName;
 	
+	@ManyToMany(mappedBy = "technologies")
+	private List<ITApplication> itApplications;
+		
 	public Technology(String technologyName) {
+		this.technologyName = technologyName;
+	}
+	
+	public Technology(Integer technologyId, String technologyName) {
+		this.technologyId = technologyId;
 		this.technologyName = technologyName;
 	}
 }

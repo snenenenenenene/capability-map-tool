@@ -64,7 +64,7 @@ public class TechnologyServiceImpl implements TechnologyService {
 		}
 		Technology oldTechnology = technologyDAL.findById(technologyId).get();
 		if (technologyName != oldTechnology.getTechnologyName() && existsByTechnologyName(technologyName)) {
-			throw new TechnologyException("Environment name already exists.");
+			throw new TechnologyException("Technology name already exists.");
 		}
 		
 		Technology technology = new Technology(technologyId, technologyName);
@@ -84,7 +84,7 @@ public class TechnologyServiceImpl implements TechnologyService {
 		}
 		
 		Optional<Technology> technology = technologyDAL.findByTechnologyName(technologyName);
-		technology.orElseThrow(() -> new NullPointerException("Environment does not exist."));
+		technology.orElseThrow(() -> new NullPointerException("Technology does not exist."));
 		return technology.get();
 	}
 
