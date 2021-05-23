@@ -1,7 +1,7 @@
 {
   "name": "leap-frontend",
   "version": "0.1.0",
-  "homepage": ".",
+  "homepage": "https://groep-5.project.ap.be/home",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.3",
