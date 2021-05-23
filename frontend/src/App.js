@@ -157,7 +157,7 @@ class App extends Component {
               <Switch>
                 {/* ROOT */}
                 <Route exact path='/home' component={Home} />
-                <Route exact path='/' component={Home} />
+                {/* <Route exact path='/' component={Home} /> */}
                 {/* ENVIRONMENTS */}
                 <Route exact path='/add' component={NewEnvironment} />
                 <Route
