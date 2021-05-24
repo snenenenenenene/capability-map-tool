@@ -8,7 +8,7 @@ import AddCapability from "./Components/Add/AddCapability";
 import "./App.css";
 import Signup from "./auth/Login";
 import LeapImg from "./img/LEAP logo.png";
-import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Link, HashRouter } from "react-router-dom";
 import AddResource from "./Components/Add/AddResource";
 import AddStrategy from "./Components/Add/AddStrategy";
 import AddBusinessProcess from "./Components/Add/AddBusinessProcess";
@@ -90,9 +90,12 @@ class App extends Component {
   }
 
   render() {
-    <BrowserRouter>
+
+    return (
+    <HashRouter>
           <Route path='/' component={Signup} />
-        </BrowserRouter>
+        </HashRouter>
+    )
   }
 }
 
