@@ -333,6 +333,11 @@ class App extends Component {
                   <Route component={NotFoundPage} />
                 </Switch>
               </div>
+              <nav class="shadow-lg navbar fixed-bottom navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Fixed bottom</a>
+  </div>
+</nav>
           </div>
         );
       } else {
