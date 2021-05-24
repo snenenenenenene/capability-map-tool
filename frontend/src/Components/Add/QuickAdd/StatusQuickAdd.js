@@ -19,7 +19,7 @@ export default class AddStatus extends Component {
         e.preventDefault();
         const formData = new FormData()
         formData.append('validityPeriod', this.state.validityPeriod)
-        await axios.post(`http://localhost:8080/api/status/`,formData)
+        await axios.post(`${process.env.REACT_APP_API_URL}/status/`,formData)
         .then(response => {
             toast.success("Added Status")
             this.props.updateDate()
@@ -31,7 +31,7 @@ export default class AddStatus extends Component {
     }
 
     async componentDidMount() {
-        await axios.get(`http://localhost:8080/api/status/`)
+        await axios.get(`${process.env.REACT_APP_API_URL}/status/`)
         .then(response => this.setState({statuses: response.data}))
     }
 

@@ -39,7 +39,6 @@ import Resource from "./Components/General/Resource";
 import EditStrategyItem from "./Components/Edit/EditStrategyItem";
 import EditProgram from "./Components/Edit/EditProgram";
 import Program from "./Components/General/Program";
-import Admin from "./Components/Admin";
 import toast, { Toaster } from "react-hot-toast";
 import AddUser from "./Components/AddUser";
 import ChoosePassword from "./auth/ConfigurePassword";
@@ -328,7 +327,6 @@ class App extends Component {
                     path='/choosePassword'
                     component={ChoosePassword}
                   />
-                  <Route exact path='/admin' component={Admin} />
                   {/* ERRORS */}
                   <Route exact path='/error' component={GeneralError} />
                   <Route exact path='/notfound' component={NotFoundError} />
