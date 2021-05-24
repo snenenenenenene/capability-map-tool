@@ -31,4 +31,6 @@ public interface ITApplicationService {
 	List<ITApplication> getAll();
 
 	List<String> getAllCurrencies();
+	
+	void addTechnology(Integer itApplicationId, Integer technologyId);
 }

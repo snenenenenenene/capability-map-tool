@@ -16,7 +16,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -89,11 +90,11 @@ public class ITApplication {
     @Column(name = "TIMEVALUE")
     private LocalDate timeValue;
     
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "ITAPPLICATION_TECHNOLOGY", 
     	joinColumns = {@JoinColumn(name = "ITAPPLICATIONID")}, 
     	inverseJoinColumns = {@JoinColumn(name = "TECHNOLOGYID")})
-    private List<Technology> technologies;
+    private Set<Technology> technologies = new HashSet<Technology>();
     
     public ITApplication(Integer itApplicationId, Status status, String name, String version, LocalDate purchaseDate,
 			LocalDate endOfLife, Integer currentScalability, Integer expectedScalability, Integer currentPerformance,
@@ -147,6 +148,11 @@ public class ITApplication {
 		this.acceptedYearlyCost = acceptedYearlyCost;
 		this.timeValue = timeValue;
 	}
+	
+	public void addTechnology(Technology technology) {
+    	technologies.add(technology);
+    	return;
+    }
 
 	@Override
 	public String toString() {

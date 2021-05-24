@@ -6,7 +6,9 @@ import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
 import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
 import com.bavostepbros.leap.domain.model.ITApplication;
 import com.bavostepbros.leap.domain.model.Status;
+import com.bavostepbros.leap.domain.model.Technology;
 import com.bavostepbros.leap.domain.service.statusservice.StatusService;
+import com.bavostepbros.leap.domain.service.technologyservice.TechnologyService;
 import com.bavostepbros.leap.persistence.ITApplicationDAL;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,9 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 
 	@Autowired
 	private StatusService statusService;
+	
+	@Autowired
+	private TechnologyService technologyService;
 
 	@Override
 	public ITApplication save(Integer statusId, String name, String version, LocalDate purchaseDate,
@@ -134,6 +139,14 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 				.map(currency -> currency.getCurrencyCode())
 				.collect(Collectors.toList());
 		return currencies;
+	}
+
+	@Override
+	public void addTechnology(Integer itApplicationId, Integer technologyId) {
+		ITApplication itApplication = get(itApplicationId);
+		Technology technology = technologyService.get(technologyId);
+		itApplication.getTechnologies().add(technology);
+		return;
 	}
 
 }
