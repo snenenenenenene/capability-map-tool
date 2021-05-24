@@ -4,10 +4,9 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { Modal } from "react-bootstrap";
 import ConfigurePassword from "./ConfigurePassword";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
 import "./Login.css";
 import * as sha1 from "js-sha1";
+import 'bootstrap/dist/css/bootstrap.min.css';
 // import * as bcrypt from "bcrypt";
 
 export default class Login extends Component {
@@ -99,10 +98,9 @@ export default class Login extends Component {
 
   render() {
     return (
-      <div className='container'>
+      <div className='container text-center jumbotron shadow-lg' style={{height : 100 + "vh", width: 100 + "%", backgroundColor:"#888888"}} >
         <Toaster />
-        <pre>{this.state.response}</pre>
-        <div className='Login'>
+        <div className='Login text-center'>
           <img
             alt='leap'
             className='rounded mx-auto d-block'
@@ -112,42 +110,42 @@ export default class Login extends Component {
           />
           <br></br>
           {/* <div className='jumbotron'> */}
-          <Form onSubmit={this.authenticateUser}>
-            <Form.Group>
-              <Form.Control
+          <form onSubmit={this.authenticateUser}>
+            <div className="form-group">
+              <input
                 type='text'
-                size='lg'
                 id='inputEmail'
                 placeholder='Email address'
                 required
                 autoFocus
                 name='email'
+                className="form-control form-control-lg"
                 value={this.state.email}
                 onChange={this.handleInputChange}
               />
-            </Form.Group>
-            <Form.Group className='form-group'>
-              <Form.Control
+            </div>
+            <div className='form-group'>
+              <input
                 size='lg'
                 type='password'
                 id='inputPassword'
                 placeholder='Password'
                 required
                 name='password'
+                className="form-control form-control-lg"
                 value={this.state.password}
                 onChange={this.handleInputChange}
               />
-            </Form.Group>
-            <Button
-              block
-              // size='lg'
+            </div>
+            <button
               style={{ height: 40 }}
+              className="btn btn-primary"
               onClick={this.authenticateUser}
               type='submit'
             >
               LOGIN
-            </Button>
-          </Form>
+            </button>
+          </form>
           {/* </div> */}
         </div>
         <Modal show={this.state.showModal}>

@@ -1,3 +1,4 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { Component } from "react";
 import Home from "./Components/Home";
 import Environment from "./Components/Environment";
@@ -5,7 +6,6 @@ import NewEnvironment from "./Components/NewEnvironment";
 import User from "./Components/User";
 import RecentEnvironments from "./Components/RecentEnvironments";
 import AddCapability from "./Components/Add/AddCapability";
-import "bootstrap/bootstrap.css"
 import "./App.css";
 import Signup from "./auth/Login";
 import LeapImg from "./img/LEAP logo.png";
