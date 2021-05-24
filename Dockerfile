@@ -3,8 +3,10 @@
 FROM busybox as frontend-docker
 FROM node:12.4.0-alpine as build
 WORKDIR /frontend
-COPY frontend/* ./
+
+COPY frontend/package.json ./package.json
 RUN npm install
+COPY frontend/* ./
 RUN npm run build
 
 ### STAGE 2 - BACKEND
