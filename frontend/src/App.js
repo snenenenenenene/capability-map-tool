@@ -81,7 +81,7 @@ class App extends Component {
 
     if (this.state.user.roleId === 2) {
       return (
-        <Link to='/admin'>
+        <Link to='/user'>
           <li className='dropdown-item'>User List</li>
         </Link>
       );
