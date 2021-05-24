@@ -98,7 +98,7 @@ export default class Login extends Component {
 
   render() {
     return (
-      <div className='container text-center jumbotron shadow-lg' style={{height : 100 + "vh", width: 100 + "%", backgroundColor:"#888888"}} >
+      <div className='container text-center jumbotron linear-jumbotron shadow-lg' style={{marginBottom: 1 + "%", marginTop: 1.5 + "%",height : 95 + "%", width: 100 + "%"}} >
         <Toaster />
         <div className='Login text-center'>
           <img
@@ -109,22 +109,17 @@ export default class Login extends Component {
             height='88'
           />
           <br></br>
-          <p>Welcome to LEAP! Enter your login credentials to get started!</p>
-          <p>If you don't have an account, ask one of the admins to make you one.</p>
-          <p style={{color: "green"}}>email: admin</p>
-          <p style={{color: "green"}}>password: admin</p>
-          <br></br>
           {/* <div className='jumbotron'> */}
           <form onSubmit={this.authenticateUser}>
             <div className="form-group">
               <input
                 type='text'
                 id='inputEmail'
-                placeholder='Email address'
+                placeholder='Email address (admin)'
                 required
                 autoFocus
                 name='email'
-                className="form-control form-control-lg"
+                className="form-control form-control-lg text-center"
                 value={this.state.email}
                 onChange={this.handleInputChange}
               />
@@ -134,10 +129,10 @@ export default class Login extends Component {
                 size='lg'
                 type='password'
                 id='inputPassword'
-                placeholder='Password'
+                placeholder='Password (admin)'
                 required
                 name='password'
-                className="form-control form-control-lg"
+                className="form-control form-control-lg text-center"
                 value={this.state.password}
                 onChange={this.handleInputChange}
               />

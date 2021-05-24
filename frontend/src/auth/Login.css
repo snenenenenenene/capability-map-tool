@@ -1,6 +1,6 @@
-@media all and (min-width: 480px) {
+@media all and (min-width: 280px) {
   .Login {
-    padding: 60px 0;
+    padding: 30px 0;
     justify-content: center;
     align-items: center;
   }
@@ -11,9 +11,20 @@
     justify-content: center;
     align-items: center;
   }
+
+  .Login p {
+    color: white;
+  }
+}
+
+.linear-jumbotron {
+  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.89), rgb(0, 0, 0));
+  border-style: solid;
+  border-color: rgb(255, 115, 0);
+  border-width: 5px;
 }
 
 html body {
-  min-height: 100vh;
+  min-height: 100%;
   /* background-image: linear-gradient(to bottom right, red, #aeaeff); */
 }
