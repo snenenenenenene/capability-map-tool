@@ -92,9 +92,10 @@ class App extends Component {
   render() {
 
     return (
-    <HashRouter>
-          <Route path='/' component={Signup} />
-        </HashRouter>
+      <p>test</p>
+    // <HashRouter>
+    //       <Route path='/' component={Signup} />
+    //     </HashRouter>
     )
   }
 }
