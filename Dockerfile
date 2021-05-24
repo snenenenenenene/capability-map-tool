@@ -7,8 +7,8 @@ WORKDIR /frontend
 # copy contents of frontend dir. For react or angular run npm build or equivalent
 
 COPY frontend/* ./
-RUN npm run build
 RUN npm install
+RUN npm run build
 
 ### STAGE 2 - BACKEND
 #Build backend
