@@ -90,13 +90,257 @@ class App extends Component {
   }
 
   render() {
-
-    return (
-      <Signup/>
-    // <HashRouter>
-    //       <Route path='/' component={Signup} />
-    //     </HashRouter>
-    )
+      if (this.state.authenticated === true) {
+        return (
+          <div className='bg_image'>
+            <Toaster />
+              <nav
+                className='navbar navbar-expand-lg navbar-dark sticky-top'
+                style={{ backgroundColor: "#ff754f" }}
+              >
+                <button
+                  className='navbar-toggler'
+                  type='button'
+                  data-toggle='collapse'
+                  data-target='#navbarTogglerDemo01'
+                  aria-controls='navbarTogglerDemo01'
+                  aria-expanded='false'
+                  aria-label='Toggle navigation'
+                >
+                  <span className='navbar-toggler-icon'></span>
+                </button>
+                <div
+                  className='collapse navbar-collapse'
+                  id='navbarTogglerDemo01'
+                >
+                  <Link to={"/home"} className='navbar-brand'>
+                    <img alt='leap' src={LeapImg} width='80' height='22' />
+                  </Link>
+                  <ul className='navbar-nav mr-auto mt-2 mt-lg-0'></ul>
+                  <form className='form-inline my-2 my-lg-0'>
+                    <div
+                      className='collapse navbar-collapse'
+                      id='navbarNavDarkDropdown'
+                    >
+                      <ul className='navbar-nav'>
+                        <li className='nav-item dropdown'>
+                          <li
+                            style={{ color: "#fff" }}
+                            href='#'
+                            id='navbarDarkDropdownMenuLink'
+                            role='button'
+                            data-bs-toggle='dropdown'
+                            aria-expanded='false'
+                          >
+                            {this.state.user.username}
+                          </li>
+                          <ul
+                            className='dropdown-menu dropdown-menu-right dropdown-menu-dark'
+                            aria-labelledby='navbarDarkDropdownMenuLink'
+                          >
+                            <Link to='/settings'>
+                              <li className='dropdown-item'>Settings</li>
+                            </Link>
+                            {this.adminSettings()}
+                            <Link to={""} onClick={this.logout}>
+                              <li className='dropdown-item'>Logout</li>
+                            </Link>
+                          </ul>
+                        </li>
+                      </ul>
+                    </div>
+                  </form>
+                </div>
+              </nav>
+              <div className='container'>
+                <Switch>
+                  {/* ROOT */}
+                  <Route exact path='/home' component={Home} />
+                  {/* <Route exact path='/' component={Home} /> */}
+                  {/* ENVIRONMENTS */}
+                  <Route exact path='/add' component={NewEnvironment} />
+                  <Route
+                    exact
+                    path='/environment/:name'
+                    component={Environment}
+                  />
+                  <Route exact path='/recent' component={RecentEnvironments} />
+                  {/* CAPABILITIES */}
+                  <Route
+                    exact
+                    path='/environment/:name/capability/add'
+                    component={AddCapability}
+                  />
+                  <Route
+                    exact
+                    path='/environment/:name/capability/:id'
+                    component={EditCapability}
+                  />
+                  <Route
+                    exact
+                    path='/environment/:name/capability'
+                    component={Capability}
+                  />
+                  {/* STRATEGIES */}
+                  <Route
+                    exact
+                    path='/environment/:name/strategy/add'
+                    component={AddStrategy}
+                  />
+                  <Route
+                    exact
+                    path='/environment/:name/strategy/:id'
+                    component={EditStrategy}
+                  />
+                  <Route
+                    exact
+                    path='/environment/:name/strategy'
+                    component={Strategy}
+                  />
+  
+                  {/* RESOURCES */}
+                  <Route
+                    exact
+                    path='/environment/:name/resource/add'
+                    component={AddResource}
+                  />
+                  <Route
+                    exact
+                    path='/environment/:name/resource/:id'
+                    component={EditResource}
+                  />
+                  <Route
+                    exact
+                    path='/environment/:name/resource'
+                    component={Resource}
+                  />
+  
+                  {/* ITAPPLICATIONS */}
+                  <Route
+                    exact
+                    path='/environment/:name/itapplication/add'
+                    component={AddITApplication}
+                  />
+                  <Route
+                    exact
+                    path='/environment/:name/itapplication/:id'
+                    component={EditITApplication}
+                  />
+                  <Route
+                    exact
+                    path='/environment/:name/itapplication'
+                    component={ITApplication}
+                  />
+                  {/* BUSSINESSPROCESSES */}
+                  <Route
+                    exact
+                    path='/environment/:name/businessprocess/add'
+                    component={AddBusinessProcess}
+                  />
+                  <Route
+                    exact
+                    path='/environment/:name/businessprocess/:id'
+                    component={EditBusinessProcess}
+                  />
+                  <Route
+                    exact
+                    path='/environment/:name/businessprocess'
+                    component={BusinessProcess}
+                  />
+                  {/* STATUSES */}
+                  <Route
+                    exact
+                    path='/environment/:name/status/add'
+                    component={AddStatus}
+                  />
+                  <Route
+                    exact
+                    path='/environment/:name/status/:id'
+                    component={EditStatus}
+                  />
+                  <Route
+                    exact
+                    path='/environment/:name/status'
+                    component={Status}
+                  />
+                  {/* PROJECTS */}
+                  <Route
+                    exact
+                    path='/environment/:name/project/add'
+                    component={AddProject}
+                  />
+                  <Route
+                    exact
+                    path='/environment/:name/project/:id'
+                    component={EditProject}
+                  />
+                  <Route
+                    exact
+                    path='/environment/:name/project'
+                    component={Project}
+                  />
+                  {/* STRATEGYITEMS */}
+                  <Route
+                    exact
+                    path='/environment/:name/strategyitem/add'
+                    component={AddStrategyItem}
+                  />
+                  <Route
+                    exact
+                    path='/environment/:name/strategyitem/:id'
+                    component={EditStrategyItem}
+                  />
+                  <Route
+                    exact
+                    path='/environment/:name/strategyitem'
+                    component={StrategyItem}
+                  />
+  
+                  {/* PROGRAMS */}
+                  <Route
+                    exact
+                    path='/environment/:name/program/add'
+                    component={AddProgram}
+                  />
+                  <Route
+                    exact
+                    path='/environment/:name/program/:id'
+                    component={EditProgram}
+                  />
+                  <Route
+                    exact
+                    path='/environment/:name/program'
+                    component={Program}
+                  />
+  
+                  {/* USERS */}
+                  <Route exact path='/login' component={Signup} />
+                  <Route
+                    exact
+                    path='/configurePassword'
+                    component={ConfigurePassword}
+                  />
+                  <Route exact path='/user' component={User} />
+                  <Route exact path='/user/add' component={AddUser} />
+                  <Route
+                    exact
+                    path='/choosePassword'
+                    component={ChoosePassword}
+                  />
+                  <Route exact path='/admin' component={Admin} />
+                  {/* ERRORS */}
+                  <Route exact path='/error' component={GeneralError} />
+                  <Route exact path='/notfound' component={NotFoundError} />
+                  <Route component={NotFoundPage} />
+                </Switch>
+              </div>
+          </div>
+        );
+      } else {
+        return (
+            <Route path='*' component={Signup} />
+        );
+      }
   }
 }
 
