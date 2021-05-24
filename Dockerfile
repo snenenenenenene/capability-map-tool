@@ -3,11 +3,8 @@
 FROM busybox as frontend-docker
 FROM node:12.4.0-alpine as build
 WORKDIR /frontend
-ENV PATH /frontend/node_modules/.bin:$PATH
-COPY frontend/package.json /frontend/package.json
-RUN npm install --silent
-RUN npm install react-scripts@3.0.1 -g --silent
-COPY . /frontend
+COPY frontend/* ./
+RUN npm install
 RUN npm run build
 
 ### STAGE 2 - BACKEND
