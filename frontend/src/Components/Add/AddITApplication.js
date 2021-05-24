@@ -19,6 +19,20 @@ export default class AddITApplication extends Component {
       version: "",
       costCurrency: "",
       currentTotalCostPerYear: "",
+            
+      purchaseDate: "",
+          endOfLife: "",
+            currentScalability: "",
+            expectedScalability: "",
+            currentPerformance: "",
+            expectedPerformance: "",
+            currentSecurityLevel: "",
+            expectedSecurityLevel: "",
+            currentsStability: "",
+            expectedStability: "",
+            currentValue: "",
+            currentYearlyCost: "",
+            timeValue: ""
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);

@@ -111,7 +111,8 @@ export default class AddCapability extends Component {
   }
 
   ratingChanged = (newRating) => {
-    console.log(newRating);
+    console.log(newRating)
+    this.setState({resourcesQuality: newRating})
   };
 
   async updateDate() {
@@ -314,39 +315,19 @@ export default class AddCapability extends Component {
                       <option>4</option>
                       <option>5</option>
                     </select>
-                    <ReactStars
-                      count={5}
-                      onChange={this.ratingChanged}
-                      size={24}
-                      color2={"#ffd700"}
-                    />
                   </div>
                 </div>
                 <div className='form-row'>
                   <div className='form-group col-md-12'>
                     <label htmlFor='resourcesQuality'>Resources Quality</label>
-                    <select
-                      id='resourcesQuality'
-                      name='resourcesQuality'
-                      className='form-control'
-                      placeholder='Resources Quality'
+                    <ReactStars
+                      count={5}
+                      onChange={this.ratingChanged}
+                      size={24}
+                      half={false}
+                      color2={"#ffd700"}
                       value={this.state.resourcesQuality}
-                      onChange={this.handleInputChange}
-                    >
-                      <option
-                        key='-1'
-                        defaultValue='selected'
-                        hidden='hidden'
-                        value=''
-                      >
-                        Select Resource Quality
-                      </option>
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                    </select>
+                    />
                   </div>
                 </div>
                 <div className='form-row'>
@@ -373,6 +354,7 @@ export default class AddCapability extends Component {
                         {this.statusListRows()}
                       </select>
                       <button
+                      style={{marginLeft: 3}}
                         type='button'
                         className='btn btn-secondary'
                         onClick={() => this.handleModal()}

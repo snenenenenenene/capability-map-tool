@@ -69,18 +69,15 @@ export default class NewEnvironment extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label='breadcrumb'>
+        <nav aria-label='breadcrumb' className="shadow">
           <ol className='breadcrumb'>
             <li className='breadcrumb-item'>
               <Link to={`/home`}>Home</Link>
             </li>
-            <li className='breadcrumb-item'>
-              <Link to={`/add`}>Add Environment</Link>
-            </li>
           </ol>
         </nav>
-        <div className='jumbotron'>
-          <h1>Add Environment</h1>
+        <div className='jumbotron shadow'>
+          <h1>Dashboard</h1>
           <div className='row'>
             <div className='col-sm-6'>
               <div>
@@ -97,7 +94,7 @@ export default class NewEnvironment extends Component {
                 </table>
               </div>
             </div>
-            <div className='col-sm-6'>
+            <div className='col-sm-'>
               <p>New Environments</p>
               <form className='form-inline' onSubmit={this.handleSubmit}>
                 <Input
@@ -106,6 +103,7 @@ export default class NewEnvironment extends Component {
                   value={this.state.environmentName}
                   onChange={this.handleInputChange}
                   className='form-control'
+                  style={{marginRight: 5}}
                   placeholder='New Environment'
                 />
                 <button

@@ -4,6 +4,26 @@
 
 html {
   min-height: 100%;
+  background-color: #282c34;
+}
+
+html body {
+  min-height: 100%;
+  background-color: #282c34;
+}
+
+div .jumbotron {
+  background-color: #ffffff;
+  border-style: solid;
+  border-color: rgb(255, 115, 0);
+  border-width: 2px;
+}
+
+ol .breadcrum {
+  background-color: #ffffff;
+  border-style: solid;
+  border-color: rgb(255, 115, 0);
+  border-width: 3px;
 }
 
 .App-logo {
@@ -26,6 +46,31 @@ html {
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.breadcrumb a {
+  color: rgb(255, 114, 79);
+}
+
+.breadcrumb a:hover {
+  color: rgb(255, 0, 0);
+  text-decoration: none;
+}
+
+.card:hover {
+  background-color: rgba(255, 186, 130, 0.055);
+  border-style: solid;
+  border-color: rgba(255, 126, 66, 0.486);
+  border-width: 1px;
+}
+
+.card a {
+  color: rgb(255, 130, 99);
+}
+
+.card a:hover {
+  color: rgb(255, 0, 0);
+  text-decoration: none;
 }
 
 .btn-circle.btn-sm {

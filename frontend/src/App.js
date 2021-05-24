@@ -92,10 +92,10 @@ class App extends Component {
   render() {
       if (this.state.authenticated === true) {
         return (
-          <div className='bg_image'>
+          <div>
             <Toaster />
               <nav
-                className='navbar navbar-expand-lg navbar-dark sticky-top'
+                className='navbar navbar-expand-lg navbar-dark sticky-top shadow-lg'
                 style={{ backgroundColor: "#ff754f" }}
               >
                 <button
@@ -155,8 +155,8 @@ class App extends Component {
               <div className='container'>
                 <Switch>
                   {/* ROOT */}
-                  <Route exact path='/home' component={Home} />
-                  <Route exact path='/' component={Home} />
+                  <Route exact path='/home' component={NewEnvironment} />
+                  <Route exact path='/' component={NewEnvironment} />
                   {/* ENVIRONMENTS */}
                   <Route exact path='/add' component={NewEnvironment} />
                   <Route

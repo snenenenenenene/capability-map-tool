@@ -23,8 +23,3 @@
   border-color: rgb(255, 115, 0);
   border-width: 5px;
 }
-
-html body {
-  min-height: 100%;
-  /* background-image: linear-gradient(to bottom right, red, #aeaeff); */
-}
