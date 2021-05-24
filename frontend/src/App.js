@@ -92,7 +92,7 @@ class App extends Component {
   render() {
 
     return (
-      <p>test</p>
+      <Signup/>
     // <HashRouter>
     //       <Route path='/' component={Signup} />
     //     </HashRouter>

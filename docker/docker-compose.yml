@@ -20,7 +20,7 @@ services:
       - DBUSER=${DATABASEUSER}
       - DBPASSWORD=${DATABASEPASSWORD}
       - DBNAME=${DATABASENAME}
-    command: java -Xmx512m -jar /target/accessing-data-mysql-0.0.1-SNAPSHOT.jar
+    command: java -Xmx512m -jar /target/leap-0.0.1-SNAPSHOT.jar
     ports:
       - "8080:8080"
     volumes:
