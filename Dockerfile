@@ -1,10 +1,11 @@
 ### STAGE 1 - FRONTEND
 # Build frontend, for react or angular choose node base image!! See e.g. https://malcoded.com/posts/angular-docker/ 
 FROM busybox as frontend-docker
-
+FROM node:8.11.2-alpine as node
 WORKDIR /frontend
 
 # copy contents of frontend dir. For react or angular run npm build or equivalent
+RUN npm run build
 COPY frontend/* ./
 
 
