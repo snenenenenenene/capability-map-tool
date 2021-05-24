@@ -8,6 +8,7 @@ WORKDIR /frontend
 
 COPY frontend/* ./
 RUN npm run build
+RUN npm install
 
 ### STAGE 2 - BACKEND
 #Build backend
