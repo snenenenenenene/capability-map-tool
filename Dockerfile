@@ -5,9 +5,9 @@ FROM node:8.11.2-alpine as node
 WORKDIR /frontend
 
 # copy contents of frontend dir. For react or angular run npm build or equivalent
-RUN npm run build
-COPY frontend/* ./
 
+COPY frontend/* ./
+RUN npm run build
 
 ### STAGE 2 - BACKEND
 #Build backend
