@@ -30,9 +30,11 @@ public class ITApplicationDto {
 	private Integer expectedSecurityLevel;
 	private Integer currentStability;
 	private Integer expectedStability;
-	private String costCurrency;
-	private String currentValue;
+	private String currencyType;
+	private Double costCurrency;
+	private Double currentValue;
 	private Double currentYearlyCost;
+	private Double acceptedYearlyCost;
 	private LocalDate timeValue;
 	private List<Technology> technologies;
 }

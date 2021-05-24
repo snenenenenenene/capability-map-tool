@@ -43,24 +43,27 @@ public class ITApplicationController {
 			@ModelAttribute("expectedSecurityLevel") Integer expectedSecurityLevel,
 			@ModelAttribute("currentStability") Integer currentsStability,
 			@ModelAttribute("expectedStability") Integer expectedStability,
-			@ModelAttribute("costCurrency") String costCurrency, 
-			@ModelAttribute("currentValue") String currentValue,
+			@ModelAttribute("currencyType") String currencyType,
+			@ModelAttribute("costCurrency") Double costCurrency, 
+			@ModelAttribute("currentValue") Double currentValue,
 			@ModelAttribute("currentYearlyCost") Double currentYearlyCost,
+			@ModelAttribute("acceptedYearlyCost") Double acceptedYearlyCost,
 			@ModelAttribute("timeValue") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeValue) {
 
 		ITApplication itApplication = itApplicationService.save(statusID, name, version, purchaseDate, endOfLife,
 				currentScalability, expectedScalability, currentPerformance, expectedPerformance, currentSecurityLevel,
-				expectedSecurityLevel, currentsStability, expectedStability, costCurrency, currentValue,
-				currentYearlyCost, timeValue);
+				expectedSecurityLevel, currentsStability, expectedStability, currencyType, costCurrency, currentValue,
+				currentYearlyCost, acceptedYearlyCost, timeValue);
 		return new ITApplicationDto(itApplication.getItApplicationId(), itApplication.getStatus(),
 				itApplication.getName(), itApplication.getVersion(), itApplication.getPurchaseDate(),
 				itApplication.getEndOfLife(), itApplication.getCurrentScalability(),
 				itApplication.getExpectedScalability(), itApplication.getCurrentPerformance(),
 				itApplication.getExpectedPerformance(), itApplication.getCurrentSecurityLevel(),
 				itApplication.getExpectedSecurityLevel(), itApplication.getCurrentStability(),
-				itApplication.getExpectedScalability(), itApplication.getCostCurrency(),
-				itApplication.getCurrentValue(), itApplication.getCurrentYearlyCost(), itApplication.getTimeValue(),
-				itApplication.getTechnologies());
+				itApplication.getExpectedStability(), itApplication.getCurrencyType(), 
+				itApplication.getCostCurrency(),itApplication.getCurrentValue(), 
+				itApplication.getCurrentYearlyCost(), itApplication.getAcceptedYearlyCost(), 
+				itApplication.getTimeValue(), itApplication.getTechnologies());
 	}
 
 	@GetMapping(path = "{itApplicationId}")
@@ -72,9 +75,10 @@ public class ITApplicationController {
 				itApplication.getExpectedScalability(), itApplication.getCurrentPerformance(),
 				itApplication.getExpectedPerformance(), itApplication.getCurrentSecurityLevel(),
 				itApplication.getExpectedSecurityLevel(), itApplication.getCurrentStability(),
-				itApplication.getExpectedScalability(), itApplication.getCostCurrency(),
-				itApplication.getCurrentValue(), itApplication.getCurrentYearlyCost(), itApplication.getTimeValue(),
-				itApplication.getTechnologies());
+				itApplication.getExpectedStability(), itApplication.getCurrencyType(), 
+				itApplication.getCostCurrency(),itApplication.getCurrentValue(), 
+				itApplication.getCurrentYearlyCost(), itApplication.getAcceptedYearlyCost(), 
+				itApplication.getTimeValue(), itApplication.getTechnologies());
 	}
 	
 	@PutMapping(path = "{itApplicationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -91,23 +95,27 @@ public class ITApplicationController {
 			@ModelAttribute("expectedSecurityLevel") Integer expectedSecurityLevel,
 			@ModelAttribute("currentStability") Integer currentsStability,
 			@ModelAttribute("expectedStability") Integer expectedStability,
-			@ModelAttribute("costCurrency") String costCurrency, @ModelAttribute("currentValue") String currentValue,
+			@ModelAttribute("currencyType") String currencyType,
+			@ModelAttribute("costCurrency") Double costCurrency, 
+			@ModelAttribute("currentValue") Double currentValue,
 			@ModelAttribute("currentYearlyCost") Double currentYearlyCost,
+			@ModelAttribute("acceptedYearlyCost") Double acceptedYearlyCost,
 			@ModelAttribute("timeValue") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeValue) {
 		
 		ITApplication itApplication = itApplicationService.update(itApplicationId, statusID, name, version, purchaseDate, endOfLife,
 				currentScalability, expectedScalability, currentPerformance, expectedPerformance, currentSecurityLevel,
-				expectedSecurityLevel, currentsStability, expectedStability, costCurrency, currentValue,
-				currentYearlyCost, timeValue);
+				expectedSecurityLevel, currentsStability, expectedStability, currencyType, costCurrency, currentValue,
+				currentYearlyCost, acceptedYearlyCost, timeValue);
 		return new ITApplicationDto(itApplication.getItApplicationId(), itApplication.getStatus(),
 				itApplication.getName(), itApplication.getVersion(), itApplication.getPurchaseDate(),
 				itApplication.getEndOfLife(), itApplication.getCurrentScalability(),
 				itApplication.getExpectedScalability(), itApplication.getCurrentPerformance(),
 				itApplication.getExpectedPerformance(), itApplication.getCurrentSecurityLevel(),
 				itApplication.getExpectedSecurityLevel(), itApplication.getCurrentStability(),
-				itApplication.getExpectedScalability(), itApplication.getCostCurrency(),
-				itApplication.getCurrentValue(), itApplication.getCurrentYearlyCost(), itApplication.getTimeValue(),
-				itApplication.getTechnologies());
+				itApplication.getExpectedStability(), itApplication.getCurrencyType(), 
+				itApplication.getCostCurrency(),itApplication.getCurrentValue(), 
+				itApplication.getCurrentYearlyCost(), itApplication.getAcceptedYearlyCost(), 
+				itApplication.getTimeValue(), itApplication.getTechnologies());
 	}
 	
 	@DeleteMapping(path = "{itApplicationId}")
@@ -125,7 +133,7 @@ public class ITApplicationController {
 		return itApplicationService.existsByName(itApplicationName);
 	}
 	
-	@GetMapping(path = "{itApplicationName}")
+	@GetMapping(path = "itapplicationname/{itApplicationName}")
 	public ITApplicationDto getITApplicationByName(@PathVariable("itApplicationName") String itApplicationName) {
 		ITApplication itApplication = itApplicationService.getItApplicationByName(itApplicationName);
 		return new ITApplicationDto(itApplication.getItApplicationId(), itApplication.getStatus(),
@@ -134,9 +142,10 @@ public class ITApplicationController {
 				itApplication.getExpectedScalability(), itApplication.getCurrentPerformance(),
 				itApplication.getExpectedPerformance(), itApplication.getCurrentSecurityLevel(),
 				itApplication.getExpectedSecurityLevel(), itApplication.getCurrentStability(),
-				itApplication.getExpectedScalability(), itApplication.getCostCurrency(),
-				itApplication.getCurrentValue(), itApplication.getCurrentYearlyCost(), itApplication.getTimeValue(),
-				itApplication.getTechnologies());
+				itApplication.getExpectedStability(), itApplication.getCurrencyType(), 
+				itApplication.getCostCurrency(),itApplication.getCurrentValue(), 
+				itApplication.getCurrentYearlyCost(), itApplication.getAcceptedYearlyCost(), 
+				itApplication.getTimeValue(), itApplication.getTechnologies());
 	}
 
 	@GetMapping
@@ -149,9 +158,10 @@ public class ITApplicationController {
 						itApplication.getExpectedScalability(), itApplication.getCurrentPerformance(),
 						itApplication.getExpectedPerformance(), itApplication.getCurrentSecurityLevel(),
 						itApplication.getExpectedSecurityLevel(), itApplication.getCurrentStability(),
-						itApplication.getExpectedScalability(), itApplication.getCostCurrency(),
-						itApplication.getCurrentValue(), itApplication.getCurrentYearlyCost(), itApplication.getTimeValue(),
-						itApplication.getTechnologies()))
+						itApplication.getExpectedStability(), itApplication.getCurrencyType(), 
+						itApplication.getCostCurrency(),itApplication.getCurrentValue(), 
+						itApplication.getCurrentYearlyCost(), itApplication.getAcceptedYearlyCost(), 
+						itApplication.getTimeValue(), itApplication.getTechnologies()))
 				.collect(Collectors.toList());
 		return itApplicationsDto;
 	}

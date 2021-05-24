@@ -32,13 +32,15 @@ public class TechnologyController {
 	public TechnologyDto addTechnology(
 			@ModelAttribute("technologyName") String technologyName) {
 		Technology technology = technologyService.save(technologyName);
-		return new TechnologyDto(technology.getTechnologyId(), technology.getTechnologyName());
+		return new TechnologyDto(technology.getTechnologyId(), technology.getTechnologyName(), 
+				technology.getItApplications());
 	}
 	
 	@GetMapping(path = "{technologyId}")
     public TechnologyDto getTechnology(@PathVariable("technologyId") Integer technologyId) {
 		Technology technology = technologyService.get(technologyId);
-		return new TechnologyDto(technology.getTechnologyId(), technology.getTechnologyName());
+		return new TechnologyDto(technology.getTechnologyId(), technology.getTechnologyName(), 
+				technology.getItApplications());
 	}
 	
 	@PutMapping(path = "{technologyId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -46,7 +48,8 @@ public class TechnologyController {
 			@PathVariable("technologyId") Integer technologyId, 
 			@ModelAttribute("technologyName") String technologyName) {
 		Technology technology = technologyService.update(technologyId, technologyName);
-		return new TechnologyDto(technology.getTechnologyId(), technology.getTechnologyName());
+		return new TechnologyDto(technology.getTechnologyId(), technology.getTechnologyName(), 
+				technology.getItApplications());
 	}
 	
 	@DeleteMapping(path = "{technologyId}")
@@ -59,7 +62,7 @@ public class TechnologyController {
 		List<Technology> technologies = technologyService.getAll();
 		List<TechnologyDto> technologiesDto = technologies.stream()
 				.map((techno) -> new TechnologyDto(techno.getTechnologyId(), 
-						techno.getTechnologyName()))
+						techno.getTechnologyName(), techno.getItApplications()))
 				.collect(Collectors.toList());
 		return technologiesDto;
 	}
