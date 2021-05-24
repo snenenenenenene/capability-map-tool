@@ -1,7 +1,7 @@
-version: '3'
+version: "3"
 services:
   mariadb:
-    image: 'mariadb'
+    image: "mariadb"
     environment:
       # Map de nodige environment vars (https://hub.docker.com/_/mariadb) met de .env file
       - MYSQL_ROOT_PASSWORD=${DATABASEROOTPASSWORD}
@@ -9,11 +9,11 @@ services:
       - MYSQL_USER=${DATABASEUSER}
       - MYSQL_PASSWORD=${DATABASEPASSWORD}
     ports:
-      - '3306:3306'
+      - "3306:3306"
     volumes:
-      - 'myproject_database:/var/lib/mysql'
+      - "myproject_database:/var/lib/mysql"
   java16:
-    image: 'openjdk:16-alpine'
+    image: "openjdk:16-alpine"
     environment:
       # Map de nodige environment vars (gebruik deze in application.properties) met de .env file
       - DBHOST=${DATABASEHOST}
@@ -22,7 +22,7 @@ services:
       - DBNAME=${DATABASENAME}
     command: java -Xmx512m -jar /target/accessing-data-mysql-0.0.1-SNAPSHOT.jar
     ports:
-      - '8080:8080'
+      - "8080:8080"
     volumes:
       - ../app/target:/target
     depends_on:

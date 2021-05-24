@@ -6,9 +6,9 @@ metadata:
     app: __KUBE_NAME__
 data:
   DBHOST: "service-mariadb-studenten.mariadb"
-  DBUSER: "groep5"
-  DBPASSWORD: "bavoAndStepbros"
-  DBNAME: "groep5"
+  DBUSER: "springuser"
+  DBPASSWORD: "ThePassword"
+  DBNAME: "db_example"
 ---
 kind: ConfigMap
 apiVersion: v1
