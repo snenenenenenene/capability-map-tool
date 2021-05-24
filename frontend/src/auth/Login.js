@@ -115,7 +115,7 @@ export default class Login extends Component {
               <input
                 type='text'
                 id='inputEmail'
-                placeholder='Email address (admin)'
+                placeholder='Email address (super_admin)'
                 required
                 autoFocus
                 name='email'
@@ -129,7 +129,7 @@ export default class Login extends Component {
                 size='lg'
                 type='password'
                 id='inputPassword'
-                placeholder='Password (admin)'
+                placeholder='Password (super_admin)'
                 required
                 name='password'
                 className="form-control form-control-lg text-center"

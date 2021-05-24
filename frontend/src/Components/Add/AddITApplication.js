@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 export default class AddITApplication extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      statuses: [],
       environments: [],
-      capabilities: [],
 
       modalIsOpen: false,
       setIsOpen: false,
@@ -27,74 +27,48 @@ export default class AddITApplication extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("environmentName", this.state.environmentName);
-    formData.append("environmentId", this.state.environmentId);
-    formData.append("capabilityName", this.state.capabilityName);
-    formData.append("parentCapabilityId", 1);
-    // formData.append('parentCapabilityId', this.state.parentCapability)
-    formData.append("paceOfChange", this.state.paceOfChange);
-    // formData.append('targetOperatingModel', this.state.TOM)
-    formData.append("targetOperatingModel", "soepke");
-    formData.append("informationQuality", this.state.informationQuality);
-    formData.append("applicationFit", this.state.applicationFit);
-    formData.append("resourceQuality", this.state.resourcesQuality);
-    formData.append("statusId", this.state.statusId);
-    formData.append("level", this.state.capabilityLevel);
-    for (let [name, value] of formData) {
-      console.log(`${name} = ${value}`);
-    }
-    await fetch(`http://localhost:8080/capability/add`, {
-      method: "POST",
-      body: formData,
-    }).then(function (res) {
-      if (res.ok) {
-        console.log("Capability added");
-      } else if (res.status === 401) {
-        console.log("Oops,, Something went wrong");
-      }
-    });
+    formData.append("itApplicationName", this.state.itApplicationName);
+    formData.append("technology", this.state.technology);
+    formData.append("version", this.state.version);
+    formData.append("costCurrency", this.state.costCurrency);
+    formData.append("currentTotalCostPerYear", this.state.currentTotalCostPerYear);
+    await axios
+      .post(`${process.env.REACT_APP_API_URL}/itapplication/`, formData)
+      .then((response) => toast.success("IT Application Added Successfully!"))
+      .catch((error) => toast.error("Could not Add IT Application"));
+    this.props.history.push(
+      `/environment/${this.state.environmentName}/itapplication`
+    );
   };
 
   async componentDidMount() {
-    const environmentResponse = await fetch(
-      `http://localhost:8080/environment/environmentname/${this.state.environmentName}`
-    );
-    const environmentData = await environmentResponse.json();
-    this.setState({ environmentId: environmentData.environmentId });
+    await axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+      )
+      .then((response) =>
+        this.setState({ environmentId: response.data.environmentId })
+      )
+      .catch((error) => {
+        console.log(error);
+        this.props.history.push("/notfounderror");
+      });
 
-    const statusResponse = await fetch(`http://localhost:8080/status/all`);
-    const statusData = await statusResponse.json();
-    this.setState({ statuses: statusData });
-
-    const capabilityResponse = await fetch(
-      `http://localhost:8080/api/capability/all`
-    );
-    const capabilityData = await capabilityResponse.json();
-    this.setState({ capabilities: capabilityData });
+    await axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/itapplication/`
+      )
+      .then((response) => {
+        this.setState({ capabilities: response.data });
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Could Not Find IT Applications");
+      });
   }
 
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
-  }
-
-  statusListRows() {
-    return this.state.statuses.map((status) => {
-      return (
-        <option key={status.statusId} value={status.statusId}>
-          {status.validityPeriod}
-        </option>
-      );
-    });
-  }
-
-  capabilityListRows() {
-    return this.state.capabilities.map((capability) => {
-      return (
-        <option key={capability.capabilityId} value={capability.capabilityId}>
-          {capability.capabilityName}
-        </option>
-      );
-    });
   }
 
   openModal() {
@@ -111,7 +85,7 @@ export default class AddITApplication extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label='breadcrumb'>
+        <nav aria-label='shadow breadcrumb'>
           <ol className='breadcrumb'>
             <li className='breadcrumb-item'>
               <Link to={`/`}>Home</Link>
@@ -126,7 +100,7 @@ export default class AddITApplication extends Component {
             </li>
           </ol>
         </nav>
-        <div className='jumbotron'>
+        <div className='jumbotron shadow'>
           <h3>Add IT Application</h3>
           <form onSubmit={this.handleSubmit}>
             <div className='row'>

@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
-export default class Admin extends Component {
+export default class Settings extends Component {
   constructor(props) {
     super(props);
     this.state = {
