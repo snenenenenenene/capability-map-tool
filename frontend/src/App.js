@@ -90,7 +90,7 @@ class App extends Component {
   }
 
   render() {
-    if (this.state.authenticated === true) {
+    // if (this.state.authenticated === true) {
       return (
         <div className='bg_image'>
           <Toaster />
@@ -338,13 +338,13 @@ class App extends Component {
           </BrowserRouter>
         </div>
       );
-    } else {
-      return (
-        <BrowserRouter>
-          <Route path='*' component={Signup} />
-        </BrowserRouter>
-      );
-    }
+    // } else {
+      // return (
+        // <BrowserRouter>
+          // <Route path='*' component={Signup} />
+        // </BrowserRouter>
+      // );
+    // }
   }
 }
 
