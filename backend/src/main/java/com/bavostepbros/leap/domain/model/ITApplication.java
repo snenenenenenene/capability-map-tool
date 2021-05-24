@@ -16,8 +16,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -94,7 +94,7 @@ public class ITApplication {
     @JoinTable(name = "ITAPPLICATION_TECHNOLOGY", 
     	joinColumns = {@JoinColumn(name = "ITAPPLICATIONID")}, 
     	inverseJoinColumns = {@JoinColumn(name = "TECHNOLOGYID")})
-    private Set<Technology> technologies = new HashSet<Technology>();
+    private List<Technology> technologies = new ArrayList<Technology>();
     
     public ITApplication(Integer itApplicationId, Status status, String name, String version, LocalDate purchaseDate,
 			LocalDate endOfLife, Integer currentScalability, Integer expectedScalability, Integer currentPerformance,

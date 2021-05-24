@@ -1,7 +1,7 @@
 package com.bavostepbros.leap.domain.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,7 +28,7 @@ public class Technology {
 	private String technologyName;
 	
 	@ManyToMany(mappedBy = "technologies")
-	private Set<ITApplication> itApplications = new HashSet<ITApplication>();
+	private List<ITApplication> itApplications = new ArrayList<ITApplication>();
 		
 	public Technology(String technologyName) {
 		this.technologyName = technologyName;

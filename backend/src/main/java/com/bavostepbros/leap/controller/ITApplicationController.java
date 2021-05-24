@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -56,9 +55,9 @@ public class ITApplicationController {
 				currentScalability, expectedScalability, currentPerformance, expectedPerformance, currentSecurityLevel,
 				expectedSecurityLevel, currentsStability, expectedStability, currencyType, costCurrency, currentValue,
 				currentYearlyCost, acceptedYearlyCost, timeValue);
-		Set<TechnologyDto> technologies = itApplication.getTechnologies().stream()
+		List<TechnologyDto> technologies = itApplication.getTechnologies().stream()
 				.map(technology -> new TechnologyDto(technology.getTechnologyId(), technology.getTechnologyName()))
-				.collect(Collectors.toSet());
+				.collect(Collectors.toList());
 		return new ITApplicationDto(itApplication.getItApplicationId(), itApplication.getStatus(),
 				itApplication.getName(), itApplication.getVersion(), itApplication.getPurchaseDate(),
 				itApplication.getEndOfLife(), itApplication.getCurrentScalability(),
@@ -74,9 +73,9 @@ public class ITApplicationController {
 	@GetMapping(path = "{itApplicationId}")
 	public ITApplicationDto getITApplicationById(@PathVariable("itApplicationId") Integer itApplicationId) {
 		ITApplication itApplication = itApplicationService.get(itApplicationId);
-		Set<TechnologyDto> technologies = itApplication.getTechnologies().stream()
+		List<TechnologyDto> technologies = itApplication.getTechnologies().stream()
 				.map(technology -> new TechnologyDto(technology.getTechnologyId(), technology.getTechnologyName()))
-				.collect(Collectors.toSet());
+				.collect(Collectors.toList());
 		return new ITApplicationDto(itApplication.getItApplicationId(), itApplication.getStatus(),
 				itApplication.getName(), itApplication.getVersion(), itApplication.getPurchaseDate(),
 				itApplication.getEndOfLife(), itApplication.getCurrentScalability(),
@@ -114,9 +113,9 @@ public class ITApplicationController {
 				currentScalability, expectedScalability, currentPerformance, expectedPerformance, currentSecurityLevel,
 				expectedSecurityLevel, currentsStability, expectedStability, currencyType, costCurrency, currentValue,
 				currentYearlyCost, acceptedYearlyCost, timeValue);
-		Set<TechnologyDto> technologies = itApplication.getTechnologies().stream()
+		List<TechnologyDto> technologies = itApplication.getTechnologies().stream()
 				.map(technology -> new TechnologyDto(technology.getTechnologyId(), technology.getTechnologyName()))
-				.collect(Collectors.toSet());
+				.collect(Collectors.toList());
 		return new ITApplicationDto(itApplication.getItApplicationId(), itApplication.getStatus(),
 				itApplication.getName(), itApplication.getVersion(), itApplication.getPurchaseDate(),
 				itApplication.getEndOfLife(), itApplication.getCurrentScalability(),
@@ -147,9 +146,9 @@ public class ITApplicationController {
 	@GetMapping(path = "itapplicationname/{itApplicationName}")
 	public ITApplicationDto getITApplicationByName(@PathVariable("itApplicationName") String itApplicationName) {
 		ITApplication itApplication = itApplicationService.getItApplicationByName(itApplicationName);
-		Set<TechnologyDto> technologies = itApplication.getTechnologies().stream()
+		List<TechnologyDto> technologies = itApplication.getTechnologies().stream()
 				.map(technology -> new TechnologyDto(technology.getTechnologyId(), technology.getTechnologyName()))
-				.collect(Collectors.toSet());
+				.collect(Collectors.toList());
 		return new ITApplicationDto(itApplication.getItApplicationId(), itApplication.getStatus(),
 				itApplication.getName(), itApplication.getVersion(), itApplication.getPurchaseDate(),
 				itApplication.getEndOfLife(), itApplication.getCurrentScalability(),
@@ -177,7 +176,7 @@ public class ITApplicationController {
 						itApplication.getCurrentYearlyCost(), itApplication.getAcceptedYearlyCost(), 
 						itApplication.getTimeValue(), itApplication.getTechnologies().stream()
 						.map(technology -> new TechnologyDto(technology.getTechnologyId(), technology.getTechnologyName()))
-						.collect(Collectors.toSet())))
+						.collect(Collectors.toList())))
 				.collect(Collectors.toList());
 		return itApplicationsDto;
 	}

@@ -1,7 +1,7 @@
 package com.bavostepbros.leap.domain.model.dto;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 import com.bavostepbros.leap.domain.model.Status;
 
@@ -35,5 +35,5 @@ public class ITApplicationDto {
 	private Double currentYearlyCost;
 	private Double acceptedYearlyCost;
 	private LocalDate timeValue;
-	private Set<TechnologyDto> technologies;
+	private List<TechnologyDto> technologies;
 }

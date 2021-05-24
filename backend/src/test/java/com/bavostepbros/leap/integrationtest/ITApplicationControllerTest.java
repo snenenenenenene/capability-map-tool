@@ -23,10 +23,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bavostepbros.leap.domain.model.ITApplication;
 import com.bavostepbros.leap.domain.model.Status;
+import com.bavostepbros.leap.domain.model.Technology;
 import com.bavostepbros.leap.domain.model.dto.ITApplicationDto;
+import com.bavostepbros.leap.domain.model.dto.TechnologyDto;
 import com.bavostepbros.leap.domain.service.itapplicationservice.ITApplicationService;
 import com.bavostepbros.leap.persistence.ITApplicationDAL;
 import com.bavostepbros.leap.persistence.StatusDAL;
+import com.bavostepbros.leap.persistence.TechnologyDAL;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -45,6 +48,9 @@ public class ITApplicationControllerTest {
 	private StatusDAL statusDAL;
 	
 	@Autowired
+	private TechnologyDAL technologyDAL;
+	
+	@Autowired
 	private ITApplicationDAL itApplicationDAL;
 	
 	@Autowired
@@ -54,6 +60,8 @@ public class ITApplicationControllerTest {
 	
 	private Status statusFirst;
 	private Status statusSecond;
+	private Technology technologyFirst;
+	private Technology technologySecond;
 	private ITApplication itApplicationFirst;
 	private ITApplication itApplicationSecond;
 	
@@ -61,6 +69,8 @@ public class ITApplicationControllerTest {
 	public void init() {
 		statusFirst = statusDAL.save(new Status(1, LocalDate.of(2021, 05, 15)));
 		statusSecond = statusDAL.save(new Status(2, LocalDate.of(2021, 05, 20)));
+		technologyFirst = technologyDAL.save(new Technology(1, "Java"));
+		technologySecond = technologyDAL.save(new Technology(2, "c#"));
 		itApplicationFirst = itApplicationDAL.save(new ITApplication(1, statusFirst, "application 1", 
 				"1.20.1", LocalDate.of(2021, 01, 20), LocalDate.of(2025, 05, 20), 1, 2, 3, 4, 5, 
 				6, 7, 8, "EUR", 1000.0, 100.0, 70.0, 100.0, LocalDate.of(2021, 05, 20)));
@@ -73,6 +83,8 @@ public class ITApplicationControllerTest {
 	public void close() {
 		statusDAL.delete(statusFirst);
 		statusDAL.delete(statusSecond);
+		technologyDAL.delete(technologyFirst);
+		technologyDAL.delete(technologySecond);
 		itApplicationDAL.delete(itApplicationFirst);
 		itApplicationDAL.delete(itApplicationSecond);
 	}
@@ -80,10 +92,13 @@ public class ITApplicationControllerTest {
 	@Test
 	void should_notBeNull() {
 		assertNotNull(statusDAL);
+		assertNotNull(technologyDAL);
 		assertNotNull(itApplicationDAL);
 		assertNotNull(itApplicationService);
 		assertNotNull(statusFirst);
 		assertNotNull(statusSecond);
+		assertNotNull(technologyFirst);
+		assertNotNull(technologySecond);
 		assertNotNull(itApplicationFirst);
 		assertNotNull(itApplicationSecond);
 	}
@@ -141,7 +156,7 @@ public class ITApplicationControllerTest {
 		ITApplication itApplication = itApplicationService.getItApplicationByName(name);
 		
 		assertNotNull(itapplicationDto);
-		testTechnology(itApplication, itapplicationDto);
+		testItApplication(itApplication, itapplicationDto);
 	}
 	
 	@Test
@@ -156,7 +171,7 @@ public class ITApplicationControllerTest {
 				mvcResult.getResponse().getContentAsString(), ITApplicationDto.class);
 		
 		assertNotNull(itapplicationDto);
-		testTechnology(itApplicationFirst, itapplicationDto);
+		testItApplication(itApplicationFirst, itapplicationDto);
 	}
 	
 	@Test
@@ -213,7 +228,7 @@ public class ITApplicationControllerTest {
 		ITApplication itApplication = itApplicationService.getItApplicationByName(name);
 		
 		assertNotNull(itapplicationDto);
-		testTechnology(itApplication, itapplicationDto);
+		testItApplication(itApplication, itapplicationDto);
 	}
 	
 	@Test
@@ -254,7 +269,7 @@ public class ITApplicationControllerTest {
 				mvcResult.getResponse().getContentAsString(), ITApplicationDto.class);
 		
 		assertNotNull(itapplicationDto);
-		testTechnology(itApplicationFirst, itapplicationDto);
+		testItApplication(itApplicationFirst, itapplicationDto);
 	}
 	
 	@Test
@@ -267,8 +282,8 @@ public class ITApplicationControllerTest {
 				mvcResult.getResponse().getContentAsString(), new TypeReference<List<ITApplicationDto>>() {});
 		
 		assertNotNull(itapplicationDto);
-		testTechnology(itApplicationFirst, itapplicationDto.get(0));
-		testTechnology(itApplicationSecond, itapplicationDto.get(1));
+		testItApplication(itApplicationFirst, itapplicationDto.get(0));
+		testItApplication(itApplicationSecond, itapplicationDto.get(1));
 	}
 	
 	@Test
@@ -289,7 +304,22 @@ public class ITApplicationControllerTest {
 	}
 	
 	@Test
-	private void testTechnology(ITApplication expectedObject, ITApplicationDto actualObject) {
+	public void should_linkTechnology_whenLinkTechnology() throws Exception {
+		Integer itApplicationId = itApplicationFirst.getItApplicationId();
+		Integer technologyId = technologyFirst.getTechnologyId();
+		
+		mockMvc.perform(MockMvcRequestBuilders.put(
+				PATH + "link-technology/" + itApplicationId + "/" + technologyId))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+		
+		ITApplication itApplication = itApplicationService.get(itApplicationId);
+		Technology technology = itApplication.getTechnologies().get(0);
+		TechnologyDto technologyDto = new TechnologyDto(technology.getTechnologyId(), technology.getTechnologyName());
+		testTechnology(technologyFirst, technologyDto);
+	}
+	
+	@Test
+	private void testItApplication(ITApplication expectedObject, ITApplicationDto actualObject) {
 		assertEquals(expectedObject.getItApplicationId(), actualObject.getItApplicationId());
 		assertEquals(expectedObject.getStatus().getStatusId(), actualObject.getStatus().getStatusId());
 		assertEquals(expectedObject.getStatus().getValidityPeriod(), actualObject.getStatus().getValidityPeriod());
@@ -311,5 +341,11 @@ public class ITApplicationControllerTest {
 		assertEquals(expectedObject.getCurrentYearlyCost(), actualObject.getCurrentYearlyCost());
 		assertEquals(expectedObject.getAcceptedYearlyCost(), actualObject.getAcceptedYearlyCost());
 		assertEquals(expectedObject.getTimeValue(), actualObject.getTimeValue());
+	}
+	
+	@Test
+	private void testTechnology(Technology expectedObject, TechnologyDto actualObject) {
+		assertEquals(expectedObject.getTechnologyId(), actualObject.getTechnologyId());
+		assertEquals(expectedObject.getTechnologyName(), actualObject.getTechnologyName());
 	}
 }
