@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import deleteImg from '../img/delete.jpg'
 import axios from 'axios';
+import toast from "react-hot-toast";
 
 export default class RecentEnvironmentTableRow extends Component {
 
@@ -12,11 +12,13 @@ export default class RecentEnvironmentTableRow extends Component {
     }
 
     deleteEnvironment (){
-        console.log(this.props.environmentId)
         axios.delete(`${process.env.REACT_APP_API_URL}/${this.props.obj.environmentId}`)
-        .then(response => console.log(response))
-        .catch(error => console.log(error))
-        this.props.history.push('/recent')
+        .then(response => toast.success("Successfully Removed Environment"))
+        .catch(error => {
+            toast.error("Failed to Remove Environment")
+            console.log(error)
+        })
+        window.location.reload();
     }
 
     render() {
@@ -33,7 +35,12 @@ export default class RecentEnvironmentTableRow extends Component {
         </Link>
                 </td>
                 <td>
-                    <img src={ deleteImg } onClick={() => {this.deleteEnvironment(this.props.obj.environmentId)}} alt='delete' width='15' height='18'/>
+                <button className='btn-sm btn-secondary'>
+                    <i
+                      onClick={() => {this.deleteEnvironment(this.props.obj.environmentId)}}
+                      className='bi bi-trash'
+                    ></i>
+                  </button>
                 </td>
             </tr>
 

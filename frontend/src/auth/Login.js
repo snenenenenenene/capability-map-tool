@@ -109,6 +109,11 @@ export default class Login extends Component {
             height='88'
           />
           <br></br>
+          <p>Welcome to LEAP! Enter your login credentials to get started!</p>
+          <p>If you don't have an account, ask one of the admins to make you one.</p>
+          <p style={{color: "green"}}>email: admin</p>
+          <p style={{color: "green"}}>password: admin</p>
+          <br></br>
           {/* <div className='jumbotron'> */}
           <form onSubmit={this.authenticateUser}>
             <div className="form-group">

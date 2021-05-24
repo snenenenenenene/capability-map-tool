@@ -52,7 +52,7 @@ export default class Environment extends Component {
             </li>
           </ol>
         </nav>
-        <button className='btn btn-primary float-right'>Export</button>
+        <button className='btn btn-primary float-right' style={{marginRight: 32, marginTop: 15}}>Export</button>
         <div className='container jumbotron'>
           <div className='card-deck'>
             <div className='card'>
@@ -61,7 +61,9 @@ export default class Environment extends Component {
                   <h5 className='card-title text-center'>Capabilities</h5>
                   <div className='text-center'>
                     <Link to={`${this.state.environmentName}/capability/add`}>
-                      <img src={plusImg} alt='add' width='30' height='30' />
+                    <button className='btn btn-circle btn-sm btn-success'>
+                    <i class="bi bi-plus-lg"></i>
+                      </button>
                     </Link>
                   </div>
                 </div>
@@ -74,7 +76,9 @@ export default class Environment extends Component {
                   <h5 className='card-title text-center'>Strategies</h5>
                   <div className='text-center'>
                     <Link to={`${this.state.environmentName}/strategy/add`}>
-                      <img src={plusImg} alt='add' width='30' height='30' />
+                    <button className='btn btn-circle btn-sm btn-success'>
+                    <i class="bi bi-plus-lg"></i>
+                      </button>
                     </Link>
                   </div>
                 </div>
@@ -87,7 +91,9 @@ export default class Environment extends Component {
                   <h5 className='card-title text-center'>Resources</h5>
                   <div className='text-center'>
                     <Link to={`${this.state.environmentName}/resource/add`}>
-                      <img src={plusImg} alt='add' width='30' height='30' />
+                    <button className='btn btn-circle btn-sm btn-success'>
+                    <i class="bi bi-plus-lg"></i>
+                      </button>
                     </Link>
                   </div>
                 </div>
@@ -95,6 +101,7 @@ export default class Environment extends Component {
               <div className='card-footer'></div>
             </div>
           </div>
+          <br></br>
           <div className='card-deck'>
             <div className='card'>
               <Link to={`${this.state.environmentName}/itapplication`}>
@@ -104,7 +111,9 @@ export default class Environment extends Component {
                     <Link
                       to={`${this.state.environmentName}/itapplication/add`}
                     >
-                      <img src={plusImg} alt='add' width='30' height='30' />
+                      <button className='btn btn-circle btn-sm btn-success'>
+                    <i class="bi bi-plus-lg"></i>
+                      </button>
                     </Link>
                   </div>
                 </div>
@@ -117,7 +126,9 @@ export default class Environment extends Component {
                   <h5 className='card-title text-center'>Strategy Items</h5>
                   <div className='text-center'>
                     <Link to={`${this.state.environmentName}/strategyitem/add`}>
-                      <img src={plusImg} alt='add' width='30' height='30' />
+                    <button className='btn btn-circle btn-sm btn-success'>
+                    <i class="bi bi-plus-lg"></i>
+                      </button>
                     </Link>
                   </div>
                 </div>
@@ -132,7 +143,9 @@ export default class Environment extends Component {
                     <Link
                       to={`${this.state.environmentName}/businessprocess/add`}
                     >
-                      <img src={plusImg} alt='add' width='30' height='30' />
+                      <button className='btn btn-circle btn-sm btn-success'>
+                    <i class="bi bi-plus-lg"></i>
+                      </button>
                     </Link>
                   </div>
                 </div>
@@ -140,6 +153,7 @@ export default class Environment extends Component {
               <div className='card-footer'></div>
             </div>
           </div>
+          <br></br>
           <div className='card-deck'>
             <div className='card'>
               <Link to={`${this.state.environmentName}/program`}>
@@ -147,7 +161,9 @@ export default class Environment extends Component {
                   <h5 className='card-title text-center'>Programs</h5>
                   <div className='text-center'>
                     <Link to={`${this.state.environmentName}/program/add`}>
-                      <img src={plusImg} alt='add' width='30' height='30' />
+                    <button className='btn btn-circle btn-sm btn-success'>
+                    <i class="bi bi-plus-lg"></i>
+                      </button>
                     </Link>
                   </div>
                 </div>
@@ -160,7 +176,9 @@ export default class Environment extends Component {
                   <h5 className='card-title text-center'>Projects</h5>
                   <div className='text-center'>
                     <Link to={`${this.state.environmentName}/project/add`}>
-                      <img src={plusImg} alt='add' width='30' height='30' />
+                    <button className='btn btn-circle btn-sm btn-success'>
+                    <i class="bi bi-plus-lg"></i>
+                      </button>
                     </Link>
                   </div>
                 </div>
@@ -173,7 +191,9 @@ export default class Environment extends Component {
                   <h5 className='card-title text-center'>Status</h5>
                   <div className='text-center'>
                     <Link to={`${this.state.environmentName}/status/add`}>
-                      <img src={plusImg} alt='add' width='30' height='30' />
+                    <button className='btn btn-circle btn-sm btn-success'>
+                    <i class="bi bi-plus-lg"></i>
+                      </button>
                     </Link>
                   </div>
                 </div>
