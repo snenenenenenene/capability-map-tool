@@ -74,7 +74,7 @@ export default class ConfigurePassword extends Component {
       <div>
         <form onSubmit={this.authenticateUser} className='form-signin'>
           <div className='form-label-group'>
-            <label htmlFor='password'>New Password</label>
+            {/* <label htmlFor='password'>New Password</label> */}
             <input
               type='password'
               id='password'
@@ -88,7 +88,7 @@ export default class ConfigurePassword extends Component {
             />
           </div>
           <div className='form-label-group'>
-            <label htmlFor='confirmNewPassword'>Confirm Password</label>
+            {/* <label htmlFor='confirmNewPassword'>Confirm Password</label> */}
             <input
               type='password'
               id='confirmNewPassword'
