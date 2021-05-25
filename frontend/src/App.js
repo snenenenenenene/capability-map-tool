@@ -42,6 +42,8 @@ import toast, { Toaster } from "react-hot-toast";
 import AddUser from "./Components/AddUser";
 import ChoosePassword from "./auth/ConfigurePassword";
 import ConfigurePassword from "./auth/ConfigurePassword";
+import ExportMap from "./Components/ExportMap";
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -166,6 +168,11 @@ class App extends Component {
               <Route exact path="/add" component={NewEnvironment} />
               <Route exact path="/environment/:name" component={Environment} />
               <Route exact path="/recent" component={RecentEnvironments} />
+              <Route
+                exact
+                path="/environment/:name/export"
+                component={ExportMap}
+              />
               {/* CAPABILITIES */}
               <Route
                 exact

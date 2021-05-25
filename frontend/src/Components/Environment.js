@@ -52,12 +52,14 @@ export default class Environment extends Component {
             </li>
           </ol>
         </nav>
-        <button
-          className="btn btn-primary float-right"
-          style={{ marginRight: 32, marginTop: 15 }}
-        >
-          Export
-        </button>
+        <Link to={`/environment/${this.state.environmentName}/export`}>
+          <button
+            className="btn btn-primary float-right"
+            style={{ marginRight: 32, marginTop: 15 }}
+          >
+            Export
+          </button>
+        </Link>
         <div className="container jumbotron">
           <div className="card-deck">
             <div className="card">

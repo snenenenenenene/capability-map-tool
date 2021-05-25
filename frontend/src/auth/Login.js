@@ -6,7 +6,7 @@ import { Modal } from "react-bootstrap";
 import ConfigurePassword from "./ConfigurePassword";
 import "./Login.css";
 import * as sha1 from "js-sha1";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 // import * as bcrypt from "bcrypt";
 
 export default class Login extends Component {
@@ -32,7 +32,7 @@ export default class Login extends Component {
 
   authenticateUser = async (e) => {
     e.preventDefault();
-    if(this.state.password === "preview" && this.state.email === "preview"){
+    if (this.state.password === "preview" && this.state.email === "preview") {
       toast.success(`Successful Login! \n Welcome ${this.state.username}`);
       this.setState({ authenticated: true });
       localStorage.setItem(
@@ -98,40 +98,48 @@ export default class Login extends Component {
 
   render() {
     return (
-      <div className='container text-center jumbotron linear-jumbotron shadow-lg' style={{marginBottom: 1 + "%", marginTop: 1.5 + "%",height : 95 + "%", width: 100 + "%"}} >
+      <div
+        className="container text-center jumbotron linear-jumbotron shadow"
+        style={{
+          marginBottom: 1 + "%",
+          marginTop: 1.5 + "%",
+          height: 95 + "%",
+          width: 100 + "%",
+        }}
+      >
         <Toaster />
-        <div className='Login text-center'>
+        <div className="Login text-center">
           <img
-            alt='leap'
-            className='rounded mx-auto d-block'
+            alt="leap"
+            className="rounded mx-auto d-block"
             src={LeapImg}
-            width='320'
-            height='88'
+            width="320"
+            height="88"
           />
           <br></br>
           {/* <div className='jumbotron'> */}
           <form onSubmit={this.authenticateUser}>
             <div className="form-group">
               <input
-                type='text'
-                id='inputEmail'
-                placeholder='Email address (super_admin)'
+                type="text"
+                id="inputEmail"
+                placeholder="Email address (super_admin)"
                 required
                 autoFocus
-                name='email'
+                name="email"
                 className="form-control form-control-lg text-center"
                 value={this.state.email}
                 onChange={this.handleInputChange}
               />
             </div>
-            <div className='form-group'>
+            <div className="form-group">
               <input
-                size='lg'
-                type='password'
-                id='inputPassword'
-                placeholder='Password (super_admin)'
+                size="lg"
+                type="password"
+                id="inputPassword"
+                placeholder="Password (super_admin)"
                 required
-                name='password'
+                name="password"
                 className="form-control form-control-lg text-center"
                 value={this.state.password}
                 onChange={this.handleInputChange}
@@ -141,7 +149,7 @@ export default class Login extends Component {
               style={{ height: 40 }}
               className="btn btn-primary"
               onClick={this.authenticateUser}
-              type='submit'
+              type="submit"
             >
               LOGIN
             </button>
@@ -162,8 +170,8 @@ export default class Login extends Component {
           </Modal.Body>
           <Modal.Footer>
             <button
-              type='button'
-              className='btn btn-secondary'
+              type="button"
+              className="btn btn-secondary"
               onClick={() => this.handleModal()}
             >
               Close Modal
