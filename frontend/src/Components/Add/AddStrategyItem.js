@@ -24,17 +24,11 @@ export default class StrategyItem extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("environmentName", this.state.environmentName);
-    formData.append("environmentId", this.state.environmentId);
-    formData.append("capabilityId", this.state.capabilityId);
+    formData.append("strategyId", this.state.strategyId);
     formData.append("strategyItemName", this.state.strategyItemName);
-    formData.append(
-      "strategyItemDescription",
-      this.state.strategyItemDescription
-    );
-    formData.append("strategicImportance", this.state.strategicImportance);
+    formData.append("description", this.state.strategyItemDescription);
     await axios
-      .post(`${process.env.REACT_APP_API_URL}/capability/`, formData)
+      .post(`${process.env.REACT_APP_API_URL}/strategyitem/`, formData)
       .then((response) => toast.success("Strategy Item Added Successfully!"))
       .catch((error) => toast.error("Could not Add Strategy Item"));
     this.props.history.push(
@@ -100,117 +94,117 @@ export default class StrategyItem extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label='breadcrumb'>
-          <ol className='breadcrumb'>
-            <li className='breadcrumb-item'>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
               <Link to={`/`}>Home</Link>
             </li>
-            <li className='breadcrumb-item'>
+            <li className="breadcrumb-item">
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className='breadcrumb-item'>
+            <li className="breadcrumb-item">
               <Link
                 to={`/environment/${this.state.environmentName}/strategyitem`}
               >
                 Strategy Item
               </Link>
             </li>
-            <li className='breadcrumb-item active' aria-current='page'>
+            <li className="breadcrumb-item active" aria-current="page">
               Add Strategy Item
             </li>
           </ol>
         </nav>
-        <div className='jumbotron'>
+        <div className="jumbotron">
           <h3>Add Strategy Item</h3>
           <form onSubmit={this.handleSubmit}>
-            <div className='row'>
-              <div className='col-sm-6'>
-                <div className='form-row'>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='strategyItemName'>Name Strategy Item</label>
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label htmlFor="strategyItemName">Name Strategy Item</label>
                     <input
-                      type='text'
-                      id='strategyItemName'
-                      name='strategyItemName'
-                      className='form-control'
-                      placeholder='Name Strategy Item'
+                      type="text"
+                      id="strategyItemName"
+                      name="strategyItemName"
+                      className="form-control"
+                      placeholder="Name Strategy Item"
                       value={this.state.strategyItemName}
                       onChange={this.handleInputChange}
                     />
                   </div>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='strategyId'>Strategy</label>
+                  <div className="form-group col-md-6">
+                    <label htmlFor="strategyId">Strategy</label>
                     <select
-                      className='form-control'
-                      name='strategyId'
-                      id='strategyId'
-                      placeholder='Add Status'
+                      className="form-control"
+                      name="strategyId"
+                      id="strategyId"
+                      placeholder="Add Status"
                       value={this.state.strategyId}
                       onChange={this.handleInputChange}
                     >
-                      <option key='-1' defaultValue='selected' value={0}>
+                      <option key="-1" defaultValue="selected" hidden value={0}>
                         None
                       </option>
                       {this.strategyListRows()}
                     </select>
                   </div>
                 </div>
-                <div className='form-row'>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='capabilityId'>Capability</label>
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label htmlFor="capabilityId">Capability</label>
                     <select
-                      className='form-control'
-                      name='capabilityId'
-                      id='capabilityId'
-                      placeholder='Add Capability'
+                      className="form-control"
+                      name="capabilityId"
+                      id="capabilityId"
+                      placeholder="Add Capability"
                       value={this.state.capabilityId}
                       onChange={this.handleInputChange}
                     >
-                      <option key='-1' defaultValue='selected' value={0}>
+                      <option key="-1" defaultValue="selected" value={0}>
                         None
                       </option>
                       {this.capabilityListRows()}
                     </select>
                   </div>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='strategicImportance'>Importance</label>
+                  <div className="form-group col-md-6">
+                    <label htmlFor="strategicImportance">Importance</label>
                     <select
-                      className='form-control'
-                      name='strategicImportance'
-                      id='strategicImportance'
-                      placeholder='Add Importance'
+                      className="form-control"
+                      name="strategicImportance"
+                      id="strategicImportance"
+                      placeholder="Add Importance"
                       value={this.state.strategicImportance}
                       onChange={this.handleInputChange}
                     >
-                      <option defaultValue='selected' value='ONE'>
+                      <option defaultValue="selected" value="ONE">
                         ONE
                       </option>
-                      <option value='TWO'>TWO</option>
-                      <option value='THREE'>THREE</option>
+                      <option value="TWO">TWO</option>
+                      <option value="THREE">THREE</option>
                     </select>
                   </div>
                 </div>
-                <div className='form-group'>
-                  <label htmlFor='strategyItemDescription'>Description</label>
+                <div className="form-group">
+                  <label htmlFor="strategyItemDescription">Description</label>
                   <textarea
-                    type='text'
-                    id='strategyItemDescription'
-                    name='strategyItemDescription'
-                    className='form-control'
-                    rows='5'
-                    placeholder='Description'
+                    type="text"
+                    id="strategyItemDescription"
+                    name="strategyItemDescription"
+                    className="form-control"
+                    rows="5"
+                    placeholder="Description"
                     value={this.state.strategyItemDescription}
                     onChange={this.handleInputChange}
                   />
                 </div>
               </div>
-              <div className='col-sm-6'></div>
+              <div className="col-sm-6"></div>
             </div>
             <button
-              className='btn btn-primary'
-              type='button'
+              className="btn btn-primary"
+              type="button"
               onClick={this.handleSubmit}
             >
               Submit
