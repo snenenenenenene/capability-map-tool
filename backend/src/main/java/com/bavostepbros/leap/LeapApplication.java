@@ -1,18 +1,12 @@
 package com.bavostepbros.leap;
 
-import com.bavostepbros.leap.controller.RoleController;
-import com.bavostepbros.leap.domain.model.Role;
-import com.bavostepbros.leap.domain.model.User;
-import com.bavostepbros.leap.domain.service.roleservice.RoleService;
-import com.bavostepbros.leap.domain.service.roleservice.RoleServiceImpl;
-import com.bavostepbros.leap.domain.service.userservice.UserService;
-import com.bavostepbros.leap.domain.service.userservice.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Currency;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-
-import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 
 @SpringBootApplication
 @EnableJpaRepositories("com.bavostepbros.leap.persistence")

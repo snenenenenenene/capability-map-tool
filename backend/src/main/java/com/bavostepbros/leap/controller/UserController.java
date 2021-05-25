@@ -1,6 +1,7 @@
 package com.bavostepbros.leap.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -25,6 +26,8 @@ import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
 import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
 import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
 import com.bavostepbros.leap.domain.model.User;
+import com.bavostepbros.leap.domain.model.dto.StatusDto;
+import com.bavostepbros.leap.domain.model.dto.UserDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,132 +44,66 @@ public class UserController {
 	private RoleService roleService;
 	
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<Void> addUser(
-			@ModelAttribute User user,
-			UriComponentsBuilder builder) {		
-		if (user.getUsername() == null || 
-				user.getUsername().isBlank() ||
-				user.getUsername().isEmpty() ||
-				user.getPassword() == null ||
-				user.getPassword().isBlank() ||
-				user.getPassword().isEmpty() ||
-				user.getEmail() == null ||
-				user.getEmail().isBlank() ||
-				user.getEmail().isEmpty())
-				{
-			throw new InvalidInputException("Invalid input.");
-		}
-
-		if(!userService.existsByUsername(user.getUsername())){
-			throw new DuplicateValueException("Username already exists.");
-		}
-
-		if(!userService.existsByEmail(user.getEmail())) {
-			throw new DuplicateValueException("Email already exists.");
-		}
-
-		boolean flag = userService.save(user);
-		if (flag == false) {
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-		}
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setLocation(builder
-				.path("{id}")
-				.buildAndExpand(user.getUserId()).toUri());
-		return new ResponseEntity<>(headers, HttpStatus.CREATED);
+	public UserDto addUser(
+			@ModelAttribute("username") String username,
+			@ModelAttribute("password") String password,
+			@ModelAttribute("email") String email,
+			@ModelAttribute("roleId") Integer roleId) {		
+		User user = userService.save(roleId, username, password, email);
+		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getPassword(), user.getEmail());
 	}
 	
 	@GetMapping("{id}")
-    public ResponseEntity<User> getUserById(
-		@PathVariable("id") Integer id) {
-		if (id == null || id.equals(0)){
-			throw new InvalidInputException("User ID is not valid.");
-		}
-		if (!userService.existsById(id)){
-			throw new IndexDoesNotExistException("User ID does not exist.");
-		}
-		
+    public UserDto getUserById(
+			@ModelAttribute("id") Integer id) {
 		User user = userService.get(id);
-        return  new ResponseEntity<User>(user, HttpStatus.OK);
+        return  new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getPassword(), user.getEmail());
     }
 	
-	@GetMapping(path = "all")
-	public ResponseEntity<List<User>> getAllUsers() {
+	@GetMapping()
+	public List<UserDto> getAllUsers() {
 		List<User> users = userService.getAll();
-		return new ResponseEntity<List<User>>(users, HttpStatus.OK);
+		List<UserDto> usersDto = users.stream()
+				.map(user -> new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getPassword(), user.getEmail()))
+				.collect(Collectors.toList());
+		return usersDto;
 	}
 	
-	@PutMapping(path = "update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<User> updateUser(@ModelAttribute User user) {
-		if (user.getUserId() == null ||
-				user.getUserId().equals(0) ||
-				user.getUsername() == null ||
-				user.getUsername().isBlank() ||
-				user.getUsername().isEmpty() ||
-				user.getPassword() == null ||
-				user.getPassword().isBlank() ||
-				user.getPassword().isEmpty() ||
-				user.getEmail() == null ||
-				user.getEmail().isBlank() ||
-				user.getEmail().isEmpty()){
-			throw new InvalidInputException("Invalid input.");
-		}
-		if (!userService.existsById(user.getUserId())){
-			throw new IndexDoesNotExistException("Can not update user if it does not exist.");
-		}
-//		if (!userService.existsByUsername(user.getUsername())){
-//			throw new DuplicateValueException("User name already exists.");
-//		}
-//		if (!userService.existsByEmail(user.getEmail())) {
-//			throw new DuplicateValueException("Email already exists");
-//		}
-		if (!roleService.existsById(user.getRoleId())) {
-			throw new IndexDoesNotExistException("Role ID does not exist.");
-		}
+	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public UserDto updateUser(
+			@ModelAttribute("userId") Integer userId,
+			@ModelAttribute("username") String username,
+			@ModelAttribute("password") String password,
+			@ModelAttribute("email") String email,
+			@ModelAttribute("roleId") Integer roleId) {
 		
-		userService.update(user);
-		return new ResponseEntity<User>(user, HttpStatus.OK);
+		User user = userService.update(userId, roleId, username, password, email);
+		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getPassword(), user.getEmail());
 	}
 	
-	@DeleteMapping("{id}")
-	public ResponseEntity<Void> deleteUser(@PathVariable("id") Integer id) {
-		if (id == null || id.equals(0)){
-			throw new InvalidInputException("User ID is not valid.");
-		}
-		if (!userService.existsById(id)) {
-			throw new IndexDoesNotExistException("User ID does not exist.");
-		}
-		
+	@DeleteMapping(path = "{id}")
+	public void deleteUser(@PathVariable("id") Integer id) {		
 		userService.delete(id);
-		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 
 	@PostMapping(path = "authenticate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<User> login(
+	public User login(
 		@ModelAttribute("email") String email) {
-		
-		if (email == null || email.isBlank() || email.isEmpty() || userService.existsByEmail(email)) {
-			throw new InvalidInputException("Invalid input.");
-		}
-
-		User user = null;
-		user = userService.getByEmail(email);
-		return new ResponseEntity<User>(user, HttpStatus.OK);
+		User user = userService.getByEmail(email);
+//		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getPassword(), user.getEmail());
+		return user;
 	}
 
 	@PutMapping(path = "changePassword", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public String changePassword(
 		@ModelAttribute("password") String password,
 		@ModelAttribute("id") Integer id) {
-		
-		if (password == null || password.isBlank() || password.isEmpty()) {
-			throw new InvalidInputException("Password is not valid.");
-		}
 
 		User user = userService.get(id);
-		user.setPassword(password);
-		userService.save(user);
+		String username = user.getUsername();
+		String email = user.getEmail();
+		Integer roleId = user.getRoleId();
+		userService.save(roleId, username, password, email);
 		String result = "Password saved";
 		return result;
 	}

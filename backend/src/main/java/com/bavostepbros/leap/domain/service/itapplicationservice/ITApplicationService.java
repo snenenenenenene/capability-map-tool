@@ -6,29 +6,35 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ITApplicationService {
-    ITApplication save(Integer statusID, String name, String technology, String version, LocalDate purchaseDate,
-                       LocalDate endOfLife, Integer currentScalability, Integer expectedScalability,
-                       Integer currentPerformance, Integer expectedPerformance, Integer currentSecurityLevel,
-                       Integer expectedSecurityLevel, Integer currentStability, Integer expectedStability,
-                       String costCurrency, String currentValue, Double currentYearlyCost, LocalDate timeValue);
+	ITApplication save(Integer statusID, String name, String version, LocalDate purchaseDate, LocalDate endOfLife,
+			Integer currentScalability, Integer expectedScalability, Integer currentPerformance,
+			Integer expectedPerformance, Integer currentSecurityLevel, Integer expectedSecurityLevel,
+			Integer currentStability, Integer expectedStability, String currencyType, Double costCurrency,
+			Double currentValue, Double currentYearlyCost, Double acceptedYearlyCost, LocalDate timeValue);
 
-    ITApplication save(ITApplication itApplication);
+	ITApplication get(Integer itApplicationId);
 
-    ITApplication get(long itApplicationID);
+	ITApplication update(Integer id, Integer statusID, String name, String version, LocalDate purchaseDate,
+			LocalDate endOfLife, Integer currentScalability, Integer expectedScalability, Integer currentPerformance,
+			Integer expectedPerformance, Integer currentSecurityLevel, Integer expectedSecurityLevel,
+			Integer currentStability, Integer expectedStability, String currencyType, Double costCurrency,
+			Double currentValue, Double currentYearlyCost, Double acceptedYearlyCost, LocalDate timeValue);
 
-    List<ITApplication> get(String name);
+	void delete(Integer itApplicationID);
 
-    List<ITApplication> getAll();
+	boolean existsById(Integer itApplicationID);
 
-    ITApplication update(long id, Integer statusID, String name, String technology, String version, LocalDate purchaseDate,
-                         LocalDate endOfLife, Integer currentScalability, Integer expectedScalability,
-                         Integer currentPerformance, Integer expectedPerformance, Integer currentSecurityLevel,
-                         Integer expectedSecurityLevel, Integer currentStability, Integer expectedStability,
-                         String costCurrency, String currentValue, Double currentYearlyCost, LocalDate timeValue);
+	boolean existsByName(String name);
 
-    void delete(long itApplicationID);
+	ITApplication getItApplicationByName(String name);
 
-    boolean existsById(long itApplicationID);
+	List<ITApplication> getAll();
 
-    boolean existsByName(String name);
+	List<String> getAllCurrencies();
+	
+	void addTechnology(Integer itApplicationId, Integer technologyId);
+	
+	void deleteTechnology(Integer itApplicationId, Integer technologyId);
+	
+	boolean doesItApplicationHasTechnology(Integer itApplicationId, Integer technologyId);
 }
