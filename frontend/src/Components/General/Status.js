@@ -71,29 +71,28 @@ export default class Status extends Component {
   };
 
   render() {
-    const environmentName = this.props.match.params.name;
     return (
       <div>
         <br></br>
-        <nav aria-label='breadcrumb'>
-          <ol className='breadcrumb'>
-            <li className='breadcrumb-item'>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
               <Link to={`/`}>Home</Link>
             </li>
-            <li className='breadcrumb-item'>
-              <Link to={`/environment/${environmentName}`}>
-                {environmentName}
+            <li className="breadcrumb-item">
+              <Link to={`/environment/${this.state.environmentName}`}>
+                {this.state.environmentName}
               </Link>
             </li>
-            <li className='breadcrumb-item'>Statuses</li>
+            <li className="breadcrumb-item">Statuses</li>
           </ol>
         </nav>
-        <div className='jumbotron'>
-          <h1 style={{ display: "inline-block" }} className='display-4'>
+        <div className="jumbotron">
+          <h1 style={{ display: "inline-block" }} className="display-4">
             Statuses
           </h1>
           <Link to={`/environment/${this.state.environmentName}/status/add`}>
-            <button className='btn btn-primary float-right'>Add Status</button>
+            <button className="btn btn-primary float-right">Add Status</button>
           </Link>
           <br />
           <br />
@@ -105,10 +104,10 @@ export default class Status extends Component {
                 title: "",
                 name: "delete",
                 render: (rowData) => (
-                  <button className='btn btn-secondary'>
+                  <button className="btn btn-secondary">
                     <i
                       onClick={this.delete.bind(this, rowData.statusId)}
-                      className='bi bi-trash'
+                      className="bi bi-trash"
                     ></i>
                   </button>
                 ),
@@ -117,10 +116,10 @@ export default class Status extends Component {
                 title: "",
                 name: "edit",
                 render: (rowData) => (
-                  <button className='btn btn-secondary'>
+                  <button className="btn btn-secondary">
                     <i
                       onClick={this.edit.bind(this, rowData.statusId)}
-                      className='bi bi-pencil'
+                      className="bi bi-pencil"
                     ></i>
                   </button>
                 ),
