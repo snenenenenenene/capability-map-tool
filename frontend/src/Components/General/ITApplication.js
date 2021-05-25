@@ -44,28 +44,57 @@ export default class ITApplication extends Component {
       `/environment/${this.state.environmentName}/itapplication/${itApplicationId}`
     );
   }
+
+  fetchDeleteITApplications = async (itApplicationId) => {
+    await axios
+      .delete(
+        `${process.env.REACT_APP_API_URL}/itapplication/${itApplicationId}`
+      )
+      .then((response) => toast.success("Succesfully Deleted IT Application"))
+      .catch((error) => toast.error("Could not Delete IT Application"));
+    //REFRESH CAPABILITIES
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/itapplication/`)
+      .then((response) => {
+        this.setState({ itApplications: [] });
+        this.setState({ itApplications: response.data });
+      })
+      .catch((error) => {
+        toast.error("Could not Find IT Applications");
+      });
+  };
+
   //DELETE CAPABILITY AND REMOVE ALL CHILD CAPABILITIES FROM STATE
   delete = async (itApplicationId) => {
-    if (
-      window.confirm("Are you sure you want to delete this IT Application?")
-    ) {
-      await axios
-        .delete(
-          `${process.env.REACT_APP_API_URL}/itapplication/${itApplicationId}`
-        )
-        .catch((error) => toast.error("Could not Remove IT Application"));
-      //REFRESH CAPABILITIES
-      await axios
-        .get(`${process.env.REACT_APP_API_URL}/itapplication/`)
-        .then((response) => {
-          this.setState({ itApplications: [] });
-          this.setState({ itApplications: response.data });
-        })
-        .catch((error) => {
-          console.log(error);
-          toast.error("No IT Applications Found");
-        });
-    }
+    toast(
+      (t) => (
+        <span>
+          <p className="text-center">
+            Are you sure you want to remove this IT Application?
+          </p>
+          <div className="text-center">
+            <button
+              className="btn btn-primary btn-sm m-3"
+              stlye={{ width: 50, height: 30 }}
+              onClick={() => {
+                toast.dismiss(t.id);
+                this.fetchDeleteITApplications(itApplicationId);
+              }}
+            >
+              Yes!
+            </button>
+            <button
+              className="btn btn-secondary btn-sm m-3"
+              stlye={{ width: 50, height: 30 }}
+              onClick={() => toast.dismiss(t.id)}
+            >
+              No!
+            </button>
+          </div>
+        </span>
+      ),
+      { duration: 50000 }
+    );
   };
 
   render() {
