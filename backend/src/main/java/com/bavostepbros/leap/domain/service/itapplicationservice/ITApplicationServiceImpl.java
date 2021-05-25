@@ -145,8 +145,22 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 	public void addTechnology(Integer itApplicationId, Integer technologyId) {
 		ITApplication itApplication = get(itApplicationId);
 		Technology technology = technologyService.get(technologyId);
-		itApplication.getTechnologies().add(technology);
+		itApplication.addTechnology(technology);
 		return;
+	}
+
+	@Override
+	public void deleteTechnology(Integer itApplicationId, Integer technologyId) {
+		ITApplication itApplication = get(itApplicationId);
+		Technology technology = technologyService.get(technologyId);
+		itApplication.removeTechnology(technology);
+	}
+
+	@Override
+	public boolean doesItApplicationHasTechnology(Integer itApplicationId, Integer technologyId) {
+		ITApplication itApplication = get(itApplicationId);
+		Technology technology = technologyService.get(technologyId);
+		return itApplication.hasTechnology(technology);
 	}
 
 }

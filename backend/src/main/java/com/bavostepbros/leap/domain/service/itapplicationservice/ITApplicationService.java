@@ -33,4 +33,8 @@ public interface ITApplicationService {
 	List<String> getAllCurrencies();
 	
 	void addTechnology(Integer itApplicationId, Integer technologyId);
+	
+	void deleteTechnology(Integer itApplicationId, Integer technologyId);
+	
+	boolean doesItApplicationHasTechnology(Integer itApplicationId, Integer technologyId);
 }

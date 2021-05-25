@@ -153,6 +153,14 @@ public class ITApplication {
     	technologies.add(technology);
     	return;
     }
+	
+	public void removeTechnology(Technology technology) {
+		technologies.remove(technology);
+	}
+	
+	public boolean hasTechnology(Technology technology) {
+		return technologies.contains(technology);
+	}
 
 	@Override
 	public String toString() {

@@ -192,4 +192,17 @@ public class ITApplicationController {
 		itApplicationService.addTechnology(itApplicationId, technologyId);
 		return;
 	}
+	
+	@DeleteMapping(path = "unlink-technology/{itApplicationId}/{technologyId}")
+	public void deleteTechnology(@PathVariable("itApplicationId") Integer itApplicationId,
+			@PathVariable("technologyId") Integer technologyId) {
+		itApplicationService.deleteTechnology(itApplicationId, technologyId);
+		return;
+	}
+	
+	@GetMapping(path = "has-technology/{itApplicationId}/{technologyId}")
+	public boolean hasTechnology(@PathVariable("itApplicationId") Integer itApplicationId,
+			@PathVariable("technologyId") Integer technologyId) {
+		return itApplicationService.doesItApplicationHasTechnology(itApplicationId, technologyId);
+	}
 }
