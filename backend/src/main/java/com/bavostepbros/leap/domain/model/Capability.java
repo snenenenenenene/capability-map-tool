@@ -69,6 +69,9 @@ public class Capability {
 
     @OneToMany
     private List<CapabilityItem> capabilityItems;
+    
+    @OneToMany
+    private List<CapabilityApplication> capabilityApplication;
 
     public Capability(Environment environment, Status status, Integer parentCapabilityId, String capabilityName, 
     		CapabilityLevel level, boolean paceOfChange, String targetOperatingModel, Integer resourceQuality, 
