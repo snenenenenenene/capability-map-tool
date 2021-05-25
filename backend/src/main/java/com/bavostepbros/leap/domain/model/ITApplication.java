@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import java.time.LocalDate;
@@ -89,6 +90,9 @@ public class ITApplication {
     
     @Column(name = "TIMEVALUE")
     private LocalDate timeValue;
+    
+    @OneToMany
+    private List<CapabilityApplication> capabilityApplication;
     
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "ITAPPLICATION_TECHNOLOGY", 
