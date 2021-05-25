@@ -77,8 +77,6 @@ class App extends Component {
   }
 
   adminSettings() {
-    console.log(this.state.user);
-
     if (this.state.user.roleId === 2) {
       return (
         <Link to='/user'>
@@ -333,11 +331,16 @@ class App extends Component {
                   <Route component={NotFoundPage} />
                 </Switch>
               </div>
-              <nav class="shadow-lg navbar fixed-bottom navbar-dark bg-dark">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Fixed bottom</a>
-  </div>
-</nav>
+              <nav className="shadow-lg navbar fixed-bottom navbar-dark bg-dark text-center">
+                <div className="container-fluid">
+                <a href="https://gitlab.apstudent.be/2ti_project_informatica_2020_2021/groep-5/leap-groep-5" className="me-4 text-center">
+                <i className="bi bi-github text-white"></i>
+                </a>
+                <div className="text-center text-white">
+                  © 2021 Copyright
+                  </div>
+                </div>
+              </nav>
           </div>
         );
       } else {
