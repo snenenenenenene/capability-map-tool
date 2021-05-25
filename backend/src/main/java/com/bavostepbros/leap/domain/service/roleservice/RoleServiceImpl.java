@@ -60,22 +60,30 @@ public class RoleServiceImpl implements RoleService {
 	
 	@Override
 	public Role update(Integer roleId, String roleName) {
-		if (roleId == null || roleId.equals(0) || roleName == null) {
+		if (roleId == null || roleId.equals(0) || 
+				roleName == null ||  roleName.isBlank() || roleName.isEmpty()) {
 			throw new InvalidInputException("Invalid input.");
 		}
 		if (!existsById(roleId)) {
 			throw new IndexDoesNotExistException("Can not update role if it does not exist.");
 		}
 		if (existsByRoleName(roleName)) {
-			throw new RoleException("Role name already exists.");
+			throw new RoleException("Rolename already exists.");
 		}
 		
 		Role role = new Role(roleId, roleName);
-		return roleDAL.save(role);
+		Role updated = roleDAL.save(role);
+		return updated;
 	}
 
 	@Override
 	public void delete(Integer id) {
+		if (id == null || id.equals(0)) {
+			throw new InvalidInputException("role ID is not valid.");
+		}
+		if (!existsById(id)) {
+			throw new IndexDoesNotExistException("Can not delete role if it does not exist.");
+		}
 		roleDAL.deleteById(id);
 	}
 	
