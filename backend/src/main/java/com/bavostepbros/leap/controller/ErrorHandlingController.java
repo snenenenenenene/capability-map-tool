@@ -16,6 +16,7 @@ import com.bavostepbros.leap.domain.customexceptions.EnvironmentException;
 import com.bavostepbros.leap.domain.customexceptions.ForeignKeyException;
 import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
 import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
+import com.bavostepbros.leap.domain.customexceptions.RelationshipException;
 import com.bavostepbros.leap.domain.customexceptions.StatusException;
 import com.bavostepbros.leap.domain.customexceptions.StrategyException;
 import com.bavostepbros.leap.domain.customexceptions.TechnologyException;
@@ -39,7 +40,8 @@ public class ErrorHandlingController extends ResponseEntityExceptionHandler {
 		EnvironmentException.class, 
 		StatusException.class, 
 		StrategyException.class,
-		TechnologyException.class})
+		TechnologyException.class,
+		RelationshipException.class})
 	protected ResponseEntity<String> handleInvalidInputException(InvalidInputException exception) {
 		logger.error(String.format("%s with message '%s' was thrown.", 
 				exception.getClass().getSimpleName(), exception.getMessage()));
