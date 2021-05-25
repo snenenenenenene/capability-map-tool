@@ -1,4 +1,4 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 import React, { Component } from "react";
 import Environment from "./Components/Environment";
 import NewEnvironment from "./Components/NewEnvironment";
@@ -78,290 +78,282 @@ class App extends Component {
   adminSettings() {
     if (this.state.user.roleId === 2) {
       return (
-        <Link to='/user'>
-          <li className='dropdown-item'>User List</li>
+        <Link to="/user">
+          <li className="dropdown-item">User List</li>
         </Link>
       );
     }
     return;
   }
 
-  adminRoutes(){
+  adminRoutes() {
     if (this.state.user.roleId === 2) {
-    return (
-      <>
-      <Route exact path='/user' component={User} />
-      <Route exact path='/user/add' component={AddUser} />
-      </>
-    )
+      return (
+        <>
+          <Route exact path="/user" component={User} />
+          <Route exact path="/user/add" component={AddUser} />
+        </>
+      );
     }
   }
 
   render() {
-      if (this.state.authenticated === true) {
-        return (
-          <div>
-            <Toaster />
-              <nav
-                className='navbar navbar-expand-lg navbar-dark sticky-top shadow-lg'
-                style={{ backgroundColor: "#ff754f" }}
-              >
-                <button
-                  className='navbar-toggler'
-                  type='button'
-                  data-toggle='collapse'
-                  data-target='#navbarTogglerDemo01'
-                  aria-controls='navbarTogglerDemo01'
-                  aria-expanded='false'
-                  aria-label='Toggle navigation'
-                >
-                  <span className='navbar-toggler-icon'></span>
-                </button>
+    if (this.state.authenticated === true) {
+      return (
+        <div>
+          <Toaster />
+          <nav
+            className="navbar navbar-expand-lg navbar-dark sticky-top shadow-lg"
+            style={{ backgroundColor: "#ff754f" }}
+          >
+            <button
+              className="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target="#navbarTogglerDemo01"
+              aria-controls="navbarTogglerDemo01"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span className="navbar-toggler-icon"></span>
+            </button>
+            <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
+              <Link to={"/home"} className="navbar-brand">
+                <img alt="leap" src={LeapImg} width="80" height="22" />
+              </Link>
+              <ul className="navbar-nav mr-auto mt-2 mt-lg-0"></ul>
+              <form className="form-inline my-2 my-lg-0">
                 <div
-                  className='collapse navbar-collapse'
-                  id='navbarTogglerDemo01'
+                  className="collapse navbar-collapse"
+                  id="navbarNavDarkDropdown"
                 >
-                  <Link to={"/home"} className='navbar-brand'>
-                    <img alt='leap' src={LeapImg} width='80' height='22' />
-                  </Link>
-                  <ul className='navbar-nav mr-auto mt-2 mt-lg-0'></ul>
-                  <form className='form-inline my-2 my-lg-0'>
-                    <div
-                      className='collapse navbar-collapse'
-                      id='navbarNavDarkDropdown'
-                    >
-                      <ul className='navbar-nav'>
-                        <li className='nav-item dropdown'>
-                          <li
-                            style={{ color: "#fff" }}
-                            href='#'
-                            id='navbarDarkDropdownMenuLink'
-                            role='button'
-                            data-bs-toggle='dropdown'
-                            aria-expanded='false'
-                          >
-                            {this.state.user.username}
-                          </li>
-                          <ul
-                            className='dropdown-menu dropdown-menu-right dropdown-menu-dark'
-                            aria-labelledby='navbarDarkDropdownMenuLink'
-                          >
-                            <Link to='/settings'>
-                              <li className='dropdown-item'>Settings</li>
-                            </Link>
-                            {this.adminSettings()}
-                            <Link to={""} onClick={this.logout}>
-                              <li className='dropdown-item'>Logout</li>
-                            </Link>
-                          </ul>
-                        </li>
+                  <ul className="navbar-nav">
+                    <li className="nav-item dropdown">
+                      <li
+                        style={{ color: "#fff" }}
+                        href="#"
+                        id="navbarDarkDropdownMenuLink"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        {this.state.user.username}
+                      </li>
+                      <ul
+                        className="dropdown-menu dropdown-menu-right dropdown-menu-dark"
+                        aria-labelledby="navbarDarkDropdownMenuLink"
+                      >
+                        <Link to="/settings">
+                          <li className="dropdown-item">Settings</li>
+                        </Link>
+                        {this.adminSettings()}
+                        <Link to={""} onClick={this.logout}>
+                          <li className="dropdown-item">Logout</li>
+                        </Link>
                       </ul>
-                    </div>
-                  </form>
+                    </li>
+                  </ul>
                 </div>
-              </nav>
-              <div className='container'>
-                <Switch>
-                  {/* ROOT */}
-                  <Route exact path='/home' component={NewEnvironment} />
-                  <Route exact path='/' component={NewEnvironment} />
-                  {/* ENVIRONMENTS */}
-                  <Route exact path='/add' component={NewEnvironment} />
-                  <Route
-                    exact
-                    path='/environment/:name'
-                    component={Environment}
-                  />
-                  <Route exact path='/recent' component={RecentEnvironments} />
-                  {/* CAPABILITIES */}
-                  <Route
-                    exact
-                    path='/environment/:name/capability/add'
-                    component={AddCapability}
-                  />
-                  <Route
-                    exact
-                    path='/environment/:name/capability/:id'
-                    component={EditCapability}
-                  />
-                  <Route
-                    exact
-                    path='/environment/:name/capability'
-                    component={Capability}
-                  />
-                  {/* STRATEGIES */}
-                  <Route
-                    exact
-                    path='/environment/:name/strategy/add'
-                    component={AddStrategy}
-                  />
-                  <Route
-                    exact
-                    path='/environment/:name/strategy/:id'
-                    component={EditStrategy}
-                  />
-                  <Route
-                    exact
-                    path='/environment/:name/strategy'
-                    component={Strategy}
-                  />
-  
-                  {/* RESOURCES */}
-                  <Route
-                    exact
-                    path='/environment/:name/resource/add'
-                    component={AddResource}
-                  />
-                  <Route
-                    exact
-                    path='/environment/:name/resource/:id'
-                    component={EditResource}
-                  />
-                  <Route
-                    exact
-                    path='/environment/:name/resource'
-                    component={Resource}
-                  />
-  
-                  {/* ITAPPLICATIONS */}
-                  <Route
-                    exact
-                    path='/environment/:name/itapplication/add'
-                    component={AddITApplication}
-                  />
-                  <Route
-                    exact
-                    path='/environment/:name/itapplication/:id'
-                    component={EditITApplication}
-                  />
-                  <Route
-                    exact
-                    path='/environment/:name/itapplication'
-                    component={ITApplication}
-                  />
-                  {/* BUSSINESSPROCESSES */}
-                  <Route
-                    exact
-                    path='/environment/:name/businessprocess/add'
-                    component={AddBusinessProcess}
-                  />
-                  <Route
-                    exact
-                    path='/environment/:name/businessprocess/:id'
-                    component={EditBusinessProcess}
-                  />
-                  <Route
-                    exact
-                    path='/environment/:name/businessprocess'
-                    component={BusinessProcess}
-                  />
-                  {/* STATUSES */}
-                  <Route
-                    exact
-                    path='/environment/:name/status/add'
-                    component={AddStatus}
-                  />
-                  <Route
-                    exact
-                    path='/environment/:name/status/:id'
-                    component={EditStatus}
-                  />
-                  <Route
-                    exact
-                    path='/environment/:name/status'
-                    component={Status}
-                  />
-                  {/* PROJECTS */}
-                  <Route
-                    exact
-                    path='/environment/:name/project/add'
-                    component={AddProject}
-                  />
-                  <Route
-                    exact
-                    path='/environment/:name/project/:id'
-                    component={EditProject}
-                  />
-                  <Route
-                    exact
-                    path='/environment/:name/project'
-                    component={Project}
-                  />
-                  {/* STRATEGYITEMS */}
-                  <Route
-                    exact
-                    path='/environment/:name/strategyitem/add'
-                    component={AddStrategyItem}
-                  />
-                  <Route
-                    exact
-                    path='/environment/:name/strategyitem/:id'
-                    component={EditStrategyItem}
-                  />
-                  <Route
-                    exact
-                    path='/environment/:name/strategyitem'
-                    component={StrategyItem}
-                  />
-  
-                  {/* PROGRAMS */}
-                  <Route
-                    exact
-                    path='/environment/:name/program/add'
-                    component={AddProgram}
-                  />
-                  <Route
-                    exact
-                    path='/environment/:name/program/:id'
-                    component={EditProgram}
-                  />
-                  <Route
-                    exact
-                    path='/environment/:name/program'
-                    component={Program}
-                  />
-  
-                  {/* USERS */}
-                  <Route exact path='/login' component={Signup} />
-                  <Route
-                    exact
-                    path='/configurePassword'
-                    component={ConfigurePassword}
-                  />
-                  {this.adminRoutes()}
-                  <Route
-                    exact
-                    path='/choosePassword'
-                    component={ChoosePassword}
-                  />
-                  {/* ERRORS */}
-                  <Route exact path='/error' component={GeneralError} />
-                  <Route exact path='/notfound' component={NotFoundError} />
-                  <Route path='/*' component={NotFoundPage} />
-                </Switch>
-              </div>
-              <nav className="shadow-lg navbar fixed-bottom navbar-dark bg-dark text-center">
-                <div className="container-fluid">
-                <a href="https://gitlab.apstudent.be/2ti_project_informatica_2020_2021/groep-5/leap-groep-5" className="me-4 text-center">
-                <i className="bi bi-github text-white"></i>
-                </a>
-                <div className="text-center text-white">
-                  © 2021 Copyright
-                  </div>
-                </div>
-              </nav>
+              </form>
+            </div>
+          </nav>
+          <div className="container">
+            <Switch>
+              {/* ROOT */}
+              <Route exact path="/home" component={NewEnvironment} />
+              <Route exact path="/" component={NewEnvironment} />
+              {/* ENVIRONMENTS */}
+              <Route exact path="/add" component={NewEnvironment} />
+              <Route exact path="/environment/:name" component={Environment} />
+              <Route exact path="/recent" component={RecentEnvironments} />
+              {/* CAPABILITIES */}
+              <Route
+                exact
+                path="/environment/:name/capability/add"
+                component={AddCapability}
+              />
+              <Route
+                exact
+                path="/environment/:name/capability/:id"
+                component={EditCapability}
+              />
+              <Route
+                exact
+                path="/environment/:name/capability"
+                component={Capability}
+              />
+              {/* STRATEGIES */}
+              <Route
+                exact
+                path="/environment/:name/strategy/add"
+                component={AddStrategy}
+              />
+              <Route
+                exact
+                path="/environment/:name/strategy/:id"
+                component={EditStrategy}
+              />
+              <Route
+                exact
+                path="/environment/:name/strategy"
+                component={Strategy}
+              />
+
+              {/* RESOURCES */}
+              <Route
+                exact
+                path="/environment/:name/resource/add"
+                component={AddResource}
+              />
+              <Route
+                exact
+                path="/environment/:name/resource/:id"
+                component={EditResource}
+              />
+              <Route
+                exact
+                path="/environment/:name/resource"
+                component={Resource}
+              />
+
+              {/* ITAPPLICATIONS */}
+              <Route
+                exact
+                path="/environment/:name/itapplication/add"
+                component={AddITApplication}
+              />
+              <Route
+                exact
+                path="/environment/:name/itapplication/:id"
+                component={EditITApplication}
+              />
+              <Route
+                exact
+                path="/environment/:name/itapplication"
+                component={ITApplication}
+              />
+              {/* BUSSINESSPROCESSES */}
+              <Route
+                exact
+                path="/environment/:name/businessprocess/add"
+                component={AddBusinessProcess}
+              />
+              <Route
+                exact
+                path="/environment/:name/businessprocess/:id"
+                component={EditBusinessProcess}
+              />
+              <Route
+                exact
+                path="/environment/:name/businessprocess"
+                component={BusinessProcess}
+              />
+              {/* STATUSES */}
+              <Route
+                exact
+                path="/environment/:name/status/add"
+                component={AddStatus}
+              />
+              <Route
+                exact
+                path="/environment/:name/status/:id"
+                component={EditStatus}
+              />
+              <Route
+                exact
+                path="/environment/:name/status"
+                component={Status}
+              />
+              {/* PROJECTS */}
+              <Route
+                exact
+                path="/environment/:name/project/add"
+                component={AddProject}
+              />
+              <Route
+                exact
+                path="/environment/:name/project/:id"
+                component={EditProject}
+              />
+              <Route
+                exact
+                path="/environment/:name/project"
+                component={Project}
+              />
+              {/* STRATEGYITEMS */}
+              <Route
+                exact
+                path="/environment/:name/strategyitem/add"
+                component={AddStrategyItem}
+              />
+              <Route
+                exact
+                path="/environment/:name/strategyitem/:id"
+                component={EditStrategyItem}
+              />
+              <Route
+                exact
+                path="/environment/:name/strategyitem"
+                component={StrategyItem}
+              />
+
+              {/* PROGRAMS */}
+              <Route
+                exact
+                path="/environment/:name/program/add"
+                component={AddProgram}
+              />
+              <Route
+                exact
+                path="/environment/:name/program/:id"
+                component={EditProgram}
+              />
+              <Route
+                exact
+                path="/environment/:name/program"
+                component={Program}
+              />
+              <Route path="/login">
+                <Redirect to="/home" />
+              </Route>
+
+              {/* USERS */}
+              <Route
+                exact
+                path="/configurePassword"
+                component={ConfigurePassword}
+              />
+              {this.adminRoutes()}
+              <Route exact path="/choosePassword" component={ChoosePassword} />
+              {/* ERRORS */}
+              <Route exact path="/error" component={GeneralError} />
+              <Route exact path="/notfound" component={NotFoundError} />
+              <Route path="/*" component={NotFoundPage} />
+            </Switch>
           </div>
-        );
-      } else {
-        return (
-          <Switch>
-            <Route exact path='/login' component={Signup} />
-            {/* <Route path='/'>
-              <Redirect to='/login'/>
-            </Route> */}
-          </Switch>
-        );
-      }
+          <nav className="shadow-lg navbar fixed-bottom navbar-dark bg-dark text-center">
+            <div className="container-fluid">
+              <a
+                href="https://gitlab.apstudent.be/2ti_project_informatica_2020_2021/groep-5/leap-groep-5"
+                className="me-4 text-center"
+              >
+                <i className="bi bi-github text-white"></i>
+              </a>
+              <div className="text-center text-white">© 2021 Copyright</div>
+            </div>
+          </nav>
+        </div>
+      );
+    } else {
+      return (
+        <Switch>
+          <Route exact path="/login" component={Signup} />
+          <Route path="/">
+            <Redirect to="/login" />
+          </Route>
+        </Switch>
+      );
+    }
   }
 }
 
