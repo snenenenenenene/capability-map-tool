@@ -315,7 +315,35 @@ public class ITApplicationControllerTest {
 		ITApplication itApplication = itApplicationService.get(itApplicationId);
 		Technology technology = itApplication.getTechnologies().get(0);
 		TechnologyDto technologyDto = new TechnologyDto(technology.getTechnologyId(), technology.getTechnologyName());
+		
 		testTechnology(technologyFirst, technologyDto);
+	}
+	
+	@Test
+	public void should_unlinkTechnology_whenDeleteTechnology() throws Exception {
+		Integer itApplicationId = itApplicationSecond.getItApplicationId();
+		Integer technologyId = technologySecond.getTechnologyId();		
+		itApplicationService.addTechnology(itApplicationId, technologyId);
+		
+		mockMvc.perform(MockMvcRequestBuilders.delete(
+				PATH + "unlink-technology/" + itApplicationId + "/" + technologyId))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+		
+		ITApplication itApplication = itApplicationService.get(itApplicationId);
+		List<Technology> technologies = itApplication.getTechnologies();
+				
+		assertEquals(itApplicationSecond.getTechnologies(), technologies);
+	}
+	
+	@Test
+	public void should_returnTrue_whenHasTechnology() throws Exception {
+		Integer itApplicationId = itApplicationSecond.getItApplicationId();
+		Integer technologyId = technologySecond.getTechnologyId();		
+		itApplicationService.addTechnology(itApplicationId, technologyId);
+		
+		mockMvc.perform(MockMvcRequestBuilders.get(
+				PATH + "has-technology/" + itApplicationId + "/" + technologyId))
+				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
 	@Test

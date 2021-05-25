@@ -4,6 +4,7 @@ import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
 import com.bavostepbros.leap.domain.customexceptions.ForeignKeyException;
 import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
 import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
+import com.bavostepbros.leap.domain.customexceptions.RelationshipException;
 import com.bavostepbros.leap.domain.model.ITApplication;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.Technology;
@@ -143,6 +144,16 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 
 	@Override
 	public void addTechnology(Integer itApplicationId, Integer technologyId) {
+		if (itApplicationId == null || itApplicationId.equals(0)) {
+			throw new InvalidInputException("IT-application ID is invalid.");
+		}
+		if (technologyId == null || technologyId.equals(0)) {
+			throw new InvalidInputException("IT-application ID is invalid.");
+		}
+		if (doesItApplicationHasTechnology(itApplicationId, technologyId)) {
+			throw new RelationshipException("Relationship already exsists.");
+		}
+		
 		ITApplication itApplication = get(itApplicationId);
 		Technology technology = technologyService.get(technologyId);
 		itApplication.addTechnology(technology);
@@ -151,6 +162,16 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 
 	@Override
 	public void deleteTechnology(Integer itApplicationId, Integer technologyId) {
+		if (itApplicationId == null || itApplicationId.equals(0)) {
+			throw new InvalidInputException("IT-application ID is invalid.");
+		}
+		if (technologyId == null || technologyId.equals(0)) {
+			throw new InvalidInputException("IT-application ID is invalid.");
+		}
+		if (!doesItApplicationHasTechnology(itApplicationId, technologyId)) {
+			throw new RelationshipException("Relationship does not exsist.");
+		}
+		
 		ITApplication itApplication = get(itApplicationId);
 		Technology technology = technologyService.get(technologyId);
 		itApplication.removeTechnology(technology);
@@ -158,6 +179,13 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 
 	@Override
 	public boolean doesItApplicationHasTechnology(Integer itApplicationId, Integer technologyId) {
+		if (itApplicationId == null || itApplicationId.equals(0)) {
+			throw new InvalidInputException("IT-application ID is invalid.");
+		}
+		if (technologyId == null || technologyId.equals(0)) {
+			throw new InvalidInputException("IT-application ID is invalid.");
+		}
+		
 		ITApplication itApplication = get(itApplicationId);
 		Technology technology = technologyService.get(technologyId);
 		return itApplication.hasTechnology(technology);
