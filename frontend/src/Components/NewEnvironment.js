@@ -69,7 +69,7 @@ export default class NewEnvironment extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label='breadcrumb' className="shadow">
+        <nav aria-label='breadcrumb'>
           <ol className='breadcrumb'>
             <li className='breadcrumb-item'>
               <Link to={`/home`}>Home</Link>

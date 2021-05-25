@@ -1,6 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { Component } from "react";
-import Home from "./Components/Home";
 import Environment from "./Components/Environment";
 import NewEnvironment from "./Components/NewEnvironment";
 import User from "./Components/User";
@@ -9,7 +8,7 @@ import AddCapability from "./Components/Add/AddCapability";
 import "./App.css";
 import Signup from "./auth/Login";
 import LeapImg from "./img/LEAP logo.png";
-import { BrowserRouter, Switch, Route, Link, HashRouter } from "react-router-dom";
+import { Switch, Route, Link, Redirect } from "react-router-dom";
 import AddResource from "./Components/Add/AddResource";
 import AddStrategy from "./Components/Add/AddStrategy";
 import AddBusinessProcess from "./Components/Add/AddBusinessProcess";
@@ -85,6 +84,17 @@ class App extends Component {
       );
     }
     return;
+  }
+
+  adminRoutes(){
+    if (this.state.user.roleId === 2) {
+    return (
+      <>
+      <Route exact path='/user' component={User} />
+      <Route exact path='/user/add' component={AddUser} />
+      </>
+    )
+    }
   }
 
   render() {
@@ -318,8 +328,7 @@ class App extends Component {
                     path='/configurePassword'
                     component={ConfigurePassword}
                   />
-                  <Route exact path='/user' component={User} />
-                  <Route exact path='/user/add' component={AddUser} />
+                  {this.adminRoutes()}
                   <Route
                     exact
                     path='/choosePassword'
@@ -328,7 +337,7 @@ class App extends Component {
                   {/* ERRORS */}
                   <Route exact path='/error' component={GeneralError} />
                   <Route exact path='/notfound' component={NotFoundError} />
-                  <Route component={NotFoundPage} />
+                  <Route path='/*' component={NotFoundPage} />
                 </Switch>
               </div>
               <nav className="shadow-lg navbar fixed-bottom navbar-dark bg-dark text-center">
@@ -345,7 +354,12 @@ class App extends Component {
         );
       } else {
         return (
-            <Route path='*' component={Signup} />
+          <Switch>
+            <Route exact path='/login' component={Signup} />
+            {/* <Route path='/'>
+              <Redirect to='/login'/>
+            </Route> */}
+          </Switch>
         );
       }
   }
