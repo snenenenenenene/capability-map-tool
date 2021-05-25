@@ -37,7 +37,6 @@ public class Environment {
     @Column(name = "ENVIRONMENTNAME")
     private String environmentName;
     
-    // Initialisatie naar services
     @OneToMany
     private List<Capability> capabilities = new ArrayList<Capability>();
 

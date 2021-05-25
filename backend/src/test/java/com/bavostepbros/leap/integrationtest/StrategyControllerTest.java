@@ -125,14 +125,7 @@ public class StrategyControllerTest {
 		Strategy strategy = strategyService.getStrategyByStrategyname(strategyName);
 		
 		assertNotNull(resultStrategy);
-		assertEquals(strategy.getStrategyId(), resultStrategy.getStrategyId());
-		assertEquals(strategy.getStatus().getStatusId(), resultStrategy.getStatus().getStatusId());
-		assertEquals(strategy.getStatus().getValidityPeriod(), resultStrategy.getStatus().getValidityPeriod());
-		assertEquals(strategy.getStrategyName(), resultStrategy.getStrategyName());
-		assertEquals(strategy.getTimeFrameStart(), resultStrategy.getTimeFrameStart());
-		assertEquals(strategy.getTimeFrameEnd(), resultStrategy.getTimeFrameEnd());
-		assertEquals(strategy.getEnvironment().getEnvironmentId(), resultStrategy.getEnvironment().getEnvironmentId());
-		assertEquals(strategy.getEnvironment().getEnvironmentName(), resultStrategy.getEnvironment().getEnvironmentName());
+		testStrategy(strategy, resultStrategy);
 	}
 	
 	@Test
@@ -147,14 +140,7 @@ public class StrategyControllerTest {
 				mvcResult.getResponse().getContentAsString(), StrategyDto.class);
 		
 		assertNotNull(resultStrategy);
-		assertEquals(strategyFirst.getStrategyId(), resultStrategy.getStrategyId());
-		assertEquals(strategyFirst.getStatus().getStatusId(), resultStrategy.getStatus().getStatusId());
-		assertEquals(strategyFirst.getStatus().getValidityPeriod(), resultStrategy.getStatus().getValidityPeriod());
-		assertEquals(strategyFirst.getStrategyName(), resultStrategy.getStrategyName());
-		assertEquals(strategyFirst.getTimeFrameStart(), resultStrategy.getTimeFrameStart());
-		assertEquals(strategyFirst.getTimeFrameEnd(), resultStrategy.getTimeFrameEnd());
-		assertEquals(strategyFirst.getEnvironment().getEnvironmentId(), resultStrategy.getEnvironment().getEnvironmentId());
-		assertEquals(strategyFirst.getEnvironment().getEnvironmentName(), resultStrategy.getEnvironment().getEnvironmentName());
+		testStrategy(strategyFirst, resultStrategy);
 	}
 	
 	@Test
@@ -169,14 +155,7 @@ public class StrategyControllerTest {
 				mvcResult.getResponse().getContentAsString(), StrategyDto.class);
 		
 		assertNotNull(resultStrategy);
-		assertEquals(strategyFirst.getStrategyId(), resultStrategy.getStrategyId());
-		assertEquals(strategyFirst.getStatus().getStatusId(), resultStrategy.getStatus().getStatusId());
-		assertEquals(strategyFirst.getStatus().getValidityPeriod(), resultStrategy.getStatus().getValidityPeriod());
-		assertEquals(strategyFirst.getStrategyName(), resultStrategy.getStrategyName());
-		assertEquals(strategyFirst.getTimeFrameStart(), resultStrategy.getTimeFrameStart());
-		assertEquals(strategyFirst.getTimeFrameEnd(), resultStrategy.getTimeFrameEnd());
-		assertEquals(strategyFirst.getEnvironment().getEnvironmentId(), resultStrategy.getEnvironment().getEnvironmentId());
-		assertEquals(strategyFirst.getEnvironment().getEnvironmentName(), resultStrategy.getEnvironment().getEnvironmentName());
+		testStrategy(strategyFirst, resultStrategy);
 	}
 	
 	@Test
@@ -192,14 +171,7 @@ public class StrategyControllerTest {
 		
 		assertNotNull(resultStrategies);
 		assertEquals(1, resultStrategies.size());
-		assertEquals(strategyFirst.getStrategyId(), resultStrategies.get(0).getStrategyId());
-		assertEquals(strategyFirst.getStatus().getStatusId(), resultStrategies.get(0).getStatus().getStatusId());
-		assertEquals(strategyFirst.getStatus().getValidityPeriod(), resultStrategies.get(0).getStatus().getValidityPeriod());
-		assertEquals(strategyFirst.getStrategyName(), resultStrategies.get(0).getStrategyName());
-		assertEquals(strategyFirst.getTimeFrameStart(), resultStrategies.get(0).getTimeFrameStart());
-		assertEquals(strategyFirst.getTimeFrameEnd(), resultStrategies.get(0).getTimeFrameEnd());
-		assertEquals(strategyFirst.getEnvironment().getEnvironmentId(), resultStrategies.get(0).getEnvironment().getEnvironmentId());
-		assertEquals(strategyFirst.getEnvironment().getEnvironmentName(), resultStrategies.get(0).getEnvironment().getEnvironmentName());
+		testStrategy(strategyFirst, resultStrategies.get(0));
 	}
 	
 	@Test
@@ -213,22 +185,8 @@ public class StrategyControllerTest {
 		
 		assertNotNull(resultStrategies);
 		assertEquals(2, resultStrategies.size());
-		assertEquals(strategyFirst.getStrategyId(), resultStrategies.get(0).getStrategyId());
-		assertEquals(strategyFirst.getStatus().getStatusId(), resultStrategies.get(0).getStatus().getStatusId());
-		assertEquals(strategyFirst.getStatus().getValidityPeriod(), resultStrategies.get(0).getStatus().getValidityPeriod());
-		assertEquals(strategyFirst.getStrategyName(), resultStrategies.get(0).getStrategyName());
-		assertEquals(strategyFirst.getTimeFrameStart(), resultStrategies.get(0).getTimeFrameStart());
-		assertEquals(strategyFirst.getTimeFrameEnd(), resultStrategies.get(0).getTimeFrameEnd());
-		assertEquals(strategyFirst.getEnvironment().getEnvironmentId(), resultStrategies.get(0).getEnvironment().getEnvironmentId());
-		assertEquals(strategyFirst.getEnvironment().getEnvironmentName(), resultStrategies.get(0).getEnvironment().getEnvironmentName());
-		assertEquals(strategySecond.getStrategyId(), resultStrategies.get(1).getStrategyId());
-		assertEquals(strategySecond.getStatus().getStatusId(), resultStrategies.get(1).getStatus().getStatusId());
-		assertEquals(strategySecond.getStatus().getValidityPeriod(), resultStrategies.get(1).getStatus().getValidityPeriod());
-		assertEquals(strategySecond.getStrategyName(), resultStrategies.get(1).getStrategyName());
-		assertEquals(strategySecond.getTimeFrameStart(), resultStrategies.get(1).getTimeFrameStart());
-		assertEquals(strategySecond.getTimeFrameEnd(), resultStrategies.get(1).getTimeFrameEnd());
-		assertEquals(strategySecond.getEnvironment().getEnvironmentId(), resultStrategies.get(1).getEnvironment().getEnvironmentId());
-		assertEquals(strategySecond.getEnvironment().getEnvironmentName(), resultStrategies.get(1).getEnvironment().getEnvironmentName());
+		testStrategy(strategyFirst, resultStrategies.get(0));
+		testStrategy(strategySecond, resultStrategies.get(1));
 	}
 	
 	@Test
@@ -275,14 +233,7 @@ public class StrategyControllerTest {
 		Strategy strategy = strategyService.getStrategyByStrategyname(strategyName);
 		
 		assertNotNull(resultStrategy);
-		assertEquals(strategy.getStrategyId(), resultStrategy.getStrategyId());
-		assertEquals(strategy.getStatus().getStatusId(), resultStrategy.getStatus().getStatusId());
-		assertEquals(strategy.getStatus().getValidityPeriod(), resultStrategy.getStatus().getValidityPeriod());
-		assertEquals(strategy.getStrategyName(), resultStrategy.getStrategyName());
-		assertEquals(strategy.getTimeFrameStart(), resultStrategy.getTimeFrameStart());
-		assertEquals(strategy.getTimeFrameEnd(), resultStrategy.getTimeFrameEnd());
-		assertEquals(strategy.getEnvironment().getEnvironmentId(), resultStrategy.getEnvironment().getEnvironmentId());
-		assertEquals(strategy.getEnvironment().getEnvironmentName(), resultStrategy.getEnvironment().getEnvironmentName());
+		testStrategy(strategy, resultStrategy);
 	}
 	
 	@Test
@@ -291,5 +242,17 @@ public class StrategyControllerTest {
 		
 		mockMvc.perform(MockMvcRequestBuilders.delete(PATH + strategyId))
 			.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+	
+	@Test
+	private void testStrategy(Strategy expectedObject, StrategyDto actualObject) {
+		assertEquals(expectedObject.getStrategyId(), actualObject.getStrategyId());
+		assertEquals(expectedObject.getStatus().getStatusId(), actualObject.getStatus().getStatusId());
+		assertEquals(expectedObject.getStatus().getValidityPeriod(), actualObject.getStatus().getValidityPeriod());
+		assertEquals(expectedObject.getStrategyName(), actualObject.getStrategyName());
+		assertEquals(expectedObject.getTimeFrameStart(), actualObject.getTimeFrameStart());
+		assertEquals(expectedObject.getTimeFrameEnd(), actualObject.getTimeFrameEnd());
+		assertEquals(expectedObject.getEnvironment().getEnvironmentId(), actualObject.getEnvironment().getEnvironmentId());
+		assertEquals(expectedObject.getEnvironment().getEnvironmentName(), actualObject.getEnvironment().getEnvironmentName());
 	}
 }
