@@ -114,7 +114,8 @@ public class CapabilityServiceImpl implements CapabilityService {
 		if (!existsById(capabilityId)) {
 			throw new CapabilityException("Can not update capability if it does not exist.");
 		}
-		if (existsByCapabilityName(capabilityName)) {
+		Capability oldCapability = capabilityDAL.findById(capabilityId).get();
+		if (capabilityName != oldCapability.getCapabilityName() && existsByCapabilityName(capabilityName)) {
 			throw new DuplicateValueException("Capability name already exists.");
 		}
 		if (!statusService.existsById(statusId)) {

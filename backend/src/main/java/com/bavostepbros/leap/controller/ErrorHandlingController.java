@@ -29,51 +29,12 @@ import com.bavostepbros.leap.domain.customexceptions.StrategyException;
 public class ErrorHandlingController extends ResponseEntityExceptionHandler {
 	private static final Logger logger = LoggerFactory.getLogger(ErrorHandlingController.class); 
 	
-	@ExceptionHandler(InvalidInputException.class)
+	@ExceptionHandler({InvalidInputException.class, IndexDoesNotExistException.class,
+		DuplicateValueException.class, ForeignKeyException.class, EnumException.class,
+		EnvironmentException.class, StatusException.class, StrategyException.class})
 	protected ResponseEntity<String> handleInvalidInputException(InvalidInputException exception) {
-		logger.error(String.format("InvalidInputException with message '%s' was thrown.", exception.getMessage()));
-		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
-	}
-	
-	@ExceptionHandler(IndexDoesNotExistException.class)
-	protected ResponseEntity<String> handleIndexDoesNotExistException(IndexDoesNotExistException exception) {
-		logger.error(String.format("IndexDoesNotExistException with message '%s' was thrown.", exception.getMessage()));
-		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
-	}
-	
-	@ExceptionHandler(DuplicateValueException.class)
-	protected ResponseEntity<String> handleDuplicateValueException(DuplicateValueException exception) {
-		logger.error(String.format("DuplicateValueException with message '%s' was thrown.", exception.getMessage()));
-		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
-	}
-	
-	@ExceptionHandler(ForeignKeyException.class)
-	protected ResponseEntity<String> handleForeignKeyException(ForeignKeyException exception) {
-		logger.error(String.format("ForeignKeyException with message '%s' was thrown.", exception.getMessage()));
-		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
-	}
-	
-	@ExceptionHandler(EnumException.class)
-	protected ResponseEntity<String> handleEnumException(EnumException exception) {
-		logger.error(String.format("EnumException with message '%s' was thrown.", exception.getMessage()));
-		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
-	}
-	
-	@ExceptionHandler(EnvironmentException.class)
-	protected ResponseEntity<String> handleEnvironmentException(EnvironmentException exception) {
-		logger.error(String.format("EnvironmentException with message '%s' was thrown.", exception.getMessage()));
-		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
-	}
-	
-	@ExceptionHandler(StatusException.class)
-	protected ResponseEntity<String> handleStatusException(StatusException exception) {
-		logger.error(String.format("EnvironmentException with message '%s' was thrown.", exception.getMessage()));
-		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
-	}
-	
-	@ExceptionHandler(StrategyException.class)
-	protected ResponseEntity<String> handleStrategyException(StrategyException exception) {
-		logger.error(String.format("StrategyException with message '%s' was thrown.", exception.getMessage()));
+		logger.error(String.format("%s with message '%s' was thrown.", 
+				exception.getClass().getSimpleName(), exception.getMessage()));
 		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 }

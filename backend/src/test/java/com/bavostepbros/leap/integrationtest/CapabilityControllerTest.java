@@ -446,9 +446,8 @@ public class CapabilityControllerTest {
 		Integer informationQuality = 1;
 		Integer applicationFit = 1;
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH)
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH + capabilityId)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-				.param("capabilityId", capabilityId.toString())
 				.param("environmentId", environmentId.toString())
 				.param("statusId", statusId.toString())
 				.param("parentCapabilityId", parentCapabilityId.toString())

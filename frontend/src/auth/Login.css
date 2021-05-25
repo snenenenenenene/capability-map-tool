@@ -1,50 +1,25 @@
-/* * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@media all and (min-width: 280px) {
+  .Login {
+    padding: 30px 0;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .Login form {
+    margin: 0 auto;
+    max-width: 320px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .Login p {
+    color: white;
+  }
 }
 
-html,
-body {
-  min-height: 100vh;
-  background: linear-gradient(
-    to right top,
-    rgb(255, 170, 136),
-    rgb(255, 137, 26)
-  );
-  display: flex;
-  alight-items: center;
-  justify-content: center;
+.linear-jumbotron {
+  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.89), rgb(0, 0, 0));
+  border-style: solid;
+  border-color: rgb(255, 115, 0);
+  border-width: 5px;
 }
-
-input,
-button {
-  appearance: none;
-  background: none;
-  border: none;
-  outline: none;
-}
-
-form {
-  display: block;
-  position: relative;
-}
-
-form:after {
-  content: "";
-  display: block;
-  position: absolute;
-  top: -5px;
-  left: -5px;
-  right: -5px;
-  bottom: -5px;
-  z-index: 1;
-  background-image: linear-gradient(
-    to bottom right,
-    rgb(255, 155, 24),
-    rgb(235, 235, 235)
-  );
-}
-
-form:inline {
-} */

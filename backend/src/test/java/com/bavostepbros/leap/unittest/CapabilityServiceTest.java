@@ -490,7 +490,7 @@ public class CapabilityServiceTest {
 	void should_throwDuplicateValueException_whenUpdateCapabilityNameExist() {
 		Integer capabilityId = capability.getCapabilityId();
 		Integer parentCapabilityId = capability.getParentCapabilityId();
-		String capabilityName = capability.getCapabilityName();
+		String capabilityName = "xyz";
 		String capabilityLevel = "ONE";
 		boolean paceOfChange = capability.isPaceOfChange();
 		String targetOperatingModel = capability.getTargetOperatingModel();
@@ -503,6 +503,8 @@ public class CapabilityServiceTest {
 		
 		BDDMockito.doReturn(true).when(spyCapabilityService).existsById(capabilityId);
 		BDDMockito.doReturn(true).when(spyCapabilityService).existsByCapabilityName(capabilityName);
+		
+		BDDMockito.given(capabilityDAL.findById(BDDMockito.anyInt())).willReturn(optionalCapability);
 		
 		Exception exception = assertThrows(DuplicateValueException.class,
 				() -> capabilityService.update(capabilityId, environmentId, statusId, 
@@ -531,6 +533,8 @@ public class CapabilityServiceTest {
 		BDDMockito.doReturn(true).when(spyCapabilityService).existsById(capabilityId);
 		BDDMockito.doReturn(false).when(spyCapabilityService).existsByCapabilityName(capabilityName);
 		BDDMockito.doReturn(false).when(spyStatusService).existsById(statusId);
+		
+		BDDMockito.given(capabilityDAL.findById(BDDMockito.anyInt())).willReturn(optionalCapability);
 		
 		Exception exception = assertThrows(ForeignKeyException.class,
 				() -> capabilityService.save(environmentId, statusId, 
@@ -561,6 +565,8 @@ public class CapabilityServiceTest {
 		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
 		BDDMockito.doReturn(false).when(spyEnvironmentService).existsById(environmentId);
 		
+		BDDMockito.given(capabilityDAL.findById(BDDMockito.anyInt())).willReturn(optionalCapability);
+		
 		Exception exception = assertThrows(ForeignKeyException.class,
 				() -> capabilityService.save(environmentId, statusId, 
 						parentCapabilityId, capabilityName, capabilityLevel, 
@@ -589,6 +595,8 @@ public class CapabilityServiceTest {
 		BDDMockito.doReturn(false).when(spyCapabilityService).existsByCapabilityName(capabilityName);
 		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
 		BDDMockito.doReturn(true).when(spyEnvironmentService).existsById(environmentId);
+		
+		BDDMockito.given(capabilityDAL.findById(BDDMockito.anyInt())).willReturn(optionalCapability);
 		
 		Exception exception = assertThrows(EnumException.class,
 				() -> capabilityService.save(environmentId, statusId, 
@@ -622,6 +630,7 @@ public class CapabilityServiceTest {
 		BDDMockito.given(statusDAL.findById(BDDMockito.anyInt())).willReturn(optionalStatus);
 		BDDMockito.given(environmentDAL.findById(BDDMockito.anyInt())).willReturn(optionalEnvironment);
 		BDDMockito.given(capabilityDAL.save(capability)).willReturn(capability);
+		BDDMockito.given(capabilityDAL.findById(BDDMockito.anyInt())).willReturn(optionalCapability);
 		
 		Capability fetchedCapability = capabilityService.update(capabilityId, environmentId, statusId, parentCapabilityId, 
 				capabilityName, capabilityLevel, paceOfChange, targetOperatingModel, 

@@ -161,9 +161,8 @@ public class StatusControllerTest {
 		Integer statusId = statusFirst.getStatusId();
 		LocalDate validityPeriod = LocalDate.of(2021, 12, 13);
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH)
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH + statusId)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-				.param("statusId", statusId.toString())
 				.param("validityPeriod", validityPeriod.toString())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk())

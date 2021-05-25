@@ -17,8 +17,7 @@ public class CapabilityLevelConverter implements AttributeConverter<CapabilityLe
 	public Integer convertToDatabaseColumn(CapabilityLevel capabilityLevel) {
 		if (capabilityLevel == null) {
 			return null;
-		}
-		
+		}		
 		return capabilityLevel.getLevel();
 	}
 

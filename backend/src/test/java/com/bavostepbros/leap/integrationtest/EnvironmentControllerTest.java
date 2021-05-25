@@ -159,11 +159,11 @@ public class EnvironmentControllerTest {
 	
 	@Test
 	public void should_putEnvironment_whenUpdateEnvironment() throws Exception {
+		Integer environmentId = environmentFirst.getEnvironmentId();
 		String newName = "Senne";
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH)
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH + environmentId)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-				.param("environmentId", environmentFirst.getEnvironmentId().toString())
 				.param("environmentName", newName)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk())

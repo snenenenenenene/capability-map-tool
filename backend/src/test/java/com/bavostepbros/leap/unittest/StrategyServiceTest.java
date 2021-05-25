@@ -331,7 +331,7 @@ public class StrategyServiceTest {
 	@Test
 	void should_throwDuplicateValueException_whenUpdateStrategyNameExist() {
 		Integer strategyId = strategy.getStrategyId();
-		String falseStrategyName = strategy.getStrategyName();
+		String falseStrategyName = "xyz";
 		LocalDate timeFrameStart = strategy.getTimeFrameStart();
 		LocalDate timeFrameEnd = strategy.getTimeFrameEnd();
 		Integer statusId = status.getStatusId();
@@ -340,6 +340,8 @@ public class StrategyServiceTest {
 
 		BDDMockito.doReturn(true).when(spyStrategyService).existsById(strategyId);
 		BDDMockito.doReturn(true).when(spyStrategyService).existsByStrategyName(falseStrategyName);
+		
+		BDDMockito.given(strategyDAL.findById(BDDMockito.anyInt())).willReturn(optionalStrategy);
 
 		Exception exception = assertThrows(DuplicateValueException.class, () -> strategyService.update(strategyId,
 				statusId, falseStrategyName, timeFrameStart, timeFrameEnd, environmentId));
@@ -360,6 +362,8 @@ public class StrategyServiceTest {
 		BDDMockito.doReturn(true).when(spyStrategyService).existsById(strategyId);
 		BDDMockito.doReturn(false).when(spyStrategyService).existsByStrategyName(falseStrategyName);
 		BDDMockito.doReturn(false).when(spyStatusService).existsById(statusId);
+		
+		BDDMockito.given(strategyDAL.findById(BDDMockito.anyInt())).willReturn(optionalStrategy);
 
 		Exception exception = assertThrows(ForeignKeyException.class, () -> strategyService.update(strategyId, statusId,
 				falseStrategyName, timeFrameStart, timeFrameEnd, environmentId));
@@ -381,6 +385,8 @@ public class StrategyServiceTest {
 		BDDMockito.doReturn(false).when(spyStrategyService).existsByStrategyName(falseStrategyName);
 		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
 		BDDMockito.doReturn(false).when(spyEnvironmentService).existsById(statusId);
+		
+		BDDMockito.given(strategyDAL.findById(BDDMockito.anyInt())).willReturn(optionalStrategy);
 
 		Exception exception = assertThrows(ForeignKeyException.class, () -> strategyService.update(strategyId, statusId,
 				falseStrategyName, timeFrameStart, timeFrameEnd, environmentId));
@@ -406,6 +412,7 @@ public class StrategyServiceTest {
 		BDDMockito.given(statusDAL.findById(BDDMockito.anyInt())).willReturn(optionalStatus);
 		BDDMockito.given(environmentDAL.findById(BDDMockito.anyInt())).willReturn(optionalEnvironment);
 		BDDMockito.given(strategyDAL.save(strategy)).willReturn(strategy);
+		BDDMockito.given(strategyDAL.findById(BDDMockito.anyInt())).willReturn(optionalStrategy);
 		
 		Strategy fetchedStrategy = strategyService.update(strategyId, statusId, falseStrategyName, timeFrameStart,
 				timeFrameEnd, environmentId);

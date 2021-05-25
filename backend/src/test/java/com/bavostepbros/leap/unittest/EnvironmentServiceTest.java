@@ -217,11 +217,14 @@ public class EnvironmentServiceTest {
 
 	@Test
 	void should_throwEnvironmentException_whenUpdateEnvironmentNameExists() {
-		String environmentName = environment.getEnvironmentName();
+		String environmentName = "xyz";
 		Integer id = environment.getEnvironmentId();
 		String expected = "Environment name already exists.";
+		
 		BDDMockito.doReturn(true).when(spyService).existsById(id);
 		BDDMockito.doReturn(true).when(spyService).existsByEnvironmentName(environmentName);
+		
+		BDDMockito.given(environmentDAL.findById(BDDMockito.anyInt())).willReturn(optionalEnvironment);
 
 		Exception exception = assertThrows(EnvironmentException.class,
 				() -> environmentService.update(id, environmentName));
@@ -239,6 +242,7 @@ public class EnvironmentServiceTest {
 		Mockito.doReturn(false).when(spyService).existsByEnvironmentName(falseEnvironmentName);
 
 		BDDMockito.given(environmentDAL.save(environment)).willReturn(environment);
+		BDDMockito.given(environmentDAL.findById(BDDMockito.anyInt())).willReturn(optionalEnvironment);
 		Environment fetchedEnvironment = environmentService.update(id, falseEnvironmentName);
 
 		assertNotNull(fetchedEnvironment);

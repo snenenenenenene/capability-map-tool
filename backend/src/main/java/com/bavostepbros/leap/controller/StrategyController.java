@@ -87,9 +87,9 @@ public class StrategyController {
 		return strategyService.existsByStrategyName(strategyName);
 	}
 
-	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PutMapping(path = "{strategyId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public StrategyDto updateStrategy(
-			@ModelAttribute("strategyId") Integer strategyId,
+			@PathVariable("strategyId") Integer strategyId,
 			@ModelAttribute("statusId") Integer statusId, 
 			@ModelAttribute("strategyName") String strategyName,
 			@ModelAttribute("timeFrameStart") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameStart,
@@ -102,7 +102,7 @@ public class StrategyController {
 				strategy.getTimeFrameStart(), strategy.getTimeFrameEnd(), strategy.getEnvironment());
 	}
 
-	@DeleteMapping("{strategyid}")
+	@DeleteMapping(path = "{strategyid}")
 	public void deleteStrategy(@PathVariable("strategyid") Integer id) {
 		strategyService.delete(id);
 	}

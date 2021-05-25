@@ -72,9 +72,9 @@ public class EnvironmentController {
 		return environmentsDto;
 	}
 	
-	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PutMapping(path = "{environmentId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public EnvironmentDto updateEnvironment(
-			@ModelAttribute("environmentId") Integer environmentId,
+			@PathVariable("environmentId") Integer environmentId,
 			@ModelAttribute("environmentName") String environmentName) {		
 		Environment environment = envService.update(environmentId, environmentName);
 		return new EnvironmentDto(environment.getEnvironmentId(), environment.getEnvironmentName());

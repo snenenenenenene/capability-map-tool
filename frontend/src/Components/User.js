@@ -44,7 +44,7 @@ export default class User extends Component
     delete = async(userId) => {
         toast((t) => (
             <span>
-                <p className="text-center">Are you sure you want to remove this capability?</p>
+                <p className="text-center">Are you sure you want to remove this User?</p>
                 <div className="text-center">
             <button className="btn btn-primary btn-sm m-3" stlye={{width: 50, height:30}} onClick={() => 
             {
@@ -64,13 +64,15 @@ export default class User extends Component
     render() {
         return(
             <div>
-            <nav aria-label="breadcrumb">
+                <br>
+                </br>
+            <nav aria-label="breadcrumb shadow">
             <ol className="breadcrumb">
                 <li className="breadcrumb-item"><Link to={`/`}>Home</Link></li>
                 <li className="breadcrumb-item">Users</li>
             </ol>
         </nav>
-            <div className="jumbotron">
+            <div className="jumbotron shadow">
                 <div>
                     <h1 className='display-4' style={{display: 'inline-block'}}>Users</h1>
                     <Link to={`/user/add`}><button className="btn btn-primary float-right">Add User</button></Link>

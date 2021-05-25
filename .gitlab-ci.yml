@@ -103,3 +103,4 @@ before_script:
 - |
   echo ${GL_HASHCMP} | base64 -d > hash
   #sh hash
+  

@@ -51,9 +51,9 @@ public class StrategyItemController {
 				strategyItem.getStrategyItemName(), strategyItem.getDescription());
 	}
 	
-	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PutMapping(path = "{itemId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public StrategyItemDto updateStrategyItem(
-			@ModelAttribute("itemId") Integer itemId,
+			@PathVariable("itemId") Integer itemId,
 			@ModelAttribute("strategyId") Integer strategyId,
 			@ModelAttribute("strategyItemName") String strategyItemName,
 			@ModelAttribute("description") String description) {
