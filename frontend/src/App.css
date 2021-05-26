@@ -7,6 +7,10 @@ html {
   /* background-color: #282c34; */
 }
 
+.capability-map-card {
+  width: 18rem;
+}
+
 html body {
   min-height: 100%;
   /* background-color: #282c34; */

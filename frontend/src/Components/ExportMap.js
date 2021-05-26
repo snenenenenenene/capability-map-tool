@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default class ExportMap extends Component {
   constructor(props) {
@@ -8,16 +9,30 @@ export default class ExportMap extends Component {
     this.state = {
       environmentName: this.props.match.params.name,
       environmentId: 1,
-      capabilities: 0,
-      itApplications: 0,
-      programs: 0,
-      strategies: 0,
-      strategyItems: 0,
-      projects: 0,
-      resources: 0,
-      businessProcesses: 0,
-      status: 0,
+      capabilities: [],
     };
+  }
+
+  capabilityMapping() {
+    console.log(this.state.capabilities);
+    return this.state.capabilities.map((capability) => {
+      return (
+        <div
+          class="card text-white bg-dark mb-3"
+          style={{ maxWidth: 10 + "rem" }}
+        >
+          <div class="card-header text-center text-uppercase">
+            {capability.capabilityName}
+          </div>
+          <div class="card-body">
+            {() => {
+              if (capability.children.length > 0) this.capabilityMapping();
+            }}
+            <p class="card-text"></p>
+          </div>
+        </div>
+      );
+    });
   }
 
   async componentDidMount() {
@@ -33,6 +48,18 @@ export default class ExportMap extends Component {
       .catch((error) => {
         console.log("environment not found");
         this.props.history.push("/notfound");
+      });
+
+    await axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/capability/all-capabilities-by-environmentid/${this.state.environmentId}`
+      )
+      .then((response) => {
+        this.setState({ capabilities: response.data });
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Could Not Find Capabilities");
       });
   }
 
@@ -55,7 +82,9 @@ export default class ExportMap extends Component {
         </nav>
         <div className="container jumbotron">
           <h1>Export</h1>
-          <div className="card-deck"></div>
+          <div className="card-deck justify-content-center">
+            {this.capabilityMapping()}
+          </div>
         </div>
       </div>
     );
