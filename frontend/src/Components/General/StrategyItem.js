@@ -133,11 +133,11 @@ export default class StrategyItem extends Component {
           <br />
           <MaterialTable
             columns={[
-              { title: "ID", field: "strategyItemId" },
+              { title: "ID", field: "itemId" },
               { title: "Name", field: "strategyItemName" },
-              { title: "Start", field: "timeFrameStart" },
-              { title: "End", field: "timeFrameEnd" },
-              { title: "Environment", field: "status.environmentId" },
+              { title: "Strategy", field: "strategy.strategyName" },
+              { title: "Start", field: "strategy.timeFrameStart" },
+              { title: "End", field: "strategy.timeFrameEnd" },
               {
                 title: "",
                 name: "delete",
