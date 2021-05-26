@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import axios from "axios";
 
-export default class Environment extends Component {
+class Environment extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -213,3 +213,4 @@ export default class Environment extends Component {
     );
   }
 }
+export default Environment;
