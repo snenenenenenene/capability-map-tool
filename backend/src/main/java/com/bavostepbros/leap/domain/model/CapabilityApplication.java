@@ -27,7 +27,7 @@ public class CapabilityApplication {
     private Capability capability;
 	
 	@ManyToOne
-    @MapsId("capabilityId")
+    @MapsId("applicationId")
     @EqualsAndHashCode.Include
     private ITApplication application;
 	
@@ -35,7 +35,7 @@ public class CapabilityApplication {
     private Integer importance;
 	
 	@Column(name = "EFFICIENCYSUPPORT")
-    private Integer efficiencySupport ;
+    private Integer efficiencySupport;
 	
 	@Column(name = "FUNCTIONALCOVERAGE")
     private Integer functionalCoverage;
