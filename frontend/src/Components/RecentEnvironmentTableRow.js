@@ -1,21 +1,20 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { Link, withRouter } from "react-router-dom";
 
-export default class RecentEnvironmentTableRow extends Component {
+class RecentEnvironmentTableRow extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
 
-  deleteEnvironment(environmentId) {
-    axios
+  async deleteEnvironment(environmentId) {
+    await axios
       .delete(`${process.env.REACT_APP_API_URL}/environment/${environmentId}`)
       .then((response) => toast.success("Successfully Removed Environment"))
       .catch((error) => {
         toast.error("Failed to Remove Environment");
-        console.log(error);
       });
     window.location.reload();
   }
@@ -40,7 +39,23 @@ export default class RecentEnvironmentTableRow extends Component {
             ></i>
           </button>
         </td>
+        <td>
+          <button className="btn-sm btn-secondary">
+            <i
+              onClick={() => {
+                console.log(
+                  `/environment/${this.props.obj.environmentId}/edit`
+                );
+                this.props.history.push(
+                  `/environment/${this.props.obj.environmentId}/edit`
+                );
+              }}
+              className="bi bi-pencil"
+            ></i>
+          </button>
+        </td>
       </tr>
     );
   }
 }
+export default withRouter(RecentEnvironmentTableRow);

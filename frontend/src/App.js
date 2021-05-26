@@ -8,7 +8,7 @@ import AddCapability from "./Components/Add/AddCapability";
 import "./App.css";
 import Signup from "./auth/Login";
 import LeapImg from "./img/LEAP logo.png";
-import { Switch, Route, Link, Redirect } from "react-router-dom";
+import { Switch, Route, Link, Redirect, withRouter } from "react-router-dom";
 import AddResource from "./Components/Add/AddResource";
 import AddStrategy from "./Components/Add/AddStrategy";
 import AddBusinessProcess from "./Components/Add/AddBusinessProcess";
@@ -43,6 +43,7 @@ import AddUser from "./Components/AddUser";
 import ChoosePassword from "./auth/ConfigurePassword";
 import ConfigurePassword from "./auth/ConfigurePassword";
 import ExportMap from "./Components/ExportMap";
+import EditEnvironment from "./Components/Edit/EditEnvironment";
 
 class App extends Component {
   constructor(props) {
@@ -167,6 +168,11 @@ class App extends Component {
               {/* ENVIRONMENTS */}
               <Route exact path="/add" component={NewEnvironment} />
               <Route exact path="/environment/:name" component={Environment} />
+              <Route
+                exact
+                path="/environment/:id/edit"
+                component={EditEnvironment}
+              />
               <Route exact path="/recent" component={RecentEnvironments} />
               <Route
                 exact
@@ -364,4 +370,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withRouter(App);
