@@ -47,7 +47,7 @@ export default class ConfigurePassword extends Component {
       formData.append("password", pwd);
       formData.append("userId", this.state.userId);
       await axios
-        .put(`${process.env.REACT_APP_API_URL}/user/update`, formData)
+        .put(`${process.env.REACT_APP_API_URL}/user/`, formData)
         .then((response) => {
           toast.success("Successfully Changed Password");
           this.props.handleModal();

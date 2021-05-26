@@ -132,8 +132,6 @@ export default class AddITApplication extends Component {
   }
 
   render() {
-    const environmentName = this.props.match.params.name;
-
     return (
       <div>
         <br></br>
@@ -143,8 +141,8 @@ export default class AddITApplication extends Component {
               <Link to={`/`}>Home</Link>
             </li>
             <li className="breadcrumb-item">
-              <Link to={`/environment/${environmentName}`}>
-                {environmentName}
+              <Link to={`/environment/${this.state.environmentName}`}>
+                {this.state.environmentName}
               </Link>
             </li>
             <li className="breadcrumb-item active" aria-current="page">

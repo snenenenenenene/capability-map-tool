@@ -9,11 +9,9 @@ export default class RecentEnvironmentTableRow extends Component {
     this.state = {};
   }
 
-  deleteEnvironment() {
+  deleteEnvironment(environmentId) {
     axios
-      .delete(
-        `${process.env.REACT_APP_API_URL}/${this.props.obj.environmentId}`
-      )
+      .delete(`${process.env.REACT_APP_API_URL}/environment/${environmentId}`)
       .then((response) => toast.success("Successfully Removed Environment"))
       .catch((error) => {
         toast.error("Failed to Remove Environment");

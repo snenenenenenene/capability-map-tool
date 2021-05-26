@@ -51,9 +51,7 @@ export default class StrategyItem extends Component {
       .catch((error) => toast.error("Could not Delete Strategy Item"));
     //REFRESH Strategy Items
     await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/strategyItem/all-strategyItems-by-environmentid/${this.state.environmentId}`
-      )
+      .get(`${process.env.REACT_APP_API_URL}/strategyItem/`)
       .then((response) => {
         this.setState({ strategyItems: [] });
         this.setState({ strategyItems: response.data });
@@ -67,12 +65,12 @@ export default class StrategyItem extends Component {
     toast(
       (t) => (
         <span>
-          <p className='text-center'>
+          <p className="text-center">
             Are you sure you want to remove this strategyItem?
           </p>
-          <div className='text-center'>
+          <div className="text-center">
             <button
-              className='btn btn-primary btn-sm m-3'
+              className="btn btn-primary btn-sm m-3"
               stlye={{ width: 50, height: 30 }}
               onClick={() => {
                 toast.dismiss(t.id);
@@ -82,7 +80,7 @@ export default class StrategyItem extends Component {
               Yes!
             </button>
             <button
-              className='btn btn-secondary btn-sm m-3'
+              className="btn btn-secondary btn-sm m-3"
               stlye={{ width: 50, height: 30 }}
               onClick={() => toast.dismiss(t.id)}
             >
@@ -99,17 +97,17 @@ export default class StrategyItem extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label='breadcrumb'>
-          <ol className='breadcrumb'>
-            <li className='breadcrumb-item'>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
               <Link to={`/`}>Home</Link>
             </li>
-            <li className='breadcrumb-item'>
+            <li className="breadcrumb-item">
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className='breadcrumb-item'>
+            <li className="breadcrumb-item">
               <Link
                 to={`/environment/${this.state.environmentName}/strategyItem`}
               >
@@ -118,15 +116,15 @@ export default class StrategyItem extends Component {
             </li>
           </ol>
         </nav>
-        <div className='jumbotron'>
+        <div className="jumbotron">
           <div>
-            <h1 className='display-4' style={{ display: "inline-block" }}>
+            <h1 className="display-4" style={{ display: "inline-block" }}>
               Strategy Items
             </h1>
             <Link
               to={`/environment/${this.state.environmentName}/strategyItem/add`}
             >
-              <button className='btn btn-primary float-right'>
+              <button className="btn btn-primary float-right">
                 Add Strategy Item
               </button>
             </Link>
@@ -144,10 +142,10 @@ export default class StrategyItem extends Component {
                 title: "",
                 name: "delete",
                 render: (rowData) => (
-                  <button className='btn btn-secondary'>
+                  <button className="btn btn-secondary">
                     <i
                       onClick={this.delete.bind(this, rowData.strategyItemId)}
-                      className='bi bi-trash'
+                      className="bi bi-trash"
                     ></i>
                   </button>
                 ),
@@ -156,10 +154,10 @@ export default class StrategyItem extends Component {
                 title: "",
                 name: "edit",
                 render: (rowData) => (
-                  <button className='btn btn-secondary'>
+                  <button className="btn btn-secondary">
                     <i
                       onClick={this.edit.bind(this, rowData.strategyItemId)}
-                      className='bi bi-pencil'
+                      className="bi bi-pencil"
                     ></i>
                   </button>
                 ),
