@@ -26,6 +26,7 @@ import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.Technology;
 import com.bavostepbros.leap.domain.model.dto.ITApplicationDto;
 import com.bavostepbros.leap.domain.model.dto.TechnologyDto;
+import com.bavostepbros.leap.domain.model.timevalue.TimeValue;
 import com.bavostepbros.leap.domain.service.itapplicationservice.ITApplicationService;
 import com.bavostepbros.leap.persistence.ITApplicationDAL;
 import com.bavostepbros.leap.persistence.StatusDAL;
@@ -73,10 +74,10 @@ public class ITApplicationControllerTest {
 		technologySecond = technologyDAL.save(new Technology(2, "c#"));
 		itApplicationFirst = itApplicationDAL.save(new ITApplication(1, statusFirst, "application 1", 
 				"1.20.1", LocalDate.of(2021, 01, 20), LocalDate.of(2025, 05, 20), 1, 2, 3, 4, 5, 
-				6, 7, 8, "EUR", 1000.0, 100.0, 70.0, 100.0, LocalDate.of(2021, 05, 20)));
+				6, 7, 8, "EUR", 1000.0, 100.0, 70.0, 100.0, TimeValue.ELIMINATE));
 		itApplicationSecond = itApplicationDAL.save(new ITApplication(2, statusSecond, "application 2", 
 				"1.20.1", LocalDate.of(2021, 01, 20), LocalDate.of(2025, 05, 20), 2, 3, 4, 5, 6, 
-				7, 8, 9, "EUR", 1000.0, 100.0, 70.0, 100.0, LocalDate.of(2021, 05, 20)));
+				7, 8, 9, "EUR", 1000.0, 100.0, 70.0, 100.0, TimeValue.INVEST));
 	}
 	
 	@AfterEach
@@ -123,7 +124,7 @@ public class ITApplicationControllerTest {
 		Double currentValue = itApplicationFirst.getCurrentValue();
 		Double currentYearlyCost = itApplicationFirst.getCurrentYearlyCost();
 		Double acceptedYearlyCost = itApplicationFirst.getAcceptedYearlyCost();
-		LocalDate timeValue = itApplicationFirst.getTimeValue();
+		TimeValue timeValue = itApplicationFirst.getTimeValue();
 		
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(PATH)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -195,7 +196,7 @@ public class ITApplicationControllerTest {
 		Double currentValue = itApplicationFirst.getCurrentValue();
 		Double currentYearlyCost = itApplicationFirst.getCurrentYearlyCost();
 		Double acceptedYearlyCost = itApplicationFirst.getAcceptedYearlyCost();
-		LocalDate timeValue = itApplicationFirst.getTimeValue();
+		TimeValue timeValue = itApplicationFirst.getTimeValue();
 		
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH + itApplicationId)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)

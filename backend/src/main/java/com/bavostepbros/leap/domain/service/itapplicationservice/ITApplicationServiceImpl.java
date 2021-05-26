@@ -8,6 +8,7 @@ import com.bavostepbros.leap.domain.customexceptions.RelationshipException;
 import com.bavostepbros.leap.domain.model.ITApplication;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.Technology;
+import com.bavostepbros.leap.domain.model.timevalue.TimeValue;
 import com.bavostepbros.leap.domain.service.statusservice.StatusService;
 import com.bavostepbros.leap.domain.service.technologyservice.TechnologyService;
 import com.bavostepbros.leap.persistence.ITApplicationDAL;
@@ -41,7 +42,7 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 			LocalDate endOfLife, Integer currentScalability, Integer expectedScalability, Integer currentPerformance,
 			Integer expectedPerformance, Integer currentSecurityLevel, Integer expectedSecurityLevel,
 			Integer currentStability, Integer expectedStability, String currencyType, Double costCurrency,
-			Double currentValue, Double currentYearlyCost, Double acceptedYearlyCost, LocalDate timeValue) {
+			Double currentValue, Double currentYearlyCost, Double acceptedYearlyCost, String timeValue) {
 		if (name == null || name.isBlank() || name.isEmpty()) {
 			throw new InvalidInputException("IT-application name is invalid.");
 		}
@@ -53,10 +54,11 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 		}
 
 		Status status = statusService.get(statusId);
+		TimeValue timeValueConverted = TimeValue.valueOf(timeValue);
 		ITApplication itApplication = new ITApplication(status, name, version, purchaseDate, endOfLife,
 				currentScalability, expectedScalability, currentPerformance, expectedPerformance, currentSecurityLevel,
 				expectedSecurityLevel, currentStability, expectedStability, currencyType, costCurrency, currentValue,
-				currentYearlyCost, acceptedYearlyCost, timeValue);
+				currentYearlyCost, acceptedYearlyCost, timeValueConverted);
 		return itApplicationDAL.save(itApplication);
 	}
 
@@ -76,7 +78,7 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 			LocalDate endOfLife, Integer currentScalability, Integer expectedScalability, Integer currentPerformance,
 			Integer expectedPerformance, Integer currentSecurityLevel, Integer expectedSecurityLevel,
 			Integer currentStability, Integer expectedStability, String currencyType, Double costCurrency,
-			Double currentValue, Double currentYearlyCost, Double acceptedYearlyCost, LocalDate timeValue) {
+			Double currentValue, Double currentYearlyCost, Double acceptedYearlyCost, String timeValue) {
 		if (id == null || id.equals(0)) {
 			throw new InvalidInputException("IT-application ID is invalid.");
 		}
@@ -95,10 +97,11 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 		}
 
 		Status status = statusService.get(statusId);
+		TimeValue timeValueConverted = TimeValue.valueOf(timeValue);
 		ITApplication itApplication = new ITApplication(id, status, name, version, purchaseDate, endOfLife,
 				currentScalability, expectedScalability, currentPerformance, expectedPerformance, currentSecurityLevel,
 				expectedSecurityLevel, currentStability, expectedStability, currencyType, costCurrency, currentValue,
-				currentYearlyCost, acceptedYearlyCost, timeValue);
+				currentYearlyCost, acceptedYearlyCost, timeValueConverted);
 		return itApplicationDAL.save(itApplication);
 	}
 

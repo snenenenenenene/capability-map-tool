@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.bavostepbros.leap.domain.model.Status;
+import com.bavostepbros.leap.domain.model.timevalue.TimeValue;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,6 +35,6 @@ public class ITApplicationDto {
 	private Double currentValue;
 	private Double currentYearlyCost;
 	private Double acceptedYearlyCost;
-	private LocalDate timeValue;
+	private TimeValue timeValue;
 	private List<TechnologyDto> technologies;
 }

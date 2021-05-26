@@ -10,7 +10,7 @@ public interface ITApplicationService {
 			Integer currentScalability, Integer expectedScalability, Integer currentPerformance,
 			Integer expectedPerformance, Integer currentSecurityLevel, Integer expectedSecurityLevel,
 			Integer currentStability, Integer expectedStability, String currencyType, Double costCurrency,
-			Double currentValue, Double currentYearlyCost, Double acceptedYearlyCost, LocalDate timeValue);
+			Double currentValue, Double currentYearlyCost, Double acceptedYearlyCost, String timeValue);
 
 	ITApplication get(Integer itApplicationId);
 
@@ -18,7 +18,7 @@ public interface ITApplicationService {
 			LocalDate endOfLife, Integer currentScalability, Integer expectedScalability, Integer currentPerformance,
 			Integer expectedPerformance, Integer currentSecurityLevel, Integer expectedSecurityLevel,
 			Integer currentStability, Integer expectedStability, String currencyType, Double costCurrency,
-			Double currentValue, Double currentYearlyCost, Double acceptedYearlyCost, LocalDate timeValue);
+			Double currentValue, Double currentYearlyCost, Double acceptedYearlyCost, String timeValue);
 
 	void delete(Integer itApplicationID);
 

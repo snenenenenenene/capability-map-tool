@@ -16,6 +16,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.bavostepbros.leap.domain.model.timevalue.TimeValue;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +91,7 @@ public class ITApplication {
     private Double acceptedYearlyCost;
     
     @Column(name = "TIMEVALUE")
-    private LocalDate timeValue;
+    private TimeValue timeValue;
     
     @OneToMany
     private List<CapabilityApplication> capabilityApplication;
@@ -104,7 +106,7 @@ public class ITApplication {
 			LocalDate endOfLife, Integer currentScalability, Integer expectedScalability, Integer currentPerformance,
 			Integer expectedPerformance, Integer currentSecurityLevel, Integer expectedSecurityLevel,
 			Integer currentStability, Integer expectedStability, String currencyType, Double costCurrency, Double currentValue,
-			Double currentYearlyCost, Double acceptedYearlyCost, LocalDate timeValue) {
+			Double currentYearlyCost, Double acceptedYearlyCost, TimeValue timeValue) {
     	this.itApplicationId = itApplicationId;
 		this.status = status;
 		this.name = name;
@@ -131,7 +133,7 @@ public class ITApplication {
 			LocalDate endOfLife, Integer currentScalability, Integer expectedScalability, Integer currentPerformance,
 			Integer expectedPerformance, Integer currentSecurityLevel, Integer expectedSecurityLevel,
 			Integer currentStability, Integer expectedStability, String currencyType, Double costCurrency, Double currentValue,
-			Double currentYearlyCost, Double acceptedYearlyCost, LocalDate timeValue) {
+			Double currentYearlyCost, Double acceptedYearlyCost, TimeValue timeValue) {
 		this.status = status;
 		this.name = name;
 		this.version = version;
