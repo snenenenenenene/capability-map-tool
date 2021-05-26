@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -83,13 +84,13 @@ public class CapabilityApplicationController {
 				capabilityApplication.getAvailability());
 	}
 
-	@PutMapping(path = "{capabilityId}/{applicationId}")
+	@DeleteMapping(path = "{capabilityId}/{applicationId}")
 	public void deleteCapabilityApplication(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("applicationId") Integer applicationId) {
 		capabilityApplicationService.delete(capabilityId, applicationId);
 	}
 
-	@GetMapping(path = "all-capabilityApplications-by-strategyitemid/{capabilityId}")
+	@GetMapping(path = "all-capabilityApplications-by-capabilityid/{capabilityId}")
 	public List<CapabilityApplicationDto> getCapabilityApplication(@PathVariable("capabilityId") Integer capabilityId) {
 		List<CapabilityApplication> capabilityApplications = capabilityApplicationService
 				.getCapabilityApplicationsByCapability(capabilityId);
