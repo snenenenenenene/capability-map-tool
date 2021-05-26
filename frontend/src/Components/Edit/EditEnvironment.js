@@ -3,15 +3,13 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-export default class EditStatus extends Component {
+export default class EditEnvironment extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      status: {},
       environments: [],
       environmentName: this.props.match.params.name,
-      statusId: this.props.match.params.id,
-      validityPeriod: new Date(),
+      environmentId: "",
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
@@ -20,18 +18,16 @@ export default class EditStatus extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("validityPeriod", this.state.validityPeriod);
-    formData.append("statusId", this.state.statusId);
+    formData.append("environmentName", this.state.environmentName);
+    formData.append("environmentId", this.state.environmentId);
     await axios
-      .put(`${process.env.REACT_APP_API_URL}/api/status/`, formData)
-      .then((response) => toast.success("Updated Status"))
+      .put(`${process.env.REACT_APP_API_URL}/api/environment/`, formData)
+      .then((response) => toast.success("Updated Environment"))
       .catch((error) => {
         console.log(error);
-        toast.error("Failed to Update Status");
+        toast.error("Failed to Update Environment");
       });
-    this.props.history.push(
-      `/environment/${this.state.environmentName}/status`
-    );
+    this.props.history.push(`/home`);
   };
 
   async componentDidMount() {
