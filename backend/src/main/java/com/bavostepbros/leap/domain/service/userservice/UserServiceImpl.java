@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.bavostepbros.leap.domain.model.User;
 import com.bavostepbros.leap.domain.service.roleservice.RoleService;
-import com.bavostepbros.leap.persistence.RoleDAL;
 import com.bavostepbros.leap.persistence.UserDAL;
 import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
 import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
@@ -34,12 +33,18 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User save(Integer roleId, String username, String password, String email) {
-		if (username == null || username.isBlank() || username.isEmpty() ||
-			email == null || email.isEmpty() || email.isBlank() ||
-			password == null || password.isEmpty() || password.isBlank()) {
+		if (username == null 
+			|| username.isBlank() 
+			|| username.isEmpty() 
+			|| email == null 
+			|| email.isEmpty() 
+			|| email.isBlank() 
+			|| password == null 
+			|| password.isEmpty() 
+			|| password.isBlank()) {
 			throw new InvalidInputException("Invalid input.");
 		}
-    	if (existsByUsername(username)) {
+    	if (!existsByUsername(username)) {
 			throw new DuplicateValueException("Username already exists.");
 		}
 		if(existsByEmail(email)) {
@@ -133,8 +138,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean existsById(Integer id) {
-		boolean result = userDAL.existsById(id);
-		return result;
+		boolean result = userDAL.findById(id) == null;
+		return !result;
 	}
 
 	@Override
