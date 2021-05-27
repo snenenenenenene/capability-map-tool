@@ -44,16 +44,15 @@ export default class StrategyItem extends Component {
     );
   }
 
-  fetchDeleteStrategyItems = async (strategyItemId) => {
+  fetchDeleteStrategyItems = async (itemId) => {
     await axios
-      .delete(`${process.env.REACT_APP_API_URL}/strategyItem/${strategyItemId}`)
+      .delete(`${process.env.REACT_APP_API_URL}/strategyitem/${itemId}`)
       .then((response) => toast.success("Succesfully Deleted Strategy Item"))
       .catch((error) => toast.error("Could not Delete Strategy Item"));
     //REFRESH Strategy Items
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/strategyItem/`)
+      .get(`${process.env.REACT_APP_API_URL}/strategyitem/`)
       .then((response) => {
-        this.setState({ strategyItems: [] });
         this.setState({ strategyItems: response.data });
       })
       .catch((error) => {
@@ -61,7 +60,7 @@ export default class StrategyItem extends Component {
       });
   };
 
-  delete = async (strategyItemId) => {
+  delete = async (itemId) => {
     toast(
       (t) => (
         <span>
@@ -74,7 +73,7 @@ export default class StrategyItem extends Component {
               stlye={{ width: 50, height: 30 }}
               onClick={() => {
                 toast.dismiss(t.id);
-                this.fetchDeleteStrategyItems(strategyItemId);
+                this.fetchDeleteStrategyItems(itemId);
               }}
             >
               Yes!
@@ -142,9 +141,9 @@ export default class StrategyItem extends Component {
                 title: "",
                 name: "delete",
                 render: (rowData) => (
-                  <button className="btn btn-secondary">
+                  <button className="btn btn-danger">
                     <i
-                      onClick={this.delete.bind(this, rowData.strategyItemId)}
+                      onClick={this.delete.bind(this, rowData.itemId)}
                       className="bi bi-trash"
                     ></i>
                   </button>
@@ -156,7 +155,7 @@ export default class StrategyItem extends Component {
                 render: (rowData) => (
                   <button className="btn btn-secondary">
                     <i
-                      onClick={this.edit.bind(this, rowData.strategyItemId)}
+                      onClick={this.edit.bind(this, rowData.itemId)}
                       className="bi bi-pencil"
                     ></i>
                   </button>

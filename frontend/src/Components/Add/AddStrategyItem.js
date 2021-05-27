@@ -4,7 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import Select from "react-select";
 
-export default class StrategyItem extends Component {
+export default class AddStrategyItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -38,16 +38,24 @@ export default class StrategyItem extends Component {
       })
       .catch((error) => toast.error("Could not Add Strategy Item"));
     if (this.state.selectedCapabilities.length !== 0) {
-      const formData = new FormData();
-      formData.append("itemId", this.state.itemId);
-      formData.append("capabilityId", this.state.capabilityId);
-      formData.append("strategicImportance", this.state.strategicImportance);
-      await axios
-        .post(`${process.env.REACT_APP_API_URL}/capabilityitem/`, formData)
-        .then((response) =>
-          toast.success("Capability Item Added Successfully!")
-        )
-        .catch((error) => toast.error("Could not Add Capability Item"));
+      let promises = [];
+
+      this.state.selectedCapabilities.forEach((cap) => {
+        const formData = new FormData();
+        formData.append("itemId", this.state.itemId);
+        formData.append("capabilityId", cap.capabilityId);
+        formData.append("strategicImportance", this.state.strategicImportance);
+        promises.push(
+          axios.post(
+            `${process.env.REACT_APP_API_URL}/capabilityitem/`,
+            formData
+          )
+        );
+
+        Promise.all(promises)
+          .then()
+          .catch((error) => toast.error("Failed to Connect to Capability"));
+      });
     }
     this.props.history.push(
       `/environment/${this.state.environmentName}/strategyitem`
@@ -106,16 +114,6 @@ export default class StrategyItem extends Component {
         </option>
       );
     });
-  }
-
-  onSelect(selectedList, selectedItem) {
-    console.log(selectedItem);
-    console.log(selectedList);
-  }
-
-  onRemove(selectedList, removedItem) {
-    console.log(removedItem);
-    console.log(selectedList);
   }
 
   strategyListRows() {
@@ -215,12 +213,14 @@ export default class StrategyItem extends Component {
                     value={this.state.strategicImportance}
                     onChange={this.handleInputChange}
                   >
-                    <option defaultValue="selected" hidden value="ONE">
+                    <option defaultValue="selected" hidden value={null}>
                       Optional
                     </option>
-                    <option value="ONE">ONE</option>
-                    <option value="TWO">TWO</option>
-                    <option value="THREE">THREE</option>
+                    <option value="NONE">None</option>
+                    <option value="LOWEST">Lowest</option>
+                    <option value="MEDIUM">Medium</option>
+                    <option value="HIGH">High</option>
+                    <option value="HIGHEST">Highest</option>
                   </select>
                 </div>
                 <div className="form-group col-md">
