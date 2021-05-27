@@ -3,11 +3,19 @@ package com.bavostepbros.leap.domain.service.programservice;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.bavostepbros.leap.domain.model.Program;
 import com.bavostepbros.leap.persistence.ProgramDAL;
 
+import lombok.RequiredArgsConstructor;
+
+@Service
+@Transactional
+@RequiredArgsConstructor
 public class ProgramServiceImpl implements ProgramService {
 	
 	@Autowired
