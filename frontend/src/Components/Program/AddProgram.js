@@ -1,12 +1,18 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { Modal } from "react-bootstrap";
 
 export default class AddProgram extends Component {
   constructor(props) {
     super(props);
     this.state = {
       environments: [],
+      statuses: [],
       environmentName: this.props.match.params.name,
+      environmentId: "",
+      programName: "",
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -14,36 +20,30 @@ export default class AddProgram extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(this.state.environmentName);
-    const post_response = await fetch(
-      `${process.env.REACT_APP_API_URL}/program/add`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          environment: {
-            environmentName: this.state.environmentName,
-            environmentId: this.state.environmentId,
-          },
-          capabilityName: this.state.capabilityName,
-          // parentCapabilityId: this.state.parentCapability,
-          // paceOfChange: this.state.paceOfChange,
-          // targetOperatingModel: this.state.TOM,
-          // informationQuality: this.state.informationQuality,
-          // applicationFit: this.state.applicationFit,
-          // resourceQuality: this.state.resourcesQuality,
-          // // status: this.state.expirationDate,
-          // level: this.state.level
-        }),
-      }
+    const formData = new FormData();
+    formData.append("programName", this.state.programName);
+    await axios
+      .post(`${process.env.REACT_APP_API_URL}/program/`, formData)
+      .then((response) => toast.success("Program Added Successfully!"))
+      .catch((error) => toast.error("Could not Add Program"));
+    this.props.history.push(
+      `/environment/${this.state.environmentName}/program`
     );
-    if (!post_response.ok) {
-      console.log("Failed to post capability");
-    }
-    console.log(`Capability posted with name: ${this.state.capabilityName}`);
   };
 
-  componentDidMount() {}
-
+  async componentDidMount() {
+    await axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+      )
+      .then((response) =>
+        this.setState({ environmentId: response.data.environmentId })
+      )
+      .catch((error) => {
+        console.log(error);
+        this.props.history.push("/notfounderror");
+      });
+  }
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
@@ -52,7 +52,7 @@ export default class AddProgram extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label="breadcrumb">
+        <nav aria-label="shadow breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
               <Link to={`/`}>Home</Link>
@@ -67,13 +67,13 @@ export default class AddProgram extends Component {
             </li>
           </ol>
         </nav>
-        <div className="jumbotron">
+        <div className="jumbotron shadow">
           <h3>Add Program</h3>
-          <form onSubmit={this.handleSubmit} method="POST">
+          <form onSubmit={this.handleSubmit}>
             <div className="row">
-              <div className="col-sm-6">
+              <div className="col-sm">
                 <div className="form-row">
-                  <div className="form-group col-md-6">
+                  <div className="form-group col-md">
                     <label htmlFor="programName">Name Program</label>
                     <input
                       type="text"
@@ -87,42 +87,49 @@ export default class AddProgram extends Component {
                   </div>
                 </div>
                 <div className="form-row">
-                  <div className="form-group col-md-6">
-                    <label htmlFor="paceOfChange">Add Program</label>
-                    <select
+                  <div className="form-group col-md">
+                    <label htmlFor="technology">Technology</label>
+                    <input
+                      type="text"
+                      id="technology"
+                      name="technology"
                       className="form-control"
-                      name="program"
-                      id="program"
-                      placeholder="Add Program"
-                      value={this.state.program}
+                      placeholder="Technology"
+                      value={this.state.technology}
                       onChange={this.handleInputChange}
-                    >
-                      <option value="1">Program 1</option>
-                      <option value="2">Program 2</option>
-                      <option value="3">Program 3</option>
-                    </select>
+                    />
                   </div>
                 </div>
-                <div className="col-sm-6">
-                  <div className="form-row">
-                    <div className="form-group col-md-6">
-                      <table className=" table table-striped">
-                        <thead>
-                          <tr>
-                            <th>Name</th>
-                            <th></th>
-                          </tr>
-                        </thead>
-                        <tbody>{this.programTableRow()}</tbody>
-                      </table>
-                    </div>
+                <div className="form-row">
+                  <div className="form-group col-md">
+                    <label htmlFor="version">Version</label>
+                    <input
+                      type="text"
+                      id="version"
+                      name="version"
+                      className="form-control"
+                      placeholder="Version"
+                      value={this.state.version}
+                      onChange={this.handleInputChange}
+                    />
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group col-md">
+                    <button
+                      className="btn btn-secondary btn-block"
+                      style={{ marginTop: 32 }}
+                      type="button"
+                      onClick={this.handleSubmit}
+                    >
+                      Submit
+                    </button>
                   </div>
                 </div>
               </div>
+              <div className="col-sm"></div>
+              <div className="col-sm"></div>
             </div>
-            <button className="btn btn-secondary" type="submit">
-              Submit
-            </button>
           </form>
         </div>
       </div>

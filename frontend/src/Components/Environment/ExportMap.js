@@ -14,25 +14,28 @@ export default class ExportMap extends Component {
   }
 
   capabilityMapping() {
-    console.log(this.state.capabilities);
-    return this.state.capabilities.map((capability) => {
-      return (
-        <div
-          class="card text-white bg-dark mb-3"
-          style={{ maxWidth: 10 + "rem" }}
-        >
-          <div class="card-header text-center text-uppercase">
-            {capability.capabilityName}
+    if (this.state.capabilities.length > 0) {
+      return this.state.capabilities.map((capability) => {
+        return (
+          <div
+            class="card text-white bg-dark mb-3"
+            style={{ maxWidth: 10 + "rem" }}
+          >
+            <div class="card-header text-center text-uppercase">
+              {capability.capabilityName}
+            </div>
+            <div class="card-body">
+              {() => {
+                if (capability.children.length > 0) this.capabilityMapping();
+              }}
+              <p class="card-text"></p>
+            </div>
           </div>
-          <div class="card-body">
-            {() => {
-              if (capability.children.length > 0) this.capabilityMapping();
-            }}
-            <p class="card-text"></p>
-          </div>
-        </div>
-      );
-    });
+        );
+      });
+    } else {
+      return <h2>No Capabilities</h2>;
+    }
   }
 
   async componentDidMount() {
@@ -81,7 +84,9 @@ export default class ExportMap extends Component {
           </ol>
         </nav>
         <div className="container jumbotron">
-          <h1>Export</h1>
+          <h1 className="display-4" style={{ display: "inline-block" }}>
+            Export
+          </h1>
           <div className="card-deck justify-content-center">
             {this.capabilityMapping()}
           </div>

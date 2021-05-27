@@ -155,7 +155,7 @@ export default class StrategyItem extends Component {
                 render: (rowData) => (
                   <button className="btn btn-secondary">
                     <i
-                      onClick={this.edit.bind(this, rowData.strategyItemId)}
+                      onClick={this.edit.bind(this, rowData.itemId)}
                       className="bi bi-pencil"
                     ></i>
                   </button>

@@ -25,7 +25,6 @@ export default class AddCapability extends Component {
       applicationFit: "",
       resourcesQuality: "",
       statusId: "",
-      level: "ONE",
       showModal: false,
       immediate: true,
       setFocusOnError: true,
@@ -49,7 +48,6 @@ export default class AddCapability extends Component {
     formData.append("applicationFit", this.state.applicationFit);
     formData.append("resourceQuality", this.state.resourcesQuality);
     formData.append("statusId", this.state.statusId);
-    formData.append("level", this.state.level);
     await axios
       .post(`${process.env.REACT_APP_API_URL}/capability/`, formData)
       .then((response) => {
@@ -198,16 +196,13 @@ export default class AddCapability extends Component {
                       name="level"
                       id="level"
                       placeholder="Add Level"
-                      value={this.state.level}
+                      value={this.state.parentCapabilityId}
                       onChange={this.handleInputChange}
                       required
                     >
-                      {/* <option key="-1"  hidden="hidden" value="">Select Level</option> */}
                       <option defaultValue="selected" value="ONE">
-                        ONE
+                        {this.state.parentCapabilityId}
                       </option>
-                      <option value="TWO">TWO</option>
-                      <option value="THREE">THREE</option>
                     </select>
                   </div>
                 </div>

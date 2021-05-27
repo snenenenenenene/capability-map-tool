@@ -44,6 +44,7 @@ import EditUser from "./Components/User/EditUser";
 import ConfigurePassword from "./Components/Authentication/ConfigurePassword";
 import ExportMap from "./Components/Environment/ExportMap";
 import EditEnvironment from "./Components/Environment/EditEnvironment";
+import Settings from "./Components/User/Settings";
 
 class App extends Component {
   constructor(props) {
@@ -68,6 +69,7 @@ class App extends Component {
   logout() {
     localStorage.removeItem("user");
     this.props.history.push("/");
+    window.location.reload();
   }
 
   toastError(object) {
@@ -332,6 +334,7 @@ class App extends Component {
               </Route>
 
               {/* USERS */}
+              <Route exact path="/settings" component={Settings} />
               <Route
                 exact
                 path="/configurePassword"
