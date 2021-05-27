@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -34,7 +35,16 @@ public class Status {
     
     @Column(name = "VALIDITYPERIOD")
     private LocalDate validityPeriod;
+    
+    @OneToOne(mappedBy = "status")
+    private Project project;
 
+    public Status(Integer statusId, LocalDate validityPeriod) {
+		super();
+		this.statusId = statusId;
+		this.validityPeriod = validityPeriod;
+	}
+    
     public Status(LocalDate validityPeriod) {
         this.validityPeriod = validityPeriod;
     }

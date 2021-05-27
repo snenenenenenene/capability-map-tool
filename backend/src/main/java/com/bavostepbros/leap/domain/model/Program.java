@@ -1,9 +1,12 @@
 package com.bavostepbros.leap.domain.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 
 import lombok.EqualsAndHashCode;
@@ -27,15 +30,16 @@ public class Program {
 	@NotBlank(message = "Program name is required")
 	@Column(name = "PROGRAMNAME", unique = true)
     private String programName;
+	
+	@OneToMany(mappedBy = "program")
+	private List<Project> projects;
 
 	public Program(Integer programId, String programName) {
-		super();
 		this.programId = programId;
 		this.programName = programName;
 	}
 
 	public Program(String programName) {
-		super();
 		this.programName = programName;
 	}
 	
