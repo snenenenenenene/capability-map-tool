@@ -4,9 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-
-import com.bavostepbros.leap.domain.service.roleservice.RoleService;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -23,13 +20,14 @@ import lombok.NoArgsConstructor;
 public class User {
     @Id
     @GeneratedValue
+    @EqualsAndHashCode.Include
     @Column(name = "USERID")
     private Integer userId;
     
     @Column (name = "ROLEID")
     private Integer roleId;
 
-    @Column(name = "USERNAME")
+    @Column(name = "USERNAME", unique = true)
     private String username;
 
     @Column(name = "PASSWORD")
