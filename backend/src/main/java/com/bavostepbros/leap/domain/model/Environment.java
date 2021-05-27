@@ -38,7 +38,7 @@ public class Environment {
     private String environmentName;
     
     @OneToMany
-    private List<Capability> capabilities = new ArrayList<Capability>();
+    private List<Capability> capabilities;
 
     @OneToMany(cascade=CascadeType.ALL)
     @JoinColumn(name="ENVIRONMENTID")

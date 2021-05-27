@@ -49,7 +49,7 @@ public class ITApplicationController {
 			@ModelAttribute("currentValue") Double currentValue,
 			@ModelAttribute("currentYearlyCost") Double currentYearlyCost,
 			@ModelAttribute("acceptedYearlyCost") Double acceptedYearlyCost,
-			@ModelAttribute("timeValue") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeValue) {
+			@ModelAttribute("timeValue") String timeValue) {
 
 		ITApplication itApplication = itApplicationService.save(statusID, name, version, purchaseDate, endOfLife,
 				currentScalability, expectedScalability, currentPerformance, expectedPerformance, currentSecurityLevel,
@@ -107,7 +107,7 @@ public class ITApplicationController {
 			@ModelAttribute("currentValue") Double currentValue,
 			@ModelAttribute("currentYearlyCost") Double currentYearlyCost,
 			@ModelAttribute("acceptedYearlyCost") Double acceptedYearlyCost,
-			@ModelAttribute("timeValue") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeValue) {
+			@ModelAttribute("timeValue") String timeValue) {
 		
 		ITApplication itApplication = itApplicationService.update(itApplicationId, statusID, name, version, purchaseDate, endOfLife,
 				currentScalability, expectedScalability, currentPerformance, expectedPerformance, currentSecurityLevel,
