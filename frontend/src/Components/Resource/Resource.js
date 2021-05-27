@@ -1,17 +1,17 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import MaterialTable from "material-table";
-import "./GeneralTable.css";
 import axios from "axios";
 
-export default class Status extends Component {
+export default class Resource extends Component {
   constructor(props) {
     super(props);
     this.state = {
       environments: [],
       environmentName: this.props.match.params.name,
       environmentId: "",
-      statuses: [],
+      resources: [],
+      reload: false,
     };
   }
 
@@ -29,39 +29,33 @@ export default class Status extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`)
-      .then((response) => this.setState({ statuses: response.data }))
+      .get(`${process.env.REACT_APP_API_URL}/resource/`)
+      .then((response) => {
+        this.setState({ resources: response.data });
+      })
       .catch((error) => {
         console.log(error);
         // this.props.history.push('/error')
       });
   }
 
-  edit(id) {
-    console.log("edit");
+  edit(resourceId) {
     this.props.history.push(
-      `/environment/${this.state.environmentName}/status/${id}`
+      `/environment/${this.state.environmentName}/resource/${resourceId}`
     );
   }
-
-  delete = async (statusId) => {
-    if (window.confirm("Are you sure you want to delete this status?")) {
+  //DELETE resource AND REMOVE ALL CHILD resources FROM STATE
+  delete = async (resourceId) => {
+    if (window.confirm("Are you sure you want to delete this resource?")) {
       await axios
-        .delete(`${process.env.REACT_APP_API_URL}/status/${statusId}`)
-        .catch((error) => {
-          if (error.response.status === 500)
-            alert(
-              "This status is in use by a capability and could not be deleted!"
-            );
-          console.error(error);
-        });
-      //REFRESH CAPABILITIES
-
+        .delete(`${process.env.REACT_APP_API_URL}/resource/${resourceId}`)
+        .catch((error) => console.error(error));
+      //REFRESH resources
       await axios
-        .get(`${process.env.REACT_APP_API_URL}/status/`)
+        .get(`${process.env.REACT_APP_API_URL}/resource/`)
         .then((response) => {
-          console.log(response.data);
-          this.setState({ statuses: response.data });
+          this.setState({ resources: [] });
+          this.setState({ resources: response.data });
         })
         .catch((error) => {
           console.log(error);
@@ -84,29 +78,35 @@ export default class Status extends Component {
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className="breadcrumb-item">Statuses</li>
+            <li className="breadcrumb-item">Resources</li>
           </ol>
         </nav>
         <div className="jumbotron">
-          <h1 style={{ display: "inline-block" }} className="display-4">
-            Statuses
-          </h1>
-          <Link to={`/environment/${this.state.environmentName}/status/add`}>
-            <button className="btn btn-primary float-right">Add Status</button>
-          </Link>
+          <div>
+            <h1 className="display-4" style={{ display: "inline-block" }}>
+              Resources
+            </h1>
+            <Link
+              to={`/environment/${this.state.environmentName}/resource/add`}
+            >
+              <button className="btn btn-primary float-right">
+                Add Resource
+              </button>
+            </Link>
+          </div>
           <br />
           <br />
           <MaterialTable
             columns={[
-              { title: "ID", field: "statusId" },
-              { title: "Date", field: "validityPeriod" },
+              { title: "ID", field: "resourceId" },
+              { title: "Name", field: "resourceName" },
               {
                 title: "",
                 name: "delete",
                 render: (rowData) => (
                   <button className="btn btn-secondary">
                     <i
-                      onClick={this.delete.bind(this, rowData.statusId)}
+                      onClick={this.delete.bind(this, rowData.resourceId)}
                       className="bi bi-trash"
                     ></i>
                   </button>
@@ -118,14 +118,14 @@ export default class Status extends Component {
                 render: (rowData) => (
                   <button className="btn btn-secondary">
                     <i
-                      onClick={this.edit.bind(this, rowData.statusId)}
+                      onClick={this.edit.bind(this, rowData.resourceId)}
                       className="bi bi-pencil"
                     ></i>
                   </button>
                 ),
               },
             ]}
-            data={this.state.statuses}
+            data={this.state.resources}
             options={{
               showTitle: false,
               search: false,

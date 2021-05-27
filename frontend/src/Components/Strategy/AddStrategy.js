@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Modal } from "react-bootstrap";
-import StatusQuickAdd from "./QuickAdd/StatusQuickAdd";
+import StatusQuickAdd from "../Status/StatusQuickAdd";
 
 export default class AddStrategy extends Component {
   constructor(props) {

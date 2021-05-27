@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-import ProjectTableRow from "./ProjectTableRow";
 import { Link } from "react-router-dom";
 
-export default class NewEnvironment extends Component {
+export default class AddProgram extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -49,85 +48,79 @@ export default class NewEnvironment extends Component {
     this.setState({ [event.target.name]: event.target.value });
   }
 
-  projectTableRow() {
-    return this.state.environments.map((row, i) => {
-      return <ProjectTableRow obj={row} key={i} />;
-    });
-  }
-
   render() {
     return (
       <div>
         <br></br>
-        <nav aria-label='breadcrumb'>
-          <ol className='breadcrumb'>
-            <li className='breadcrumb-item'>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
               <Link to={`/`}>Home</Link>
             </li>
-            <li className='breadcrumb-item'>
+            <li className="breadcrumb-item">
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className='breadcrumb-item active' aria-current='page'>
+            <li className="breadcrumb-item active" aria-current="page">
               Add Program
             </li>
           </ol>
         </nav>
-        <div className='jumbotron'>
+        <div className="jumbotron">
           <h3>Add Program</h3>
-          <form onSubmit={this.handleSubmit} method='POST'>
-            <div className='row'>
-              <div className='col-sm-6'>
-                <div className='form-row'>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='programName'>Name Program</label>
+          <form onSubmit={this.handleSubmit} method="POST">
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label htmlFor="programName">Name Program</label>
                     <input
-                      type='text'
-                      id='programName'
-                      name='programName'
-                      className='form-control'
-                      placeholder='Name Program'
+                      type="text"
+                      id="programName"
+                      name="programName"
+                      className="form-control"
+                      placeholder="Name Program"
                       value={this.state.programName}
                       onChange={this.handleInputChange}
                     />
                   </div>
                 </div>
-                <div className='form-row'>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='paceOfChange'>Add Project</label>
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label htmlFor="paceOfChange">Add Program</label>
                     <select
-                      className='form-control'
-                      name='project'
-                      id='project'
-                      placeholder='Add Project'
-                      value={this.state.project}
+                      className="form-control"
+                      name="program"
+                      id="program"
+                      placeholder="Add Program"
+                      value={this.state.program}
                       onChange={this.handleInputChange}
                     >
-                      <option value='1'>Project 1</option>
-                      <option value='2'>Project 2</option>
-                      <option value='3'>Project 3</option>
+                      <option value="1">Program 1</option>
+                      <option value="2">Program 2</option>
+                      <option value="3">Program 3</option>
                     </select>
                   </div>
                 </div>
-                <div className='col-sm-6'>
-                  <div className='form-row'>
-                    <div className='form-group col-md-6'>
-                      <table className=' table table-striped'>
+                <div className="col-sm-6">
+                  <div className="form-row">
+                    <div className="form-group col-md-6">
+                      <table className=" table table-striped">
                         <thead>
                           <tr>
                             <th>Name</th>
                             <th></th>
                           </tr>
                         </thead>
-                        <tbody>{this.projectTableRow()}</tbody>
+                        <tbody>{this.programTableRow()}</tbody>
                       </table>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <button className='btn btn-secondary' type='submit'>
+            <button className="btn btn-secondary" type="submit">
               Submit
             </button>
           </form>

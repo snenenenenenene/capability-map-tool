@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Modal } from "react-bootstrap";
-import Ratings from "./QuickAdd/Ratings";
-import StatusQuickAdd from "./QuickAdd/StatusQuickAdd";
+import Ratings from "./Ratings";
+import StatusQuickAdd from "../Status/StatusQuickAdd";
 
 export default class AddITApplication extends Component {
   constructor(props) {

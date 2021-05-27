@@ -1,18 +1,16 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import MaterialTable from "material-table";
-import "./GeneralTable.css";
 import axios from "axios";
 
-export default class Resource extends Component {
+export default class BusinessProcess extends Component {
   constructor(props) {
     super(props);
     this.state = {
       environments: [],
       environmentName: this.props.match.params.name,
       environmentId: "",
-      resources: [],
-      reload: false,
+      businessProcesses: [],
     };
   }
 
@@ -30,33 +28,36 @@ export default class Resource extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/resource/`)
+      .get(`${process.env.REACT_APP_API_URL}/businessProcesses/`)
       .then((response) => {
-        this.setState({ resources: response.data });
+        this.setState({ businessProcesses: response.data });
       })
       .catch((error) => {
         console.log(error);
-        // this.props.history.push('/error')
       });
   }
 
-  edit(resourceId) {
+  edit(businessProcessesId) {
     this.props.history.push(
-      `/environment/${this.state.environmentName}/resource/${resourceId}`
+      `/environment/${this.state.environmentName}/businessProcess/${businessProcessesId}`
     );
   }
-  //DELETE resource AND REMOVE ALL CHILD resources FROM STATE
-  delete = async (resourceId) => {
-    if (window.confirm("Are you sure you want to delete this resource?")) {
+  //DELETE CAPABILITY AND REMOVE ALL CHILD CAPABILITIES FROM STATE
+  delete = async (businessProcessesId) => {
+    if (
+      window.confirm("Are you sure you want to delete this business process?")
+    ) {
       await axios
-        .delete(`${process.env.REACT_APP_API_URL}/resource/${resourceId}`)
+        .delete(
+          `${process.env.REACT_APP_API_URL}/businessProcess/${businessProcessesId}`
+        )
         .catch((error) => console.error(error));
-      //REFRESH resources
+      //REFRESH CAPABILITIES
       await axios
-        .get(`${process.env.REACT_APP_API_URL}/resource/`)
+        .get(`${process.env.REACT_APP_API_URL}/businessProcess/`)
         .then((response) => {
-          this.setState({ resources: [] });
-          this.setState({ resources: response.data });
+          this.setState({ businessProcesses: [] });
+          this.setState({ businessProcesses: response.data });
         })
         .catch((error) => {
           console.log(error);
@@ -69,29 +70,29 @@ export default class Resource extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label='breadcrumb'>
-          <ol className='breadcrumb'>
-            <li className='breadcrumb-item'>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
               <Link to={`/`}>Home</Link>
             </li>
-            <li className='breadcrumb-item'>
+            <li className="breadcrumb-item">
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className='breadcrumb-item'>Resources</li>
+            <li className="breadcrumb-item">Business Processes</li>
           </ol>
         </nav>
-        <div className='jumbotron'>
+        <div className="jumbotron">
           <div>
-            <h1 className='display-4' style={{ display: "inline-block" }}>
-              Resources
+            <h1 className="display-4" style={{ display: "inline-block" }}>
+              Business Processes
             </h1>
             <Link
-              to={`/environment/${this.state.environmentName}/resource/add`}
+              to={`/environment/${this.state.environmentName}/businessProcess/add`}
             >
-              <button className='btn btn-primary float-right'>
-                Add Resource
+              <button className="btn btn-primary float-right">
+                Add Business Process
               </button>
             </Link>
           </div>
@@ -99,16 +100,19 @@ export default class Resource extends Component {
           <br />
           <MaterialTable
             columns={[
-              { title: "ID", field: "resourceId" },
-              { title: "Name", field: "resourceName" },
+              { title: "ID", field: "businessProcessId" },
+              { title: "Name", field: "businessProcessName" },
               {
                 title: "",
                 name: "delete",
                 render: (rowData) => (
-                  <button className='btn btn-secondary'>
+                  <button className="btn btn-secondary">
                     <i
-                      onClick={this.delete.bind(this, rowData.resourceId)}
-                      className='bi bi-trash'
+                      onClick={this.delete.bind(
+                        this,
+                        rowData.businessProcessesId
+                      )}
+                      className="bi bi-trash"
                     ></i>
                   </button>
                 ),
@@ -117,16 +121,19 @@ export default class Resource extends Component {
                 title: "",
                 name: "edit",
                 render: (rowData) => (
-                  <button className='btn btn-secondary'>
+                  <button className="btn btn-secondary">
                     <i
-                      onClick={this.edit.bind(this, rowData.resourceId)}
-                      className='bi bi-pencil'
+                      onClick={this.edit.bind(
+                        this,
+                        rowData.businessProcessesId
+                      )}
+                      className="bi bi-pencil"
                     ></i>
                   </button>
                 ),
               },
             ]}
-            data={this.state.resources}
+            data={this.state.businessProcesses}
             options={{
               showTitle: false,
               search: false,

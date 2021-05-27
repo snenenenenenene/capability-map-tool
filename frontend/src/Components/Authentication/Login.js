@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import LeapImg from "../img/LEAP logo.png";
+import LeapImg from "../../img/LEAP logo.png";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { Modal } from "react-bootstrap";
@@ -7,7 +7,6 @@ import ConfigurePassword from "./ConfigurePassword";
 import "./Login.css";
 import * as sha1 from "js-sha1";
 import "bootstrap/dist/css/bootstrap.min.css";
-// import * as bcrypt from "bcrypt";
 
 export default class Login extends Component {
   constructor(props) {

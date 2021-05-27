@@ -1,19 +1,17 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import MaterialTable from "material-table";
-import "./GeneralTable.css";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-export default class Strategy extends Component {
+export default class StrategyItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
       environments: [],
       environmentName: this.props.match.params.name,
       environmentId: "",
-      strategies: [],
-      showStatusModal: false,
+      strategyItems: [],
     };
   }
 
@@ -30,46 +28,44 @@ export default class Strategy extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/strategy/`)
+      .get(`${process.env.REACT_APP_API_URL}/strategyitem/`)
       .then((response) => {
-        this.setState({ strategies: response.data });
+        this.setState({ strategyItems: response.data });
       })
       .catch((error) => {
-        toast.error("Could Not Find Strategies");
+        toast.error("Could Not Find Strategy Items");
       });
   }
 
-  edit(strategyId) {
+  edit(strategyItemId) {
     this.props.history.push(
-      `/environment/${this.state.environmentName}/strategy/${strategyId}`
+      `/environment/${this.state.environmentName}/strategyitem/${strategyItemId}`
     );
   }
 
-  fetchDeleteStrategies = async (strategyId) => {
+  fetchDeleteStrategyItems = async (strategyItemId) => {
     await axios
-      .delete(`${process.env.REACT_APP_API_URL}/strategy/${strategyId}`)
-      .then((response) => toast.success("Succesfully Deleted Strategy"))
-      .catch((error) => toast.error("Could not Delete Strategy"));
-    //REFRESH Strategies
+      .delete(`${process.env.REACT_APP_API_URL}/strategyItem/${strategyItemId}`)
+      .then((response) => toast.success("Succesfully Deleted Strategy Item"))
+      .catch((error) => toast.error("Could not Delete Strategy Item"));
+    //REFRESH Strategy Items
     await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/strategy/all-strategies-by-environmentid/${this.state.environmentId}`
-      )
+      .get(`${process.env.REACT_APP_API_URL}/strategyItem/`)
       .then((response) => {
-        this.setState({ strategies: [] });
-        this.setState({ strategies: response.data });
+        this.setState({ strategyItems: [] });
+        this.setState({ strategyItems: response.data });
       })
       .catch((error) => {
-        toast.error("Could not Find Strategies");
+        toast.error("Could not Find Strategy Items");
       });
   };
 
-  delete = async (strategyId) => {
+  delete = async (strategyItemId) => {
     toast(
       (t) => (
         <span>
           <p className="text-center">
-            Are you sure you want to remove this strategy?
+            Are you sure you want to remove this strategyItem?
           </p>
           <div className="text-center">
             <button
@@ -77,7 +73,7 @@ export default class Strategy extends Component {
               stlye={{ width: 50, height: 30 }}
               onClick={() => {
                 toast.dismiss(t.id);
-                this.fetchDeleteStrategies(strategyId);
+                this.fetchDeleteStrategyItems(strategyItemId);
               }}
             >
               Yes!
@@ -111,8 +107,10 @@ export default class Strategy extends Component {
               </Link>
             </li>
             <li className="breadcrumb-item">
-              <Link to={`/environment/${this.state.environmentName}/strategy`}>
-                Strategy
+              <Link
+                to={`/environment/${this.state.environmentName}/strategyItem`}
+              >
+                Strategy Item
               </Link>
             </li>
           </ol>
@@ -120,13 +118,13 @@ export default class Strategy extends Component {
         <div className="jumbotron">
           <div>
             <h1 className="display-4" style={{ display: "inline-block" }}>
-              Strategies
+              Strategy Items
             </h1>
             <Link
-              to={`/environment/${this.state.environmentName}/strategy/add`}
+              to={`/environment/${this.state.environmentName}/strategyItem/add`}
             >
               <button className="btn btn-primary float-right">
-                Add Strategy
+                Add Strategy Item
               </button>
             </Link>
           </div>
@@ -134,18 +132,18 @@ export default class Strategy extends Component {
           <br />
           <MaterialTable
             columns={[
-              { title: "ID", field: "strategyId" },
-              { title: "Name", field: "strategyName" },
-              { title: "Start", field: "timeFrameStart" },
-              { title: "End", field: "timeFrameEnd" },
-              { title: "Environment", field: "status.environmentId" },
+              { title: "ID", field: "itemId" },
+              { title: "Name", field: "strategyItemName" },
+              { title: "Strategy", field: "strategy.strategyName" },
+              { title: "Start", field: "strategy.timeFrameStart" },
+              { title: "End", field: "strategy.timeFrameEnd" },
               {
                 title: "",
                 name: "delete",
                 render: (rowData) => (
                   <button className="btn btn-secondary">
                     <i
-                      onClick={this.delete.bind(this, rowData.strategyId)}
+                      onClick={this.delete.bind(this, rowData.strategyItemId)}
                       className="bi bi-trash"
                     ></i>
                   </button>
@@ -157,14 +155,14 @@ export default class Strategy extends Component {
                 render: (rowData) => (
                   <button className="btn btn-secondary">
                     <i
-                      onClick={this.edit.bind(this, rowData.strategyId)}
+                      onClick={this.edit.bind(this, rowData.strategyItemId)}
                       className="bi bi-pencil"
                     ></i>
                   </button>
                 ),
               },
             ]}
-            data={this.state.strategies}
+            data={this.state.strategyItems}
             options={{
               showTitle: false,
               search: false,

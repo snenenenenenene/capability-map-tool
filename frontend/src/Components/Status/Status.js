@@ -1,17 +1,16 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import MaterialTable from "material-table";
-import "./GeneralTable.css";
 import axios from "axios";
 
-export default class Program extends Component {
+export default class Status extends Component {
   constructor(props) {
     super(props);
     this.state = {
       environments: [],
       environmentName: this.props.match.params.name,
       environmentId: "",
-      programs: [],
+      statuses: [],
     };
   }
 
@@ -29,32 +28,39 @@ export default class Program extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/program/`)
-      .then((response) => {
-        this.setState({ programs: response.data });
-      })
+      .get(`${process.env.REACT_APP_API_URL}/status/`)
+      .then((response) => this.setState({ statuses: response.data }))
       .catch((error) => {
         console.log(error);
+        // this.props.history.push('/error')
       });
   }
 
-  edit(programId) {
+  edit(id) {
+    console.log("edit");
     this.props.history.push(
-      `/environment/${this.state.environmentName}/program/${programId}`
+      `/environment/${this.state.environmentName}/status/${id}`
     );
   }
-  //DELETE CAPABILITY AND REMOVE ALL CHILD CAPABILITIES FROM STATE
-  delete = async (programId) => {
-    if (window.confirm("Are you sure you want to delete this Program?")) {
+
+  delete = async (statusId) => {
+    if (window.confirm("Are you sure you want to delete this status?")) {
       await axios
-        .delete(`${process.env.REACT_APP_API_URL}/program/${programId}`)
-        .catch((error) => console.error(error));
+        .delete(`${process.env.REACT_APP_API_URL}/status/${statusId}`)
+        .catch((error) => {
+          if (error.response.status === 500)
+            alert(
+              "This status is in use by a capability and could not be deleted!"
+            );
+          console.error(error);
+        });
       //REFRESH CAPABILITIES
+
       await axios
-        .get(`${process.env.REACT_APP_API_URL}/program/`)
+        .get(`${process.env.REACT_APP_API_URL}/status/`)
         .then((response) => {
-          this.setState({ programs: [] });
-          this.setState({ programs: response.data });
+          console.log(response.data);
+          this.setState({ statuses: response.data });
         })
         .catch((error) => {
           console.log(error);
@@ -67,44 +73,40 @@ export default class Program extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label='breadcrumb'>
-          <ol className='breadcrumb'>
-            <li className='breadcrumb-item'>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
               <Link to={`/`}>Home</Link>
             </li>
-            <li className='breadcrumb-item'>
+            <li className="breadcrumb-item">
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className='breadcrumb-item'>Programs</li>
+            <li className="breadcrumb-item">Statuses</li>
           </ol>
         </nav>
-        <div className='jumbotron'>
-          <div>
-            <h1 className='display-4' style={{ display: "inline-block" }}>
-              Programs
-            </h1>
-            <Link to={`/environment/${this.state.environmentName}/program/add`}>
-              <button className='btn btn-primary float-right'>
-                Add Program
-              </button>
-            </Link>
-          </div>
+        <div className="jumbotron">
+          <h1 style={{ display: "inline-block" }} className="display-4">
+            Statuses
+          </h1>
+          <Link to={`/environment/${this.state.environmentName}/status/add`}>
+            <button className="btn btn-primary float-right">Add Status</button>
+          </Link>
           <br />
           <br />
           <MaterialTable
             columns={[
-              { title: "ID", field: "programId" },
-              { title: "Name", field: "programName" },
+              { title: "ID", field: "statusId" },
+              { title: "Date", field: "validityPeriod" },
               {
                 title: "",
                 name: "delete",
                 render: (rowData) => (
-                  <button className='btn btn-secondary'>
+                  <button className="btn btn-secondary">
                     <i
-                      onClick={this.delete.bind(this, rowData.programId)}
-                      className='bi bi-trash'
+                      onClick={this.delete.bind(this, rowData.statusId)}
+                      className="bi bi-trash"
                     ></i>
                   </button>
                 ),
@@ -113,16 +115,16 @@ export default class Program extends Component {
                 title: "",
                 name: "edit",
                 render: (rowData) => (
-                  <button className='btn btn-secondary'>
+                  <button className="btn btn-secondary">
                     <i
-                      onClick={this.edit.bind(this, rowData.programId)}
-                      className='bi bi-pencil'
+                      onClick={this.edit.bind(this, rowData.statusId)}
+                      className="bi bi-pencil"
                     ></i>
                   </button>
                 ),
               },
             ]}
-            data={this.state.programs}
+            data={this.state.statuses}
             options={{
               showTitle: false,
               search: false,

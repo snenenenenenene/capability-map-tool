@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import MaterialTable from "material-table";
-import "./GeneralTable.css";
 import axios from "axios";
 
 export default class Project extends Component {
@@ -69,26 +68,26 @@ export default class Project extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label='breadcrumb'>
-          <ol className='breadcrumb'>
-            <li className='breadcrumb-item'>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
               <Link to={`/`}>Home</Link>
             </li>
-            <li className='breadcrumb-item'>
+            <li className="breadcrumb-item">
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className='breadcrumb-item'>Projects</li>
+            <li className="breadcrumb-item">Projects</li>
           </ol>
         </nav>
-        <div className='jumbotron'>
+        <div className="jumbotron">
           <div>
-            <h1 className='display-4' style={{ display: "inline-block" }}>
+            <h1 className="display-4" style={{ display: "inline-block" }}>
               Projects
             </h1>
             <Link to={`/environment/${this.state.environmentName}/project/add`}>
-              <button className='btn btn-primary float-right'>
+              <button className="btn btn-primary float-right">
                 Add project
               </button>
             </Link>
@@ -103,10 +102,10 @@ export default class Project extends Component {
                 title: "",
                 name: "delete",
                 render: (rowData) => (
-                  <button className='btn btn-secondary'>
+                  <button className="btn btn-secondary">
                     <i
                       onClick={this.delete.bind(this, rowData.projectId)}
-                      className='bi bi-trash'
+                      className="bi bi-trash"
                     ></i>
                   </button>
                 ),
@@ -115,10 +114,10 @@ export default class Project extends Component {
                 title: "",
                 name: "edit",
                 render: (rowData) => (
-                  <button className='btn btn-secondary'>
+                  <button className="btn btn-secondary">
                     <i
                       onClick={this.edit.bind(this, rowData.projectId)}
-                      className='bi bi-pencil'
+                      className="bi bi-pencil"
                     ></i>
                   </button>
                 ),
