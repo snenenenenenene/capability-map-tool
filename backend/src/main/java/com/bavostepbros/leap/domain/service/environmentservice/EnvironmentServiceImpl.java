@@ -52,8 +52,9 @@ public class EnvironmentServiceImpl implements EnvironmentService {
 			throw new IndexDoesNotExistException("Environment ID does not exists.");
 		}
     	
-        Environment environment = environmentDAL.findById(id).get();
-        return environment;
+        Optional<Environment> environment = environmentDAL.findById(id);
+        environment.orElseThrow(() -> new NullPointerException("Environment does not exist."));
+        return environment.get();
     }
 
     @Override
