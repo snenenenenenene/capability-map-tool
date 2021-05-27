@@ -11,7 +11,7 @@ import com.bavostepbros.leap.domain.model.Capability;
  */
 public interface CapabilityService {
 	Capability save(Integer environmentId, Integer statusId, Integer parentCapabilityId, String capabilityName,
-			String level, boolean paceOfChange, String targetOperatingModel, Integer resourceQuality,
+			boolean paceOfChange, String targetOperatingModel, Integer resourceQuality,
 			Integer informationQuality, Integer applicationFit);
 
 	Capability get(Integer id);
@@ -19,8 +19,10 @@ public interface CapabilityService {
 	List<Capability> getAll();
 
 	Capability update(Integer capabilityId, Integer environmentId, Integer statusId, Integer parentCapabilityId,
-			String capabilityName, String level, boolean paceOfChange, String targetOperatingModel,
+			String capabilityName, boolean paceOfChange, String targetOperatingModel,
 			Integer resourceQuality, Integer informationQuality, Integer applicationFit);
+
+	void updateLevel(Capability capability);
 
 	void delete(Integer id);
 

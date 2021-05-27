@@ -86,10 +86,10 @@ public class CapabilityApplicationControllerTest {
 		environmentFirst = environmentDAL.save(new Environment(1, "Test 1"));
 		environmentSecond = environmentDAL.save(new Environment(2, "Test 2"));
 		capabilityFirst = capabilityDAL.save(new Capability(1, environmentFirst, statusFirst, 1, "Capability 1",
-				CapabilityLevel.ONE, true, "Target Operating Model", 1, 1, 1));
+				true, "Target Operating Model", 1, 1, 1));
 		capabilitySecond = capabilityDAL
 				.save(new Capability(2, environmentSecond, statusSecond, capabilityFirst.getCapabilityId(),
-						"Capability 2", CapabilityLevel.TWO, true, "Target Operating Model", 1, 1, 1));
+						"Capability 2", true, "Target Operating Model", 1, 1, 1));
 		itApplicationFirst = itApplicationDAL.save(new ITApplication(1, statusFirst, "application 1", "1.20.1",
 				LocalDate.of(2021, 01, 20), LocalDate.of(2025, 05, 20), 1, 2, 3, 4, 5, 6, 7, 8, "EUR", 1000.0, 100.0,
 				70.0, 100.0, TimeValue.MIGRATE));

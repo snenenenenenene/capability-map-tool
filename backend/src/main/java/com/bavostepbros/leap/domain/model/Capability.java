@@ -74,13 +74,12 @@ public class Capability {
     private List<CapabilityApplication> capabilityApplication;
 
     public Capability(Environment environment, Status status, Integer parentCapabilityId, String capabilityName, 
-    		CapabilityLevel level, boolean paceOfChange, String targetOperatingModel, Integer resourceQuality, 
+    		boolean paceOfChange, String targetOperatingModel, Integer resourceQuality,
     		Integer informationQuality, Integer applicationFit) {
         this.environment = environment;
         this.status = status;
         this.parentCapabilityId = parentCapabilityId;
         this.capabilityName = capabilityName;
-        this.level = level;
         this.paceOfChange = paceOfChange;
         this.targetOperatingModel = targetOperatingModel;
         this.resourceQuality = resourceQuality;
@@ -89,7 +88,7 @@ public class Capability {
     }
     
     public Capability(Integer capabilityId, Environment environment, Status status, Integer parentCapabilityId,
-			String capabilityName, CapabilityLevel level, boolean paceOfChange, String targetOperatingModel,
+			String capabilityName, boolean paceOfChange, String targetOperatingModel,
 			Integer resourceQuality, Integer informationQuality, Integer applicationFit) {
 		super();
 		this.capabilityId = capabilityId;
@@ -97,7 +96,6 @@ public class Capability {
 		this.status = status;
 		this.parentCapabilityId = parentCapabilityId;
 		this.capabilityName = capabilityName;
-		this.level = level;
 		this.paceOfChange = paceOfChange;
 		this.targetOperatingModel = targetOperatingModel;
 		this.resourceQuality = resourceQuality;

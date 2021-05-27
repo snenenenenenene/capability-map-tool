@@ -39,15 +39,16 @@ public class CapabilityController {
 	public CapabilityDto addCapability(@ModelAttribute("environmentId") Integer environmentId,
 			@ModelAttribute("statusId") Integer statusId,
 			@ModelAttribute("parentCapabilityId") Integer parentCapabilityId,
-			@ModelAttribute("capabilityName") String capabilityName, @ModelAttribute("level") String level,
+			@ModelAttribute("capabilityName") String capabilityName,
 			@ModelAttribute("paceOfChange") boolean paceOfChange,
 			@ModelAttribute("targetOperatingModel") String targetOperatingModel,
 			@ModelAttribute("resourceQuality") Integer resourceQuality,
 			@ModelAttribute("informationQuality") Integer informationQuality,
 			@ModelAttribute("applicationFit") Integer applicationFit, UriComponentsBuilder builder) {
 
-		Capability capability = capService.save(environmentId, statusId, parentCapabilityId, capabilityName, level,
+		Capability capability = capService.save(environmentId, statusId, parentCapabilityId, capabilityName,
 				paceOfChange, targetOperatingModel, resourceQuality, informationQuality, applicationFit);
+		capService.updateLevel(capability);
 		return new CapabilityDto(capability.getCapabilityId(), capability.getEnvironment(), capability.getStatus(),
 				capability.getParentCapabilityId(), capability.getCapabilityName(), capability.getLevel(),
 				capability.isPaceOfChange(), capability.getTargetOperatingModel(), capability.getResourceQuality(),
@@ -161,8 +162,9 @@ public class CapabilityController {
 			@ModelAttribute("applicationFit") Integer applicationFit) {
 
 		Capability capability = capService.update(capabilityId, environmentId, statusId, parentCapabilityId,
-				capabilityName, level, paceOfChange, targetOperatingModel, resourceQuality, informationQuality,
+				capabilityName, paceOfChange, targetOperatingModel, resourceQuality, informationQuality,
 				applicationFit);
+		capService.updateLevel(capability);
 		return new CapabilityDto(capability.getCapabilityId(), capability.getEnvironment(), capability.getStatus(),
 				capability.getParentCapabilityId(), capability.getCapabilityName(), capability.getLevel(),
 				capability.isPaceOfChange(), capability.getTargetOperatingModel(), capability.getResourceQuality(),
