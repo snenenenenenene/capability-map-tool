@@ -48,6 +48,7 @@ export default class AddCapability extends Component {
     formData.append("applicationFit", this.state.applicationFit);
     formData.append("resourceQuality", this.state.resourcesQuality);
     formData.append("statusId", this.state.statusId);
+    formData.append("level", "ONE");
     await axios
       .post(`${process.env.REACT_APP_API_URL}/capability/`, formData)
       .then((response) => {

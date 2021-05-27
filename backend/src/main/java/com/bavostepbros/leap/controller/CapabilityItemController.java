@@ -24,59 +24,52 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api/capabilityitem/")
 public class CapabilityItemController {
-	
+
 	@Autowired
 	private CapabilityItemService capabilityItemService;
-	
+
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public CapabilityItemDto addCapabilityItem(
-			@ModelAttribute("capabilityId") Integer capabilityId,
+	public CapabilityItemDto addCapabilityItem(@ModelAttribute("capabilityId") Integer capabilityId,
 			@ModelAttribute("itemId") Integer itemId,
 			@ModelAttribute("strategicImportance") String strategicImportance) {
-		
-		CapabilityItem capabilityItem = capabilityItemService.save(capabilityId, itemId, 
-				strategicImportance);
-		return new CapabilityItemDto(capabilityItem.getCapability(), 
-				capabilityItem.getStrategyItem(), capabilityItem.getStrategicImportance());
+
+		CapabilityItem capabilityItem = capabilityItemService.save(capabilityId, itemId, strategicImportance);
+		return new CapabilityItemDto(capabilityItem.getCapability(), capabilityItem.getStrategyItem(),
+				capabilityItem.getStrategicImportance());
 	}
-	
+
 	@GetMapping("{capabilityId}/{itemId}")
-	public CapabilityItemDto getCapabilityItem(
-			@PathVariable("capabilityId") Integer capabilityId,
+	public CapabilityItemDto getCapabilityItem(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("itemId") Integer itemId) {
-		
+
 		CapabilityItem capabilityItem = capabilityItemService.get(capabilityId, itemId);
-		return new CapabilityItemDto(capabilityItem.getCapability(), 
-				capabilityItem.getStrategyItem(), capabilityItem.getStrategicImportance());
+		return new CapabilityItemDto(capabilityItem.getCapability(), capabilityItem.getStrategyItem(),
+				capabilityItem.getStrategicImportance());
 	}
-	
+
 	@PutMapping(path = "{capabilityId}/{itemId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public CapabilityItemDto updateCapabilityItem(
-			@PathVariable("capabilityId") Integer capabilityId,
-			@PathVariable("itemId") Integer itemId,
-			@ModelAttribute("strategicImportance") String strategicImportance) {
-		
-		CapabilityItem capabilityItem = capabilityItemService.save(capabilityId, itemId, 
-				strategicImportance);
-		return new CapabilityItemDto(capabilityItem.getCapability(), 
-				capabilityItem.getStrategyItem(), capabilityItem.getStrategicImportance());
+	public CapabilityItemDto updateCapabilityItem(@PathVariable("capabilityId") Integer capabilityId,
+			@PathVariable("itemId") Integer itemId, @ModelAttribute("strategicImportance") String strategicImportance) {
+
+		CapabilityItem capabilityItem = capabilityItemService.save(capabilityId, itemId, strategicImportance);
+		return new CapabilityItemDto(capabilityItem.getCapability(), capabilityItem.getStrategyItem(),
+				capabilityItem.getStrategicImportance());
 	}
-	
+
 	@DeleteMapping(path = "{capabilityId}/{itemId}")
-	public void deleteCapability(@PathVariable("capabilityId") Integer capabilityId, 
+	public void deleteCapability(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("itemId") Integer itemId) {
 		capabilityItemService.delete(capabilityId, itemId);
 	}
-	
+
 	@GetMapping(path = "all-capabilityitems-by-strategyitemid/{itemId}")
-	public List<CapabilityItemDto> getAllCapabilityItemsByStrategyId(
-			@PathVariable("itemId") Integer itemId) {
-		
+	public List<CapabilityItemDto> getAllCapabilityItemsByStrategyId(@PathVariable("itemId") Integer itemId) {
+
 		List<CapabilityItem> capabilityItems = capabilityItemService.getCapabilityItemsByStrategyItem(itemId);
 		List<CapabilityItemDto> capabilityItemsDto = capabilityItems.stream()
-				.map(capabilityItem -> new CapabilityItemDto(capabilityItem.getCapability(), 
+				.map(capabilityItem -> new CapabilityItemDto(capabilityItem.getCapability(),
 						capabilityItem.getStrategyItem(), capabilityItem.getStrategicImportance()))
 				.collect(Collectors.toList());
-		return capabilityItemsDto; 
+		return capabilityItemsDto;
 	}
 }

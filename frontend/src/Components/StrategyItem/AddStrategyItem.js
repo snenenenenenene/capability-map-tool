@@ -4,7 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import Select from "react-select";
 
-export default class StrategyItem extends Component {
+export default class AddStrategyItem extends Component {
   constructor(props) {
     super(props);
     this.state = {

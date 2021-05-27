@@ -1,29 +1,25 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import toast from "react-hot-toast";
+import Select from "react-select";
 
-export default class EditStrategyItem extends Component {
+export default class EditStrategy extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      statuses: [],
       environments: [],
+      selectedCapabilities: [],
       capabilities: [],
-
+      strategies: [],
       environmentName: this.props.match.params.name,
-      capabilityId: this.props.match.params.id,
+      itemId: this.props.match.params.id,
       environmentId: "",
-      capabilityName: "",
-      parentCapabilityId: "",
-      description: "",
-      paceOfChange: "",
-      TOM: "",
-      informationQuality: "",
-      applicationFit: "",
-      resourceQuality: "",
-      statusId: "",
-      capabilityLevel: "",
-      validityPeriod: "",
+      capabilityId: "",
+      strategyItemName: "",
+      strategyItemDescription: "",
+      strategicImportance: "",
+      strategyId: "",
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -32,33 +28,36 @@ export default class EditStrategyItem extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("environmentName", this.state.environmentName);
-    formData.append("environmentId", this.state.environmentId);
-    formData.append("capabilityName", this.state.capabilityName);
-    formData.append("capabilityId", this.state.capabilityId);
-    formData.append("parentCapabilityId", this.state.parentCapabilityId);
-    formData.append("paceOfChange", this.state.paceOfChange);
-    formData.append("targetOperatingModel", this.state.TOM);
-    formData.append("informationQuality", this.state.informationQuality);
-    formData.append("applicationFit", this.state.applicationFit);
-    formData.append("resourceQuality", this.state.resourceQuality);
-    formData.append("statusId", this.state.statusId);
-    formData.append("level", this.state.capabilityLevel);
-    console.log(formData);
-    for (var pair of formData.entries()) {
-      console.log(pair[0] + ", " + pair[1]);
-    }
-
+    formData.append("strategyId", this.state.strategyId);
+    formData.append("itemId", this.state.itemId);
+    formData.append("strategyItemName", this.state.strategyItemName);
+    formData.append("description", this.state.strategyItemDescription);
     await axios
-      .put(`${process.env.REACT_APP_API_URL}/capability/update`, formData)
-      .then((reponse) => {
-        this.props.history.push(
-          `/environment/${this.state.environmentName}/capability/all`
-        );
+      .put(`${process.env.REACT_APP_API_URL}/strategyitem/`, formData)
+      .then((response) => {
+        toast.success("Strategy Item Added Successfully!");
+        this.setState({ itemId: response.data.itemId });
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => toast.error("Could not Add Strategy Item"));
+    if (this.state.selectedCapabilities.length !== 0) {
+      const formData = new FormData();
+      formData.append("itemId", this.state.itemId);
+      formData.append("capabilityId", this.state.capabilityId);
+      formData.append("strategicImportance", this.state.strategicImportance);
+      await axios
+        .post(`${process.env.REACT_APP_API_URL}/capabilityitem/`, formData)
+        .then((response) =>
+          toast.success("Capability Item Added Successfully!")
+        )
+        .catch((error) => toast.error("Could not Add Capability Item"));
+    }
+    this.props.history.push(
+      `/environment/${this.state.environmentName}/strategyitem`
+    );
+  };
+
+  handleChange = (selectedOption) => {
+    this.setState({ selectedCapabilities: selectedOption });
   };
 
   async componentDidMount() {
@@ -66,63 +65,71 @@ export default class EditStrategyItem extends Component {
       .get(
         `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
       )
-      .then((response) =>
-        this.setState({ environmentId: response.data.environmentId })
-      )
+      .then((response) => {
+        this.setState({ environmentId: response.data.environmentId });
+      })
       .catch((error) => {
-        this.props.history.push("/error");
-      });
-
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/all`)
-      .then((response) => this.setState({ statuses: response.data }))
-      .catch((error) => {
-        this.props.history.push("/error");
-      });
-
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/capability/all`)
-      .then((response) => this.setState({ capabilities: response.data }))
-      .catch((error) => {
-        this.props.history.push("/error");
+        console.log(error);
+        this.props.history.push("/notfounderror");
       });
 
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/capability/${this.state.capabilityId}`
+        `${process.env.REACT_APP_API_URL}/capability/all-capabilities-by-environmentid/${this.state.environmentId}`
       )
       .then((response) => {
-        this.setState({
-          environmentId: response.data.environment.environmentId,
-          capabilityName: response.data.capabilityName,
-          parentCapabilityId: response.data.parentCapabilityId,
-          paceOfChange: response.data.paceOfChange,
-          TOM: response.data.targetOperatingModel,
-          informationQuality: response.data.informationQuality,
-          applicationFit: response.data.applicationFit,
-          resourceQuality: response.data.resourceQuality,
-          statusId: response.data.status.statusId,
-          capabilityLevel: response.data.level,
-          validityPeriod: response.data.status.validityPeriod,
+        response.data.forEach((capability) => {
+          capability.label = capability.capabilityName;
+          capability.value = capability.capabilityId;
         });
+        this.setState({ capabilities: response.data });
       })
       .catch((error) => {
-        this.props.history.push("/error");
+        toast.error("Could not load Capabilities");
+      });
+
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/strategy/`)
+      .then((response) => this.setState({ strategies: response.data }))
+      .catch((error) => {
+        toast.error("Could not load Strategies");
+      });
+
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/strategyitem/${this.state.itemId}`)
+      .then((response) =>
+        this.setState({
+          capabilityId: response.data.capabilityId,
+          strategyItemName: response.data.strategyItemName,
+          strategyItemDescription: response.data.description,
+          strategicImportance: response.data.strategicImportance,
+          strategyId: response.data.strategy.strategyId,
+        })
+      )
+      .catch((error) => {
+        toast.error("Could not load Strategies");
+      });
+
+    await axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/capabilityitem/all-capabilityitems-by-strategyitemid/${this.state.itemId}`
+      )
+      .then((response) =>
+        this.setState({
+          capabilityId: response.data.capabilityId,
+          strategyItemName: response.data.strategyItemName,
+          strategyItemDescription: response.data.description,
+          strategicImportance: response.data.strategicImportance,
+          strategyId: response.data.strategy.strategyId,
+        })
+      )
+      .catch((error) => {
+        toast.error("Could not load Strategies");
       });
   }
 
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
-  }
-
-  statusListRows() {
-    return this.state.statuses.map((status) => {
-      return (
-        <option key={status.statusId} value={status.statusId}>
-          {status.validityPeriod}
-        </option>
-      );
-    });
   }
 
   capabilityListRows() {
@@ -135,259 +142,136 @@ export default class EditStrategyItem extends Component {
     });
   }
 
-  render() {
-    const environmentName = this.props.match.params.name;
-    const capabilityID = this.props.match.params.id;
+  onSelect(selectedList, selectedItem) {
+    console.log(selectedItem);
+    console.log(selectedList);
+  }
 
+  onRemove(selectedList, removedItem) {
+    console.log(removedItem);
+    console.log(selectedList);
+  }
+
+  strategyListRows() {
+    return this.state.strategies.map((strategy) => {
+      return (
+        <option key={strategy.strategyId} value={strategy.strategyId}>
+          {strategy.strategyName}
+        </option>
+      );
+    });
+  }
+
+  render() {
     return (
       <div>
         <br></br>
-        <nav aria-label='breadcrumb'>
-          <ol className='breadcrumb'>
-            <li className='breadcrumb-item'>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
               <Link to={`/`}>Home</Link>
             </li>
-            <li className='breadcrumb-item'>
-              <Link to={`/environment/${environmentName}`}>
-                {environmentName}
+            <li className="breadcrumb-item">
+              <Link to={`/environment/${this.state.environmentName}`}>
+                {this.state.environmentName}
               </Link>
             </li>
-            <li className='breadcrumb-item'>
-              <Link to={`/environment/${environmentName}/capability/all`}>
-                Capability
+            <li className="breadcrumb-item">
+              <Link
+                to={`/environment/${this.state.environmentName}/strategyitem`}
+              >
+                Strategy Item
               </Link>
             </li>
-            <li className='breadcrumb-item'>{capabilityID}</li>
-            <li className='breadcrumb-item active' aria-current='page'>
-              Edit Capability
+            <li className="breadcrumb-item active" aria-current="page">
+              Edit Strategy Item
             </li>
           </ol>
         </nav>
-        <div className='jumbotron'>
-          <h3>Add Capability</h3>
+        <div className="jumbotron">
+          <h3>Edit Strategy Item</h3>
           <form onSubmit={this.handleSubmit}>
-            <div className='row'>
-              <div className='col-sm-6'>
-                <div className='form-row'>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='nameCapability'>Name Capability</label>
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label htmlFor="strategyItemName">Name Strategy Item</label>
                     <input
-                      type='text'
-                      id='capabilityName'
-                      name='capabilityName'
-                      className='form-control'
-                      placeholder='Name Capability'
-                      value={this.state.capabilityName}
+                      type="text"
+                      id="strategyItemName"
+                      name="strategyItemName"
+                      className="form-control"
+                      placeholder="Name Strategy Item"
+                      value={this.state.strategyItemName}
                       onChange={this.handleInputChange}
                     />
                   </div>
-                </div>
-                <div className='form-row'>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='paceOfChange'>Parent Capability</label>
+                  <div className="form-group col-md-6">
+                    <label htmlFor="strategyId">Strategy</label>
                     <select
-                      className='form-control'
-                      name='parentCapabilityId'
-                      id='parentCapabilityId'
-                      placeholder='Add Parent Capability'
-                      value={this.state.parentCapabilityId}
+                      className="form-control"
+                      name="strategyId"
+                      id="strategyId"
+                      placeholder="Add Status"
+                      value={this.state.strategyId}
                       onChange={this.handleInputChange}
                     >
-                      <option
-                        key='-1'
-                        defaultValue='selected'
-                        hidden='hidden'
-                        value={1}
-                      >
+                      <option key="-1" defaultValue="selected" hidden value={0}>
                         None
                       </option>
-                      {this.capabilityListRows()}
-                    </select>
-                  </div>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='capabilityLevel'>Capability Level</label>
-                    <select
-                      className='form-control'
-                      name='capabilityLevel'
-                      id='capabilityLevel'
-                      placeholder='Add Level'
-                      value={this.state.capabilityLevel}
-                      onChange={this.handleInputChange}
-                    >
-                      <option
-                        key='-1'
-                        defaultValue='selected'
-                        hidden='hidden'
-                        value=''
-                      >
-                        Select Level
-                      </option>
-                      <option value='ONE'>ONE</option>
-                      <option value='TWO'>TWO</option>
-                      <option value='THREE'>THREE</option>
+                      {this.strategyListRows()}
                     </select>
                   </div>
                 </div>
-                <div className='form-group'>
-                  <label htmlFor='description'>Description</label>
+                <div className="form-row"></div>
+                <div className="form-group">
+                  <label htmlFor="strategyItemDescription">Description</label>
                   <textarea
-                    type='text'
-                    id='description'
-                    name='description'
-                    className='form-control'
-                    rows='4'
-                    placeholder='Description'
-                    value={this.state.description}
+                    type="text"
+                    id="strategyItemDescription"
+                    name="strategyItemDescription"
+                    className="form-control"
+                    rows="5"
+                    placeholder="Description"
+                    value={this.state.strategyItemDescription}
                     onChange={this.handleInputChange}
                   />
                 </div>
               </div>
-              <div className='col-sm-6'>
-                <div className='form-row'>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='paceOfChange'>Pace of Change</label>
-                    <select
-                      className='form-control'
-                      name='paceOfChange'
-                      placeholder='Add Pace of Change'
-                      id='paceOfChange'
-                      value={this.state.paceOfChange}
-                      onChange={this.handleInputChange}
-                    >
-                      <option
-                        key='-1'
-                        defaultValue='selected'
-                        hidden='hidden'
-                        value=''
-                      >
-                        Select Pace of Change
-                      </option>
-                      <option value='true'>True</option>
-                      <option value='false'>False</option>
-                    </select>
-                  </div>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='informationQuality'>
-                      Information Quality
-                    </label>
-                    <select
-                      className='form-control'
-                      name='informationQuality'
-                      placeholder='Add Information Quality'
-                      id='informationQuality'
-                      value={this.state.informationQuality}
-                      onChange={this.handleInputChange}
-                    >
-                      <option
-                        key='-1'
-                        defaultValue='selected'
-                        hidden='hidden'
-                        value=''
-                      >
-                        Select Information Quality
-                      </option>
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                    </select>
-                  </div>
-                </div>
-                <div className='form-row'>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='paceOfChange'>TOM</label>
-                    <select
-                      className='form-control'
-                      name='TOM'
-                      placeholder='Add TOM'
-                      id='TOM'
-                      value={this.state.TOM}
-                      onChange={this.handleInputChange}
-                    >
-                      <option
-                        key='-1'
-                        defaultValue='selected'
-                        hidden='hidden'
-                        value=''
-                      >
-                        Select TOM
-                      </option>
-                      <option value='TOM'>TOM</option>
-                    </select>
-                  </div>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='applicationFit'>Application Fit</label>
-                    <select
-                      className='form-control'
-                      name='applicationFit'
-                      placeholder='Add Application Fit'
-                      id='applicationFit'
-                      value={this.state.applicationFit}
-                      onChange={this.handleInputChange}
-                    >
-                      <option
-                        key='-1'
-                        defaultValue='selected'
-                        hidden='hidden'
-                        value=''
-                      >
-                        Select Application Fit
-                      </option>
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                    </select>
-                  </div>
-                </div>
-                <div className='form-group'>
-                  <label htmlFor='resourceQuality'>Resource Quality</label>
+              <div className="col-sm-6">
+                <div className="form-group col-md">
+                  <label htmlFor="strategicImportance">Importance</label>
                   <select
-                    id='resourceQuality'
-                    name='resourceQuality'
-                    className='form-control'
-                    placeholder='Resource Quality'
-                    value={this.state.resourceQuality}
+                    className="form-control"
+                    name="strategicImportance"
+                    id="strategicImportance"
+                    placeholder="Add Importance"
+                    value={this.state.strategicImportance}
                     onChange={this.handleInputChange}
                   >
-                    <option key='-1' defaultValue='selected' hidden='hidden'>
-                      {this.state.resourceQuality}
+                    <option defaultValue="selected" hidden value="ONE">
+                      Optional
                     </option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
+                    <option value="ONE">ONE</option>
+                    <option value="TWO">TWO</option>
+                    <option value="THREE">THREE</option>
                   </select>
-                  <div className='select-container'>
-                    <label htmlFor='statusId'>Validity Period</label>
-                    <select
-                      id='statusId'
-                      name='statusId'
-                      className='form-control'
-                      placeholder='Validity Period'
-                      value={this.state.statusId}
-                      onChange={this.handleInputChange}
-                    >
-                      <option
-                        key='-1'
-                        defaultValue='selected'
-                        hidden='hidden'
-                        value=''
-                      >
-                        {this.state.validityPeriod}
-                      </option>
-                      {this.statusListRows()}
-                    </select>
-                  </div>
+                </div>
+                <div className="form-group col-md">
+                  <label htmlFor="capabilityId">Capability</label>
+                  <Select
+                    options={this.state.capabilities}
+                    isMulti
+                    closeMenuOnSelect={false}
+                    onChange={this.handleChange}
+                    placeholder="Optional"
+                  />
                 </div>
               </div>
             </div>
             <button
-              className='btn btn-primary'
-              type='button'
+              className="btn btn-primary"
+              type="button"
               onClick={this.handleSubmit}
             >
               Submit

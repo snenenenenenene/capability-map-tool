@@ -34,11 +34,13 @@ export default class AddStrategy extends Component {
     formData.append("statusId", this.state.statusId);
     await axios
       .post(`${process.env.REACT_APP_API_URL}/strategy/`, formData)
-      .then((response) => toast.success("Strategy Added Successfully!"))
+      .then((response) => {
+        toast.success("Strategy Added Successfully!");
+        this.props.history.push(
+          `/environment/${this.state.environmentName}/strategy`
+        );
+      })
       .catch((error) => toast.error("Could not Add Strategy"));
-    this.props.history.push(
-      `/environment/${this.state.environmentName}/strategy`
-    );
   };
 
   async componentDidMount() {
