@@ -15,6 +15,7 @@ export default class AddITApplication extends Component {
       environmentName: this.props.match.params.name,
       environmentId: "",
       statusId: "",
+      strategicImportance:"",
       itApplicationName: "",
       technology: "",
       version: "",

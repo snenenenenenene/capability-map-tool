@@ -5,6 +5,7 @@ import axios from "axios";
 import { Modal } from "react-bootstrap";
 import StatusQuickAdd from "../Status/StatusQuickAdd";
 import toast from "react-hot-toast";
+import Select from "react-select";
 
 export default class AddCapability extends Component {
   constructor(props) {
@@ -13,6 +14,8 @@ export default class AddCapability extends Component {
       statuses: [],
       environments: [],
       capabilities: [],
+      strategyItems: [],
+      selectedItems: [],
 
       environmentName: this.props.match.params.name,
       environmentId: "",
@@ -29,6 +32,7 @@ export default class AddCapability extends Component {
       immediate: true,
       setFocusOnError: true,
       clearInputOnReset: false,
+      showItemModal: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -53,11 +57,35 @@ export default class AddCapability extends Component {
       .post(`${process.env.REACT_APP_API_URL}/capability/`, formData)
       .then((response) => {
         toast.success("Capability Added Successfully!");
-        this.props.history.push(
-          `/environment/${this.state.environmentName}/capability`
-        );
+        this.setState({ capabilityId: response.data.capabilityId });
       })
       .catch((error) => toast.error("Could not Add Capability"));
+    if (this.state.selectedItems.length !== 0) {
+      let promises = [];
+
+      this.state.selectedItems.forEach((item) => {
+        const formData = new FormData();
+        formData.append("itemId", item.itemId);
+        formData.append("capabilityId", this.state.capabilityId);
+        formData.append("strategicImportance", this.state.strategicImportance);
+        promises.push(
+          axios.post(
+            `${process.env.REACT_APP_API_URL}/capabilityitem/`,
+            formData
+          )
+        );
+
+        Promise.all(promises)
+          .then()
+          .catch((error) => toast.error("Failed to Connect to Capability"));
+      });
+    }
+    this.props.history.push(
+      `/environment/${this.state.environmentName}/strategyitem`
+    );
+    this.props.history.push(
+      `/environment/${this.state.environmentName}/capability`
+    );
   };
 
   async componentDidMount() {
@@ -88,6 +116,23 @@ export default class AddCapability extends Component {
       .catch((error) => {
         toast.error("Could not load Capabilities");
       });
+
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/strategyitem/`)
+      .then((response) => {
+        response.data.forEach((item) => {
+          item.label = item.strategyItemName;
+          item.value = item.itemId;
+        });
+        this.setState({ strategyItems: response.data });
+      })
+      .catch((error) => {
+        toast.error("Could not load Strategy Items");
+      });
+  }
+
+  handleItemModal() {
+    this.setState({ showItemModal: !this.state.showItemModal });
   }
 
   handleInputChange(event) {
@@ -117,6 +162,10 @@ export default class AddCapability extends Component {
   ratingChanged = (newRating) => {
     console.log(newRating);
     this.setState({ resourcesQuality: newRating });
+  };
+
+  handleChange = (selectedOption) => {
+    this.setState({ selectedItems: selectedOption });
   };
 
   async updateDate() {
@@ -329,7 +378,7 @@ export default class AddCapability extends Component {
                   </div>
                 </div>
                 <div className="form-row">
-                  <div className="form-group col-md-12">
+                  <div className="form-group col-md">
                     <label htmlFor="resourcesQuality">Resources Quality</label>
                     <ReactStars
                       count={5}
@@ -340,6 +389,56 @@ export default class AddCapability extends Component {
                       value={this.state.resourcesQuality}
                       required
                     />
+                  </div>
+                  <div className="form-group col-md">
+                    <label htmlFor="showItem">Strategy Item (Optional)</label>
+                    <button
+                      className="btn btn-secondary btn-block"
+                      type="button"
+                      onClick={() => this.handleItemModal()}
+                    >
+                      Add Strategy Item
+                    </button>
+                    <Modal show={this.state.showItemModal}>
+                      <Modal.Header>Add Items</Modal.Header>
+                      <Modal.Body>
+                        <label htmlFor="itemId">Strategy Items</label>
+                        <Select
+                          options={this.state.strategyItems}
+                          isMulti
+                          closeMenuOnSelect={false}
+                          onChange={this.handleChange}
+                          placeholder="Optional"
+                        />
+                        <label htmlFor="strategicImportance">Importance</label>
+                        <select
+                          className="form-control"
+                          name="strategicImportance"
+                          id="strategicImportance"
+                          placeholder="Add Importance"
+                          value={this.state.strategicImportance}
+                          onChange={this.handleInputChange}
+                        >
+                          <option defaultValue="selected" hidden value={null}>
+                            Optional
+                          </option>
+                          <option value="NONE">None</option>
+                          <option value="LOWEST">Lowest</option>
+                          <option value="MEDIUM">Medium</option>
+                          <option value="HIGH">High</option>
+                          <option value="HIGHEST">Highest</option>
+                        </select>
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <button
+                          type="button"
+                          className="btn btn-secondary"
+                          onClick={() => this.handleItemModal()}
+                        >
+                          Close Modal
+                        </button>
+                      </Modal.Footer>
+                    </Modal>
                   </div>
                 </div>
                 <div className="form-row">
