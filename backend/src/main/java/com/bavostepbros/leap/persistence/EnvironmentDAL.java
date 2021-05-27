@@ -11,6 +11,6 @@ import com.bavostepbros.leap.domain.model.Environment;
 * @author Bavo Van Meel
 *
 */
-public interface EnvironmentDAL extends JpaRepository<Environment, Integer>{
+public interface EnvironmentDAL extends JpaRepository<Environment, Integer> {
 	Optional<Environment> findByEnvironmentName(String environmentName);
 }
