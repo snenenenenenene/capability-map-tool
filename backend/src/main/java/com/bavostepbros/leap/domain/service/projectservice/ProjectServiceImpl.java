@@ -32,12 +32,12 @@ public class ProjectServiceImpl implements ProjectService {
     private ProjectDAL projectDAL;
 	
 	@Override
-	public Project save(Integer programId, Integer statusId) {
+	public Project save(String projectName, Integer programId, Integer statusId) {
 		Optional<Program> program = programDAL.findById(programId);
 		program.orElseThrow(() -> new NullPointerException("Program does not exist."));
 		Optional<Status> status = statusDAL.findById(statusId);
 		status.orElseThrow(() -> new NullPointerException("Status does not exist."));
-		Project project = new Project(program.get(), status.get());
+		Project project = new Project(projectName, program.get(), status.get());
 		return projectDAL.save(project);
 	}
 
@@ -49,12 +49,12 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public Project update(Integer projectId, Integer programId, Integer statusId) {
+	public Project update(Integer projectId, String projectName, Integer programId, Integer statusId) {
 		Optional<Program> program = programDAL.findById(programId);
 		program.orElseThrow(() -> new NullPointerException("Program does not exist."));
 		Optional<Status> status = statusDAL.findById(statusId);
 		status.orElseThrow(() -> new NullPointerException("Status does not exist."));
-		Project project = new Project(projectId, program.get(), status.get());
+		Project project = new Project(projectId, projectName, program.get(), status.get());
 		return projectDAL.save(project);
 	}
 

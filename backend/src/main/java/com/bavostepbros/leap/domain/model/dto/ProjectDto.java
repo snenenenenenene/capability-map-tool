@@ -1,8 +1,5 @@
 package com.bavostepbros.leap.domain.model.dto;
 
-import com.bavostepbros.leap.domain.model.Program;
-import com.bavostepbros.leap.domain.model.Status;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProjectDto {
 	private Integer projectId;
-	private Program program;
-	private Status status;
+	private String projectName;
+	private ProgramDto program;
+	private StatusDto status;
 }

@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +22,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Status {
 
@@ -35,12 +33,11 @@ public class Status {
     
     @Column(name = "VALIDITYPERIOD")
     private LocalDate validityPeriod;
-    
-    @OneToOne(mappedBy = "status")
-    private Project project;
+    	
+	@OneToOne(mappedBy = "status") 
+	private Project project;
 
     public Status(Integer statusId, LocalDate validityPeriod) {
-		super();
 		this.statusId = statusId;
 		this.validityPeriod = validityPeriod;
 	}
