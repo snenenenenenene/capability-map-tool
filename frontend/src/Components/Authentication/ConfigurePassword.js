@@ -41,13 +41,10 @@ export default class ConfigurePassword extends Component {
     if (schema.validate(this.state.password)) {
       var pwd = sha1(this.state.password);
       const formData = new FormData();
-      formData.append("username", this.state.username);
-      formData.append("email", this.state.email);
-      formData.append("roleId", this.state.roleId);
       formData.append("password", pwd);
-      formData.append("userId", this.state.userId);
+      formData.append("id", this.state.userId);
       await axios
-        .put(`${process.env.REACT_APP_API_URL}/user/`, formData)
+        .put(`${process.env.REACT_APP_API_URL}/user/changePassword`, formData)
         .then((response) => {
           toast.success("Successfully Changed Password");
           this.props.handleModal();
@@ -72,30 +69,30 @@ export default class ConfigurePassword extends Component {
   render() {
     return (
       <div>
-        <form onSubmit={this.authenticateUser} className='form-signin'>
-          <div className='form-label-group'>
+        <form onSubmit={this.authenticateUser} className="form-signin">
+          <div className="form-label-group">
             {/* <label htmlFor='password'>New Password</label> */}
             <input
-              type='password'
-              id='password'
-              className='form-control'
-              placeholder='New Password'
+              type="password"
+              id="password"
+              className="form-control"
+              placeholder="New Password"
               required
               autoFocus
-              name='password'
+              name="password"
               value={this.state.password}
               onChange={this.handleInputChange}
             />
           </div>
-          <div className='form-label-group'>
+          <div className="form-label-group">
             {/* <label htmlFor='confirmNewPassword'>Confirm Password</label> */}
             <input
-              type='password'
-              id='confirmNewPassword'
-              className='form-control'
-              placeholder='Confirm Password'
+              type="password"
+              id="confirmNewPassword"
+              className="form-control"
+              placeholder="Confirm Password"
               required
-              name='confirmNewPassword'
+              name="confirmNewPassword"
               value={this.state.confirmNewPassword}
               onChange={this.handleInputChange}
             />
@@ -103,8 +100,8 @@ export default class ConfigurePassword extends Component {
           <br></br>
           <button
             onClick={this.handleSubmit}
-            className='btn btn-lg btn-primary btn-block text-uppercase'
-            type='submit'
+            className="btn btn-lg btn-primary btn-block text-uppercase"
+            type="submit"
           >
             Configure Password
           </button>

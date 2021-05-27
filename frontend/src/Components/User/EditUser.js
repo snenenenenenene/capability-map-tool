@@ -4,14 +4,16 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import * as sha1 from "js-sha1";
 
-export default class AddUser extends Component {
+export default class EditUser extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      userId: this.props.match.params.id,
       roles: [],
       username: "",
-      roleId: 1,
+      roleId: "",
       email: "",
+      password: "",
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -20,18 +22,35 @@ export default class AddUser extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
+    formData.append("userId", this.state.userId);
     formData.append("username", this.state.username);
     formData.append("email", this.state.email);
     formData.append("password", sha1("newUser"));
     formData.append("roleId", this.state.roleId);
     await axios
-      .post(`${process.env.REACT_APP_API_URL}/user/`, formData)
-      .then((response) => toast.success("User Added Successfully!"))
-      .catch((error) => toast.error("Could not Add User"));
-    this.props.history.push(`/user`);
+      .put(`${process.env.REACT_APP_API_URL}/user/`, formData)
+      .then((response) => {
+        toast.success("User Updated Successfully!");
+        this.props.history.push(`/user`);
+      })
+      .catch((error) => toast.error("Could not Update User"));
   };
 
   async componentDidMount() {
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/user/${this.state.userId}`)
+      .then((response) =>
+        this.setState({
+          username: response.data.username,
+          email: response.data.email,
+          password: response.data.password,
+          roleId: response.data.roleId,
+        })
+      )
+      .catch((error) => {
+        toast.error("Could not Load User");
+      });
+
     await axios
       .get(`${process.env.REACT_APP_API_URL}/role/`)
       .then((response) => this.setState({ roles: response.data }))
@@ -67,12 +86,12 @@ export default class AddUser extends Component {
               <Link to={`/user`}>User</Link>
             </li>
             <li className="breadcrumb-item active" aria-current="page">
-              Add User
+              Edit User
             </li>
           </ol>
         </nav>
         <div className="jumbotron">
-          <h3>Add User</h3>
+          <h3>Edit User</h3>
           <form onSubmit={this.handleSubmit}>
             <div className="row">
               <div className="col-sm">
@@ -116,6 +135,7 @@ export default class AddUser extends Component {
                       placeholder="Role"
                       value={this.state.roleId}
                       onChange={this.handleInputChange}
+                      required
                     >
                       {this.roleListRows()}
                     </select>

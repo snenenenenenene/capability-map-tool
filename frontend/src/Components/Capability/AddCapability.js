@@ -20,13 +20,16 @@ export default class AddCapability extends Component {
       parentCapability: 0,
       description: "",
       paceOfChange: "",
-      TOM: "",
+      targetOperatingModel: "",
       informationQuality: "",
       applicationFit: "",
       resourcesQuality: "",
       statusId: "",
       level: "ONE",
       showModal: false,
+      immediate: true,
+      setFocusOnError: true,
+      clearInputOnReset: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -41,7 +44,7 @@ export default class AddCapability extends Component {
     formData.append("capabilityName", this.state.capabilityName);
     formData.append("parentCapabilityId", this.state.parentCapability);
     formData.append("paceOfChange", this.state.paceOfChange);
-    formData.append("targetOperatingModel", this.state.TOM);
+    formData.append("targetOperatingModel", this.state.targetOperatingModel);
     formData.append("informationQuality", this.state.informationQuality);
     formData.append("applicationFit", this.state.applicationFit);
     formData.append("resourceQuality", this.state.resourcesQuality);
@@ -49,11 +52,13 @@ export default class AddCapability extends Component {
     formData.append("level", this.state.level);
     await axios
       .post(`${process.env.REACT_APP_API_URL}/capability/`, formData)
-      .then((response) => toast.success("Capability Added Successfully!"))
+      .then((response) => {
+        toast.success("Capability Added Successfully!");
+        this.props.history.push(
+          `/environment/${this.state.environmentName}/capability`
+        );
+      })
       .catch((error) => toast.error("Could not Add Capability"));
-    this.props.history.push(
-      `/environment/${this.state.environmentName}/capability`
-    );
   };
 
   async componentDidMount() {
@@ -164,6 +169,7 @@ export default class AddCapability extends Component {
                       placeholder="Name Capability"
                       value={this.state.capabilityName}
                       onChange={this.handleInputChange}
+                      required
                     />
                   </div>
                 </div>
@@ -177,6 +183,7 @@ export default class AddCapability extends Component {
                       placeholder="Add Parent Capability"
                       value={this.state.parentCapabilityId}
                       onChange={this.handleInputChange}
+                      required
                     >
                       <option key="-1" defaultValue="selected" value={0}>
                         None
@@ -193,6 +200,7 @@ export default class AddCapability extends Component {
                       placeholder="Add Level"
                       value={this.state.level}
                       onChange={this.handleInputChange}
+                      required
                     >
                       {/* <option key="-1"  hidden="hidden" value="">Select Level</option> */}
                       <option defaultValue="selected" value="ONE">
@@ -228,6 +236,7 @@ export default class AddCapability extends Component {
                       id="paceOfChange"
                       value={this.state.paceOfChange}
                       onChange={this.handleInputChange}
+                      required
                     >
                       <option
                         key="-1"
@@ -252,6 +261,7 @@ export default class AddCapability extends Component {
                       id="informationQuality"
                       value={this.state.informationQuality}
                       onChange={this.handleInputChange}
+                      required
                     >
                       <option
                         key="-1"
@@ -271,14 +281,15 @@ export default class AddCapability extends Component {
                 </div>
                 <div className="form-row">
                   <div className="form-group col-md-6">
-                    <label htmlFor="paceOfChange">TOM</label>
+                    <label htmlFor="targetOperatingModel">TOM</label>
                     <select
                       className="form-control"
-                      name="TOM"
-                      placeholder="Add TOM"
-                      id="TOM"
-                      value={this.state.TOM}
+                      name="targetOperatingModel"
+                      placeholder="Add targetOperatingModel"
+                      id="targetOperatingModel"
+                      value={this.state.targetOperatingModel}
                       onChange={this.handleInputChange}
+                      required
                     >
                       <option
                         key="-1"
@@ -288,7 +299,10 @@ export default class AddCapability extends Component {
                       >
                         Select TOM
                       </option>
-                      <option value="TOM">TOM</option>
+                      <option value="Coordination">Coordination</option>
+                      <option value="Coordination">Diversification</option>
+                      <option value="Coordination">Replication</option>
+                      <option value="Coordination">Unification</option>
                     </select>
                   </div>
                   <div className="form-group col-md-6">
@@ -300,6 +314,7 @@ export default class AddCapability extends Component {
                       id="applicationFit"
                       value={this.state.applicationFit}
                       onChange={this.handleInputChange}
+                      required
                     >
                       <option
                         key="-1"
@@ -327,6 +342,7 @@ export default class AddCapability extends Component {
                       half={false}
                       color2={"#ffd700"}
                       value={this.state.resourcesQuality}
+                      required
                     />
                   </div>
                 </div>
@@ -341,6 +357,7 @@ export default class AddCapability extends Component {
                         className="form-control"
                         placeholder="Validity Period"
                         value={this.state.expirationDate}
+                        required
                         onChange={this.handleInputChange}
                       >
                         <option

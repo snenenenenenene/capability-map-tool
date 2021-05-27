@@ -40,6 +40,7 @@ import EditProgram from "./Components/Program/EditProgram";
 import Program from "./Components/Program/Program";
 import toast, { Toaster } from "react-hot-toast";
 import AddUser from "./Components/User/AddUser";
+import EditUser from "./Components/User/EditUser";
 import ConfigurePassword from "./Components/Authentication/ConfigurePassword";
 import ExportMap from "./Components/Environment/ExportMap";
 import EditEnvironment from "./Components/Environment/EditEnvironment";
@@ -66,7 +67,7 @@ class App extends Component {
 
   logout() {
     localStorage.removeItem("user");
-    window.location.reload();
+    this.props.history.push("/");
   }
 
   toastError(object) {
@@ -91,10 +92,11 @@ class App extends Component {
   adminRoutes() {
     if (this.state.user.roleId === 2) {
       return (
-        <>
+        <Switch>
           <Route exact path="/user" component={User} />
           <Route exact path="/user/add" component={AddUser} />
-        </>
+          <Route exact path="/user/:id" component={EditUser} />
+        </Switch>
       );
     }
   }
@@ -325,7 +327,7 @@ class App extends Component {
                 path="/environment/:name/program"
                 component={Program}
               />
-              <Route path="/login">
+              <Route exact path="/login">
                 <Redirect to="/home" />
               </Route>
 
@@ -336,11 +338,6 @@ class App extends Component {
                 component={ConfigurePassword}
               />
               {this.adminRoutes()}
-              <Route
-                exact
-                path="/choosePassword"
-                component={ConfigurePassword}
-              />
               {/* ERRORS */}
               <Route exact path="/error" component={GeneralError} />
               <Route exact path="/notfound" component={NotFoundError} />
@@ -364,7 +361,7 @@ class App extends Component {
       return (
         <Switch>
           <Route exact path="/login" component={Signup} />
-          <Route path="/">
+          <Route exact path="/">
             <Redirect to="/login" />
           </Route>
         </Switch>
