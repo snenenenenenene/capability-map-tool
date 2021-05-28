@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import Pdf from "react-to-pdf";
 
 export default class ExportMap extends Component {
   constructor(props) {
@@ -18,11 +19,11 @@ export default class ExportMap extends Component {
       return this.state.capabilities.map((capability) => {
         return (
           <div
-            class="card text-white bg-dark mb-3"
+            class="card text-white bg-secondary mb-3"
             style={{ maxWidth: 10 + "rem" }}
           >
             <div class="card-header text-center text-uppercase">
-              {capability.capabilityName}
+              {capability.capabilityId}. {capability.capabilityName}
             </div>
             <div class="card-body">
               {() => {
@@ -67,6 +68,7 @@ export default class ExportMap extends Component {
   }
 
   render() {
+    const targetRef = React.createRef();
     return (
       <div>
         <br></br>
@@ -87,7 +89,15 @@ export default class ExportMap extends Component {
           <h1 className="display-4" style={{ display: "inline-block" }}>
             Export
           </h1>
-          <div className="card-deck justify-content-center">
+          <Pdf targetRef={targetRef} filename="capabilitymap.pdf">
+            {({ toPdf }) => (
+              <button className="float-right btn btn-danger" onClick={toPdf}>
+                Generate Pdf
+              </button>
+            )}
+          </Pdf>
+
+          <div className="card-deck justify-content-center" ref={targetRef}>
             {this.capabilityMapping()}
           </div>
         </div>

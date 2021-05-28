@@ -54,10 +54,10 @@ class Environment extends Component {
         </nav>
         <Link to={`/environment/${this.state.environmentName}/export`}>
           <button
-            className="btn btn-primary float-right"
-            style={{ marginRight: 32, marginTop: 15 }}
+            className="btn btn-danger float-right"
+            style={{ marginRight: 34, marginTop: 15 }}
           >
-            Export
+            Map
           </button>
         </Link>
         <div className="container jumbotron">

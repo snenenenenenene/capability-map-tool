@@ -1,19 +1,38 @@
 import axios from "axios";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Input } from "reactstrap";
-import RecentEnvironmentTableRow from "./RecentEnvironmentTableRow";
+import { Modal } from "reactstrap";
+// import RecentEnvironmentTableRow from "./RecentEnvironmentTableRow";
 import toast from "react-hot-toast";
+import MaterialTable from "material-table";
+
 export default class NewEnvironment extends Component {
   constructor(props) {
     super(props);
     this.state = {
       environmentName: "",
       environments: [],
+      showModal: false,
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+
+  fetchDeleteEnvironments = async (environmentId) => {
+    await axios
+      .delete(`${process.env.REACT_APP_API_URL}/environment/${environmentId}`)
+      .then((response) => toast.success("Succesfully Deleted Environment"))
+      .catch((error) => toast.error("Could not Delete Environment"));
+    //REFRESH CAPABILITIES
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/environment/`)
+      .then((response) => {
+        this.setState({ environments: response.data });
+      })
+      .catch((error) => {
+        toast.error("Could not Find Environment");
+      });
+  };
 
   handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,61 +78,123 @@ export default class NewEnvironment extends Component {
       });
   }
 
-  recentEnvironmentTableRow() {
-    return this.state.environments.map((row, i) => {
-      return <RecentEnvironmentTableRow obj={row} key={i} />;
-    });
-  }
-
   render() {
     return (
       <div>
         <br></br>
-        <nav aria-label='breadcrumb'>
-          <ol className='breadcrumb'>
-            <li className='breadcrumb-item'>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
               <Link to={`/home`}>Home</Link>
             </li>
           </ol>
         </nav>
-        <div className='jumbotron shadow'>
-          <h1>Dashboard</h1>
-          <div className='row'>
-            <div className='col-sm-6'>
-              <div>
-                <p>Recent Environments</p>
-                <table className=' table table-striped'>
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Name</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>{this.recentEnvironmentTableRow()}</tbody>
-                </table>
-              </div>
-            </div>
-            <div className='col-sm-'>
-              <p>New Environments</p>
-              <form className='form-inline' onSubmit={this.handleSubmit}>
-                <Input
-                  type='text'
-                  name='environmentName'
-                  value={this.state.environmentName}
-                  onChange={this.handleInputChange}
-                  className='form-control'
-                  style={{marginRight: 5}}
-                  placeholder='New Environment'
-                />
+        <div>
+          <div className="jumbotron shadow">
+            <div className="form-inline">
+              <h1 className="display-4">Dashboard</h1>
+              <form
+                className="input-group ml-auto"
+                onSubmit={this.handleSubmit}
+              >
                 <button
-                  className='btn btn-secondary'
-                  type='button'
+                  className="btn btn-danger"
+                  type="button"
                   onClick={this.handleSubmit}
                 >
                   Add
                 </button>
+                <input
+                  type="text"
+                  id="environmentName"
+                  name="environmentName"
+                  className="form-control"
+                  placeholder="Name Environment"
+                  value={this.state.environmentName}
+                  onChange={this.handleInputChange}
+                  required
+                />
               </form>
+            </div>
+
+            <hr></hr>
+            <div className="row">
+              <div className="col-sm">
+                <div>
+                  <MaterialTable
+                    columns={[
+                      { title: "ID", field: "environmentId" },
+                      { title: "Name", field: "environmentName" },
+                      {
+                        title: "",
+                        name: "actions",
+                        render: (rowData) => (
+                          <>
+                            <button className="btn btn-danger">
+                              <i
+                                className="bi bi-trash"
+                                onClick={(e) => {
+                                  toast(
+                                    (t) => (
+                                      <span>
+                                        <p className="text-center">
+                                          Are you sure you want to remove this
+                                          environment?
+                                        </p>
+                                        <div className="text-center">
+                                          <button
+                                            className="btn btn-primary btn-sm m-3"
+                                            stlye={{ width: 50, height: 30 }}
+                                            onClick={() => {
+                                              toast.dismiss(t.id);
+                                              this.fetchDeleteEnvironments(
+                                                rowData.environmentId
+                                              );
+                                            }}
+                                          >
+                                            Yes!
+                                          </button>
+                                          <button
+                                            className="btn btn-secondary btn-sm m-3"
+                                            stlye={{ width: 50, height: 30 }}
+                                            onClick={() => toast.dismiss(t.id)}
+                                          >
+                                            No!
+                                          </button>
+                                        </div>
+                                      </span>
+                                    ),
+                                    { duration: 50000 }
+                                  );
+                                  e.stopPropagation();
+                                }}
+                              ></i>
+                            </button>
+                            <button
+                              className="btn btn"
+                              onClick={(e) => {
+                                this.props.history.push(
+                                  `/environment/${rowData.environmentId}/edit`
+                                );
+                                e.stopPropagation();
+                              }}
+                            >
+                              <i className="bi bi-pencil"></i>
+                            </button>
+                          </>
+                        ),
+                      },
+                    ]}
+                    data={this.state.environments}
+                    onRowClick={(event, rowData, togglePanel) =>
+                      this.props.history.push(
+                        `/environment/${rowData.environmentName}`
+                      )
+                    }
+                    title="Environments"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>

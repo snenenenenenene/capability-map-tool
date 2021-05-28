@@ -15,7 +15,7 @@ export default class AddITApplication extends Component {
       environmentName: this.props.match.params.name,
       environmentId: "",
       statusId: "",
-      strategicImportance:"",
+      strategicImportance: "",
       itApplicationName: "",
       technology: "",
       version: "",
@@ -68,11 +68,13 @@ export default class AddITApplication extends Component {
     formData.append("timeValue", this.state.timeValue);
     await axios
       .post(`${process.env.REACT_APP_API_URL}/itapplication/`, formData)
-      .then((response) => toast.success("IT Application Added Successfully!"))
+      .then((response) => {
+        toast.success("IT Application Added Successfully!");
+        this.props.history.push(
+          `/environment/${this.state.environmentName}/itapplication`
+        );
+      })
       .catch((error) => toast.error("Could not Add IT Application"));
-    this.props.history.push(
-      `/environment/${this.state.environmentName}/itapplication`
-    );
   };
 
   statusListRows() {
@@ -86,7 +88,6 @@ export default class AddITApplication extends Component {
   }
 
   transferRatings(name, value) {
-    console.log(name + " " + value);
     this.setState({ [name]: value });
   }
 
@@ -122,6 +123,7 @@ export default class AddITApplication extends Component {
   }
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
+    console.log(this.state.timeValue);
   }
 
   handleModal() {
@@ -297,7 +299,7 @@ export default class AddITApplication extends Component {
                   <div className="form-group col-md">
                     <label htmlFor="timeValue">Time Value</label>
                     <input
-                      type="date"
+                      type="time"
                       id="timeValue"
                       name="timeValue"
                       className="form-control"

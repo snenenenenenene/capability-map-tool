@@ -19,6 +19,7 @@ export default class AddStrategyItem extends Component {
       strategyItemName: "",
       strategyItemDescription: "",
       strategicImportance: "",
+      showModal: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -65,6 +66,10 @@ export default class AddStrategyItem extends Component {
   handleChange = (selectedOption) => {
     this.setState({ selectedCapabilities: selectedOption });
   };
+
+  handleModal() {
+    this.setState({ showModal: !this.state.showModal });
+  }
 
   async componentDidMount() {
     await axios

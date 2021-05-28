@@ -30,7 +30,7 @@ class RecentEnvironmentTableRow extends Component {
           </Link>
         </td>
         <td>
-          <button className="btn-sm btn-secondary">
+          <button className="btn">
             <i
               onClick={() => {
                 this.deleteEnvironment(this.props.obj.environmentId);
@@ -38,9 +38,7 @@ class RecentEnvironmentTableRow extends Component {
               className="bi bi-trash"
             ></i>
           </button>
-        </td>
-        <td>
-          <button className="btn-sm btn-secondary">
+          <button className="btn">
             <i
               onClick={() => {
                 console.log(

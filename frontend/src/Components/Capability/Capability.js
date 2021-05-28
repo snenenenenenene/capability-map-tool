@@ -13,6 +13,7 @@ export default class Capability extends Component {
       environmentName: this.props.match.params.name,
       environmentId: "",
       capabilities: [],
+      strategyItems: [],
     };
   }
 
@@ -47,6 +48,18 @@ export default class Capability extends Component {
       `/environment/${this.state.environmentName}/capability/${capabilityId}`
     );
   }
+
+  strategyItemRows = async (capabilityId) => {
+    await axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/capability/all-capabilityitems-by-capability/${capabilityId}`
+      )
+      .then((response) => {
+        response.data.forEach((item) => {
+          return <p>{item.itemId}</p>;
+        });
+      });
+  };
 
   fetchDeleteCapabilities = async (capabilityId) => {
     await axios
@@ -140,26 +153,22 @@ export default class Capability extends Component {
               { title: "Expiration", field: "status.validityPeriod" },
               {
                 title: "",
-                name: "delete",
+                name: "actions",
                 render: (rowData) => (
-                  <button className="btn btn-secondary">
-                    <i
-                      onClick={this.delete.bind(this, rowData.capabilityId)}
-                      className="bi bi-trash"
-                    ></i>
-                  </button>
-                ),
-              },
-              {
-                title: "",
-                name: "edit",
-                render: (rowData) => (
-                  <button className="btn btn-secondary">
-                    <i
-                      onClick={this.edit.bind(this, rowData.capabilityId)}
-                      className="bi bi-pencil"
-                    ></i>
-                  </button>
+                  <>
+                    <button className="btn">
+                      <i
+                        onClick={this.delete.bind(this, rowData.capabilityId)}
+                        className="bi bi-trash"
+                      ></i>
+                    </button>
+                    <button className="btn btn">
+                      <i
+                        onClick={this.edit.bind(this, rowData.capabilityId)}
+                        className="bi bi-pencil"
+                      ></i>
+                    </button>
+                  </>
                 ),
               },
             ]}
@@ -167,9 +176,12 @@ export default class Capability extends Component {
             parentChildData={(row, rows) =>
               rows.find((a) => a.capabilityId === row.parentCapabilityId)
             }
+            onRowClick={(event, rowData, togglePanel) => togglePanel()}
+            detailPanel={(rowData) => {
+              this.strategyItemRows(rowData.capabilityId);
+            }}
             options={{
               showTitle: false,
-              search: false,
             }}
           />
         </div>
