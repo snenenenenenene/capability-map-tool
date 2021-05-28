@@ -75,4 +75,11 @@ public class ProjectServiceImpl implements ProjectService {
 		return projectDAL.findByProgram(program.get());
 	}
 
+	@Override
+	public Project getProjectByName(String projectName) {
+		Optional<Project> project = projectDAL.findByProjectName(projectName);
+		project.orElseThrow(() -> new NullPointerException("Project does not exist."));
+		return project.get();
+	}
+
 }

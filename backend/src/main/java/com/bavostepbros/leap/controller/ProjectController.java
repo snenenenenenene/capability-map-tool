@@ -92,4 +92,13 @@ public class ProjectController {
 				.collect(Collectors.toList());
 		return projectsDto;
 	}
+	
+	@GetMapping(path = "projectname/{projectName}")
+	public ProjectDto getProject(@Valid @PathVariable("projectName") String projectName) {
+		Project project = projectService.getProjectByName(projectName);
+		ProgramDto programDto = new ProgramDto(project.getProgram().getProgramId(),
+				project.getProgram().getProgramName());
+		StatusDto statusDto = new StatusDto(project.getStatus().getStatusId(), project.getStatus().getValidityPeriod());
+		return new ProjectDto(project.getProjectId(), project.getProjectName(), programDto, statusDto);
+	}
 }

@@ -11,4 +11,5 @@ public interface ProjectService {
 	void delete(Integer projectId);
 	List<Project> getAll();
 	List<Project> getAllProgramId(Integer programId);
+	Project getProjectByName(String projectName);
 }
