@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Currency;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -302,6 +303,21 @@ public class ITApplicationControllerTest {
 		
 		assertNotNull(currencies);
 		assertEquals(testCurrencies, currencies);
+	}
+	
+	@Test
+	public void should_getAllTimeValues_whenGetAllTimeValues() throws Exception {
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + "all-timevalues"))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn();
+		
+		List<String> timeValues = objectMapper.readValue(
+				mvcResult.getResponse().getContentAsString(), new TypeReference<List<String>>() {});
+		
+		List<String> testTimeValues = Arrays.stream(TimeValue.values()).map(TimeValue::name).collect(Collectors.toList());
+		
+		assertNotNull(timeValues);
+		assertEquals(testTimeValues, timeValues);
 	}
 	
 	@Test
