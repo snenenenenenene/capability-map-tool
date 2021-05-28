@@ -20,7 +20,7 @@ export default class AddCapability extends Component {
       environmentName: this.props.match.params.name,
       environmentId: "",
       capabilityName: "",
-      parentCapability: 0,
+      parentCapabilityId: 0,
       description: "",
       paceOfChange: "",
       targetOperatingModel: "",
@@ -29,9 +29,6 @@ export default class AddCapability extends Component {
       resourcesQuality: "",
       statusId: "",
       showModal: false,
-      immediate: true,
-      setFocusOnError: true,
-      clearInputOnReset: false,
       showItemModal: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -45,14 +42,13 @@ export default class AddCapability extends Component {
     formData.append("environmentName", this.state.environmentName);
     formData.append("environmentId", this.state.environmentId);
     formData.append("capabilityName", this.state.capabilityName);
-    formData.append("parentCapabilityId", this.state.parentCapability);
+    formData.append("parentCapabilityId", this.state.parentCapabilityId);
     formData.append("paceOfChange", this.state.paceOfChange);
     formData.append("targetOperatingModel", this.state.targetOperatingModel);
     formData.append("informationQuality", this.state.informationQuality);
     formData.append("applicationFit", this.state.applicationFit);
     formData.append("resourceQuality", this.state.resourcesQuality);
     formData.append("statusId", this.state.statusId);
-    formData.append("level", "ONE");
     await axios
       .post(`${process.env.REACT_APP_API_URL}/capability/`, formData)
       .then((response) => {
@@ -112,7 +108,13 @@ export default class AddCapability extends Component {
       .get(
         `${process.env.REACT_APP_API_URL}/capability/all-capabilities-by-environmentid/${this.state.environmentId}`
       )
-      .then((response) => this.setState({ capabilities: response.data }))
+      .then((response) => {
+        response.data.forEach((cap) => {
+          cap.label = `${cap.capabilityName} - lvl: ${cap.level}`;
+          cap.value = cap.capabilityId;
+        });
+        this.setState({ capabilities: response.data });
+      })
       .catch((error) => {
         toast.error("Could not load Capabilities");
       });
@@ -144,16 +146,6 @@ export default class AddCapability extends Component {
       return (
         <option key={status.statusId} value={status.statusId}>
           {status.validityPeriod}
-        </option>
-      );
-    });
-  }
-
-  capabilityListRows() {
-    return this.state.capabilities.map((capability) => {
-      return (
-        <option key={capability.capabilityId} value={capability.capabilityId}>
-          {capability.capabilityName}
         </option>
       );
     });
@@ -222,38 +214,26 @@ export default class AddCapability extends Component {
                   </div>
                 </div>
                 <div className="form-row">
-                  <div className="form-group col-md-6">
+                  <div className="form-group col-md">
                     <label htmlFor="paceOfChange">Parent Capability</label>
-                    <select
-                      className="form-control"
+                    <Select
+                      options={this.state.capabilities}
                       name="parentCapability"
                       id="parentCapability"
                       placeholder="Add Parent Capability"
-                      value={this.state.parentCapabilityId}
-                      onChange={this.handleInputChange}
+                      noOptionsMessage={() => "No Level 1 Capabilities"}
+                      onChange={(cap) => {
+                        if (cap) {
+                          this.setState({
+                            parentCapabilityId: cap.capabilityId,
+                          });
+                        } else {
+                          this.setState({ parentCapabilityId: 0 });
+                        }
+                      }}
+                      isClearable={true}
                       required
-                    >
-                      <option key="-1" defaultValue="selected" value={0}>
-                        None
-                      </option>
-                      {this.capabilityListRows()}
-                    </select>
-                  </div>
-                  <div className="form-group col-md-6">
-                    <label htmlFor="level">Capability Level</label>
-                    <select
-                      className="form-control"
-                      name="level"
-                      id="level"
-                      placeholder="Add Level"
-                      value={this.state.parentCapabilityId}
-                      onChange={this.handleInputChange}
-                      required
-                    >
-                      <option defaultValue="selected" value="ONE">
-                        {this.state.parentCapabilityId}
-                      </option>
-                    </select>
+                    ></Select>
                   </div>
                 </div>
                 <div className="form-group">

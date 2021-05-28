@@ -130,7 +130,7 @@ export default class NewEnvironment extends Component {
                         name: "actions",
                         render: (rowData) => (
                           <>
-                            <button className="btn btn-danger">
+                            <button className="btn btn">
                               <i
                                 className="bi bi-trash"
                                 onClick={(e) => {

@@ -97,7 +97,7 @@ export default class ExportMap extends Component {
             )}
           </Pdf>
 
-          <div className="card-deck justify-content-center" ref={targetRef}>
+          <div ref={targetRef} className="card-deck justify-content-center">
             {this.capabilityMapping()}
           </div>
         </div>

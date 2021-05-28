@@ -71,17 +71,18 @@ export default class Settings extends Component {
               <div className="col-sm">
                 <div className="form-row">
                   <div className="form-group col-md-6">
-                    <fieldset disabled>
-                      <label htmlFor="email">Email</label>
-                      <input
-                        type="text"
-                        id="email"
-                        name="email"
-                        className="form-control"
-                        placeholder="email"
-                        value={this.state.email}
-                      />
-                    </fieldset>
+                    <label htmlFor="email" className="sr-only">
+                      Email
+                    </label>
+                    <input
+                      type="text"
+                      id="email"
+                      name="email"
+                      className="form-control-plaintext"
+                      placeholder="email"
+                      readonly
+                      value={this.state.email}
+                    />
                   </div>
                 </div>
                 <div className="form-row">

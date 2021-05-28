@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import MaterialTable from "material-table";
 import "./GeneralTable.css";
 import axios from "axios";
+import { Modal } from "react-bootstrap";
+import Select from "react-select";
+
 import toast from "react-hot-toast";
 
 export default class Capability extends Component {
@@ -14,6 +17,7 @@ export default class Capability extends Component {
       environmentId: "",
       capabilities: [],
       strategyItems: [],
+      showItemModal: false,
     };
   }
 
@@ -60,6 +64,10 @@ export default class Capability extends Component {
         });
       });
   };
+
+  handleItemModal() {
+    this.setState({ showItemModal: !this.state.showItemModal });
+  }
 
   fetchDeleteCapabilities = async (capabilityId) => {
     await axios
@@ -176,10 +184,60 @@ export default class Capability extends Component {
             parentChildData={(row, rows) =>
               rows.find((a) => a.capabilityId === row.parentCapabilityId)
             }
-            onRowClick={(event, rowData, togglePanel) => togglePanel()}
             detailPanel={(rowData) => {
-              this.strategyItemRows(rowData.capabilityId);
+              return (
+                <>
+                  <button
+                    className="btn btn-secondary"
+                    type="button"
+                    onClick={() => this.handleItemModal()}
+                  >
+                    Add Strategy Item
+                  </button>
+                  <Modal show={this.state.showItemModal}>
+                    <Modal.Header>Add Items</Modal.Header>
+                    <Modal.Body>
+                      <label htmlFor="itemId">Strategy Items</label>
+                      <Select
+                        options={this.state.strategyItems}
+                        isMulti
+                        closeMenuOnSelect={false}
+                        onChange={this.handleChange}
+                        placeholder="Optional"
+                      />
+                      <label htmlFor="strategicImportance">Importance</label>
+                      <select
+                        className="form-control"
+                        name="strategicImportance"
+                        id="strategicImportance"
+                        placeholder="Add Importance"
+                        value={this.state.strategicImportance}
+                        onChange={this.handleInputChange}
+                      >
+                        <option defaultValue="selected" hidden value={null}>
+                          Optional
+                        </option>
+                        <option value="NONE">None</option>
+                        <option value="LOWEST">Lowest</option>
+                        <option value="MEDIUM">Medium</option>
+                        <option value="HIGH">High</option>
+                        <option value="HIGHEST">Highest</option>
+                      </select>
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <button
+                        type="button"
+                        className="btn btn-secondary"
+                        onClick={() => this.handleItemModal()}
+                      >
+                        Close Modal
+                      </button>
+                    </Modal.Footer>
+                  </Modal>
+                </>
+              );
             }}
+            onRowClick={(event, rowData, togglePanel) => togglePanel()}
             options={{
               showTitle: false,
             }}
