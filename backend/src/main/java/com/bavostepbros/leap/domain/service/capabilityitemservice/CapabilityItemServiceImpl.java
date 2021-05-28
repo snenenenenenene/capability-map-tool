@@ -113,4 +113,10 @@ public class CapabilityItemServiceImpl implements CapabilityItemService {
 		return capabilityItemDAL.findByStrategyItem(strategyItem);
 	}
 
+	@Override
+	public List<CapabilityItem> getCapabilityItemsByCapability(Integer capabilityId) {
+		Capability capability = capabilityService.get(capabilityId);
+		return capabilityItemDAL.findByCapability(capability);
+	}
+
 }

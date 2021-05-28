@@ -79,4 +79,16 @@ public class CapabilityItemController {
 				.collect(Collectors.toList());
 		return capabilityItemsDto; 
 	}
+	
+	@GetMapping(path = "all-capabilityitems-by-capabilityid/{capabilityId}")
+	public List<CapabilityItemDto> getAllCapabilityItemsByCapabilityId(
+			@PathVariable("capabilityId") Integer capabilityId) {
+		
+		List<CapabilityItem> capabilityItems = capabilityItemService.getCapabilityItemsByCapability(capabilityId);
+		List<CapabilityItemDto> capabilityItemsDto = capabilityItems.stream()
+				.map(capabilityItem -> new CapabilityItemDto(capabilityItem.getCapability(), 
+						capabilityItem.getStrategyItem(), capabilityItem.getStrategicImportance()))
+				.collect(Collectors.toList());
+		return capabilityItemsDto; 
+	}
 }

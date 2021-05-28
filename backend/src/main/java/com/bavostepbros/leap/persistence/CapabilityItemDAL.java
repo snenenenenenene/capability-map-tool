@@ -12,6 +12,10 @@ import com.bavostepbros.leap.domain.model.StrategyItem;
 
 public interface CapabilityItemDAL extends JpaRepository<CapabilityItem, CapabilityItemId> {
 	Optional<CapabilityItem> findByCapabilityAndStrategyItem(Capability capability, StrategyItem strategyItem);
+
 	List<CapabilityItem> findByStrategyItem(StrategyItem strategyItem);
+
 	void deleteByCapabilityAndStrategyItem(Capability capability, StrategyItem strategyItem);
+	
+	List<CapabilityItem> findByCapability(Capability capability);
 }

@@ -14,4 +14,6 @@ public interface CapabilityItemService {
 	void delete(Integer capabilityId, Integer itemId);
 	
 	List<CapabilityItem> getCapabilityItemsByStrategyItem(Integer itemId);
+	
+	List<CapabilityItem> getCapabilityItemsByCapability(Integer capabilityId);
 }
