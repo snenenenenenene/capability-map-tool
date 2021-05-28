@@ -240,6 +240,22 @@ public class CapabilityItemControllerTest {
 	}
 	
 	@Test
+	public void should_getCapabilityItems_whenGetCapabilityItemsByCapabilityid() throws Exception {
+		Integer capabilityId = capabilityItemSecond.getCapability().getCapabilityId();
+		
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + "all-capabilityitems-by-capabilityid/" + capabilityId))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn();
+		
+		List<CapabilityItemDto> resultCapabilityItems = objectMapper.readValue(
+				mvcResult.getResponse().getContentAsString(), new TypeReference<List<CapabilityItemDto>>() {});
+		
+		assertNotNull(resultCapabilityItems);
+		assertEquals(1, resultCapabilityItems.size());
+		testCapabilityItem(capabilityItemSecond, resultCapabilityItems.get(0));
+	}
+	
+	@Test
 	private void testCapabilityItem(CapabilityItem expectedObject, CapabilityItemDto actualObject) {
 		assertEquals(expectedObject.getCapability().getCapabilityId(), actualObject.getCapability().getCapabilityId());
 		assertEquals(expectedObject.getCapability().getEnvironment().getEnvironmentId(), actualObject.getCapability().getEnvironment().getEnvironmentId());
