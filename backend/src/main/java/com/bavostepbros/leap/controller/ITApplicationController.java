@@ -186,6 +186,11 @@ public class ITApplicationController {
 		return itApplicationService.getAllCurrencies();
 	}
 	
+	@GetMapping(path = "all-timevalues")
+	public List<String> getAllTimeValues() {
+		return itApplicationService.getAllTimeValues();
+	}
+	
 	@PutMapping(path = "link-technology/{itApplicationId}/{technologyId}")
 	public void linkTechnology(@PathVariable("itApplicationId") Integer itApplicationId,
 			@PathVariable("technologyId") Integer technologyId) {

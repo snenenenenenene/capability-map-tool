@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Currency;
 import java.util.List;
 import java.util.Optional;
@@ -143,6 +144,11 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 				.map(currency -> currency.getCurrencyCode())
 				.collect(Collectors.toList());
 		return currencies;
+	}
+	
+	@Override
+	public List<String> getAllTimeValues() {
+		return Arrays.stream(TimeValue.values()).map(TimeValue::name).collect(Collectors.toList());
 	}
 
 	@Override

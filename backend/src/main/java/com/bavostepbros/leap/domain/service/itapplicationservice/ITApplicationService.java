@@ -32,6 +32,8 @@ public interface ITApplicationService {
 
 	List<String> getAllCurrencies();
 	
+	List<String> getAllTimeValues();
+	
 	void addTechnology(Integer itApplicationId, Integer technologyId);
 	
 	void deleteTechnology(Integer itApplicationId, Integer technologyId);
