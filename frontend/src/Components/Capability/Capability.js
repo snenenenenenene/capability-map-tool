@@ -17,9 +17,29 @@ export default class Capability extends Component {
       environmentId: "",
       capabilities: [],
       strategyItems: [],
+      itemId: 0,
+      strategicImportance: "",
       showItemModal: false,
     };
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
+
+  handleInputChange(event) {
+    this.setState({ [event.target.name]: event.target.value });
+  }
+
+  handleSubmit = (capabilityId) => async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("itemId", this.state.itemId);
+    formData.append("capabilityId", capabilityId);
+    formData.append("strategicImportance", this.state.strategicImportance);
+    await axios
+      .post(`${process.env.REACT_APP_API_URL}/capabilityitem/`, formData)
+      .then(toast.success("Item Successfully Added"))
+      .catch((error) => toast.error("Could not add Item"));
+  };
 
   async componentDidMount() {
     await axios
@@ -45,12 +65,42 @@ export default class Capability extends Component {
         console.log(error);
         toast.error("Could Not Find Capabilities");
       });
+
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/strategyitem/`)
+      .then((response) => {
+        response.data.forEach((item) => {
+          item.label = item.strategyItemName;
+          item.value = item.itemId;
+        });
+        this.setState({ strategyItems: response.data });
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Could Not Find Strategy Items");
+      });
   }
 
   edit(capabilityId) {
     this.props.history.push(
       `/environment/${this.state.environmentName}/capability/${capabilityId}`
     );
+  }
+
+  async strategyItemTable(capabilityId) {
+    await axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/capabilityitem/all-capabilityitems-by-capabilityid/${capabilityId}/`
+      )
+      .then((response) => {
+        return response.data.map((item) => {
+          return <p>{item.itemId}</p>;
+        });
+        this.setState({ strategyItems: response.data });
+      })
+      .catch((error) => {
+        toast.error("Could Not Find Strategy Items");
+      });
   }
 
   strategyItemRows = async (capabilityId) => {
@@ -187,8 +237,9 @@ export default class Capability extends Component {
             detailPanel={(rowData) => {
               return (
                 <>
+                  {this.strategyItemTable(rowData.capabilityId)}
                   <button
-                    className="btn btn-secondary"
+                    className="btn btn-secondary btn-block"
                     type="button"
                     onClick={() => this.handleItemModal()}
                   >
@@ -197,32 +248,42 @@ export default class Capability extends Component {
                   <Modal show={this.state.showItemModal}>
                     <Modal.Header>Add Items</Modal.Header>
                     <Modal.Body>
-                      <label htmlFor="itemId">Strategy Items</label>
-                      <Select
-                        options={this.state.strategyItems}
-                        isMulti
-                        closeMenuOnSelect={false}
-                        onChange={this.handleChange}
-                        placeholder="Optional"
-                      />
-                      <label htmlFor="strategicImportance">Importance</label>
-                      <select
-                        className="form-control"
-                        name="strategicImportance"
-                        id="strategicImportance"
-                        placeholder="Add Importance"
-                        value={this.state.strategicImportance}
-                        onChange={this.handleInputChange}
+                      <form
+                        onSubmit={() => this.handleSubmit(rowData.capabilityId)}
                       >
-                        <option defaultValue="selected" hidden value={null}>
-                          Optional
-                        </option>
-                        <option value="NONE">None</option>
-                        <option value="LOWEST">Lowest</option>
-                        <option value="MEDIUM">Medium</option>
-                        <option value="HIGH">High</option>
-                        <option value="HIGHEST">Highest</option>
-                      </select>
+                        <label htmlFor="itemId">Strategy Items</label>
+                        <Select
+                          options={this.state.strategyItems}
+                          noOptionsMessage={() => "No Strategy Items"}
+                          onChange={(item) => {
+                            if (item) {
+                              this.setState({
+                                itemId: item.itemId,
+                              });
+                            } else {
+                              this.setState({ itemId: 0 });
+                            }
+                          }}
+                          placeholder="Optional"
+                        />
+                        <label htmlFor="strategicImportance">Importance</label>
+                        <select
+                          className="form-control"
+                          name="strategicImportance"
+                          id="strategicImportance"
+                          placeholder="Add Importance"
+                          value={this.state.strategicImportance}
+                          onChange={this.handleInputChange}
+                        >
+                          <option value="LOWEST">Lowest</option>
+                          <option value="MEDIUM">Medium</option>
+                          <option value="HIGH">High</option>
+                          <option value="HIGHEST">Highest</option>
+                        </select>
+                        <button className="btn btn-primary" type="sumbit">
+                          SUBMIT
+                        </button>
+                      </form>
                     </Modal.Body>
                     <Modal.Footer>
                       <button
