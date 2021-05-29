@@ -1,8 +1,6 @@
 import axios from "axios";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Modal } from "reactstrap";
-// import RecentEnvironmentTableRow from "./RecentEnvironmentTableRow";
 import toast from "react-hot-toast";
 import MaterialTable from "material-table";
 

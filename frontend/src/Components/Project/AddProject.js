@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import ReactStars from "react-stars";
 import axios from "axios";
 import { Modal } from "react-bootstrap";
 import StatusQuickAdd from "../Status/StatusQuickAdd";

@@ -19,17 +19,17 @@ export default class ExportMap extends Component {
       return this.state.capabilities.map((capability) => {
         return (
           <div
-            class="card text-white bg-secondary mb-3"
+            className="card text-white bg-secondary mb-3"
             style={{ maxWidth: 10 + "rem" }}
           >
-            <div class="card-header text-center text-uppercase">
+            <div className="card-header text-center text-uppercase">
               {capability.capabilityId}. {capability.capabilityName}
             </div>
             <div class="card-body">
               {() => {
                 if (capability.children.length > 0) this.capabilityMapping();
               }}
-              <p class="card-text"></p>
+              <p className="card-text"></p>
             </div>
           </div>
         );

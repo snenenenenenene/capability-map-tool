@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { Modal } from "react-bootstrap";
 
 export default class AddProgram extends Component {
   constructor(props) {

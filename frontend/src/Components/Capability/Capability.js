@@ -19,6 +19,7 @@ export default class Capability extends Component {
       strategyItems: [],
       itemId: 0,
       strategicImportance: "",
+      capabilityItems: [],
       showItemModal: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -39,6 +40,17 @@ export default class Capability extends Component {
       .post(`${process.env.REACT_APP_API_URL}/capabilityitem/`, formData)
       .then(toast.success("Item Successfully Added"))
       .catch((error) => toast.error("Could not add Item"));
+
+    await axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/capabilityitem/all-capabilityitems-by-capabilityid/${capabilityId}/`
+      )
+      .then((response) => {
+        this.setState({ capabilityItems: response.data });
+      })
+      .catch((error) => {
+        toast.error("Could Not Find Strategy Items");
+      });
   };
 
   async componentDidMount() {
@@ -93,27 +105,12 @@ export default class Capability extends Component {
         `${process.env.REACT_APP_API_URL}/capabilityitem/all-capabilityitems-by-capabilityid/${capabilityId}/`
       )
       .then((response) => {
-        return response.data.map((item) => {
-          return <p>{item.itemId}</p>;
-        });
-        this.setState({ strategyItems: response.data });
+        this.setState({ capabilityItems: response.data });
       })
       .catch((error) => {
         toast.error("Could Not Find Strategy Items");
       });
   }
-
-  strategyItemRows = async (capabilityId) => {
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/capability/all-capabilityitems-by-capability/${capabilityId}`
-      )
-      .then((response) => {
-        response.data.forEach((item) => {
-          return <p>{item.itemId}</p>;
-        });
-      });
-  };
 
   handleItemModal() {
     this.setState({ showItemModal: !this.state.showItemModal });
@@ -130,7 +127,6 @@ export default class Capability extends Component {
         `${process.env.REACT_APP_API_URL}/capability/all-capabilities-by-environmentid/${this.state.environmentId}`
       )
       .then((response) => {
-        this.setState({ capabilities: [] });
         this.setState({ capabilities: response.data });
       })
       .catch((error) => {
@@ -236,8 +232,22 @@ export default class Capability extends Component {
             }
             detailPanel={(rowData) => {
               return (
-                <>
-                  {this.strategyItemTable(rowData.capabilityId)}
+                <div>
+                  <div className="card-deck" style={{ padding: 10 }}>
+                    {this.state.capabilityItems.map((capabilityItem) => {
+                      return (
+                        <div
+                          className="card"
+                          style={{ margin: 10, padding: 10 }}
+                        >
+                          <div className="card-header text-center text-uppercase">
+                            {capabilityItem.capability.capabilityName}
+                          </div>
+                          <div className="card-body"></div>
+                        </div>
+                      );
+                    })}
+                  </div>
                   <button
                     className="btn btn-secondary btn-block"
                     type="button"
@@ -248,9 +258,7 @@ export default class Capability extends Component {
                   <Modal show={this.state.showItemModal}>
                     <Modal.Header>Add Items</Modal.Header>
                     <Modal.Body>
-                      <form
-                        onSubmit={() => this.handleSubmit(rowData.capabilityId)}
-                      >
+                      <form onSubmit={this.handleSubmit(rowData.capabilityId)}>
                         <label htmlFor="itemId">Strategy Items</label>
                         <Select
                           options={this.state.strategyItems}
@@ -295,10 +303,14 @@ export default class Capability extends Component {
                       </button>
                     </Modal.Footer>
                   </Modal>
-                </>
+                </div>
               );
             }}
-            onRowClick={(event, rowData, togglePanel) => togglePanel()}
+            onRowClick={(event, rowData, togglePanel) => {
+              this.strategyItemTable(rowData.capabilityId);
+
+              togglePanel();
+            }}
             options={{
               showTitle: false,
             }}
