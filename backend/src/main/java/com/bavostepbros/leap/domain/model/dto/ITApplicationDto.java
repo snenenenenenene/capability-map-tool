@@ -36,6 +36,7 @@ public class ITApplicationDto {
 	private Double acceptedYearlyCost;
 	private TimeValue timeValue;
 	private List<TechnologyDto> technologies;
+	// private List<CapabilityDto> capabilities;
 	
 	public ITApplicationDto(Integer itApplicationId, StatusDto status, String name, String version, LocalDate purchaseDate,
 			LocalDate endOfLife, Integer currentScalability, Integer expectedScalability, Integer currentPerformance,
@@ -62,6 +63,6 @@ public class ITApplicationDto {
 		this.currentYearlyCost = currentYearlyCost;
 		this.acceptedYearlyCost = acceptedYearlyCost;
 		this.timeValue = timeValue;
-	}	
+	}
 	
 }

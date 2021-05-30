@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -114,8 +115,7 @@ public class ITApplicationController {
 	public List<ITApplicationDto> getAllITApplications() {
 		List<ITApplication> itApplications = itApplicationService.getAll();
 		List<ITApplicationDto> itApplicationsDto = itApplications.stream()
-				.map(itApplication -> convertItApplication(itApplication))
-				.collect(Collectors.toList());
+				.map(itApplication -> convertItApplication(itApplication)).collect(Collectors.toList());
 		return itApplicationsDto;
 	}
 
@@ -152,17 +152,44 @@ public class ITApplicationController {
 	private ITApplicationDto convertItApplication(ITApplication itApplication) {
 		StatusDto status = new StatusDto(itApplication.getStatus().getStatusId(),
 				itApplication.getStatus().getValidityPeriod());
-		List<TechnologyDto> technologies = itApplication.getTechnologies().stream()
-				.map(technology -> new TechnologyDto(technology.getTechnologyId(), technology.getTechnologyName()))
-				.collect(Collectors.toList());
-		return new ITApplicationDto(itApplication.getItApplicationId(), status,
-				itApplication.getName(), itApplication.getVersion(), itApplication.getPurchaseDate(),
-				itApplication.getEndOfLife(), itApplication.getCurrentScalability(),
-				itApplication.getExpectedScalability(), itApplication.getCurrentPerformance(),
-				itApplication.getExpectedPerformance(), itApplication.getCurrentSecurityLevel(),
-				itApplication.getExpectedSecurityLevel(), itApplication.getCurrentStability(),
-				itApplication.getExpectedStability(), itApplication.getCurrencyType(), itApplication.getCostCurrency(),
-				itApplication.getCurrentValue(), itApplication.getCurrentYearlyCost(),
-				itApplication.getAcceptedYearlyCost(), itApplication.getTimeValue(), technologies);
+
+		List<TechnologyDto> technologies = new ArrayList<TechnologyDto>();
+		if (itApplication.getTechnologies() != null) {
+			technologies = itApplication.getTechnologies().stream()
+					.map(technology -> new TechnologyDto(technology.getTechnologyId(), technology.getTechnologyName()))
+					.collect(Collectors.toList());
+		}
+
+		/*
+		 * List<CapabilityDto> capabilitiesDto = new ArrayList<CapabilityDto>(); if
+		 * (!itApplication.getCapabilityApplication().isEmpty()) { capabilitiesDto =
+		 * itApplication.getCapabilityApplication().stream() .map(capabilityApplication
+		 * -> new CapabilityDto(
+		 * capabilityApplication.getCapability().getCapabilityId(), new EnvironmentDto(
+		 * capabilityApplication.getCapability().getEnvironment().getEnvironmentId(),
+		 * capabilityApplication.getCapability().getEnvironment().getEnvironmentName()),
+		 * new
+		 * StatusDto(capabilityApplication.getCapability().getStatus().getStatusId(),
+		 * capabilityApplication.getCapability().getStatus().getValidityPeriod()),
+		 * capabilityApplication.getCapability().getParentCapabilityId(),
+		 * capabilityApplication.getCapability().getCapabilityName(),
+		 * capabilityApplication.getCapability().getLevel(),
+		 * capabilityApplication.getCapability().isPaceOfChange(),
+		 * capabilityApplication.getCapability().getTargetOperatingModel(),
+		 * capabilityApplication.getCapability().getResourceQuality(),
+		 * capabilityApplication.getCapability().getInformationQuality(),
+		 * capabilityApplication.getCapability().getApplicationFit()))
+		 * .collect(Collectors.toList()); }
+		 */
+		
+		return new ITApplicationDto(itApplication.getItApplicationId(), status, itApplication.getName(),
+				itApplication.getVersion(), itApplication.getPurchaseDate(), itApplication.getEndOfLife(),
+				itApplication.getCurrentScalability(), itApplication.getExpectedScalability(),
+				itApplication.getCurrentPerformance(), itApplication.getExpectedPerformance(),
+				itApplication.getCurrentSecurityLevel(), itApplication.getExpectedSecurityLevel(),
+				itApplication.getCurrentStability(), itApplication.getExpectedStability(),
+				itApplication.getCurrencyType(), itApplication.getCostCurrency(), itApplication.getCurrentValue(),
+				itApplication.getCurrentYearlyCost(), itApplication.getAcceptedYearlyCost(),
+				itApplication.getTimeValue(), technologies);
 	}
 }
