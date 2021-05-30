@@ -1,5 +1,6 @@
 package com.bavostepbros.leap.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bavostepbros.leap.domain.model.Project;
+import com.bavostepbros.leap.domain.model.dto.CapabilityDto;
+import com.bavostepbros.leap.domain.model.dto.EnvironmentDto;
 import com.bavostepbros.leap.domain.model.dto.ProgramDto;
 import com.bavostepbros.leap.domain.model.dto.ProjectDto;
 import com.bavostepbros.leap.domain.model.dto.StatusDto;
@@ -39,19 +42,13 @@ public class ProjectController {
 			@Valid @ModelAttribute("programId") Integer programId,
 			@Valid @ModelAttribute("statusId") Integer statusId) {
 		Project project = projectService.save(projectName, programId, statusId);
-		ProgramDto programDto = new ProgramDto(project.getProgram().getProgramId(),
-				project.getProgram().getProgramName());
-		StatusDto statusDto = new StatusDto(project.getStatus().getStatusId(), project.getStatus().getValidityPeriod());
-		return new ProjectDto(project.getProjectId(), project.getProjectName(), programDto, statusDto);
+		return convertProject(project);
 	}
 
 	@GetMapping(path = "{projectId}")
 	public ProjectDto getProject(@PathVariable("projectId") Integer projectId) {
 		Project project = projectService.get(projectId);
-		ProgramDto programDto = new ProgramDto(project.getProgram().getProgramId(),
-				project.getProgram().getProgramName());
-		StatusDto statusDto = new StatusDto(project.getStatus().getStatusId(), project.getStatus().getValidityPeriod());
-		return new ProjectDto(project.getProjectId(), project.getProjectName(), programDto, statusDto);
+		return convertProject(project);
 	}
 
 	@PutMapping(path = "{projectId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -60,10 +57,7 @@ public class ProjectController {
 			@Valid @ModelAttribute("programId") Integer programId,
 			@Valid @ModelAttribute("statusId") Integer statusId) {
 		Project project = projectService.update(projectId, projectName, programId, statusId);
-		ProgramDto programDto = new ProgramDto(project.getProgram().getProgramId(),
-				project.getProgram().getProgramName());
-		StatusDto statusDto = new StatusDto(project.getStatus().getStatusId(), project.getStatus().getValidityPeriod());
-		return new ProjectDto(project.getProjectId(), project.getProjectName(), programDto, statusDto);
+		return convertProject(project);
 	}
 
 	@DeleteMapping(path = "{projectId}")
@@ -75,9 +69,7 @@ public class ProjectController {
 	public List<ProjectDto> getAllProjects() {
 		List<Project> projects = projectService.getAll();
 		List<ProjectDto> projectsDto = projects.stream()
-				.map(project -> new ProjectDto(project.getProjectId(), project.getProjectName(),
-						new ProgramDto(project.getProgram().getProgramId(), project.getProgram().getProgramName()),
-						new StatusDto(project.getStatus().getStatusId(), project.getStatus().getValidityPeriod())))
+				.map(project -> convertProject(project))
 				.collect(Collectors.toList());
 		return projectsDto;
 	}
@@ -86,9 +78,7 @@ public class ProjectController {
 	public List<ProjectDto> getAllProjectsByProgramId(@Valid @PathVariable("programId") Integer programId) {
 		List<Project> projects = projectService.getAllProgramId(programId);
 		List<ProjectDto> projectsDto = projects.stream()
-				.map(project -> new ProjectDto(project.getProjectId(), project.getProjectName(),
-						new ProgramDto(project.getProgram().getProgramId(), project.getProgram().getProgramName()),
-						new StatusDto(project.getStatus().getStatusId(), project.getStatus().getValidityPeriod())))
+				.map(project -> convertProject(project))
 				.collect(Collectors.toList());
 		return projectsDto;
 	}
@@ -96,9 +86,28 @@ public class ProjectController {
 	@GetMapping(path = "projectname/{projectName}")
 	public ProjectDto getProject(@Valid @PathVariable("projectName") String projectName) {
 		Project project = projectService.getProjectByName(projectName);
+		return convertProject(project);
+	}
+	
+	private ProjectDto convertProject(Project project) {
 		ProgramDto programDto = new ProgramDto(project.getProgram().getProgramId(),
 				project.getProgram().getProgramName());
 		StatusDto statusDto = new StatusDto(project.getStatus().getStatusId(), project.getStatus().getValidityPeriod());
-		return new ProjectDto(project.getProjectId(), project.getProjectName(), programDto, statusDto);
+
+		List<CapabilityDto> capabilitiesDto = new ArrayList<CapabilityDto>();
+		if (project.getCapabilities() != null) {
+			capabilitiesDto = project.getCapabilities().stream()
+					.map(capability -> new CapabilityDto(capability.getCapabilityId(),
+							new EnvironmentDto(capability.getEnvironment().getEnvironmentId(),
+									capability.getEnvironment().getEnvironmentName()),
+							new StatusDto(capability.getStatus().getStatusId(), 
+									capability.getStatus().getValidityPeriod()),
+							capability.getParentCapabilityId(), capability.getCapabilityName(), 
+							capability.getLevel(), capability.isPaceOfChange(), 
+							capability.getTargetOperatingModel(), capability.getResourceQuality(),
+							capability.getInformationQuality(), capability.getApplicationFit()))
+					.collect(Collectors.toList());
+		}
+		return new ProjectDto(project.getProjectId(), project.getProjectName(), programDto, statusDto, capabilitiesDto);
 	}
 }

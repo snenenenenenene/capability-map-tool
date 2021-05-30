@@ -16,9 +16,11 @@ import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
 import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Environment;
+import com.bavostepbros.leap.domain.model.Project;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
+import com.bavostepbros.leap.domain.service.projectservice.ProjectService;
 import com.bavostepbros.leap.domain.service.statusservice.StatusService;
 import com.bavostepbros.leap.persistence.CapabilityDAL;
 
@@ -42,6 +44,9 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 	@Autowired
 	private StatusService statusService;
+	
+	@Autowired
+	private ProjectService projectService;
 
 	@Override
 	public Capability save(Integer environmentId, Integer statusId, Integer parentCapabilityId, String capabilityName,
@@ -239,6 +244,27 @@ public class CapabilityServiceImpl implements CapabilityService {
 		}
 		
 		return capabilityDAL.findByCapabilityName(capabilityName).get();
+	}
+
+	@Override
+	public void addProject(Integer capabilityId, Integer projectId) {
+		Capability capability = get(capabilityId);
+		Project project = projectService.get(projectId);
+		capability.addProject(project);
+		return;
+	}
+
+	@Override
+	public void deleteProject(Integer capabilityId, Integer projectId) {
+		Capability capability = get(capabilityId);
+		Project project = projectService.get(projectId);
+		capability.removeProject(project);
+	}
+
+	@Override
+	public List<Project> getAllProjectsByCapabilityId(Integer capabilityId) {
+		Capability capability = get(capabilityId);
+		return capability.getProjects();
 	}
 
 }

@@ -1,10 +1,14 @@
 package com.bavostepbros.leap.domain.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -41,15 +45,18 @@ public class Project {
 	@OneToOne
 	@JoinColumn(name = "STATUSID")
 	private Status status;
-
-	public Project(Integer projectId, String projectName, Program program, Status status) {
-		this.projectId = projectId;
+	
+	@ManyToMany(mappedBy = "projects")
+	private List<Capability> capabilities = new ArrayList<Capability>();
+	
+	public Project(String projectName, Program program, Status status) {
 		this.projectName = projectName;
 		this.program = program;
 		this.status = status;
 	}
 
-	public Project(String projectName, Program program, Status status) {
+	public Project(Integer projectId, String projectName, Program program, Status status) {
+		this.projectId = projectId;
 		this.projectName = projectName;
 		this.program = program;
 		this.status = status;

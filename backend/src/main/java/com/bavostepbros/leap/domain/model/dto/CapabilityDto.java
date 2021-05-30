@@ -1,7 +1,7 @@
 package com.bavostepbros.leap.domain.model.dto;
 
-import com.bavostepbros.leap.domain.model.Environment;
-import com.bavostepbros.leap.domain.model.Status;
+import java.util.List;
+
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 
 import lombok.AllArgsConstructor;
@@ -15,8 +15,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CapabilityDto {
 	private Integer capabilityId;
-	private Environment environment;
-	private Status status;
+	private EnvironmentDto environment;
+	private StatusDto status;
 	private Integer parentCapabilityId;
 	private String capabilityName;
 	private CapabilityLevel level;
@@ -25,4 +25,22 @@ public class CapabilityDto {
 	private Integer resourceQuality;
 	private Integer informationQuality;
 	private Integer applicationFit;
+	private List<ProjectDto> projects;
+	
+	public CapabilityDto(Integer capabilityId, EnvironmentDto environment, StatusDto status, Integer parentCapabilityId,
+			String capabilityName, CapabilityLevel level, boolean paceOfChange, String targetOperatingModel,
+			Integer resourceQuality, Integer informationQuality, Integer applicationFit) {
+		this.capabilityId = capabilityId;
+		this.environment = environment;
+		this.status = status;
+		this.parentCapabilityId = parentCapabilityId;
+		this.capabilityName = capabilityName;
+		this.level = level;
+		this.paceOfChange = paceOfChange;
+		this.targetOperatingModel = targetOperatingModel;
+		this.resourceQuality = resourceQuality;
+		this.informationQuality = informationQuality;
+		this.applicationFit = applicationFit;
+	}	
+	
 }

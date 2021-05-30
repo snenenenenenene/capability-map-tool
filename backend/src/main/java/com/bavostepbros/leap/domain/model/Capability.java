@@ -1,10 +1,13 @@
 package com.bavostepbros.leap.domain.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -16,6 +19,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -72,6 +76,12 @@ public class Capability {
     
     @OneToMany
     private List<CapabilityApplication> capabilityApplication;
+    
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "CAPABILITY_PROJECT", 
+    	joinColumns = {@JoinColumn(name = "CAPABILITYID")}, 
+    	inverseJoinColumns = {@JoinColumn(name = "PROJECTID")})
+    private List<Project> projects = new ArrayList<Project>();
 
     public Capability(Environment environment, Status status, Integer parentCapabilityId, String capabilityName, 
     		CapabilityLevel level, boolean paceOfChange, String targetOperatingModel, Integer resourceQuality, 
@@ -104,6 +114,19 @@ public class Capability {
 		this.informationQuality = informationQuality;
 		this.applicationFit = applicationFit;
 	}
+    
+    public void addProject(Project project) {
+    	projects.add(project);
+    	return;
+    }
+    
+    public void removeProject(Project project) {
+    	projects.remove(project);
+    }
+    
+    public List<Project> getProjects() {
+    	return projects;
+    }
 
     @Override
     public String toString() {

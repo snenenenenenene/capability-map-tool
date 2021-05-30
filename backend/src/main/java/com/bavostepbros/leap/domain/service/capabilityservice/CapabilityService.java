@@ -3,6 +3,7 @@ package com.bavostepbros.leap.domain.service.capabilityservice;
 import java.util.List;
 
 import com.bavostepbros.leap.domain.model.Capability;
+import com.bavostepbros.leap.domain.model.Project;
 
 /**
  *
@@ -37,4 +38,10 @@ public interface CapabilityService {
 	List<Capability> getCapabilityChildren(Integer parentId);
 
 	List<Capability> getCapabilitiesByParentIdAndLevel(Integer parentId, String level);
+	
+	void addProject(Integer capabilityId, Integer projectId);
+	
+	void deleteProject(Integer capabilityId, Integer projectId);
+	
+	List<Project> getAllProjectsByCapabilityId(Integer capabilityId);
 }
