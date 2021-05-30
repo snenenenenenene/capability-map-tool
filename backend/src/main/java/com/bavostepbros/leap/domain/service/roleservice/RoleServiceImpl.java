@@ -89,8 +89,8 @@ public class RoleServiceImpl implements RoleService {
 	
 	@Override
 	public boolean existsById(Integer id){
-		boolean result = roleDAL.existsById(id);
-		return result;
+		boolean result = roleDAL.findById(id) == null;
+		return !result;
 	}
 
 	@Override

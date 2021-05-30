@@ -1,49 +1,50 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { Component } from "react";
-import Environment from "./Components/Environment";
-import NewEnvironment from "./Components/NewEnvironment";
-import User from "./Components/User";
-import RecentEnvironments from "./Components/RecentEnvironments";
-import AddCapability from "./Components/Add/AddCapability";
+import Environment from "./Components/Environment/Environment";
+import NewEnvironment from "./Components/Environment/NewEnvironment";
+import User from "./Components/User/User";
+import RecentEnvironments from "./Components/Environment/RecentEnvironments";
+import AddCapability from "./Components/Capability/AddCapability";
 import "./App.css";
-import Signup from "./auth/Login";
+import Signup from "./Components/Authentication/Login";
 import LeapImg from "./img/LEAP logo.png";
 import { Switch, Route, Link, Redirect, withRouter } from "react-router-dom";
-import AddResource from "./Components/Add/AddResource";
-import AddStrategy from "./Components/Add/AddStrategy";
-import AddBusinessProcess from "./Components/Add/AddBusinessProcess";
-import AddITApplication from "./Components/Add/AddITApplication";
-import AddProgram from "./Components/Add/AddProgram";
-import AddStatus from "./Components/Add/AddStatus";
-import AddStrategyItem from "./Components/Add/AddStrategyItem";
-import AddProject from "./Components/Add/AddProject";
-import EditCapability from "./Components/Edit/EditCapability";
-import Capability from "./Components/General/Capability";
-import Project from "./Components/General/Project";
+import AddResource from "./Components/Resource/AddResource";
+import AddStrategy from "./Components/Strategy/AddStrategy";
+import AddBusinessProcess from "./Components/BusinessProcess/AddBusinessProcess";
+import AddITApplication from "./Components/IT-Application/AddITApplication";
+import AddProgram from "./Components/Program/AddProgram";
+import AddStatus from "./Components/Status/AddStatus";
+import AddStrategyItem from "./Components/StrategyItem/AddStrategyItem";
+import AddProject from "./Components/Project/AddProject";
+import EditCapability from "./Components/Capability/EditCapability";
+import Capability from "./Components/Capability/Capability";
+import Project from "./Components/Project/Project";
 import NotFoundError from "./Components/Error/NotFound";
 import GeneralError from "./Components/Error/Error";
-import Status from "./Components/General/Status";
+import Status from "./Components/Status/Status";
 import NotFoundPage from "./Components/Error/NotFoundPage";
-import BusinessProcess from "./Components/General/BusinessProcess";
-import EditBusinessProcess from "./Components/Edit/EditBusinessProcess";
-import ITApplication from "./Components/General/ITApplication";
-import EditITApplication from "./Components/Edit/EditITApplication";
-import EditStatus from "./Components/Edit/EditStatus";
-import EditProject from "./Components/Edit/EditProject";
-import EditStrategy from "./Components/Edit/EditStrategy";
-import StrategyItem from "./Components/General/StrategyItem";
-import Strategy from "./Components/General/Strategy";
-import EditResource from "./Components/Edit/EditResource";
-import Resource from "./Components/General/Resource";
-import EditStrategyItem from "./Components/Edit/EditStrategyItem";
-import EditProgram from "./Components/Edit/EditProgram";
-import Program from "./Components/General/Program";
+import BusinessProcess from "./Components/BusinessProcess/BusinessProcess";
+import EditBusinessProcess from "./Components/BusinessProcess/EditBusinessProcess";
+import ITApplication from "./Components/IT-Application/ITApplication";
+import EditITApplication from "./Components/IT-Application/EditITApplication";
+import EditStatus from "./Components/Status/EditStatus";
+import EditProject from "./Components/Project/EditProject";
+import EditStrategy from "./Components/Strategy/EditStrategy";
+import StrategyItem from "./Components/StrategyItem/StrategyItem";
+import Strategy from "./Components/Strategy/Strategy";
+import EditResource from "./Components/Resource/EditResource";
+import Resource from "./Components/Resource/Resource";
+import EditStrategyItem from "./Components/StrategyItem/EditStrategyItem";
+import EditProgram from "./Components/Program/EditProgram";
+import Program from "./Components/Program/Program";
 import toast, { Toaster } from "react-hot-toast";
-import AddUser from "./Components/AddUser";
-import ChoosePassword from "./auth/ConfigurePassword";
-import ConfigurePassword from "./auth/ConfigurePassword";
-import ExportMap from "./Components/ExportMap";
-import EditEnvironment from "./Components/Edit/EditEnvironment";
+import AddUser from "./Components/User/AddUser";
+import EditUser from "./Components/User/EditUser";
+import ConfigurePassword from "./Components/Authentication/ConfigurePassword";
+import ExportMap from "./Components/Environment/ExportMap";
+import EditEnvironment from "./Components/Environment/EditEnvironment";
+import Settings from "./Components/User/Settings";
 
 class App extends Component {
   constructor(props) {
@@ -67,6 +68,7 @@ class App extends Component {
 
   logout() {
     localStorage.removeItem("user");
+    this.props.history.push("/");
     window.location.reload();
   }
 
@@ -92,10 +94,11 @@ class App extends Component {
   adminRoutes() {
     if (this.state.user.roleId === 2) {
       return (
-        <>
+        <Switch>
           <Route exact path="/user" component={User} />
           <Route exact path="/user/add" component={AddUser} />
-        </>
+          <Route exact path="/user/:id" component={EditUser} />
+        </Switch>
       );
     }
   }
@@ -326,18 +329,18 @@ class App extends Component {
                 path="/environment/:name/program"
                 component={Program}
               />
-              <Route path="/login">
+              <Route exact path="/login">
                 <Redirect to="/home" />
               </Route>
 
               {/* USERS */}
+              <Route exact path="/settings" component={Settings} />
               <Route
                 exact
                 path="/configurePassword"
                 component={ConfigurePassword}
               />
               {this.adminRoutes()}
-              <Route exact path="/choosePassword" component={ChoosePassword} />
               {/* ERRORS */}
               <Route exact path="/error" component={GeneralError} />
               <Route exact path="/notfound" component={NotFoundError} />
@@ -361,7 +364,7 @@ class App extends Component {
       return (
         <Switch>
           <Route exact path="/login" component={Signup} />
-          <Route path="/">
+          <Route exact path="/">
             <Redirect to="/login" />
           </Route>
         </Switch>

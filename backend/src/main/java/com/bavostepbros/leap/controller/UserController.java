@@ -103,7 +103,7 @@ public class UserController {
 		String username = user.getUsername();
 		String email = user.getEmail();
 		Integer roleId = user.getRoleId();
-		userService.save(roleId, username, password, email);
+		userService.update(id, roleId, username, password, email);
 		String result = "Password saved";
 		return result;
 	}
