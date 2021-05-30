@@ -1,6 +1,5 @@
 package com.bavostepbros.leap.domain.model.dto;
 
-import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 
@@ -15,7 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CapabilityDto {
 	private Integer capabilityId;
-	private Environment environment;
+	private EnvironmentDto environmentDto;
 	private Status status;
 	private Integer parentCapabilityId;
 	private String capabilityName;

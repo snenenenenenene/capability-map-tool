@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import com.bavostepbros.leap.domain.model.dto.CapabilityDto;
+import com.bavostepbros.leap.domain.model.dto.EnvironmentDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,8 +47,8 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 	@Override
 	public Capability save(Integer environmentId, Integer statusId, Integer parentCapabilityId, String capabilityName,
-			boolean paceOfChange, String targetOperatingModel, Integer resourceQuality,
-			Integer informationQuality, Integer applicationFit) {
+							  boolean paceOfChange, String targetOperatingModel, Integer resourceQuality,
+							  Integer informationQuality, Integer applicationFit) {
 		if (capabilityName == null || capabilityName.isBlank() || capabilityName.isEmpty()) {
 			throw new InvalidInputException("Invalid input.");
 		}
@@ -71,7 +73,9 @@ public class CapabilityServiceImpl implements CapabilityService {
 		Capability capability = new Capability(environment, status, parentCapabilityId, capabilityName,
 				paceOfChange, targetOperatingModel, resourceQuality, informationQuality, applicationFit);
 		updateLevel(capability);
+
 		Capability savedCapability = capabilityDAL.save(capability);
+		environmentService.addCapability(environmentId, savedCapability);
 		return savedCapability;
 	}
 

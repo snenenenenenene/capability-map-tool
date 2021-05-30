@@ -11,8 +11,8 @@ import com.bavostepbros.leap.domain.model.Capability;
  */
 public interface CapabilityService {
 	Capability save(Integer environmentId, Integer statusId, Integer parentCapabilityId, String capabilityName,
-			boolean paceOfChange, String targetOperatingModel, Integer resourceQuality,
-			Integer informationQuality, Integer applicationFit);
+					   boolean paceOfChange, String targetOperatingModel, Integer resourceQuality,
+					   Integer informationQuality, Integer applicationFit);
 
 	Capability get(Integer id);
 

@@ -2,7 +2,9 @@ package com.bavostepbros.leap.domain.service.environmentservice;
 
 import java.util.List;
 
+import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Environment;
+import com.bavostepbros.leap.domain.model.Strategy;
 
 /**
 *
@@ -15,6 +17,8 @@ public interface EnvironmentService {
 	Environment getByEnvironmentName(String evironmentName);
 	List<Environment> getAll();
 	Environment update(Integer environmentId, String evironmentName);
+	Environment addCapability(Integer id, Capability capability);
+	Environment addStrategy(Integer id, Strategy strategy);
 	void delete(Integer id);
 	boolean existsById(Integer id);
 	boolean existsByEnvironmentName(String environmentName);

@@ -3,6 +3,10 @@ package com.bavostepbros.leap.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.bavostepbros.leap.domain.model.Capability;
+import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapDto;
+import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapItemDto;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,7 +29,6 @@ import lombok.RequiredArgsConstructor;
 * @author Bavo Van Meel
 *
 */
-// @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/environment/")
@@ -42,9 +45,9 @@ public class EnvironmentController {
 	}
 	
 	@GetMapping(path = "{environmentId}")
-    public EnvironmentDto getEnvironmentById(@PathVariable("environmentId") Integer environmentId) {		
+    public EnvironmentDto getEnvironmentById(@PathVariable("environmentId") Integer environmentId) {
 		Environment environment = envService.get(environmentId);
-        return new EnvironmentDto(environment.getEnvironmentId(), environment.getEnvironmentName());
+		return new EnvironmentDto(environment.getEnvironmentId(), environment.getEnvironmentName());
     }
 	
 	@GetMapping(path = "environmentname/{environmentname}")
@@ -83,5 +86,40 @@ public class EnvironmentController {
 	@DeleteMapping(path = "{environmentId}")
 	public void deleteEnvironment(@PathVariable("environmentId") Integer environmentId) {		
 		envService.delete(environmentId);
+	}
+
+	@GetMapping(path = "capabilitymap/{environmentId}")
+	public CapabilityMapDto getCapabilityMap(@PathVariable("environmentId") Integer environmentId) {
+		try {
+			return constructMap(envService.get(environmentId));
+		} catch (Exception e) {
+			System.out.println("whoopsiedoopsie");
+			return new CapabilityMapDto();
+		}
+	}
+
+
+	private CapabilityMapDto constructMap(Environment environment) {
+		return new CapabilityMapDto(environment.getEnvironmentName(),
+			environment.getCapabilities().stream()
+				.filter(i -> i.getParentCapabilityId().equals(0))
+				.map(i -> constructGraph(i, environment.getCapabilities()))
+				.collect(Collectors.toList()));
+	}
+
+
+	private CapabilityMapItemDto constructGraph(Capability root, List<Capability> pool) {
+		return new CapabilityMapItemDto(
+			root.getCapabilityName(),
+			root.isPaceOfChange(),
+			root.getTargetOperatingModel(),
+			root.getResourceQuality(),
+			root.getInformationQuality(),
+			root.getApplicationFit(),
+			root.getStatus(),
+			pool.stream()
+				.filter(i -> i.getParentCapabilityId().equals(root.getCapabilityId()))
+				.map(i -> constructGraph(i, pool))
+				.collect(Collectors.toList()));
 	}
 }

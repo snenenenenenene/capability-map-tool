@@ -326,8 +326,8 @@ public class CapabilityControllerTest {
 	@Test
 	private void testCapability(Capability expectedObject, CapabilityDto actualObject) {
 		assertEquals(expectedObject.getCapabilityId(), actualObject.getCapabilityId());
-		assertEquals(expectedObject.getEnvironment().getEnvironmentId(), actualObject.getEnvironment().getEnvironmentId());
-		assertEquals(expectedObject.getEnvironment().getEnvironmentName(), actualObject.getEnvironment().getEnvironmentName());
+		assertEquals(expectedObject.getEnvironment().getEnvironmentId(), actualObject.getEnvironmentDto().getEnvironmentId());
+		assertEquals(expectedObject.getEnvironment().getEnvironmentName(), actualObject.getEnvironmentDto().getEnvironmentName());
 		assertEquals(expectedObject.getStatus().getStatusId(), actualObject.getStatus().getStatusId());
 		assertEquals(expectedObject.getStatus().getValidityPeriod(), actualObject.getStatus().getValidityPeriod());
 		assertEquals(expectedObject.getParentCapabilityId(), actualObject.getParentCapabilityId());

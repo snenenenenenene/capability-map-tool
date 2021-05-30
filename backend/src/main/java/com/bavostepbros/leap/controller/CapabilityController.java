@@ -3,6 +3,9 @@ package com.bavostepbros.leap.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.bavostepbros.leap.domain.model.Environment;
+import com.bavostepbros.leap.domain.model.dto.EnvironmentDto;
+import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,43 +47,81 @@ public class CapabilityController {
 			@ModelAttribute("targetOperatingModel") String targetOperatingModel,
 			@ModelAttribute("resourceQuality") Integer resourceQuality,
 			@ModelAttribute("informationQuality") Integer informationQuality,
-			@ModelAttribute("applicationFit") Integer applicationFit, UriComponentsBuilder builder) {
+			@ModelAttribute("applicationFit") Integer applicationFit) {
 
-		Capability capability = capService.save(environmentId, statusId, parentCapabilityId, capabilityName,
+		Capability savedCapability = capService.save(environmentId, statusId, parentCapabilityId, capabilityName,
 				paceOfChange, targetOperatingModel, resourceQuality, informationQuality, applicationFit);
-		capService.updateLevel(capability);
-		return new CapabilityDto(capability.getCapabilityId(), capability.getEnvironment(), capability.getStatus(),
-				capability.getParentCapabilityId(), capability.getCapabilityName(), capability.getLevel(),
-				capability.isPaceOfChange(), capability.getTargetOperatingModel(), capability.getResourceQuality(),
-				capability.getInformationQuality(), capability.getApplicationFit());
+
+		return new CapabilityDto(
+				savedCapability.getCapabilityId(),
+				new EnvironmentDto(environmentId, savedCapability.getEnvironment().getEnvironmentName()),
+				savedCapability.getStatus(),
+				savedCapability.getParentCapabilityId(),
+				savedCapability.getCapabilityName(),
+				savedCapability.getLevel(),
+				savedCapability.isPaceOfChange(),
+				savedCapability.getTargetOperatingModel(),
+				savedCapability.getResourceQuality(),
+				savedCapability.getInformationQuality(),
+				savedCapability.getApplicationFit());
 	}
 
 	@GetMapping("{capabilityid}")
 	public CapabilityDto getCapabilityByCapabilityid(@PathVariable("capabilityid") Integer capabilityId) {
 		Capability capability = capService.get(capabilityId);
-		return new CapabilityDto(capability.getCapabilityId(), capability.getEnvironment(), capability.getStatus(),
-				capability.getParentCapabilityId(), capability.getCapabilityName(), capability.getLevel(),
-				capability.isPaceOfChange(), capability.getTargetOperatingModel(), capability.getResourceQuality(),
-				capability.getInformationQuality(), capability.getApplicationFit());
+
+		return new CapabilityDto(
+				capability.getCapabilityId(),
+				new EnvironmentDto(
+						capability.getEnvironment().getEnvironmentId(),
+						capability.getEnvironment().getEnvironmentName()),
+				capability.getStatus(),
+				capability.getParentCapabilityId(),
+				capability.getCapabilityName(),
+				capability.getLevel(),
+				capability.isPaceOfChange(),
+				capability.getTargetOperatingModel(),
+				capability.getResourceQuality(),
+				capability.getInformationQuality(),
+				capability.getApplicationFit());
 	}
 
 	@GetMapping("capabilityname/{capabilityname}")
 	public CapabilityDto getCapabilityByCapabilityname(@PathVariable("capabilityname") String capabilityName) {
 		Capability capability = capService.getCapabilityByCapabilityName(capabilityName);
-		return new CapabilityDto(capability.getCapabilityId(), capability.getEnvironment(), capability.getStatus(),
-				capability.getParentCapabilityId(), capability.getCapabilityName(), capability.getLevel(),
-				capability.isPaceOfChange(), capability.getTargetOperatingModel(), capability.getResourceQuality(),
-				capability.getInformationQuality(), capability.getApplicationFit());
+		return new CapabilityDto(
+				capability.getCapabilityId(),
+				new EnvironmentDto(
+						capability.getEnvironment().getEnvironmentId(),
+						capability.getEnvironment().getEnvironmentName()),
+				capability.getStatus(),
+				capability.getParentCapabilityId(),
+				capability.getCapabilityName(),
+				capability.getLevel(),
+				capability.isPaceOfChange(),
+				capability.getTargetOperatingModel(),
+				capability.getResourceQuality(),
+				capability.getInformationQuality(),
+				capability.getApplicationFit());
 	}
 
 	@GetMapping(path = "all-capabilities-by-environmentid/{environmentid}")
 	public List<CapabilityDto> getAllCapabilitiesByEnvironmentId(@PathVariable("environmentid") Integer environmentId) {
 		List<Capability> capabilities = capService.getCapabilitiesByEnvironment(environmentId);
 		List<CapabilityDto> capabilitiesDto = capabilities.stream()
-				.map(capability -> new CapabilityDto(capability.getCapabilityId(), capability.getEnvironment(),
-						capability.getStatus(), capability.getParentCapabilityId(), capability.getCapabilityName(),
-						capability.getLevel(), capability.isPaceOfChange(), capability.getTargetOperatingModel(),
-						capability.getResourceQuality(), capability.getInformationQuality(),
+				.map(capability -> new CapabilityDto(
+						capability.getCapabilityId(),
+						new EnvironmentDto(
+								capability.getEnvironment().getEnvironmentId(),
+								capability.getEnvironment().getEnvironmentName()),
+						capability.getStatus(),
+						capability.getParentCapabilityId(),
+						capability.getCapabilityName(),
+						capability.getLevel(),
+						capability.isPaceOfChange(),
+						capability.getTargetOperatingModel(),
+						capability.getResourceQuality(),
+						capability.getInformationQuality(),
 						capability.getApplicationFit()))
 				.collect(Collectors.toList());
 		return capabilitiesDto;
@@ -90,10 +131,19 @@ public class CapabilityController {
 	public List<CapabilityDto> getAllCapabilitiesByLevel(@PathVariable("level") String level) {
 		List<Capability> capabilities = capService.getCapabilitiesByLevel(level);
 		List<CapabilityDto> capabilitiesDto = capabilities.stream()
-				.map(capability -> new CapabilityDto(capability.getCapabilityId(), capability.getEnvironment(),
-						capability.getStatus(), capability.getParentCapabilityId(), capability.getCapabilityName(),
-						capability.getLevel(), capability.isPaceOfChange(), capability.getTargetOperatingModel(),
-						capability.getResourceQuality(), capability.getInformationQuality(),
+				.map(capability -> new CapabilityDto(
+						capability.getCapabilityId(),
+						new EnvironmentDto(
+								capability.getEnvironment().getEnvironmentId(),
+								capability.getEnvironment().getEnvironmentName()),
+						capability.getStatus(),
+						capability.getParentCapabilityId(),
+						capability.getCapabilityName(),
+						capability.getLevel(),
+						capability.isPaceOfChange(),
+						capability.getTargetOperatingModel(),
+						capability.getResourceQuality(),
+						capability.getInformationQuality(),
 						capability.getApplicationFit()))
 				.collect(Collectors.toList());
 		return capabilitiesDto;
@@ -104,10 +154,19 @@ public class CapabilityController {
 			@PathVariable("parentcapabilityid") Integer parentId) {
 		List<Capability> capabilities = capService.getCapabilityChildren(parentId);
 		List<CapabilityDto> capabilitiesDto = capabilities.stream()
-				.map(capability -> new CapabilityDto(capability.getCapabilityId(), capability.getEnvironment(),
-						capability.getStatus(), capability.getParentCapabilityId(), capability.getCapabilityName(),
-						capability.getLevel(), capability.isPaceOfChange(), capability.getTargetOperatingModel(),
-						capability.getResourceQuality(), capability.getInformationQuality(),
+				.map(capability -> new CapabilityDto(
+						capability.getCapabilityId(),
+						new EnvironmentDto(
+								capability.getEnvironment().getEnvironmentId(),
+								capability.getEnvironment().getEnvironmentName()),
+						capability.getStatus(),
+						capability.getParentCapabilityId(),
+						capability.getCapabilityName(),
+						capability.getLevel(),
+						capability.isPaceOfChange(),
+						capability.getTargetOperatingModel(),
+						capability.getResourceQuality(),
+						capability.getInformationQuality(),
 						capability.getApplicationFit()))
 				.collect(Collectors.toList());
 		return capabilitiesDto;
@@ -118,10 +177,19 @@ public class CapabilityController {
 			@PathVariable("parentcapabilityid") Integer parentId, @PathVariable("level") String level) {
 		List<Capability> capabilities = capService.getCapabilitiesByParentIdAndLevel(parentId, level);
 		List<CapabilityDto> capabilitiesDto = capabilities.stream()
-				.map(capability -> new CapabilityDto(capability.getCapabilityId(), capability.getEnvironment(),
-						capability.getStatus(), capability.getParentCapabilityId(), capability.getCapabilityName(),
-						capability.getLevel(), capability.isPaceOfChange(), capability.getTargetOperatingModel(),
-						capability.getResourceQuality(), capability.getInformationQuality(),
+				.map(capability -> new CapabilityDto(
+						capability.getCapabilityId(),
+						new EnvironmentDto(
+								capability.getEnvironment().getEnvironmentId(),
+								capability.getEnvironment().getEnvironmentName()),
+						capability.getStatus(),
+						capability.getParentCapabilityId(),
+						capability.getCapabilityName(),
+						capability.getLevel(),
+						capability.isPaceOfChange(),
+						capability.getTargetOperatingModel(),
+						capability.getResourceQuality(),
+						capability.getInformationQuality(),
 						capability.getApplicationFit()))
 				.collect(Collectors.toList());
 		return capabilitiesDto;
@@ -131,10 +199,19 @@ public class CapabilityController {
 	public List<CapabilityDto> getAllCapabilities() {
 		List<Capability> capabilities = capService.getAll();
 		List<CapabilityDto> capabilitiesDto = capabilities.stream()
-				.map(capability -> new CapabilityDto(capability.getCapabilityId(), capability.getEnvironment(),
-						capability.getStatus(), capability.getParentCapabilityId(), capability.getCapabilityName(),
-						capability.getLevel(), capability.isPaceOfChange(), capability.getTargetOperatingModel(),
-						capability.getResourceQuality(), capability.getInformationQuality(),
+				.map(capability -> new CapabilityDto(
+						capability.getCapabilityId(),
+						new EnvironmentDto(
+								capability.getEnvironment().getEnvironmentId(),
+								capability.getEnvironment().getEnvironmentName()),
+						capability.getStatus(),
+						capability.getParentCapabilityId(),
+						capability.getCapabilityName(),
+						capability.getLevel(),
+						capability.isPaceOfChange(),
+						capability.getTargetOperatingModel(),
+						capability.getResourceQuality(),
+						capability.getInformationQuality(),
 						capability.getApplicationFit()))
 				.collect(Collectors.toList());
 		return capabilitiesDto;
@@ -165,10 +242,20 @@ public class CapabilityController {
 				capabilityName, paceOfChange, targetOperatingModel, resourceQuality, informationQuality,
 				applicationFit);
 		capService.updateLevel(capability);
-		return new CapabilityDto(capability.getCapabilityId(), capability.getEnvironment(), capability.getStatus(),
-				capability.getParentCapabilityId(), capability.getCapabilityName(), capability.getLevel(),
-				capability.isPaceOfChange(), capability.getTargetOperatingModel(), capability.getResourceQuality(),
-				capability.getInformationQuality(), capability.getApplicationFit());
+		return new CapabilityDto(
+				capability.getCapabilityId(),
+				new EnvironmentDto(
+						capability.getEnvironment().getEnvironmentId(),
+						capability.getEnvironment().getEnvironmentName()),
+				capability.getStatus(),
+				capability.getParentCapabilityId(),
+				capability.getCapabilityName(),
+				capability.getLevel(),
+				capability.isPaceOfChange(),
+				capability.getTargetOperatingModel(),
+				capability.getResourceQuality(),
+				capability.getInformationQuality(),
+				capability.getApplicationFit());
 	}
 
 	@DeleteMapping(path = "{capabilityid}")
