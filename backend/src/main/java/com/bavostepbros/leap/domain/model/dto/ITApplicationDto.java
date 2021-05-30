@@ -3,7 +3,6 @@ package com.bavostepbros.leap.domain.model.dto;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.timevalue.TimeValue;
 
 import lombok.AllArgsConstructor;
@@ -17,7 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ITApplicationDto {
 	private Integer itApplicationId;
-	private Status status;
+	private StatusDto status;
 	private String name;
 	private String version;
 	private LocalDate purchaseDate;
@@ -37,4 +36,32 @@ public class ITApplicationDto {
 	private Double acceptedYearlyCost;
 	private TimeValue timeValue;
 	private List<TechnologyDto> technologies;
+	
+	public ITApplicationDto(Integer itApplicationId, StatusDto status, String name, String version, LocalDate purchaseDate,
+			LocalDate endOfLife, Integer currentScalability, Integer expectedScalability, Integer currentPerformance,
+			Integer expectedPerformance, Integer currentSecurityLevel, Integer expectedSecurityLevel,
+			Integer currentStability, Integer expectedStability, String currencyType, Double costCurrency,
+			Double currentValue, Double currentYearlyCost, Double acceptedYearlyCost, TimeValue timeValue) {
+		this.itApplicationId = itApplicationId;
+		this.status = status;
+		this.name = name;
+		this.version = version;
+		this.purchaseDate = purchaseDate;
+		this.endOfLife = endOfLife;
+		this.currentScalability = currentScalability;
+		this.expectedScalability = expectedScalability;
+		this.currentPerformance = currentPerformance;
+		this.expectedPerformance = expectedPerformance;
+		this.currentSecurityLevel = currentSecurityLevel;
+		this.expectedSecurityLevel = expectedSecurityLevel;
+		this.currentStability = currentStability;
+		this.expectedStability = expectedStability;
+		this.currencyType = currencyType;
+		this.costCurrency = costCurrency;
+		this.currentValue = currentValue;
+		this.currentYearlyCost = currentYearlyCost;
+		this.acceptedYearlyCost = acceptedYearlyCost;
+		this.timeValue = timeValue;
+	}	
+	
 }
