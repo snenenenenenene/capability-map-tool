@@ -92,11 +92,11 @@ public class CapabilityItemControllerTest {
 		environmentFirst = environmentDAL.save(new Environment(1, "Test 1"));
 		environmentSecond = environmentDAL.save(new Environment(2, "Test 2"));
 		capabilityFirst = capabilityDAL.save(new Capability(1, environmentFirst,
-				statusFirst, 1, "Capability 1", CapabilityLevel.ONE, true, 
+				statusFirst, 1, "Capability 1", true,
 				"Target Operating Model", 1, 1, 1));
 		capabilitySecond = capabilityDAL.save(new Capability(2, environmentFirst,
 				statusFirst, capabilityFirst.getCapabilityId(), "Capability 2", 
-				CapabilityLevel.TWO, true, "Target Operating Model", 1, 1, 1));
+				true, "Target Operating Model", 1, 1, 1));
 		strategyFirst = strategyDAL.save(new Strategy(1, statusFirst, "Strategy 1",
 				LocalDate.of(2021, 05, 15), LocalDate.of(2021, 05, 20), 
 				environmentFirst));

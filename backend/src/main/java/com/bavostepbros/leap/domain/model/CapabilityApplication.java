@@ -5,6 +5,9 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -34,6 +37,9 @@ public class CapabilityApplication {
 	@Column(name = "IMPORTANCE")
     private Integer importance;
 	
+	@NotNull
+	@Min(1)
+	@Max(5)
 	@Column(name = "EFFICIENCYSUPPORT")
     private Integer efficiencySupport;
 	

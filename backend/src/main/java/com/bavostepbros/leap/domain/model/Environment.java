@@ -33,7 +33,7 @@ public class Environment {
     @EqualsAndHashCode.Include
     @Column(name = "ENVIRONMENTID")
     private Integer environmentId;
-    
+
     @Column(name = "ENVIRONMENTNAME")
     private String environmentName;
     
@@ -47,20 +47,16 @@ public class Environment {
     public Environment(String environmentName) {
         this.environmentName = environmentName;
     }
-    
+
     public Environment(Integer environmentId, String environmentName) {
 		this.environmentId = environmentId;
 		this.environmentName = environmentName;
 	}
 
-	@Override
-    public String toString() {
-        return "{" +
-            " environmentId='" + getEnvironmentId() + "'" +
-            ", environmentName='" + getEnvironmentName() + "'" +
-            "}";
-    }
-
-	
-
+//    public Environment(Integer environmentId, String environmentName, List<Capability> capabilities, List<Strategy> strategies) {
+//        this.environmentId = environmentId;
+//        this.environmentName = environmentName;
+//        this.capabilities = capabilities;
+//        this.strategies = strategies;
+//    }
 }

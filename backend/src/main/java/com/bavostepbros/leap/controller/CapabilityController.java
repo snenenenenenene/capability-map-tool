@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.bavostepbros.leap.domain.model.dto.EnvironmentDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.dto.CapabilityDto;
-import com.bavostepbros.leap.domain.model.dto.EnvironmentDto;
 import com.bavostepbros.leap.domain.model.dto.ProgramDto;
 import com.bavostepbros.leap.domain.model.dto.ProjectDto;
 import com.bavostepbros.leap.domain.model.dto.StatusDto;
@@ -43,14 +43,14 @@ public class CapabilityController {
 	public CapabilityDto addCapability(@ModelAttribute("environmentId") Integer environmentId,
 			@ModelAttribute("statusId") Integer statusId,
 			@ModelAttribute("parentCapabilityId") Integer parentCapabilityId,
-			@ModelAttribute("capabilityName") String capabilityName, @ModelAttribute("level") String level,
+			@ModelAttribute("capabilityName") String capabilityName,
 			@ModelAttribute("paceOfChange") boolean paceOfChange,
 			@ModelAttribute("targetOperatingModel") String targetOperatingModel,
 			@ModelAttribute("resourceQuality") Integer resourceQuality,
 			@ModelAttribute("informationQuality") Integer informationQuality,
 			@ModelAttribute("applicationFit") Integer applicationFit) {
 
-		Capability capability = capService.save(environmentId, statusId, parentCapabilityId, capabilityName, level,
+		Capability capability = capService.save(environmentId, statusId, parentCapabilityId, capabilityName,
 				paceOfChange, targetOperatingModel, resourceQuality, informationQuality, applicationFit);
 		return convertCapability(capability);
 	}
@@ -136,7 +136,7 @@ public class CapabilityController {
 			@ModelAttribute("applicationFit") Integer applicationFit) {
 
 		Capability capability = capService.update(capabilityId, environmentId, statusId, parentCapabilityId,
-				capabilityName, level, paceOfChange, targetOperatingModel, resourceQuality, informationQuality,
+				capabilityName, paceOfChange, targetOperatingModel, resourceQuality, informationQuality,
 				applicationFit);
 		return convertCapability(capability);
 	}

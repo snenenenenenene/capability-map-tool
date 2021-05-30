@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import com.bavostepbros.leap.domain.model.Capability;
+import com.bavostepbros.leap.domain.model.Strategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +40,7 @@ public class EnvironmentServiceImpl implements EnvironmentService {
     	if (existsByEnvironmentName(environmentName)) {
 			throw new DuplicateValueException("Environment name already exists.");
 		}
-		
+
     	Environment environment = new Environment(environmentName);
         return environmentDAL.save(environment);
     }
@@ -92,8 +94,21 @@ public class EnvironmentServiceImpl implements EnvironmentService {
 		}
 
     	Environment environment = new Environment(environmentId, environmentName);
-    	Environment updatedEnvironment = environmentDAL.save(environment);
-        return updatedEnvironment;
+        return environmentDAL.save(environment);
+    }
+
+    @Override
+    public Environment addCapability(Integer id, Capability capability) {
+        Environment environment = environmentDAL.findById(id).get();
+        environment.getCapabilities().add(capability);
+        return environmentDAL.save(environment);
+    }
+
+    @Override
+    public Environment addStrategy(Integer id, Strategy strategy) {
+        Environment environment = environmentDAL.findById(id).get();
+        environment.getStrategies().add(strategy);
+        return environmentDAL.save(environment);
     }
 
     @Override

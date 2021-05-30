@@ -17,6 +17,10 @@ public enum CapabilityLevel {
 	public Integer getLevel() {
 		return level;
 	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
 	
 	public boolean isEmpty() {
 		return this.equals(CapabilityLevel.NONE);
@@ -27,12 +31,8 @@ public enum CapabilityLevel {
 	}
 	
 	public static CapabilityLevel getValue(Integer level) {
-		CapabilityLevel[] levels = CapabilityLevel.values();
-		for (int i = 0; i < levels.length; i++) {
-			if (levels[i].compare(level)) {
-				return levels[i];
-			}
-		}
+		for (CapabilityLevel i : CapabilityLevel.values())
+			if (i.compare(level)) return i;
 		return CapabilityLevel.NONE;
 	}
 	
@@ -45,5 +45,9 @@ public enum CapabilityLevel {
 			}
 		}
 		return max;
+	}
+
+	public CapabilityLevel next() {
+		return values()[this.ordinal() + 1];
 	}
 }

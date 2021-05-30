@@ -3,6 +3,8 @@ package com.bavostepbros.leap.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bavostepbros.leap.domain.model.CapabilityApplication;
 import com.bavostepbros.leap.domain.model.dto.CapabilityApplicationDto;
+import com.bavostepbros.leap.domain.model.dto.CapabilityDto;
+import com.bavostepbros.leap.domain.model.dto.EnvironmentDto;
+import com.bavostepbros.leap.domain.model.dto.ITApplicationDto;
+import com.bavostepbros.leap.domain.model.dto.StatusDto;
 import com.bavostepbros.leap.domain.service.capabilityapplicationservice.CapabilityApplicationService;
 
 import lombok.RequiredArgsConstructor;
@@ -31,7 +37,7 @@ public class CapabilityApplicationController {
 	@PostMapping(path = "{capabilityId}/{applicationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public CapabilityApplicationDto addCapabilityApplication(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("applicationId") Integer applicationId,
-			@ModelAttribute("efficiencySupport") Integer efficiencySupport,
+			@Valid @ModelAttribute("efficiencySupport") Integer efficiencySupport,
 			@ModelAttribute("functionalCoverage") Integer functionalCoverage,
 			@ModelAttribute("correctnessBusinessFit") Integer correctnessBusinessFit,
 			@ModelAttribute("futurePotential") Integer futurePotential,
@@ -42,24 +48,14 @@ public class CapabilityApplicationController {
 		CapabilityApplication capabilityApplication = capabilityApplicationService.save(capabilityId, applicationId,
 				efficiencySupport, functionalCoverage, correctnessBusinessFit, futurePotential, completeness,
 				correctnessInformationFit, availability);
-		return new CapabilityApplicationDto(capabilityApplication.getCapability(),
-				capabilityApplication.getApplication(), capabilityApplication.getImportance(),
-				capabilityApplication.getEfficiencySupport(), capabilityApplication.getFunctionalCoverage(),
-				capabilityApplication.getCorrectnessBusinessFit(), capabilityApplication.getFuturePotential(),
-				capabilityApplication.getCompleteness(), capabilityApplication.getCorrectnessInformationFit(),
-				capabilityApplication.getAvailability());
+		return convertCapabilityApplication(capabilityApplication);
 	}
 
 	@GetMapping(path = "{capabilityId}/{applicationId}")
 	public CapabilityApplicationDto getCapabilityApplication(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("applicationId") Integer applicationId) {
 		CapabilityApplication capabilityApplication = capabilityApplicationService.get(capabilityId, applicationId);
-		return new CapabilityApplicationDto(capabilityApplication.getCapability(),
-				capabilityApplication.getApplication(), capabilityApplication.getImportance(),
-				capabilityApplication.getEfficiencySupport(), capabilityApplication.getFunctionalCoverage(),
-				capabilityApplication.getCorrectnessBusinessFit(), capabilityApplication.getFuturePotential(),
-				capabilityApplication.getCompleteness(), capabilityApplication.getCorrectnessInformationFit(),
-				capabilityApplication.getAvailability());
+		return convertCapabilityApplication(capabilityApplication);
 	}
 
 	@PutMapping(path = "{capabilityId}/{applicationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -76,12 +72,7 @@ public class CapabilityApplicationController {
 		CapabilityApplication capabilityApplication = capabilityApplicationService.save(capabilityId, applicationId,
 				efficiencySupport, functionalCoverage, correctnessBusinessFit, futurePotential, completeness,
 				correctnessInformationFit, availability);
-		return new CapabilityApplicationDto(capabilityApplication.getCapability(),
-				capabilityApplication.getApplication(), capabilityApplication.getImportance(),
-				capabilityApplication.getEfficiencySupport(), capabilityApplication.getFunctionalCoverage(),
-				capabilityApplication.getCorrectnessBusinessFit(), capabilityApplication.getFuturePotential(),
-				capabilityApplication.getCompleteness(), capabilityApplication.getCorrectnessInformationFit(),
-				capabilityApplication.getAvailability());
+		return convertCapabilityApplication(capabilityApplication);
 	}
 
 	@DeleteMapping(path = "{capabilityId}/{applicationId}")
@@ -95,13 +86,52 @@ public class CapabilityApplicationController {
 		List<CapabilityApplication> capabilityApplications = capabilityApplicationService
 				.getCapabilityApplicationsByCapability(capabilityId);
 		List<CapabilityApplicationDto> capabilityApplicationsDto = capabilityApplications.stream()
-				.map(capabilityApplication -> new CapabilityApplicationDto(capabilityApplication.getCapability(),
-						capabilityApplication.getApplication(), capabilityApplication.getImportance(),
-						capabilityApplication.getEfficiencySupport(), capabilityApplication.getFunctionalCoverage(),
-						capabilityApplication.getCorrectnessBusinessFit(), capabilityApplication.getFuturePotential(),
-						capabilityApplication.getCompleteness(), capabilityApplication.getCorrectnessInformationFit(),
-						capabilityApplication.getAvailability()))
+				.map(capabilityApplication -> convertCapabilityApplication(capabilityApplication))
 				.collect(Collectors.toList());
 		return capabilityApplicationsDto;
+	}
+
+	private CapabilityApplicationDto convertCapabilityApplication(CapabilityApplication capabilityApplication) {
+		CapabilityDto capabilityDto = new CapabilityDto(capabilityApplication.getCapability().getCapabilityId(),
+				new EnvironmentDto(capabilityApplication.getCapability().getEnvironment().getEnvironmentId(),
+						capabilityApplication.getCapability().getEnvironment().getEnvironmentName()),
+				new StatusDto(capabilityApplication.getCapability().getStatus().getStatusId(),
+						capabilityApplication.getCapability().getStatus().getValidityPeriod()),
+				capabilityApplication.getCapability().getParentCapabilityId(),
+				capabilityApplication.getCapability().getCapabilityName(),
+				capabilityApplication.getCapability().getLevel(),
+				capabilityApplication.getCapability().isPaceOfChange(),
+				capabilityApplication.getCapability().getTargetOperatingModel(),
+				capabilityApplication.getCapability().getResourceQuality(),
+				capabilityApplication.getCapability().getInformationQuality(),
+				capabilityApplication.getCapability().getApplicationFit());
+		
+		ITApplicationDto itApplicationDto = new ITApplicationDto(
+				capabilityApplication.getApplication().getItApplicationId(),
+				new StatusDto(capabilityApplication.getApplication().getStatus().getStatusId(),
+						capabilityApplication.getApplication().getStatus().getValidityPeriod()),
+				capabilityApplication.getApplication().getName(), capabilityApplication.getApplication().getVersion(),
+				capabilityApplication.getApplication().getPurchaseDate(),
+				capabilityApplication.getApplication().getEndOfLife(),
+				capabilityApplication.getApplication().getCurrentScalability(),
+				capabilityApplication.getApplication().getExpectedScalability(),
+				capabilityApplication.getApplication().getCurrentPerformance(),
+				capabilityApplication.getApplication().getExpectedPerformance(),
+				capabilityApplication.getApplication().getCurrentSecurityLevel(),
+				capabilityApplication.getApplication().getExpectedSecurityLevel(),
+				capabilityApplication.getApplication().getCurrentStability(),
+				capabilityApplication.getApplication().getExpectedStability(),
+				capabilityApplication.getApplication().getCurrencyType(),
+				capabilityApplication.getApplication().getCostCurrency(),
+				capabilityApplication.getApplication().getCurrentValue(),
+				capabilityApplication.getApplication().getCurrentYearlyCost(),
+				capabilityApplication.getApplication().getAcceptedYearlyCost(),
+				capabilityApplication.getApplication().getTimeValue());
+		
+		return new CapabilityApplicationDto(capabilityDto, itApplicationDto, capabilityApplication.getImportance(),
+				capabilityApplication.getEfficiencySupport(), capabilityApplication.getFunctionalCoverage(),
+				capabilityApplication.getCorrectnessBusinessFit(), capabilityApplication.getFuturePotential(),
+				capabilityApplication.getCompleteness(), capabilityApplication.getCorrectnessInformationFit(),
+				capabilityApplication.getAvailability());
 	}
 }

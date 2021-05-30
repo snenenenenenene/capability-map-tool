@@ -66,19 +66,19 @@ public class CapabilityControllerTest {
 	
 	@BeforeEach
 	public void init() {
-		statusFirst = statusDAL.save(new Status(1, LocalDate.of(2021, 05, 15)));
-		statusSecond = statusDAL.save(new Status(2, LocalDate.of(2021, 05, 20)));
+		statusFirst = statusDAL.save(new Status(1, LocalDate.of(2021, 5, 15)));
+		statusSecond = statusDAL.save(new Status(2, LocalDate.of(2021, 5, 20)));
 		environmentFirst = environmentDAL.save(new Environment(1, "Test 1"));
 		environmentSecond = environmentDAL.save(new Environment(2, "Test 2"));
 		capabilityFirst = capabilityDAL.save(new Capability(1, environmentFirst,
-				statusFirst, 1, "Capability 1", CapabilityLevel.ONE, true, 
+				statusFirst, 1, "Capability 1", true,
 				"Target Operating Model", 1, 1, 1));
 		capabilitySecond = capabilityDAL.save(new Capability(2, environmentFirst,
 				statusFirst, capabilityFirst.getCapabilityId(), "Capability 2", 
-				CapabilityLevel.TWO, true, "Target Operating Model", 1, 1, 1));
+				true, "Target Operating Model", 1, 1, 1));
 		capabilityThirth = capabilityDAL.save(new Capability(3, environmentSecond,
 				statusSecond, capabilityFirst.getCapabilityId(), "Capability 3", 
-				CapabilityLevel.TWO, true, "Target Operating Model", 1, 1, 1));
+				true, "Target Operating Model", 1, 1, 1));
 	}
 	
 	@AfterEach
