@@ -37,7 +37,7 @@ public class Environment {
     @Column(name = "ENVIRONMENTNAME")
     private String environmentName;
     
-    @OneToMany
+    @OneToMany(mappedBy = "environment")
     private List<Capability> capabilities;
 
     @OneToMany(cascade=CascadeType.ALL)

@@ -41,6 +41,7 @@ public class Capability {
     private Integer capabilityId;
     
     @ManyToOne
+    @JoinColumn(name = "ENVIRONMENTID", nullable = false)
     private Environment environment;
 
     @OneToOne
