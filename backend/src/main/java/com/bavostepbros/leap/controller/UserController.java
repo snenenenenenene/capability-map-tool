@@ -39,9 +39,6 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
-
-	@Autowired
-	private RoleService roleService;
 	
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public UserDto addUser(
@@ -50,21 +47,21 @@ public class UserController {
 			@ModelAttribute("email") String email,
 			@ModelAttribute("roleId") Integer roleId) {		
 		User user = userService.save(roleId, username, password, email);
-		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getPassword(), user.getEmail());
+		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail());
 	}
 	
 	@GetMapping("{id}")
     public UserDto getUserById(
 			@ModelAttribute("id") Integer id) {
 		User user = userService.get(id);
-        return  new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getPassword(), user.getEmail());
+        return  new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail());
     }
 	
 	@GetMapping()
 	public List<UserDto> getAllUsers() {
 		List<User> users = userService.getAll();
 		List<UserDto> usersDto = users.stream()
-				.map(user -> new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getPassword(), user.getEmail()))
+				.map(user -> new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail()))
 				.collect(Collectors.toList());
 		return usersDto;
 	}
@@ -78,7 +75,7 @@ public class UserController {
 			@ModelAttribute("roleId") Integer roleId) {
 		
 		User user = userService.update(userId, roleId, username, password, email);
-		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getPassword(), user.getEmail());
+		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail());
 	}
 	
 	@DeleteMapping(path = "{id}")
@@ -86,11 +83,13 @@ public class UserController {
 		userService.delete(id);
 	}
 
+	/*
+		return payload
+	*/
 	@PostMapping(path = "authenticate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public User login(
 		@ModelAttribute("email") String email) {
 		User user = userService.getByEmail(email);
-//		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getPassword(), user.getEmail());
 		return user;
 	}
 
