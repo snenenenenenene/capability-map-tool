@@ -1,7 +1,9 @@
 package com.bavostepbros.leap.domain.model.dto.capabilitymap;
 
-import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
+import com.bavostepbros.leap.domain.model.dto.CapabilityItemDto;
+import com.bavostepbros.leap.domain.model.dto.StatusDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +24,7 @@ public class CapabilityMapItemDto {
     private Integer resourceQuality;
     private Integer informationQuality;
     private Integer applicationFit;
-    private Status status;
+    private StatusDto status;
     private List<CapabilityMapItemDto> children;
+    private List<CapabilityItemDto> capabilityItems;
 }

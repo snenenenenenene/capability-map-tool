@@ -46,7 +46,7 @@ public class StrategyItem {
     @Column(name = "DESCRIPTION")
     private String description;
 
-    @OneToMany
+    @OneToMany(mappedBy = "strategyItem")
     private List<CapabilityItem> capabilityItems;
 
     public StrategyItem(Strategy strategy, String strategyItemName, 

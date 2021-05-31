@@ -72,7 +72,7 @@ public class Capability {
     @Column(name = "APPLICATIONFIT")
     private Integer applicationFit;
 
-    @OneToMany
+    @OneToMany(mappedBy = "capability")
     private List<CapabilityItem> capabilityItems;
     
     @OneToMany

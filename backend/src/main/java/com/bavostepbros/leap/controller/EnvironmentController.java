@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.bavostepbros.leap.domain.model.Capability;
+import com.bavostepbros.leap.domain.model.CapabilityItem;
 import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapDto;
 import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapItemDto;
 
@@ -24,6 +25,7 @@ import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.Strategy;
 import com.bavostepbros.leap.domain.model.StrategyItem;
 import com.bavostepbros.leap.domain.model.dto.CapabilityDto;
+import com.bavostepbros.leap.domain.model.dto.CapabilityItemDto;
 import com.bavostepbros.leap.domain.model.dto.EnvironmentDto;
 import com.bavostepbros.leap.domain.model.dto.StatusDto;
 import com.bavostepbros.leap.domain.model.dto.StrategyDto;
@@ -145,12 +147,24 @@ public class EnvironmentController {
 		return new StrategyItemDto(strategyItem.getItemId(), strategyItem.getStrategyItemName(),
 				strategyItem.getDescription());
 	}
+	
+	private CapabilityItemDto convertCapabilityItem(CapabilityItem capabilityItem) {
+		return new CapabilityItemDto(convertStrategyItem(capabilityItem.getStrategyItem()), capabilityItem.getStrategicImportance());
+	}
 
-	private CapabilityMapItemDto constructGraph(Capability root, List<Capability> pool) {
-		return new CapabilityMapItemDto(root.getCapabilityId(), root.getCapabilityName(), root.getLevel(),
-				root.isPaceOfChange(), root.getTargetOperatingModel(), root.getResourceQuality(),
-				root.getInformationQuality(), root.getApplicationFit(), root.getStatus(),
-				pool.stream().filter(i -> i.getParentCapabilityId().equals(root.getCapabilityId()))
-						.map(i -> constructGraph(i, pool)).collect(Collectors.toList()));
+	private CapabilityMapItemDto constructGraph(Capability capability, List<Capability> pool) {
+		List<CapabilityItemDto> capabilityItemsDto = new ArrayList<CapabilityItemDto>();
+		if (capability.getCapabilityItems() != null) {
+			capabilityItemsDto = capability.getCapabilityItems().stream()
+					.map(capabilityItem -> convertCapabilityItem(capabilityItem))
+					.collect(Collectors.toList());
+		}
+		return new CapabilityMapItemDto(capability.getCapabilityId(), capability.getCapabilityName(), capability.getLevel(),
+				capability.isPaceOfChange(), capability.getTargetOperatingModel(), capability.getResourceQuality(),
+				capability.getInformationQuality(), capability.getApplicationFit(), convertBasicStatus(capability.getStatus()),
+				pool.stream()
+					.filter(i -> i.getParentCapabilityId().equals(capability.getCapabilityId()))
+					.map(i -> constructGraph(i, pool))
+					.collect(Collectors.toList()), capabilityItemsDto);
 	}
 }

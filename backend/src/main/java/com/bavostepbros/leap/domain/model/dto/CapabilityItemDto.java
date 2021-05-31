@@ -15,4 +15,10 @@ public class CapabilityItemDto {
 	private CapabilityDto capability;
 	private StrategyItemDto strategyItem;
 	private StrategicImportance strategicImportance;
+	
+	public CapabilityItemDto(StrategyItemDto strategyItem, StrategicImportance strategicImportance) {
+		this.strategyItem = strategyItem;
+		this.strategicImportance = strategicImportance;
+	}	
+	
 }
