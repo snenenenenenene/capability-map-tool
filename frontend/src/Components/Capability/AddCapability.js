@@ -358,70 +358,6 @@ export default class AddCapability extends Component {
                   </div>
                 </div>
                 <div className="form-row">
-                  <div className="form-group col-md">
-                    <label htmlFor="resourcesQuality">Resources Quality</label>
-                    <ReactStars
-                      count={5}
-                      onChange={this.ratingChanged}
-                      size={24}
-                      half={false}
-                      color2={"#ffd700"}
-                      value={this.state.resourcesQuality}
-                      required
-                    />
-                  </div>
-                  <div className="form-group col-md">
-                    <label htmlFor="showItem">Strategy Item (Optional)</label>
-                    <button
-                      className="btn btn-secondary btn-block"
-                      type="button"
-                      onClick={() => this.handleItemModal()}
-                    >
-                      Add Strategy Item
-                    </button>
-                    <Modal show={this.state.showItemModal}>
-                      <Modal.Header>Add Items</Modal.Header>
-                      <Modal.Body>
-                        <label htmlFor="itemId">Strategy Items</label>
-                        <Select
-                          options={this.state.strategyItems}
-                          isMulti
-                          closeMenuOnSelect={false}
-                          onChange={this.handleChange}
-                          placeholder="Optional"
-                        />
-                        <label htmlFor="strategicImportance">Importance</label>
-                        <select
-                          className="form-control"
-                          name="strategicImportance"
-                          id="strategicImportance"
-                          placeholder="Add Importance"
-                          value={this.state.strategicImportance}
-                          onChange={this.handleInputChange}
-                        >
-                          <option defaultValue="selected" hidden value={null}>
-                            Optional
-                          </option>
-                          <option value="NONE">None</option>
-                          <option value="LOWEST">Lowest</option>
-                          <option value="MEDIUM">Medium</option>
-                          <option value="HIGH">High</option>
-                          <option value="HIGHEST">Highest</option>
-                        </select>
-                      </Modal.Body>
-                      <Modal.Footer>
-                        <button
-                          type="button"
-                          className="btn btn-secondary"
-                          onClick={() => this.handleItemModal()}
-                        >
-                          Close Modal
-                        </button>
-                      </Modal.Footer>
-                    </Modal>
-                  </div>
-                </div>
-                <div className="form-row">
                   <div className="form-group col-md-12">
                     <label htmlFor="statusId">Validity Period</label>
 
@@ -472,6 +408,20 @@ export default class AddCapability extends Component {
                         </Modal.Footer>
                       </Modal>
                     </div>
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group col-md">
+                    <label htmlFor="resourcesQuality">Resources Quality</label>
+                    <ReactStars
+                      count={5}
+                      onChange={this.ratingChanged}
+                      size={24}
+                      half={false}
+                      color2={"#ffd700"}
+                      value={this.state.resourcesQuality}
+                      required
+                    />
                   </div>
                 </div>
               </div>

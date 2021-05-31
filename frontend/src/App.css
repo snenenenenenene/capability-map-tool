@@ -11,6 +11,22 @@ html {
   width: 18rem;
 }
 
+#capability-ONE {
+  background-color: rgb(212, 212, 212);
+  width: 40srem;
+}
+
+#capability-TWO {
+  background-color: rgba(189, 189, 189, 0.555);
+  width: 20rem;
+}
+
+#capability-THREE {
+  background-color: rgba(172, 172, 172, 0.356);
+  margin: 1px;
+  min-width: 10px;
+}
+
 html body {
   min-height: 100%;
   /* background-color: #282c34; */
