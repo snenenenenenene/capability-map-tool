@@ -167,19 +167,21 @@ public class CapabilityController {
 		StatusDto statusDto = new StatusDto(capability.getStatus().getStatusId(),
 				capability.getStatus().getValidityPeriod());
 		
-		List<ProjectDto> projectsDto = new ArrayList<ProjectDto>();
-		if (capability.getProjects() != null) {
-			projectsDto = capability.getProjects().stream()
-					.map(project -> new ProjectDto(project.getProjectId(), project.getProjectName(),
-							new ProgramDto(project.getProgram().getProgramId(), project.getProgram().getProgramName()),
-							new StatusDto(project.getStatus().getStatusId(), project.getStatus().getValidityPeriod())))
-					.filter(out -> out != null)
-					.collect(Collectors.toList());
-		}
+		/*
+		 * List<ProjectDto> projectsDto = new ArrayList<ProjectDto>(); if
+		 * (capability.getProjects() != null) { projectsDto =
+		 * capability.getProjects().stream() .map(project -> new
+		 * ProjectDto(project.getProjectId(), project.getProjectName(), new
+		 * ProgramDto(project.getProgram().getProgramId(),
+		 * project.getProgram().getProgramName()), new
+		 * StatusDto(project.getStatus().getStatusId(),
+		 * project.getStatus().getValidityPeriod()))) .filter(out -> out != null)
+		 * .collect(Collectors.toList()); }
+		 */
 		
 		return new CapabilityDto(capability.getCapabilityId(), environmentDto, statusDto,
 				capability.getParentCapabilityId(), capability.getCapabilityName(), capability.getLevel(),
 				capability.isPaceOfChange(), capability.getTargetOperatingModel(), capability.getResourceQuality(),
-				capability.getInformationQuality(), capability.getApplicationFit(), projectsDto);
+				capability.getInformationQuality(), capability.getApplicationFit());
 	}
 }

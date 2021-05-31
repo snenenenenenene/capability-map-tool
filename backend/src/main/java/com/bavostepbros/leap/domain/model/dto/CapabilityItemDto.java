@@ -1,7 +1,5 @@
 package com.bavostepbros.leap.domain.model.dto;
 
-import com.bavostepbros.leap.domain.model.Capability;
-import com.bavostepbros.leap.domain.model.StrategyItem;
 import com.bavostepbros.leap.domain.model.strategicimportance.StrategicImportance;
 
 import lombok.AllArgsConstructor;
@@ -14,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CapabilityItemDto {
-	private Capability capability;
-	private StrategyItem strategyItem;
+	private CapabilityDto capability;
+	private StrategyItemDto strategyItem;
 	private StrategicImportance strategicImportance;
 }

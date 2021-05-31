@@ -100,27 +100,29 @@ public class EnvironmentController {
 	}
 
 	private EnvironmentDto convertEnvironment(Environment environment) {
-		List<CapabilityDto> capabilitiesDto = new ArrayList<CapabilityDto>();
-		if (environment.getCapabilities() != null) {
-			capabilitiesDto = environment.getCapabilities().stream()
-					.map(capability -> new CapabilityDto(capability.getCapabilityId(),
-							convertBasicEnvironment(capability.getEnvironment()),
-							convertBasicStatus(capability.getStatus()), capability.getParentCapabilityId(),
-							capability.getCapabilityName(), capability.getLevel(), capability.isPaceOfChange(),
-							capability.getTargetOperatingModel(), capability.getResourceQuality(),
-							capability.getInformationQuality(), capability.getApplicationFit()))
-					.collect(Collectors.toList());
-		}
-		List<StrategyDto> strategiesDto = new ArrayList<StrategyDto>();
-		if (environment.getStrategies() != null) {
-			strategiesDto = environment.getStrategies().stream()
-					.map(strategy -> new StrategyDto(strategy.getStrategyId(), convertBasicStatus(strategy.getStatus()),
-							strategy.getStrategyName(), strategy.getTimeFrameStart(), strategy.getTimeFrameEnd(),
-							convertBasicEnvironment(environment)))
-					.collect(Collectors.toList());
-		}
-		return new EnvironmentDto(environment.getEnvironmentId(), environment.getEnvironmentName(), capabilitiesDto,
-				strategiesDto);
+		/*
+		 * List<CapabilityDto> capabilitiesDto = new ArrayList<CapabilityDto>(); if
+		 * (environment.getCapabilities() != null) { capabilitiesDto =
+		 * environment.getCapabilities().stream() .map(capability -> new
+		 * CapabilityDto(capability.getCapabilityId(),
+		 * convertBasicEnvironment(capability.getEnvironment()),
+		 * convertBasicStatus(capability.getStatus()),
+		 * capability.getParentCapabilityId(), capability.getCapabilityName(),
+		 * capability.getLevel(), capability.isPaceOfChange(),
+		 * capability.getTargetOperatingModel(), capability.getResourceQuality(),
+		 * capability.getInformationQuality(), capability.getApplicationFit()))
+		 * .collect(Collectors.toList()); }
+		 */
+		/*
+		 * List<StrategyDto> strategiesDto = new ArrayList<StrategyDto>(); if
+		 * (environment.getStrategies() != null) { strategiesDto =
+		 * environment.getStrategies().stream() .map(strategy -> new
+		 * StrategyDto(strategy.getStrategyId(),
+		 * convertBasicStatus(strategy.getStatus()), strategy.getStrategyName(),
+		 * strategy.getTimeFrameStart(), strategy.getTimeFrameEnd(),
+		 * convertBasicEnvironment(environment))) .collect(Collectors.toList()); }
+		 */
+		return new EnvironmentDto(environment.getEnvironmentId(), environment.getEnvironmentName());
 	}
 
 	private EnvironmentDto convertBasicEnvironment(Environment environment) {

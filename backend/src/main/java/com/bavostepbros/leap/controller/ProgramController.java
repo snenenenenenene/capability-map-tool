@@ -1,6 +1,5 @@
 package com.bavostepbros.leap.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,8 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bavostepbros.leap.domain.model.Program;
 import com.bavostepbros.leap.domain.model.dto.ProgramDto;
-import com.bavostepbros.leap.domain.model.dto.ProjectDto;
-import com.bavostepbros.leap.domain.model.dto.StatusDto;
 import com.bavostepbros.leap.domain.service.programservice.ProgramService;
 
 import lombok.RequiredArgsConstructor;
@@ -75,16 +72,16 @@ public class ProgramController {
 	}
 	
 	private ProgramDto convertProgram(Program program) {
-		List<ProjectDto> projectsDto = new ArrayList<ProjectDto>();
-		if (program.getProjects() != null) {
-			projectsDto = program.getProjects().stream()
-					.map(project -> new ProjectDto(project.getProjectId(), project.getProjectName(),
-							new ProgramDto(project.getProgram().getProgramId(),
-									project.getProgram().getProgramName()),
-							new StatusDto(project.getStatus().getStatusId(), 
-									project.getStatus().getValidityPeriod())))
-					.collect(Collectors.toList());
-		}
-		return new ProgramDto(program.getProgramId(), program.getProgramName(), projectsDto);
+		/*
+		 * List<ProjectDto> projectsDto = new ArrayList<ProjectDto>(); if
+		 * (program.getProjects() != null) { projectsDto =
+		 * program.getProjects().stream() .map(project -> new
+		 * ProjectDto(project.getProjectId(), project.getProjectName(), new
+		 * ProgramDto(project.getProgram().getProgramId(),
+		 * project.getProgram().getProgramName()), new
+		 * StatusDto(project.getStatus().getStatusId(),
+		 * project.getStatus().getValidityPeriod()))) .collect(Collectors.toList()); }
+		 */
+		return new ProgramDto(program.getProgramId(), program.getProgramName());
 	}
 }

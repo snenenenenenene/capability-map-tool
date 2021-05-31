@@ -92,43 +92,51 @@ public class CapabilityApplicationController {
 	}
 
 	private CapabilityApplicationDto convertCapabilityApplication(CapabilityApplication capabilityApplication) {
-		CapabilityDto capabilityDto = new CapabilityDto(capabilityApplication.getCapability().getCapabilityId(),
-				new EnvironmentDto(capabilityApplication.getCapability().getEnvironment().getEnvironmentId(),
-						capabilityApplication.getCapability().getEnvironment().getEnvironmentName()),
-				new StatusDto(capabilityApplication.getCapability().getStatus().getStatusId(),
-						capabilityApplication.getCapability().getStatus().getValidityPeriod()),
-				capabilityApplication.getCapability().getParentCapabilityId(),
-				capabilityApplication.getCapability().getCapabilityName(),
-				capabilityApplication.getCapability().getLevel(),
-				capabilityApplication.getCapability().isPaceOfChange(),
-				capabilityApplication.getCapability().getTargetOperatingModel(),
-				capabilityApplication.getCapability().getResourceQuality(),
-				capabilityApplication.getCapability().getInformationQuality(),
-				capabilityApplication.getCapability().getApplicationFit());
+		/*
+		 * CapabilityDto capabilityDto = new
+		 * CapabilityDto(capabilityApplication.getCapability().getCapabilityId(), new
+		 * EnvironmentDto(capabilityApplication.getCapability().getEnvironment().
+		 * getEnvironmentId(),
+		 * capabilityApplication.getCapability().getEnvironment().getEnvironmentName()),
+		 * new
+		 * StatusDto(capabilityApplication.getCapability().getStatus().getStatusId(),
+		 * capabilityApplication.getCapability().getStatus().getValidityPeriod()),
+		 * capabilityApplication.getCapability().getParentCapabilityId(),
+		 * capabilityApplication.getCapability().getCapabilityName(),
+		 * capabilityApplication.getCapability().getLevel(),
+		 * capabilityApplication.getCapability().isPaceOfChange(),
+		 * capabilityApplication.getCapability().getTargetOperatingModel(),
+		 * capabilityApplication.getCapability().getResourceQuality(),
+		 * capabilityApplication.getCapability().getInformationQuality(),
+		 * capabilityApplication.getCapability().getApplicationFit());
+		 */
 		
-		ITApplicationDto itApplicationDto = new ITApplicationDto(
-				capabilityApplication.getApplication().getItApplicationId(),
-				new StatusDto(capabilityApplication.getApplication().getStatus().getStatusId(),
-						capabilityApplication.getApplication().getStatus().getValidityPeriod()),
-				capabilityApplication.getApplication().getName(), capabilityApplication.getApplication().getVersion(),
-				capabilityApplication.getApplication().getPurchaseDate(),
-				capabilityApplication.getApplication().getEndOfLife(),
-				capabilityApplication.getApplication().getCurrentScalability(),
-				capabilityApplication.getApplication().getExpectedScalability(),
-				capabilityApplication.getApplication().getCurrentPerformance(),
-				capabilityApplication.getApplication().getExpectedPerformance(),
-				capabilityApplication.getApplication().getCurrentSecurityLevel(),
-				capabilityApplication.getApplication().getExpectedSecurityLevel(),
-				capabilityApplication.getApplication().getCurrentStability(),
-				capabilityApplication.getApplication().getExpectedStability(),
-				capabilityApplication.getApplication().getCurrencyType(),
-				capabilityApplication.getApplication().getCostCurrency(),
-				capabilityApplication.getApplication().getCurrentValue(),
-				capabilityApplication.getApplication().getCurrentYearlyCost(),
-				capabilityApplication.getApplication().getAcceptedYearlyCost(),
-				capabilityApplication.getApplication().getTimeValue());
+		/*
+		 * ITApplicationDto itApplicationDto = new ITApplicationDto(
+		 * capabilityApplication.getApplication().getItApplicationId(), new
+		 * StatusDto(capabilityApplication.getApplication().getStatus().getStatusId(),
+		 * capabilityApplication.getApplication().getStatus().getValidityPeriod()),
+		 * capabilityApplication.getApplication().getName(),
+		 * capabilityApplication.getApplication().getVersion(),
+		 * capabilityApplication.getApplication().getPurchaseDate(),
+		 * capabilityApplication.getApplication().getEndOfLife(),
+		 * capabilityApplication.getApplication().getCurrentScalability(),
+		 * capabilityApplication.getApplication().getExpectedScalability(),
+		 * capabilityApplication.getApplication().getCurrentPerformance(),
+		 * capabilityApplication.getApplication().getExpectedPerformance(),
+		 * capabilityApplication.getApplication().getCurrentSecurityLevel(),
+		 * capabilityApplication.getApplication().getExpectedSecurityLevel(),
+		 * capabilityApplication.getApplication().getCurrentStability(),
+		 * capabilityApplication.getApplication().getExpectedStability(),
+		 * capabilityApplication.getApplication().getCurrencyType(),
+		 * capabilityApplication.getApplication().getCostCurrency(),
+		 * capabilityApplication.getApplication().getCurrentValue(),
+		 * capabilityApplication.getApplication().getCurrentYearlyCost(),
+		 * capabilityApplication.getApplication().getAcceptedYearlyCost(),
+		 * capabilityApplication.getApplication().getTimeValue());
+		 */
 		
-		return new CapabilityApplicationDto(capabilityDto, itApplicationDto, capabilityApplication.getImportance(),
+		return new CapabilityApplicationDto(capabilityApplication.getCapability(), capabilityApplication.getApplication(), capabilityApplication.getImportance(),
 				capabilityApplication.getEfficiencySupport(), capabilityApplication.getFunctionalCoverage(),
 				capabilityApplication.getCorrectnessBusinessFit(), capabilityApplication.getFuturePotential(),
 				capabilityApplication.getCompleteness(), capabilityApplication.getCorrectnessInformationFit(),
