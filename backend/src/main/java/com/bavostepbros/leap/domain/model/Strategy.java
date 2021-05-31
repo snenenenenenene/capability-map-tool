@@ -1,10 +1,8 @@
 package com.bavostepbros.leap.domain.model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -54,9 +52,8 @@ public class Strategy {
     @JoinColumn(name = "ENVIRONMENTID", nullable = false)
     private Environment environment;
 
-    @OneToMany(cascade=CascadeType.ALL)
-    @JoinColumn(name="STRATEGYID")
-    private List<StrategyItem> items = new ArrayList<StrategyItem>();
+    @OneToMany(mappedBy = "strategy")
+    private List<StrategyItem> items;
 
     public Strategy(Status status, String strategyName, LocalDate timeFrameStart, 
     		LocalDate timeFrameEnd, Environment environment) {

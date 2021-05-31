@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -35,6 +36,7 @@ public class StrategyItem {
     private Integer itemId;
 
     @ManyToOne
+    @JoinColumn(name = "STRATEGYID", nullable = false)
     private Strategy strategy;
 
     @Column(name = "STRATEGYITEMNAME")
