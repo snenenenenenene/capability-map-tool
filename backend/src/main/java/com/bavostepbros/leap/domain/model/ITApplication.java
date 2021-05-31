@@ -93,7 +93,7 @@ public class ITApplication {
     @Column(name = "TIMEVALUE")
     private TimeValue timeValue;
     
-    @OneToMany
+    @OneToMany(mappedBy = "application")
     private List<CapabilityApplication> capabilityApplication;
     
     @ManyToMany(cascade = CascadeType.MERGE)

@@ -74,8 +74,11 @@ public class Capability {
     @OneToMany(mappedBy = "capability")
     private List<CapabilityItem> capabilityItems;
     
-    @OneToMany
+    @OneToMany(mappedBy = "capability")
     private List<CapabilityApplication> capabilityApplication;
+    
+    @OneToMany(mappedBy = "capability")
+    private List<CapabilityInformation> capabilityInformation;
     
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "CAPABILITY_PROJECT", 
