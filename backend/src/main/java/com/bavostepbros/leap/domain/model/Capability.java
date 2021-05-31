@@ -131,6 +131,16 @@ public class Capability {
     public List<Project> getProjects() {
     	return projects;
     }
+    
+    public void addBusinessProcess(BusinessProcess businessProcessItem) {
+    	businessProcess.add(businessProcessItem);
+    	return;
+    }
+    
+    public void removeBusinessProcess(BusinessProcess businessProcessItem) {
+    	businessProcess.remove(businessProcessItem);
+    	return;
+    }
 
     @Override
     public String toString() {

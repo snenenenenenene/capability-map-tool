@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import com.bavostepbros.leap.domain.model.dto.CapabilityDto;
-import com.bavostepbros.leap.domain.model.dto.EnvironmentDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +14,13 @@ import com.bavostepbros.leap.domain.customexceptions.EnumException;
 import com.bavostepbros.leap.domain.customexceptions.ForeignKeyException;
 import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
 import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
+import com.bavostepbros.leap.domain.model.BusinessProcess;
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.Project;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
+import com.bavostepbros.leap.domain.service.businessprocessservice.BusinessProcessService;
 import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
 import com.bavostepbros.leap.domain.service.projectservice.ProjectService;
 import com.bavostepbros.leap.domain.service.statusservice.StatusService;
@@ -49,6 +49,9 @@ public class CapabilityServiceImpl implements CapabilityService {
 	
 	@Autowired
 	private ProjectService projectService;
+	
+	@Autowired
+	private BusinessProcessService businessProcessService;
 
 	@Override
 	public Capability save(Integer environmentId, Integer statusId, Integer parentCapabilityId, String capabilityName,
@@ -270,6 +273,20 @@ public class CapabilityServiceImpl implements CapabilityService {
 	public List<Project> getAllProjectsByCapabilityId(Integer capabilityId) {
 		Capability capability = get(capabilityId);
 		return capability.getProjects();
+	}
+
+	@Override
+	public void addBusinessProcess(Integer capabilityId, Integer businessProcessId) {
+		Capability capability = get(capabilityId);
+		BusinessProcess businessProcess = businessProcessService.get(businessProcessId);
+		capability.addBusinessProcess(businessProcess);
+	}
+
+	@Override
+	public void deleteBusinessProcess(Integer capabilityId, Integer businessProcessId) {
+		Capability capability = get(capabilityId);
+		BusinessProcess businessProcess = businessProcessService.get(businessProcessId);
+		capability.removeBusinessProcess(businessProcess);
 	}
 
 }
