@@ -20,6 +20,14 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+
 import com.bavostepbros.leap.domain.service.roleservice.RoleService;
 import com.bavostepbros.leap.domain.service.userservice.UserService;
 import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
@@ -28,6 +36,9 @@ import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
 import com.bavostepbros.leap.domain.model.User;
 import com.bavostepbros.leap.domain.model.dto.StatusDto;
 import com.bavostepbros.leap.domain.model.dto.UserDto;
+import com.bavostepbros.leap.persistence.UserDAL;
+
+import com.bavostepbros.leap.configuration.JWTConfig.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 
@@ -42,6 +53,17 @@ public class UserController {
 
 	@Autowired
 	private RoleService roleService;
+
+	@Autowired
+	private UserDAL userDAL;
+
+	private static Logger log = LoggerFactory.getLogger(UserController.class);
+
+	@Autowired
+	private AuthenticationManager authenticationManager;
+
+	@Autowired
+	private JwtTokenProvider tokenProvider;
 	
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public UserDto addUser(
@@ -86,12 +108,32 @@ public class UserController {
 		userService.delete(id);
 	}
 
-	@PostMapping(path = "authenticate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public User login(
-		@ModelAttribute("email") String email) {
+	@PostMapping(value = "/authenticate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<String> authenticate(
+				@ModelAttribute("email") String email,
+				@ModelAttribute("password") String password) {
 		User user = userService.getByEmail(email);
-//		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getPassword(), user.getEmail());
-		return user;
+
+		log.info("UserResourceImpl : authenticate");
+		JSONObject jsonObject = new JSONObject();
+		try {
+			Authentication authentication = authenticationManager
+					.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+			if (authentication.isAuthenticated()) {
+				jsonObject.put("name", authentication.getName());
+				jsonObject.put("authorities", authentication.getAuthorities());
+				jsonObject.put("token", tokenProvider.createToken(email, roleService.get(user.getRoleId())));
+				return new ResponseEntity<String>(jsonObject.toString(), HttpStatus.OK);
+			}
+		} catch (JSONException e) {
+			try {
+				jsonObject.put("exception", e.getMessage());
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
+			return new ResponseEntity<String>(jsonObject.toString(), HttpStatus.UNAUTHORIZED);
+		}
+		return null;
 	}
 
 	@PutMapping(path = "changePassword", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
