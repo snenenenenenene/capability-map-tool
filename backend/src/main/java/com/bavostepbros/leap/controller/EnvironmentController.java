@@ -140,7 +140,7 @@ public class EnvironmentController {
 	}
 
 	private CapabilityMapItemDto constructGraph(Capability root, List<Capability> pool) {
-		return new CapabilityMapItemDto(root.getCapabilityName(), root.getLevel(), root.isPaceOfChange(),
+		return new CapabilityMapItemDto(root.getCapabilityId(), root.getCapabilityName(), root.getLevel(), root.isPaceOfChange(),
 				root.getTargetOperatingModel(), root.getResourceQuality(), root.getInformationQuality(),
 				root.getApplicationFit(), root.getStatus(),
 				pool.stream().filter(i -> i.getParentCapabilityId().equals(root.getCapabilityId()))

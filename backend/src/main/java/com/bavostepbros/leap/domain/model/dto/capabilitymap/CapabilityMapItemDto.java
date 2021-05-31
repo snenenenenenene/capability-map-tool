@@ -1,6 +1,5 @@
 package com.bavostepbros.leap.domain.model.dto.capabilitymap;
 
-import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 import lombok.AllArgsConstructor;
@@ -15,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CapabilityMapItemDto {
+	private Integer capabilityId;
     private String capabilityName;
     private CapabilityLevel level;
     private boolean paceOfChange;
