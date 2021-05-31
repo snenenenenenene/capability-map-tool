@@ -14,21 +14,28 @@ html {
 #capability-ONE {
   background-color: rgb(212, 212, 212);
   width: 40srem;
+  z-index: 100;
 }
 
 #capability-TWO {
   background-color: rgba(189, 189, 189, 0.555);
   width: 20rem;
+  z-index: 200;
 }
 
 #capability-THREE {
   background-color: rgba(172, 172, 172, 0.356);
   margin: 1px;
   min-width: 10px;
+  z-index: 300;
 }
 
+div .capability-title:hover {
+  background-color: #ff754fbb;
+}
 html body {
   min-height: 100%;
+  z-index: 100;
   /* background-color: #282c34; */
 }
 
@@ -55,6 +62,9 @@ ol .breadcrum {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
+}
+.capability-modal {
+  margin: -42px 0 0 0;
 }
 
 .App-header {

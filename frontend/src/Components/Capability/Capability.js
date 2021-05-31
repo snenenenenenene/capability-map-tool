@@ -139,12 +139,12 @@ export default class Capability extends Component {
     toast(
       (t) => (
         <span>
-          <p className="text-center">
+          <p className='text-center'>
             Are you sure you want to remove this capability?
           </p>
-          <div className="text-center">
+          <div className='text-center'>
             <button
-              className="btn btn-primary btn-sm m-3"
+              className='btn btn-primary btn-sm m-3'
               stlye={{ width: 50, height: 30 }}
               onClick={() => {
                 toast.dismiss(t.id);
@@ -154,7 +154,7 @@ export default class Capability extends Component {
               Yes!
             </button>
             <button
-              className="btn btn-secondary btn-sm m-3"
+              className='btn btn-secondary btn-sm m-3'
               stlye={{ width: 50, height: 30 }}
               onClick={() => toast.dismiss(t.id)}
             >
@@ -171,28 +171,28 @@ export default class Capability extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+        <nav aria-label='breadcrumb'>
+          <ol className='breadcrumb'>
+            <li className='breadcrumb-item'>
               <Link to={`/`}>Home</Link>
             </li>
-            <li className="breadcrumb-item">
+            <li className='breadcrumb-item'>
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className="breadcrumb-item">Capability</li>
+            <li className='breadcrumb-item'>Capability</li>
           </ol>
         </nav>
-        <div className="jumbotron">
+        <div className='jumbotron'>
           <div>
-            <h1 className="display-4" style={{ display: "inline-block" }}>
+            <h1 className='display-4' style={{ display: "inline-block" }}>
               Capabilities
             </h1>
             <Link
               to={`/environment/${this.state.environmentName}/capability/add`}
             >
-              <button className="btn btn-primary float-right">
+              <button className='btn btn-primary float-right'>
                 Add Capability
               </button>
             </Link>
@@ -211,22 +211,22 @@ export default class Capability extends Component {
                 name: "actions",
                 render: (rowData) => (
                   <div>
-                    <button className="btn">
+                    <button className='btn'>
                       <i
                         onClick={this.delete.bind(this, rowData.capabilityId)}
-                        className="bi bi-trash"
+                        className='bi bi-trash'
                       ></i>
                     </button>
-                    <button className="btn">
+                    <button className='btn'>
                       <i
                         onClick={this.edit.bind(this, rowData.capabilityId)}
-                        className="bi bi-pencil"
+                        className='bi bi-pencil'
                       ></i>
                     </button>
-                    <button className="btn">
+                    <button className='btn'>
                       <i
                         onClick={() => this.handleItemModal()}
-                        className="bi bi-app-indicator"
+                        className='bi bi-app-indicator'
                       ></i>
                     </button>
                   </div>
@@ -240,17 +240,19 @@ export default class Capability extends Component {
             detailPanel={(rowData) => {
               return (
                 <div>
-                  <div className="card-deck" style={{ padding: 10 }}>
+                  <div className='card-deck' style={{ padding: 10 }}>
                     {this.state.capabilityItems.map((capabilityItem) => {
                       return (
                         <div
-                          className="card"
+                          className='card'
                           style={{ margin: 10, padding: 10 }}
                         >
-                          <div className="card-header text-center text-uppercase">
-                            {capabilityItem.capability.capabilityName}
+                          <div className='card-header text-center text-uppercase'>
+                            {capabilityItem.strategyItem.strategyItemName}
                           </div>
-                          <div className="card-body"></div>
+                          <div className='card-body'>
+                            {capabilityItem.strategyItem.description}
+                          </div>
                         </div>
                       );
                     })}
@@ -261,7 +263,7 @@ export default class Capability extends Component {
                     </Modal.Header>
                     <Modal.Body>
                       <form onSubmit={this.handleSubmit(rowData.capabilityId)}>
-                        <label htmlFor="itemId">Strategy Items</label>
+                        <label htmlFor='itemId'>Strategy Items</label>
                         <Select
                           options={this.state.strategyItems}
                           noOptionsMessage={() => "No Strategy Items"}
@@ -274,31 +276,31 @@ export default class Capability extends Component {
                               this.setState({ itemId: 0 });
                             }
                           }}
-                          placeholder="Optional"
+                          placeholder='Optional'
                         />
-                        <label htmlFor="strategicImportance">Importance</label>
+                        <label htmlFor='strategicImportance'>Importance</label>
                         <select
-                          className="form-control"
-                          name="strategicImportance"
-                          id="strategicImportance"
-                          placeholder="Add Importance"
+                          className='form-control'
+                          name='strategicImportance'
+                          id='strategicImportance'
+                          placeholder='Add Importance'
                           value={this.state.strategicImportance}
                           onChange={this.handleInputChange}
                         >
-                          <option value="LOWEST">Lowest</option>
-                          <option value="MEDIUM">Medium</option>
-                          <option value="HIGH">High</option>
-                          <option value="HIGHEST">Highest</option>
+                          <option value='LOWEST'>Lowest</option>
+                          <option value='MEDIUM'>Medium</option>
+                          <option value='HIGH'>High</option>
+                          <option value='HIGHEST'>Highest</option>
                         </select>
-                        <button className="btn btn-primary" type="sumbit">
+                        <button className='btn btn-primary' type='sumbit'>
                           SUBMIT
                         </button>
                       </form>
                     </Modal.Body>
                     <Modal.Footer>
                       <button
-                        type="button"
-                        className="btn btn-secondary"
+                        type='button'
+                        className='btn btn-secondary'
                         onClick={() => this.handleItemModal()}
                       >
                         Close Modal
