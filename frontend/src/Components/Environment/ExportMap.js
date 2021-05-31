@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Pdf from "react-to-pdf";
+import { Modal } from "react-bootstrap";
 
 export default class ExportMap extends Component {
   constructor(props) {
@@ -11,32 +12,59 @@ export default class ExportMap extends Component {
       environmentName: this.props.match.params.name,
       environmentId: 1,
       capabilities: [],
+      showModal: false,
     };
   }
 
-  capabilityMapping() {
-    if (this.state.capabilities.length > 0) {
-      return this.state.capabilities.map((capability) => {
-        return (
+  handleModal() {
+    this.setState({ showModal: !this.state.showModal });
+  }
+
+  generateModal() {
+    if (this.state.showModal === true) {
+      return (
+        <div style={{ backgroundColor: "red" }}>
+          <h1>hi</h1>
+        </div>
+        // <Modal show={true}>
+        //   <Modal.Header>{capabilityId}</Modal.Header>
+        //   <Modal.Body>
+        //     <p>{capabilityId}</p>
+        //   </Modal.Body>
+        //   <Modal.Footer>
+        //     <button type="button" className="btn btn-secondary">
+        //       Close Modal
+        //     </button>
+        //   </Modal.Footer>
+        // </Modal>
+      );
+    }
+    return;
+  }
+
+  capabilityMapping(capabilities) {
+    return capabilities.map((capability, i) => {
+      return (
+        <div
+          className="card capability-card"
+          id={`capability-${capability.level}`}
+        >
           <div
-            className="card text-white bg-secondary mb-3"
-            style={{ maxWidth: 10 + "rem" }}
+            className="card-header text-center text-uppercase"
+            onClick={() => this.handleModal()}
           >
-            <div className="card-header text-center text-uppercase">
-              {capability.capabilityId}. {capability.capabilityName}
-            </div>
-            <div class="card-body">
-              {() => {
-                if (capability.children.length > 0) this.capabilityMapping();
-              }}
+            {i} {capability.capabilityName}
+          </div>
+          <div class="card-body">
+            {}
+            <div className="card-deck justify-content-center">
+              {this.capabilityMapping(capability.children)}
               <p className="card-text"></p>
             </div>
           </div>
-        );
-      });
-    } else {
-      return <h2>No Capabilities</h2>;
-    }
+        </div>
+      );
+    });
   }
 
   async componentDidMount() {
@@ -56,15 +84,16 @@ export default class ExportMap extends Component {
 
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/capability/all-capabilities-by-environmentid/${this.state.environmentId}`
+        `${process.env.REACT_APP_API_URL}/environment/capabilitymap/${this.state.environmentId}`
       )
       .then((response) => {
-        this.setState({ capabilities: response.data });
+        this.setState({ capabilities: response.data.capabilities });
       })
       .catch((error) => {
         console.log(error);
         toast.error("Could Not Find Capabilities");
       });
+    console.log(this.state.capabilities);
   }
 
   render() {
@@ -98,7 +127,7 @@ export default class ExportMap extends Component {
           </Pdf>
 
           <div ref={targetRef} className="card-deck justify-content-center">
-            {this.capabilityMapping()}
+            {this.capabilityMapping(this.state.capabilities)}
           </div>
         </div>
       </div>

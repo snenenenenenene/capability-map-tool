@@ -82,6 +82,7 @@ export default class Capability extends Component {
       .get(`${process.env.REACT_APP_API_URL}/strategyitem/`)
       .then((response) => {
         response.data.forEach((item) => {
+          console.log(item);
           item.label = item.strategyItemName;
           item.value = item.itemId;
         });
@@ -206,23 +207,29 @@ export default class Capability extends Component {
               { title: "Level", field: "level" },
               { title: "Expiration", field: "status.validityPeriod" },
               {
-                title: "",
+                title: "Actions",
                 name: "actions",
                 render: (rowData) => (
-                  <>
+                  <div>
                     <button className="btn">
                       <i
                         onClick={this.delete.bind(this, rowData.capabilityId)}
                         className="bi bi-trash"
                       ></i>
                     </button>
-                    <button className="btn btn">
+                    <button className="btn">
                       <i
                         onClick={this.edit.bind(this, rowData.capabilityId)}
                         className="bi bi-pencil"
                       ></i>
                     </button>
-                  </>
+                    <button className="btn">
+                      <i
+                        onClick={() => this.handleItemModal()}
+                        className="bi bi-app-indicator"
+                      ></i>
+                    </button>
+                  </div>
                 ),
               },
             ]}
@@ -248,15 +255,10 @@ export default class Capability extends Component {
                       );
                     })}
                   </div>
-                  <button
-                    className="btn btn-secondary btn-block"
-                    type="button"
-                    onClick={() => this.handleItemModal()}
-                  >
-                    Add Strategy Item
-                  </button>
                   <Modal show={this.state.showItemModal}>
-                    <Modal.Header>Add Items</Modal.Header>
+                    <Modal.Header>
+                      {rowData.capabilityId}. Add Items
+                    </Modal.Header>
                     <Modal.Body>
                       <form onSubmit={this.handleSubmit(rowData.capabilityId)}>
                         <label htmlFor="itemId">Strategy Items</label>
