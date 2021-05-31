@@ -19,7 +19,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -82,7 +81,7 @@ public class Capability {
     @JoinTable(name = "CAPABILITY_PROJECT", 
     	joinColumns = {@JoinColumn(name = "CAPABILITYID")}, 
     	inverseJoinColumns = {@JoinColumn(name = "PROJECTID")})
-    private List<Project> projects = new ArrayList<Project>();
+    private List<Project> projects;
 
     public Capability(Environment environment, Status status, Integer parentCapabilityId, String capabilityName, 
     		boolean paceOfChange, String targetOperatingModel, Integer resourceQuality,

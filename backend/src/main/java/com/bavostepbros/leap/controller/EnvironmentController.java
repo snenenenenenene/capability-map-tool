@@ -21,12 +21,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bavostepbros.leap.domain.model.Environment;
+import com.bavostepbros.leap.domain.model.Program;
+import com.bavostepbros.leap.domain.model.Project;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.Strategy;
 import com.bavostepbros.leap.domain.model.StrategyItem;
-import com.bavostepbros.leap.domain.model.dto.CapabilityDto;
 import com.bavostepbros.leap.domain.model.dto.CapabilityItemDto;
 import com.bavostepbros.leap.domain.model.dto.EnvironmentDto;
+import com.bavostepbros.leap.domain.model.dto.ProgramDto;
+import com.bavostepbros.leap.domain.model.dto.ProjectDto;
 import com.bavostepbros.leap.domain.model.dto.StatusDto;
 import com.bavostepbros.leap.domain.model.dto.StrategyDto;
 import com.bavostepbros.leap.domain.model.dto.StrategyItemDto;
@@ -149,7 +152,17 @@ public class EnvironmentController {
 	}
 	
 	private CapabilityItemDto convertCapabilityItem(CapabilityItem capabilityItem) {
-		return new CapabilityItemDto(convertStrategyItem(capabilityItem.getStrategyItem()), capabilityItem.getStrategicImportance());
+		return new CapabilityItemDto(convertStrategyItem(capabilityItem.getStrategyItem()), 
+				capabilityItem.getStrategicImportance());
+	}
+	
+	private ProgramDto convertProgram(Program program) {
+		return new ProgramDto(program.getProgramId(), program.getProgramName());
+	}
+	
+	private ProjectDto convertProject(Project project) {
+		return new ProjectDto(project.getProjectId(), project.getProjectName(), 
+				convertProgram(project.getProgram()), convertBasicStatus(project.getStatus()));
 	}
 
 	private CapabilityMapItemDto constructGraph(Capability capability, List<Capability> pool) {
@@ -159,12 +172,19 @@ public class EnvironmentController {
 					.map(capabilityItem -> convertCapabilityItem(capabilityItem))
 					.collect(Collectors.toList());
 		}
+		
+		List<ProjectDto> projectsDto = new ArrayList<ProjectDto>();
+		if (capability.getProjects() != null) {
+			projectsDto = capability.getProjects().stream()
+					.map(project -> convertProject(project))
+					.collect(Collectors.toList());
+		}
 		return new CapabilityMapItemDto(capability.getCapabilityId(), capability.getCapabilityName(), capability.getLevel(),
 				capability.isPaceOfChange(), capability.getTargetOperatingModel(), capability.getResourceQuality(),
 				capability.getInformationQuality(), capability.getApplicationFit(), convertBasicStatus(capability.getStatus()),
 				pool.stream()
 					.filter(i -> i.getParentCapabilityId().equals(capability.getCapabilityId()))
 					.map(i -> constructGraph(i, pool))
-					.collect(Collectors.toList()), capabilityItemsDto);
+					.collect(Collectors.toList()), capabilityItemsDto, projectsDto);
 	}
 }
