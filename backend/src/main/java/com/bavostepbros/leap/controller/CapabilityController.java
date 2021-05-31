@@ -39,6 +39,7 @@ public class CapabilityController {
 	@Autowired
 	private CapabilityService capService;
 
+	// Add catch for status/environment not found
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public CapabilityDto addCapability(@ModelAttribute("environmentId") Integer environmentId,
 			@ModelAttribute("statusId") Integer statusId,
@@ -151,7 +152,6 @@ public class CapabilityController {
 	public void linkTechnology(@ModelAttribute("capabilityId") Integer capabilityId,
 			@ModelAttribute("projectId") Integer projectId) {
 		capService.addProject(capabilityId, projectId);
-		return;
 	}
 	
 	// TODO add test
@@ -159,7 +159,6 @@ public class CapabilityController {
 	public void unlinkTechnology(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("projectId") Integer projectId) {
 		capService.deleteProject(capabilityId, projectId);
-		return;
 	}
 	
 	private CapabilityDto convertCapability(Capability capability) {

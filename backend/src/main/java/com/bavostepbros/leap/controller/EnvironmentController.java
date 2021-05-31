@@ -73,8 +73,8 @@ public class EnvironmentController {
 	@GetMapping
 	public List<EnvironmentDto> getAllEnvironments() {
 		List<Environment> environments = envService.getAll();
-		List<EnvironmentDto> environmentsDto = environments.stream().map(environment -> convertBasicEnvironment(environment))
-				.collect(Collectors.toList());
+		List<EnvironmentDto> environmentsDto = environments.stream()
+				.map(environment -> convertBasicEnvironment(environment)).collect(Collectors.toList());
 		return environmentsDto;
 	}
 
@@ -99,19 +99,6 @@ public class EnvironmentController {
 		}
 	}
 
-	private CapabilityMapDto constructMap(Environment environment) {
-		return new CapabilityMapDto(environment.getEnvironmentName(),
-				environment.getCapabilities().stream().filter(i -> i.getParentCapabilityId().equals(0))
-						.map(i -> constructGraph(i, environment.getCapabilities())).collect(Collectors.toList()));
-	}
-
-	private CapabilityMapItemDto constructGraph(Capability root, List<Capability> pool) {
-		return new CapabilityMapItemDto(root.getCapabilityName(), root.isPaceOfChange(), root.getTargetOperatingModel(),
-				root.getResourceQuality(), root.getInformationQuality(), root.getApplicationFit(), root.getStatus(),
-				pool.stream().filter(i -> i.getParentCapabilityId().equals(root.getCapabilityId()))
-						.map(i -> constructGraph(i, pool)).collect(Collectors.toList()));
-	}
-	
 	private EnvironmentDto convertEnvironment(Environment environment) {
 		List<CapabilityDto> capabilitiesDto = new ArrayList<CapabilityDto>();
 		if (environment.getCapabilities() != null) {
@@ -142,5 +129,19 @@ public class EnvironmentController {
 
 	private StatusDto convertBasicStatus(Status status) {
 		return new StatusDto(status.getStatusId(), status.getValidityPeriod());
+	}
+
+	private CapabilityMapDto constructMap(Environment environment) {
+		return new CapabilityMapDto(environment.getEnvironmentName(),
+				environment.getCapabilities().stream().filter(i -> i.getParentCapabilityId().equals(0))
+						.map(i -> constructGraph(i, environment.getCapabilities())).collect(Collectors.toList()));
+	}
+
+	private CapabilityMapItemDto constructGraph(Capability root, List<Capability> pool) {
+		return new CapabilityMapItemDto(root.getCapabilityName(), root.getLevel(), root.isPaceOfChange(),
+				root.getTargetOperatingModel(), root.getResourceQuality(), root.getInformationQuality(),
+				root.getApplicationFit(), root.getStatus(),
+				pool.stream().filter(i -> i.getParentCapabilityId().equals(root.getCapabilityId()))
+						.map(i -> constructGraph(i, pool)).collect(Collectors.toList()));
 	}
 }

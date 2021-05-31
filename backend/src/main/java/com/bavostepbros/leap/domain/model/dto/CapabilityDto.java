@@ -1,5 +1,4 @@
 package com.bavostepbros.leap.domain.model.dto;
-
 import java.util.List;
 
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;

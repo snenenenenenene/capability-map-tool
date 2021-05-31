@@ -2,6 +2,7 @@ package com.bavostepbros.leap.domain.model.dto.capabilitymap;
 
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Status;
+import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CapabilityMapItemDto {
     private String capabilityName;
+    private CapabilityLevel level;
     private boolean paceOfChange;
     private String targetOperatingModel;
     private Integer resourceQuality;
