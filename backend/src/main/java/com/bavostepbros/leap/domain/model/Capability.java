@@ -82,6 +82,12 @@ public class Capability {
     	joinColumns = {@JoinColumn(name = "CAPABILITYID")}, 
     	inverseJoinColumns = {@JoinColumn(name = "PROJECTID")})
     private List<Project> projects;
+    
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "CAPABILITY_BUSINESSPROCESS", 
+    	joinColumns = {@JoinColumn(name = "CAPABILITYID")}, 
+    	inverseJoinColumns = {@JoinColumn(name = "BUSINESSPROCESSID")})
+    private List<BusinessProcess> businessProcess;
 
     public Capability(Environment environment, Status status, Integer parentCapabilityId, String capabilityName, 
     		boolean paceOfChange, String targetOperatingModel, Integer resourceQuality,
