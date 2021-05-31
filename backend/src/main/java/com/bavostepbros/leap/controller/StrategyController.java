@@ -1,6 +1,8 @@
 package com.bavostepbros.leap.controller;
 
 import com.bavostepbros.leap.domain.model.Strategy;
+import com.bavostepbros.leap.domain.model.dto.EnvironmentDto;
+import com.bavostepbros.leap.domain.model.dto.StatusDto;
 import com.bavostepbros.leap.domain.model.dto.StrategyDto;
 import com.bavostepbros.leap.domain.service.strategyservice.StrategyService;
 
@@ -29,39 +31,33 @@ public class StrategyController {
 	private StrategyService strategyService;
 
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public StrategyDto addStrategy(
-			@ModelAttribute("statusId") Integer statusId,
+	public StrategyDto addStrategy(@ModelAttribute("statusId") Integer statusId,
 			@ModelAttribute("strategyName") String strategyName,
 			@ModelAttribute("timeFrameStart") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameStart,
 			@ModelAttribute("timeFrameEnd") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameEnd,
 			@ModelAttribute("environmentId") Integer environmentId) {
 
 		Strategy strategy = strategyService.save(statusId, strategyName, timeFrameStart, timeFrameEnd, environmentId);
-		return new StrategyDto(strategy.getStrategyId(), strategy.getStatus(), strategy.getStrategyName(), 
-				strategy.getTimeFrameStart(), strategy.getTimeFrameEnd(), strategy.getEnvironment());
+		return convertStrategy(strategy);
 	}
 
 	@GetMapping(path = "{strategyid}")
 	public StrategyDto getStrategyById(@PathVariable("strategyid") Integer id) {
 		Strategy strategy = strategyService.get(id);
-		return new StrategyDto(strategy.getStrategyId(), strategy.getStatus(), strategy.getStrategyName(), 
-				strategy.getTimeFrameStart(), strategy.getTimeFrameEnd(), strategy.getEnvironment());
+		return convertStrategy(strategy);
 	}
-	
+
 	@GetMapping(path = "strategyname/{strategyname}")
 	public StrategyDto getStrategyByStrategyname(@PathVariable("strategyname") String strategyName) {
 		Strategy strategy = strategyService.getStrategyByStrategyname(strategyName);
-		return new StrategyDto(strategy.getStrategyId(), strategy.getStatus(), strategy.getStrategyName(), 
-				strategy.getTimeFrameStart(), strategy.getTimeFrameEnd(), strategy.getEnvironment());
+		return convertStrategy(strategy);
 	}
 
 	@GetMapping(path = "all-strategies-by-environmentid/{environmentid}")
 	public List<StrategyDto> getAllCapabilitiesByEnvironment(@PathVariable("environmentid") Integer id) {
 		List<Strategy> strategies = strategyService.getStrategiesByEnvironment(id);
 		List<StrategyDto> strategiesDto = strategies.stream()
-				.map(strategy -> new StrategyDto(strategy.getStrategyId(), strategy.getStatus(), 
-						strategy.getStrategyName(), strategy.getTimeFrameStart(), 
-						strategy.getTimeFrameEnd(), strategy.getEnvironment()))
+				.map(strategy -> convertStrategy(strategy))
 				.collect(Collectors.toList());
 		return strategiesDto;
 	}
@@ -70,9 +66,7 @@ public class StrategyController {
 	public List<StrategyDto> getAllStrategies() {
 		List<Strategy> strategies = strategyService.getAll();
 		List<StrategyDto> strategiesDto = strategies.stream()
-				.map(strategy -> new StrategyDto(strategy.getStrategyId(), strategy.getStatus(), 
-						strategy.getStrategyName(), strategy.getTimeFrameStart(), 
-						strategy.getTimeFrameEnd(), strategy.getEnvironment()))
+				.map(strategy -> convertStrategy(strategy))
 				.collect(Collectors.toList());
 		return strategiesDto;
 	}
@@ -88,22 +82,27 @@ public class StrategyController {
 	}
 
 	@PutMapping(path = "{strategyId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public StrategyDto updateStrategy(
-			@PathVariable("strategyId") Integer strategyId,
-			@ModelAttribute("statusId") Integer statusId, 
-			@ModelAttribute("strategyName") String strategyName,
+	public StrategyDto updateStrategy(@PathVariable("strategyId") Integer strategyId,
+			@ModelAttribute("statusId") Integer statusId, @ModelAttribute("strategyName") String strategyName,
 			@ModelAttribute("timeFrameStart") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameStart,
 			@ModelAttribute("timeFrameEnd") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate timeFrameEnd,
 			@ModelAttribute("environmentId") Integer environmentId) {
 
 		Strategy strategy = strategyService.update(strategyId, statusId, strategyName, timeFrameStart, timeFrameEnd,
 				environmentId);
-		return new StrategyDto(strategy.getStrategyId(), strategy.getStatus(), strategy.getStrategyName(), 
-				strategy.getTimeFrameStart(), strategy.getTimeFrameEnd(), strategy.getEnvironment());
+		return convertStrategy(strategy);
 	}
 
 	@DeleteMapping(path = "{strategyid}")
 	public void deleteStrategy(@PathVariable("strategyid") Integer id) {
 		strategyService.delete(id);
+	}
+
+	private StrategyDto convertStrategy(Strategy strategy) {
+		StatusDto status = new StatusDto(strategy.getStatus().getStatusId(), strategy.getStatus().getValidityPeriod());
+		EnvironmentDto environment = new EnvironmentDto(strategy.getEnvironment().getEnvironmentId(),
+				strategy.getEnvironment().getEnvironmentName());
+		return new StrategyDto(strategy.getStrategyId(), status, strategy.getStrategyName(),
+				strategy.getTimeFrameStart(), strategy.getTimeFrameEnd(), environment);
 	}
 }

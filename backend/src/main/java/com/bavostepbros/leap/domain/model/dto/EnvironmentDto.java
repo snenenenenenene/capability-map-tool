@@ -15,10 +15,17 @@ public class EnvironmentDto {
 	private Integer environmentId;
 	private String environmentName;
 	private List<CapabilityDto> capabilities;
+	private List<StrategyDto> strategies;
 	
 	public EnvironmentDto(Integer environmentId, String environmentName) {
 		this.environmentId = environmentId;
 		this.environmentName = environmentName;
+	}
+
+	public EnvironmentDto(Integer environmentId, String environmentName, List<CapabilityDto> capabilities) {
+		this.environmentId = environmentId;
+		this.environmentName = environmentName;
+		this.capabilities = capabilities;
 	}
 		
 }

@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bavostepbros.leap.domain.model.Environment;
+import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.dto.CapabilityDto;
 import com.bavostepbros.leap.domain.model.dto.EnvironmentDto;
 import com.bavostepbros.leap.domain.model.dto.StatusDto;
+import com.bavostepbros.leap.domain.model.dto.StrategyDto;
 import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
 
 import lombok.RequiredArgsConstructor;
@@ -43,19 +45,19 @@ public class EnvironmentController {
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public EnvironmentDto addEnvironment(@ModelAttribute("environmentName") String environmentName) {
 		Environment environment = envService.save(environmentName);
-		return convertEnvironment(environment);
+		return convertBasicEnvironment(environment);
 	}
 
 	@GetMapping(path = "{environmentId}")
 	public EnvironmentDto getEnvironmentById(@PathVariable("environmentId") Integer environmentId) {
 		Environment environment = envService.get(environmentId);
-		return convertEnvironment(environment);
+		return convertBasicEnvironment(environment);
 	}
 
 	@GetMapping(path = "environmentname/{environmentname}")
 	public EnvironmentDto getEnvironmentByEnvironmentName(@PathVariable("environmentname") String environmentName) {
 		Environment environment = envService.getByEnvironmentName(environmentName);
-		return convertEnvironment(environment);
+		return convertBasicEnvironment(environment);
 	}
 
 	@GetMapping(path = "exists-by-id/{environmentId}")
@@ -71,7 +73,7 @@ public class EnvironmentController {
 	@GetMapping
 	public List<EnvironmentDto> getAllEnvironments() {
 		List<Environment> environments = envService.getAll();
-		List<EnvironmentDto> environmentsDto = environments.stream().map(environment -> convertEnvironment(environment))
+		List<EnvironmentDto> environmentsDto = environments.stream().map(environment -> convertBasicEnvironment(environment))
 				.collect(Collectors.toList());
 		return environmentsDto;
 	}
@@ -80,7 +82,7 @@ public class EnvironmentController {
 	public EnvironmentDto updateEnvironment(@PathVariable("environmentId") Integer environmentId,
 			@ModelAttribute("environmentName") String environmentName) {
 		Environment environment = envService.update(environmentId, environmentName);
-		return convertEnvironment(environment);
+		return convertBasicEnvironment(environment);
 	}
 
 	@DeleteMapping(path = "{environmentId}")
@@ -88,27 +90,11 @@ public class EnvironmentController {
 		envService.delete(environmentId);
 	}
 
-	private EnvironmentDto convertEnvironment(Environment environment) {
-		List<CapabilityDto> capabilitiesDto = new ArrayList<CapabilityDto>();
-		if (environment.getCapabilities() != null) {
-			capabilitiesDto = environment.getCapabilities().stream().map(capability -> new CapabilityDto(
-					capability.getCapabilityId(),
-					new EnvironmentDto(capability.getEnvironment().getEnvironmentId(),
-							capability.getEnvironment().getEnvironmentName()),
-					new StatusDto(capability.getStatus().getStatusId(), capability.getStatus().getValidityPeriod()),
-					capability.getParentCapabilityId(), capability.getCapabilityName(), capability.getLevel(),
-					capability.isPaceOfChange(), capability.getTargetOperatingModel(), capability.getResourceQuality(),
-					capability.getInformationQuality(), capability.getApplicationFit())).collect(Collectors.toList());
-		}
-		return new EnvironmentDto(environment.getEnvironmentId(), environment.getEnvironmentName(), capabilitiesDto);
-	}
-
 	@GetMapping(path = "capabilitymap/{environmentId}")
 	public CapabilityMapDto getCapabilityMap(@PathVariable("environmentId") Integer environmentId) {
 		try {
 			return constructMap(envService.get(environmentId));
 		} catch (Exception e) {
-			System.out.println("whoopsiedoopsie");
 			return new CapabilityMapDto();
 		}
 	}
@@ -120,17 +106,41 @@ public class EnvironmentController {
 	}
 
 	private CapabilityMapItemDto constructGraph(Capability root, List<Capability> pool) {
-		return new CapabilityMapItemDto(
-			root.getCapabilityName(),
-			root.isPaceOfChange(),
-			root.getTargetOperatingModel(),
-			root.getResourceQuality(),
-			root.getInformationQuality(),
-			root.getApplicationFit(),
-			root.getStatus(),
-			pool.stream()
-				.filter(i -> i.getParentCapabilityId().equals(root.getCapabilityId()))
-				.map(i -> constructGraph(i, pool))
-				.collect(Collectors.toList()));
+		return new CapabilityMapItemDto(root.getCapabilityName(), root.isPaceOfChange(), root.getTargetOperatingModel(),
+				root.getResourceQuality(), root.getInformationQuality(), root.getApplicationFit(), root.getStatus(),
+				pool.stream().filter(i -> i.getParentCapabilityId().equals(root.getCapabilityId()))
+						.map(i -> constructGraph(i, pool)).collect(Collectors.toList()));
+	}
+	
+	private EnvironmentDto convertEnvironment(Environment environment) {
+		List<CapabilityDto> capabilitiesDto = new ArrayList<CapabilityDto>();
+		if (environment.getCapabilities() != null) {
+			capabilitiesDto = environment.getCapabilities().stream()
+					.map(capability -> new CapabilityDto(capability.getCapabilityId(),
+							convertBasicEnvironment(capability.getEnvironment()),
+							convertBasicStatus(capability.getStatus()), capability.getParentCapabilityId(),
+							capability.getCapabilityName(), capability.getLevel(), capability.isPaceOfChange(),
+							capability.getTargetOperatingModel(), capability.getResourceQuality(),
+							capability.getInformationQuality(), capability.getApplicationFit()))
+					.collect(Collectors.toList());
+		}
+		List<StrategyDto> strategiesDto = new ArrayList<StrategyDto>();
+		if (environment.getStrategies() != null) {
+			strategiesDto = environment.getStrategies().stream()
+					.map(strategy -> new StrategyDto(strategy.getStrategyId(), convertBasicStatus(strategy.getStatus()),
+							strategy.getStrategyName(), strategy.getTimeFrameStart(), strategy.getTimeFrameEnd(),
+							convertBasicEnvironment(environment)))
+					.collect(Collectors.toList());
+		}
+		return new EnvironmentDto(environment.getEnvironmentId(), environment.getEnvironmentName(), capabilitiesDto,
+				strategiesDto);
+	}
+
+	private EnvironmentDto convertBasicEnvironment(Environment environment) {
+		return new EnvironmentDto(environment.getEnvironmentId(), environment.getEnvironmentName());
+	}
+
+	private StatusDto convertBasicStatus(Status status) {
+		return new StatusDto(status.getStatusId(), status.getValidityPeriod());
 	}
 }
