@@ -1,5 +1,8 @@
 package com.bavostepbros.leap.domain.model.dto;
 
+import com.bavostepbros.leap.domain.model.Capability;
+import com.bavostepbros.leap.domain.model.ITApplication;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,8 +13,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CapabilityApplicationDto {
-	private CapabilityDto capability;
-	private ITApplicationDto application;
+	private Capability capability;
+	private ITApplication application;
 	private Integer importance;
 	private Integer efficiencySupport;
 	private Integer functionalCoverage;

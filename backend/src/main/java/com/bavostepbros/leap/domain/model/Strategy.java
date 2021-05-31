@@ -51,6 +51,7 @@ public class Strategy {
     private LocalDate timeFrameEnd;
 
     @ManyToOne
+    @JoinColumn(name = "ENVIRONMENTID", nullable = false)
     private Environment environment;
 
     @OneToMany(cascade=CascadeType.ALL)
@@ -68,7 +69,6 @@ public class Strategy {
     
     public Strategy(Integer strategyId, Status status, String strategyName, LocalDate timeFrameStart,
 			LocalDate timeFrameEnd, Environment environment) {
-		super();
 		this.strategyId = strategyId;
 		this.status = status;
 		this.strategyName = strategyName;
@@ -76,16 +76,5 @@ public class Strategy {
 		this.timeFrameEnd = timeFrameEnd;
 		this.environment = environment;
 	}
-
-    @Override
-    public String toString() {
-        return "{" +
-            " strategyId='" + getStrategyId() + "'" +
-            ", statusId='" + getStatus() + "'" +
-            ", strategyName='" + getStrategyName() + "'" +
-            ", timeFrameStart='" + getTimeFrameStart() + "'" +
-            ", timeFrameEnd='" + getTimeFrameEnd() + "'" +
-            "}";
-    }
 
 }
