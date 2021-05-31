@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.bavostepbros.leap.domain.model.BusinessProcess;
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.CapabilityItem;
 import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapDto;
@@ -26,6 +27,7 @@ import com.bavostepbros.leap.domain.model.Project;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.Strategy;
 import com.bavostepbros.leap.domain.model.StrategyItem;
+import com.bavostepbros.leap.domain.model.dto.BusinessProcessDto;
 import com.bavostepbros.leap.domain.model.dto.CapabilityItemDto;
 import com.bavostepbros.leap.domain.model.dto.EnvironmentDto;
 import com.bavostepbros.leap.domain.model.dto.ProgramDto;
@@ -164,6 +166,12 @@ public class EnvironmentController {
 		return new ProjectDto(project.getProjectId(), project.getProjectName(), 
 				convertProgram(project.getProgram()), convertBasicStatus(project.getStatus()));
 	}
+	
+	private BusinessProcessDto convertBusinessProcess(BusinessProcess businessProcess) {
+		return new BusinessProcessDto(businessProcess.getBusinessProcessId(),
+				businessProcess.getBusinessProcessName(),
+				businessProcess.getBusinessProcessDescription());
+	}
 
 	private CapabilityMapItemDto constructGraph(Capability capability, List<Capability> pool) {
 		List<CapabilityItemDto> capabilityItemsDto = new ArrayList<CapabilityItemDto>();
@@ -179,12 +187,20 @@ public class EnvironmentController {
 					.map(project -> convertProject(project))
 					.collect(Collectors.toList());
 		}
+		
+		List<BusinessProcessDto> businessProcessDto = new ArrayList<BusinessProcessDto>();
+		if (capability.getBusinessProcess() != null) {
+			businessProcessDto = capability.getBusinessProcess().stream()
+					.map(businessProcess -> convertBusinessProcess(businessProcess))
+					.collect(Collectors.toList());
+		}
+		
 		return new CapabilityMapItemDto(capability.getCapabilityId(), capability.getCapabilityName(), capability.getLevel(),
 				capability.isPaceOfChange(), capability.getTargetOperatingModel(), capability.getResourceQuality(),
 				capability.getInformationQuality(), capability.getApplicationFit(), convertBasicStatus(capability.getStatus()),
 				pool.stream()
 					.filter(i -> i.getParentCapabilityId().equals(capability.getCapabilityId()))
 					.map(i -> constructGraph(i, pool))
-					.collect(Collectors.toList()), capabilityItemsDto, projectsDto);
+					.collect(Collectors.toList()), capabilityItemsDto, projectsDto, businessProcessDto);
 	}
 }
