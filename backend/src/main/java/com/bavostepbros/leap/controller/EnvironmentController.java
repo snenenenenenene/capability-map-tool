@@ -115,13 +115,15 @@ public class EnvironmentController {
 
 	private CapabilityMapDto constructMap(Environment environment) {
 		return new CapabilityMapDto(environment.getEnvironmentName(),
-				environment.getCapabilities().stream().filter(i -> i.getParentCapabilityId().equals(0))
-						.map(i -> constructGraph(i, environment.getCapabilities())).collect(Collectors.toList()));
+			environment.getCapabilities().stream()
+				.filter(i -> i.getParentCapabilityId().equals(0))
+				.map(i -> constructGraph(i, environment.getCapabilities())).collect(Collectors.toList()));
 	}
 
 	private CapabilityMapItemDto constructGraph(Capability root, List<Capability> pool) {
 		return new CapabilityMapItemDto(
 			root.getCapabilityName(),
+			root.getLevel(),
 			root.isPaceOfChange(),
 			root.getTargetOperatingModel(),
 			root.getResourceQuality(),
