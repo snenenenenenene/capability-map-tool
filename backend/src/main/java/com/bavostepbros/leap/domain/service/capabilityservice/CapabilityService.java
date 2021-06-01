@@ -12,16 +12,16 @@ import com.bavostepbros.leap.domain.model.Project;
  */
 public interface CapabilityService {
 	Capability save(Integer environmentId, Integer statusId, Integer parentCapabilityId, String capabilityName,
-					   boolean paceOfChange, String targetOperatingModel, Integer resourceQuality,
-					   Integer informationQuality, Integer applicationFit);
+			boolean paceOfChange, String targetOperatingModel, Integer resourceQuality, Integer informationQuality,
+			Integer applicationFit);
 
 	Capability get(Integer id);
 
 	List<Capability> getAll();
 
 	Capability update(Integer capabilityId, Integer environmentId, Integer statusId, Integer parentCapabilityId,
-			String capabilityName, boolean paceOfChange, String targetOperatingModel,
-			Integer resourceQuality, Integer informationQuality, Integer applicationFit);
+			String capabilityName, boolean paceOfChange, String targetOperatingModel, Integer resourceQuality,
+			Integer informationQuality, Integer applicationFit);
 
 	void updateLevel(Capability capability);
 
@@ -30,7 +30,7 @@ public interface CapabilityService {
 	boolean existsById(Integer id);
 
 	boolean existsByCapabilityName(String capabilityName);
-	
+
 	Capability getCapabilityByCapabilityName(String capabilityName);
 
 	List<Capability> getCapabilitiesByEnvironment(Integer environmentId);
@@ -40,18 +40,18 @@ public interface CapabilityService {
 	List<Capability> getCapabilityChildren(Integer parentId);
 
 	List<Capability> getCapabilitiesByParentIdAndLevel(Integer parentId, String level);
-	
+
 	void addProject(Integer capabilityId, Integer projectId);
-	
+
 	void deleteProject(Integer capabilityId, Integer projectId);
-	
+
 	List<Project> getAllProjectsByCapabilityId(Integer capabilityId);
-	
+
 	void addBusinessProcess(Integer capabilityId, Integer businessProcessId);
-	
+
 	void deleteBusinessProcess(Integer capabilityId, Integer businessProcessId);
-	
+
 	void addResource(Integer capabilityId, Integer resourceId);
-	
+
 	void deleteResource(Integer capabilityId, Integer resourceId);
 }
