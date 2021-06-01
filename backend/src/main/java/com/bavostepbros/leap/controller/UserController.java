@@ -39,6 +39,9 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+
+//	@Autowired
+//	private Authentication
 	
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public UserDto addUser(
@@ -88,9 +91,13 @@ public class UserController {
 	*/
 	@PostMapping(path = "authenticate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public User login(
-		@ModelAttribute("email") String email) {
-		User user = userService.getByEmail(email);
-		return user;
+		@ModelAttribute("email") String email,
+		@ModelAttribute("password") String password){
+		try {
+			return userService.getByEmail(email);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@PutMapping(path = "changePassword", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
