@@ -1,6 +1,5 @@
 package com.bavostepbros.leap.domain.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -47,7 +46,7 @@ public class Project {
 	private Status status;
 	
 	@ManyToMany(mappedBy = "projects")
-	private List<Capability> capabilities = new ArrayList<Capability>();
+	private List<Capability> capabilities;
 	
 	public Project(String projectName, Program program, Status status) {
 		this.projectName = projectName;

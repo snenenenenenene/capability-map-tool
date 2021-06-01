@@ -4,6 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import Pdf from "react-to-pdf";
 import { Modal } from "react-bootstrap";
+import ExportMapModal from "./ExportMapModal";
 
 export default class ExportMap extends Component {
   constructor(props) {
@@ -13,6 +14,7 @@ export default class ExportMap extends Component {
       environmentId: 1,
       capabilities: [],
       showModal: false,
+      capability: {},
     };
   }
 
@@ -20,46 +22,28 @@ export default class ExportMap extends Component {
     this.setState({ showModal: !this.state.showModal });
   }
 
-  generateModal() {
-    if (this.state.showModal === true) {
-      return (
-        <div style={{ backgroundColor: "red" }}>
-          <h1>hi</h1>
-        </div>
-        // <Modal show={true}>
-        //   <Modal.Header>{capabilityId}</Modal.Header>
-        //   <Modal.Body>
-        //     <p>{capabilityId}</p>
-        //   </Modal.Body>
-        //   <Modal.Footer>
-        //     <button type="button" className="btn btn-secondary">
-        //       Close Modal
-        //     </button>
-        //   </Modal.Footer>
-        // </Modal>
-      );
-    }
-    return;
+  handleCapabilityClick(capability) {
+    this.setState({ capability: capability });
+    this.handleModal();
   }
 
   capabilityMapping(capabilities) {
     return capabilities.map((capability, i) => {
       return (
         <div
-          className="card capability-card"
+          className='card capability-card'
           id={`capability-${capability.level}`}
         >
           <div
-            className="card-header text-center text-uppercase"
-            onClick={() => this.handleModal()}
+            className='capability-title card-header text-center text-uppercase'
+            onClick={() => this.handleCapabilityClick(capability)}
           >
             {i} {capability.capabilityName}
           </div>
-          <div class="card-body">
-            {}
-            <div className="card-deck justify-content-center">
+          <div class='card-body'>
+            <div className='card-deck justify-content-center'>
               {this.capabilityMapping(capability.children)}
-              <p className="card-text"></p>
+              <p className='card-text'></p>
             </div>
           </div>
         </div>
@@ -90,7 +74,6 @@ export default class ExportMap extends Component {
         this.setState({ capabilities: response.data.capabilities });
       })
       .catch((error) => {
-        console.log(error);
         toast.error("Could Not Find Capabilities");
       });
     console.log(this.state.capabilities);
@@ -98,36 +81,61 @@ export default class ExportMap extends Component {
 
   render() {
     const targetRef = React.createRef();
+    const capability = this.state.capability;
     return (
       <div>
         <br></br>
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+        <nav aria-label='breadcrumb'>
+          <ol className='breadcrumb'>
+            <li className='breadcrumb-item'>
               <Link to={`/`}>Home</Link>
             </li>
-            <li className="breadcrumb-item">
+            <li className='breadcrumb-item'>
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className="breadcrumb-item">Export</li>
+            <li className='breadcrumb-item'>Export</li>
           </ol>
         </nav>
-        <div className="container jumbotron">
-          <h1 className="display-4" style={{ display: "inline-block" }}>
+        <div className='container jumbotron'>
+          <h1 className='display-4' style={{ display: "inline-block" }}>
             Export
           </h1>
-          <Pdf targetRef={targetRef} filename="capabilitymap.pdf">
+          <Pdf targetRef={targetRef} filename='capabilitymap.pdf'>
             {({ toPdf }) => (
-              <button className="float-right btn btn-danger" onClick={toPdf}>
+              <button className='float-right btn btn-danger' onClick={toPdf}>
                 Generate Pdf
               </button>
             )}
           </Pdf>
 
-          <div ref={targetRef} className="card-deck justify-content-center">
-            {this.capabilityMapping(this.state.capabilities)}
+          <div ref={targetRef}>
+            <div className='jumbotron card-deck justify-content-center'>
+              {this.capabilityMapping(this.state.capabilities)}
+            </div>
+          </div>
+          <div>
+            <Modal
+              className='capability-modal'
+              show={this.state.showModal}
+              onHide={() => this.handleModal()}
+              centered
+            >
+              <Modal.Header closeButton>
+                <Modal.Title>{capability.capabilityName}</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                {/* {capability.capabilityItems.map((capabilityItem) => {
+                  return (
+                    <div
+                      className='card'
+                      style={{ margin: 10, padding: 10 }}
+                    ></div>
+                  );
+                })} */}
+              </Modal.Body>
+            </Modal>
           </div>
         </div>
       </div>

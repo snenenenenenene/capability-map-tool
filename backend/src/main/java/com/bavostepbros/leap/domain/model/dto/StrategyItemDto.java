@@ -14,4 +14,11 @@ public class StrategyItemDto {
 	private StrategyDto strategy;
 	private String strategyItemName;
 	private String description;
+	
+	public StrategyItemDto(Integer itemId, String strategyItemName, String description) {
+		this.itemId = itemId;
+		this.strategyItemName = strategyItemName;
+		this.description = description;
+	}
+	
 }

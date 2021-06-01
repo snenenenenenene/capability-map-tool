@@ -19,7 +19,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -72,17 +71,26 @@ public class Capability {
     @Column(name = "APPLICATIONFIT")
     private Integer applicationFit;
 
-    @OneToMany
+    @OneToMany(mappedBy = "capability")
     private List<CapabilityItem> capabilityItems;
     
-    @OneToMany
+    @OneToMany(mappedBy = "capability")
     private List<CapabilityApplication> capabilityApplication;
+    
+    @OneToMany(mappedBy = "capability")
+    private List<CapabilityInformation> capabilityInformation;
     
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "CAPABILITY_PROJECT", 
     	joinColumns = {@JoinColumn(name = "CAPABILITYID")}, 
     	inverseJoinColumns = {@JoinColumn(name = "PROJECTID")})
-    private List<Project> projects = new ArrayList<Project>();
+    private List<Project> projects;
+    
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "CAPABILITY_BUSINESSPROCESS", 
+    	joinColumns = {@JoinColumn(name = "CAPABILITYID")}, 
+    	inverseJoinColumns = {@JoinColumn(name = "BUSINESSPROCESSID")})
+    private List<BusinessProcess> businessProcess;
 
     public Capability(Environment environment, Status status, Integer parentCapabilityId, String capabilityName, 
     		boolean paceOfChange, String targetOperatingModel, Integer resourceQuality,
@@ -125,6 +133,16 @@ public class Capability {
     
     public List<Project> getProjects() {
     	return projects;
+    }
+    
+    public void addBusinessProcess(BusinessProcess businessProcessItem) {
+    	businessProcess.add(businessProcessItem);
+    	return;
+    }
+    
+    public void removeBusinessProcess(BusinessProcess businessProcessItem) {
+    	businessProcess.remove(businessProcessItem);
+    	return;
     }
 
     @Override
