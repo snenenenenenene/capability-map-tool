@@ -18,11 +18,13 @@ import com.bavostepbros.leap.domain.model.BusinessProcess;
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.Project;
+import com.bavostepbros.leap.domain.model.Resource;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 import com.bavostepbros.leap.domain.service.businessprocessservice.BusinessProcessService;
 import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
 import com.bavostepbros.leap.domain.service.projectservice.ProjectService;
+import com.bavostepbros.leap.domain.service.resourceservice.ResourceService;
 import com.bavostepbros.leap.domain.service.statusservice.StatusService;
 import com.bavostepbros.leap.persistence.CapabilityDAL;
 
@@ -46,17 +48,20 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 	@Autowired
 	private StatusService statusService;
-	
+
 	@Autowired
 	private ProjectService projectService;
-	
+
 	@Autowired
 	private BusinessProcessService businessProcessService;
+	
+	@Autowired
+	private ResourceService resourceService;
 
 	@Override
 	public Capability save(Integer environmentId, Integer statusId, Integer parentCapabilityId, String capabilityName,
-							  boolean paceOfChange, String targetOperatingModel, Integer resourceQuality,
-							  Integer informationQuality, Integer applicationFit) {
+			boolean paceOfChange, String targetOperatingModel, Integer resourceQuality, Integer informationQuality,
+			Integer applicationFit) {
 		if (capabilityName == null || capabilityName.isBlank() || capabilityName.isEmpty()) {
 			throw new InvalidInputException("Invalid input.");
 		}
@@ -78,8 +83,8 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 		Environment environment = environmentService.get(environmentId);
 		Status status = statusService.get(statusId);
-		Capability capability = new Capability(environment, status, parentCapabilityId, capabilityName,
-				paceOfChange, targetOperatingModel, resourceQuality, informationQuality, applicationFit);
+		Capability capability = new Capability(environment, status, parentCapabilityId, capabilityName, paceOfChange,
+				targetOperatingModel, resourceQuality, informationQuality, applicationFit);
 		updateLevel(capability);
 
 		Capability savedCapability = capabilityDAL.save(capability);
@@ -95,8 +100,9 @@ public class CapabilityServiceImpl implements CapabilityService {
 		if (!existsById(id)) {
 			throw new IndexDoesNotExistException("Capability ID does not exists.");
 		}
-		
-		Capability capability = capabilityDAL.findById(id).get();;
+
+		Capability capability = capabilityDAL.findById(id).get();
+		;
 		return capability;
 	}
 
@@ -107,8 +113,8 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 	@Override
 	public Capability update(Integer capabilityId, Integer environmentId, Integer statusId, Integer parentCapabilityId,
-			String capabilityName, boolean paceOfChange, String targetOperatingModel,
-			Integer resourceQuality, Integer informationQuality, Integer applicationFit) {
+			String capabilityName, boolean paceOfChange, String targetOperatingModel, Integer resourceQuality,
+			Integer informationQuality, Integer applicationFit) {
 		if (capabilityId == null || capabilityId.equals(0) || capabilityName == null || capabilityName.isBlank()
 				|| capabilityName.isEmpty()) {
 			throw new InvalidInputException("Invalid input.");
@@ -142,13 +148,13 @@ public class CapabilityServiceImpl implements CapabilityService {
 		return updatedCapability;
 	}
 
-	//TODO try catch for out of bounds exception
+	// TODO try catch for out of bounds exception
 	@Override
 	public void updateLevel(Capability capability) {
-		if(capability.getParentCapabilityId() == 0)
+		if (capability.getParentCapabilityId() == 0)
 			capability.setLevel(CapabilityLevel.ONE);
 		else
-		 	capability.setLevel(capabilityDAL.getOne(capability.getParentCapabilityId()).getLevel().next());
+			capability.setLevel(capabilityDAL.getOne(capability.getParentCapabilityId()).getLevel().next());
 	}
 
 	// TODO write unit tests!
@@ -180,7 +186,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 		if (!environmentService.existsById(environmentId)) {
 			throw new ForeignKeyException("Environment ID does not exists.");
 		}
-		
+
 		Environment environment = environmentService.get(environmentId);
 		List<Capability> capabilities = capabilityDAL.findByEnvironment(environment);
 		return capabilities;
@@ -191,12 +197,11 @@ public class CapabilityServiceImpl implements CapabilityService {
 		if (level == null) {
 			throw new InvalidInputException("CapabilityLevel is not valid.");
 		}
-		if (Arrays.stream(CapabilityLevel.values())
-				.noneMatch((capLevel) -> capLevel.name().equals(level))) { 
-			throw new EnumException("CapabilityLevel is not valid."); 
+		if (Arrays.stream(CapabilityLevel.values()).noneMatch((capLevel) -> capLevel.name().equals(level))) {
+			throw new EnumException("CapabilityLevel is not valid.");
 		}
-				
-		CapabilityLevel capabilityLevel = CapabilityLevel.valueOf(level);	
+
+		CapabilityLevel capabilityLevel = CapabilityLevel.valueOf(level);
 		List<Capability> capabilities = capabilityDAL.findByLevel(capabilityLevel);
 		return capabilities;
 	}
@@ -224,11 +229,10 @@ public class CapabilityServiceImpl implements CapabilityService {
 		if (!existsById(parentId)) {
 			throw new IndexDoesNotExistException("Parent ID does not exists.");
 		}
-		if (Arrays.stream(CapabilityLevel.values())
-				.noneMatch((capLevel) -> capLevel.name().equals(level))) { 
-			throw new EnumException("CapabilityLevel is not valid."); 
+		if (Arrays.stream(CapabilityLevel.values()).noneMatch((capLevel) -> capLevel.name().equals(level))) {
+			throw new EnumException("CapabilityLevel is not valid.");
 		}
-				
+
 		CapabilityLevel capabilityLevel = CapabilityLevel.valueOf(level);
 		List<Capability> capabilities = capabilityDAL.findByParentCapabilityIdAndLevel(parentId, capabilityLevel);
 		return capabilities;
@@ -243,14 +247,14 @@ public class CapabilityServiceImpl implements CapabilityService {
 	public boolean existsByCapabilityName(String capabilityName) {
 		return !capabilityDAL.findByCapabilityName(capabilityName).isEmpty();
 	}
-	
+
 	// TODO write unit tests for this one!
 	@Override
 	public Capability getCapabilityByCapabilityName(String capabilityName) {
 		if (capabilityName == null || capabilityName.isBlank() || capabilityName.isEmpty()) {
 			throw new InvalidInputException("Invalid input.");
 		}
-		
+
 		return capabilityDAL.findByCapabilityName(capabilityName).get();
 	}
 
@@ -287,6 +291,20 @@ public class CapabilityServiceImpl implements CapabilityService {
 		Capability capability = get(capabilityId);
 		BusinessProcess businessProcess = businessProcessService.get(businessProcessId);
 		capability.removeBusinessProcess(businessProcess);
+	}
+
+	@Override
+	public void addResource(Integer capabilityId, Integer resourceId) {
+		Capability capability = get(capabilityId);
+		Resource resource = resourceService.get(resourceId);
+		capability.addResource(resource);
+	}
+
+	@Override
+	public void deleteResource(Integer capabilityId, Integer resourceId) {
+		Capability capability = get(capabilityId);
+		Resource resource = resourceService.get(resourceId);
+		capability.removeResource(resource);
 	}
 
 }

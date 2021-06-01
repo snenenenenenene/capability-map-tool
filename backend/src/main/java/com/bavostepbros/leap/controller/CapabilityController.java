@@ -170,6 +170,18 @@ public class CapabilityController {
 		capabilityService.deleteBusinessProcess(capabilityId, businessProcessId);
 	}
 	
+	@PutMapping(path = "link-resource/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public void linkResource(@ModelAttribute("capabilityId") Integer capabilityId,
+			@ModelAttribute("resourceId") Integer resourceId) {
+		capabilityService.addResource(capabilityId, resourceId);
+	}
+	
+	@DeleteMapping(path = "unlink-resource/{capabilityId}/{resourceId}")
+	public void unlinkResource(@PathVariable("capabilityId") Integer capabilityId,
+			@PathVariable("resourceId") Integer resourceId) {
+		capabilityService.deleteResource(capabilityId, resourceId);
+	}
+	
 	private CapabilityDto convertCapability(Capability capability) {
 		EnvironmentDto environmentDto = new EnvironmentDto(capability.getEnvironment().getEnvironmentId(),
 				capability.getEnvironment().getEnvironmentName());

@@ -50,4 +50,8 @@ public interface CapabilityService {
 	void addBusinessProcess(Integer capabilityId, Integer businessProcessId);
 	
 	void deleteBusinessProcess(Integer capabilityId, Integer businessProcessId);
+	
+	void addResource(Integer capabilityId, Integer resourceId);
+	
+	void deleteResource(Integer capabilityId, Integer resourceId);
 }

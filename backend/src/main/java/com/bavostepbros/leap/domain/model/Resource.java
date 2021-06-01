@@ -1,9 +1,12 @@
 package com.bavostepbros.leap.domain.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotBlank;
 
 import lombok.EqualsAndHashCode;
@@ -34,6 +37,9 @@ public class Resource {
 	
 	@Column(name = "FULLTIMEEQUIVALENTYEARLYVALUE")
 	private Double fullTimeEquivalentYearlyValue;
+	
+	@ManyToMany(mappedBy = "resources")
+	private List<Capability> capabilities;
 
 	public Resource(Integer resourceId, @NotBlank String resourceName, @NotBlank String resourceDescription,
 			Double fullTimeEquivalentYearlyValue) {
