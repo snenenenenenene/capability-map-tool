@@ -53,13 +53,13 @@ public class CapabilityController {
 		return convertCapability(capability);
 	}
 
-	@GetMapping("{capabilityid}")
+	@GetMapping(path = "{capabilityid}")
 	public CapabilityDto getCapabilityByCapabilityid(@PathVariable("capabilityid") Integer capabilityId) {
 		Capability capability = capabilityService.get(capabilityId);
 		return convertCapability(capability);
 	}
 
-	@GetMapping("capabilityname/{capabilityname}")
+	@GetMapping(path = "capabilityname/{capabilityname}")
 	public CapabilityDto getCapabilityByCapabilityname(@PathVariable("capabilityname") String capabilityName) {
 		Capability capability = capabilityService.getCapabilityByCapabilityName(capabilityName);
 		return convertCapability(capability);
