@@ -40,8 +40,8 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-//	@Autowired
-//	private Authentication
+	@Autowired
+	private Authentication
 	
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public UserDto addUser(
