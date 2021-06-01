@@ -23,7 +23,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-// @IdClass(CapabilityItemId.class)
 public class CapabilityItem {
 		
 	@EmbeddedId 

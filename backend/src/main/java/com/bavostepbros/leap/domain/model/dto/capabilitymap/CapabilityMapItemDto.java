@@ -1,6 +1,7 @@
 package com.bavostepbros.leap.domain.model.dto.capabilitymap;
 
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
+import com.bavostepbros.leap.domain.model.dto.BusinessProcessDto;
 import com.bavostepbros.leap.domain.model.dto.CapabilityItemDto;
 import com.bavostepbros.leap.domain.model.dto.ProjectDto;
 import com.bavostepbros.leap.domain.model.dto.StatusDto;
@@ -29,4 +30,5 @@ public class CapabilityMapItemDto {
     private List<CapabilityMapItemDto> children;
     private List<CapabilityItemDto> capabilityItems;
     private List<ProjectDto> projects;
+    private List<BusinessProcessDto> businessprocess;
 }

@@ -46,4 +46,8 @@ public interface CapabilityService {
 	void deleteProject(Integer capabilityId, Integer projectId);
 	
 	List<Project> getAllProjectsByCapabilityId(Integer capabilityId);
+	
+	void addBusinessProcess(Integer capabilityId, Integer businessProcessId);
+	
+	void deleteBusinessProcess(Integer capabilityId, Integer businessProcessId);
 }

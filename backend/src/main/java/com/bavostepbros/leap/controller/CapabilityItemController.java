@@ -42,7 +42,7 @@ public class CapabilityItemController {
 		return convertCapabilityItem(capabilityItem);
 	}
 
-	@GetMapping("{capabilityId}/{itemId}")
+	@GetMapping(path = "{capabilityId}/{itemId}")
 	public CapabilityItemDto getCapabilityItem(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("itemId") Integer itemId) {
 
