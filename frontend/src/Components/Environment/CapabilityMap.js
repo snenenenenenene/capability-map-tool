@@ -4,9 +4,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import Pdf from "react-to-pdf";
 import { Modal } from "react-bootstrap";
-import ExportMapModal from "./ExportMapModal";
 
-export default class ExportMap extends Component {
+export default class CapabilityMap extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -60,6 +59,15 @@ export default class ExportMap extends Component {
         this.setState({
           environmentId: response.data.environmentId,
         });
+        if (localStorage.getItem("environment"))
+          console.log(this.state.environmentName);
+        localStorage.removeItem("environment");
+        localStorage.setItem(
+          "environment",
+          JSON.stringify({
+            environmentName: this.state.environmentName,
+          })
+        );
       })
       .catch((error) => {
         console.log("environment not found");
@@ -90,43 +98,34 @@ export default class ExportMap extends Component {
             <li className='breadcrumb-item'>
               <Link to={`/`}>Home</Link>
             </li>
-            <li className='breadcrumb-item'>
-              <Link to={`/environment/${this.state.environmentName}`}>
-                {this.state.environmentName}
-              </Link>
-            </li>
-            <li className='breadcrumb-item'>Export</li>
+            <li className='breadcrumb-item'>{this.state.environmentName}</li>
+            <Pdf targetRef={targetRef} filename='capabilitymap.pdf'>
+              {({ toPdf }) => (
+                <div className='ml-auto' onClick={toPdf}>
+                  <i class='bi bi-file-earmark-pdf-fill' onClick={toPdf}></i>
+                </div>
+              )}
+            </Pdf>
           </ol>
         </nav>
-        <div className='container jumbotron'>
-          <h1 className='display-4' style={{ display: "inline-block" }}>
-            Export
-          </h1>
-          <Pdf targetRef={targetRef} filename='capabilitymap.pdf'>
-            {({ toPdf }) => (
-              <button className='float-right btn btn-danger' onClick={toPdf}>
-                Generate Pdf
-              </button>
-            )}
-          </Pdf>
 
-          <div ref={targetRef}>
-            <div className='jumbotron card-deck justify-content-center'>
-              {this.capabilityMapping(this.state.capabilities)}
-            </div>
+        <div ref={targetRef}>
+          <div className='card-deck justify-content-center'>
+            {this.capabilityMapping(this.state.capabilities)}
           </div>
-          <div>
-            <Modal
-              className='capability-modal'
-              show={this.state.showModal}
-              onHide={() => this.handleModal()}
-              centered
-            >
-              <Modal.Header closeButton>
-                <Modal.Title>{capability.capabilityName}</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                {/* {capability.capabilityItems.map((capabilityItem) => {
+        </div>
+        <div>
+          <Modal
+            className='capability-modal'
+            show={this.state.showModal}
+            onHide={() => this.handleModal()}
+            centered
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>{capability.capabilityName}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              {/* {capability.capabilityItems.map((capabilityItem) => {
                   return (
                     <div
                       className='card'
@@ -134,9 +133,8 @@ export default class ExportMap extends Component {
                     ></div>
                   );
                 })} */}
-              </Modal.Body>
-            </Modal>
-          </div>
+            </Modal.Body>
+          </Modal>
         </div>
       </div>
     );

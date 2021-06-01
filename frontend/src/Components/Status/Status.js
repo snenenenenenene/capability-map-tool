@@ -73,64 +73,63 @@ export default class Status extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+        <nav aria-label='breadcrumb'>
+          <ol className='breadcrumb'>
+            <li className='breadcrumb-item'>
               <Link to={`/`}>Home</Link>
             </li>
-            <li className="breadcrumb-item">
+            <li className='breadcrumb-item'>
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className="breadcrumb-item">Statuses</li>
+            <li className='breadcrumb-item'>Statuses</li>
           </ol>
         </nav>
-        <div className="jumbotron">
-          <h1 style={{ display: "inline-block" }} className="display-4">
-            Statuses
-          </h1>
-          <Link to={`/environment/${this.state.environmentName}/status/add`}>
-            <button className="btn btn-primary float-right">Add Status</button>
-          </Link>
-          <br />
-          <br />
-          <MaterialTable
-            columns={[
-              { title: "ID", field: "statusId" },
-              { title: "Date", field: "validityPeriod" },
-              {
-                title: "",
-                name: "delete",
-                render: (rowData) => (
-                  <button className="btn btn-secondary">
-                    <i
-                      onClick={this.delete.bind(this, rowData.statusId)}
-                      className="bi bi-trash"
-                    ></i>
-                  </button>
-                ),
+        <MaterialTable
+          title='Statuses'
+          actions={[
+            {
+              icon: "add",
+              tooltip: "Add Status",
+              isFreeAction: true,
+              onClick: (event) => {
+                this.props.history.push(
+                  `/environment/${this.state.environmentName}/status/add`
+                );
               },
-              {
-                title: "",
-                name: "edit",
-                render: (rowData) => (
-                  <button className="btn btn-secondary">
-                    <i
-                      onClick={this.edit.bind(this, rowData.statusId)}
-                      className="bi bi-pencil"
-                    ></i>
-                  </button>
-                ),
-              },
-            ]}
-            data={this.state.statuses}
-            options={{
-              showTitle: false,
-              search: false,
-            }}
-          />
-        </div>
+            },
+          ]}
+          columns={[
+            { title: "ID", field: "statusId" },
+            { title: "Date", field: "validityPeriod" },
+            {
+              title: "",
+              name: "delete",
+              render: (rowData) => (
+                <button className='btn btn-secondary'>
+                  <i
+                    onClick={this.delete.bind(this, rowData.statusId)}
+                    className='bi bi-trash'
+                  ></i>
+                </button>
+              ),
+            },
+            {
+              title: "",
+              name: "edit",
+              render: (rowData) => (
+                <button className='btn btn-secondary'>
+                  <i
+                    onClick={this.edit.bind(this, rowData.statusId)}
+                    className='bi bi-pencil'
+                  ></i>
+                </button>
+              ),
+            },
+          ]}
+          data={this.state.statuses}
+        />
       </div>
     );
   }

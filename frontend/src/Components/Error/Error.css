@@ -34,8 +34,8 @@ ul {
   transition: 0.2s ease;
   font-weight: bold;
   margin: 5px 0px;
-  border: 4px solid var(--green);
-  color: var(--blue);
+  border: 4px solid #ff754f;
+  color: blue;
 }
 .btn.green:before {
   content: "";
@@ -44,13 +44,13 @@ ul {
   top: 0;
   width: 0%;
   height: 100%;
-  background: var(--green);
+  background: #ff754f;
   z-index: -1;
   transition: 0.2s ease;
 }
 .btn.green:hover {
-  color: var(--white);
-  background: var(--green);
+  color: white;
+  background: #ff754f;
   transition: 0.2s ease;
 }
 .btn.green:hover:before {

@@ -68,12 +68,12 @@ export default class ITApplication extends Component {
     toast(
       (t) => (
         <span>
-          <p className="text-center">
+          <p className='text-center'>
             Are you sure you want to remove this IT Application?
           </p>
-          <div className="text-center">
+          <div className='text-center'>
             <button
-              className="btn btn-primary btn-sm m-3"
+              className='btn btn-primary btn-sm m-3'
               stlye={{ width: 50, height: 30 }}
               onClick={() => {
                 toast.dismiss(t.id);
@@ -83,7 +83,7 @@ export default class ITApplication extends Component {
               Yes!
             </button>
             <button
-              className="btn btn-secondary btn-sm m-3"
+              className='btn btn-secondary btn-sm m-3'
               stlye={{ width: 50, height: 30 }}
               onClick={() => toast.dismiss(t.id)}
             >
@@ -100,70 +100,65 @@ export default class ITApplication extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+        <nav aria-label='breadcrumb'>
+          <ol className='breadcrumb'>
+            <li className='breadcrumb-item'>
               <Link to={`/`}>Home</Link>
             </li>
-            <li className="breadcrumb-item">
+            <li className='breadcrumb-item'>
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className="breadcrumb-item">IT Applications</li>
+            <li className='breadcrumb-item'>IT Applications</li>
           </ol>
         </nav>
-        <div className="jumbotron">
-          <div>
-            <h1 className="display-4" style={{ display: "inline-block" }}>
-              IT Applications
-            </h1>
-            <Link
-              to={`/environment/${this.state.environmentName}/itApplication/add`}
-            >
-              <button className="btn btn-primary float-right">
-                Add IT Application
-              </button>
-            </Link>
-          </div>
-          <br />
-          <br />
-          <MaterialTable
-            columns={[
-              { title: "ID", field: "itApplicationId" },
-              { title: "Name", field: "name" },
-              {
-                title: "",
-                name: "delete",
-                render: (rowData) => (
-                  <button className="btn btn-secondary">
+        <MaterialTable
+          title='IT Applications'
+          actions={[
+            {
+              icon: "add",
+              tooltip: "Add IT Application",
+              isFreeAction: true,
+              onClick: (event) => {
+                this.props.history.push(
+                  `/environment/${this.state.environmentName}/itapplication/add`
+                );
+              },
+            },
+          ]}
+          columns={[
+            { title: "ID", field: "itApplicationId" },
+            { title: "Name", field: "name" },
+            {
+              title: "Actions",
+              name: "actions",
+              render: (rowData) => (
+                <div>
+                  <button className='btn'>
                     <i
                       onClick={this.delete.bind(this, rowData.itApplicationId)}
-                      className="bi bi-trash"
+                      className='bi bi-trash'
                     ></i>
                   </button>
-                ),
-              },
-              {
-                title: "",
-                name: "edit",
-                render: (rowData) => (
-                  <button className="btn btn-secondary">
+                  <button className='btn'>
                     <i
                       onClick={this.edit.bind(this, rowData.itApplicationId)}
-                      className="bi bi-pencil"
+                      className='bi bi-pencil'
                     ></i>
                   </button>
-                ),
-              },
-            ]}
-            data={this.state.itApplications}
-            options={{
-              showTitle: false,
-              search: false,
-            }}
-          />
-        </div>
+                  <button className='btn'>
+                    <i
+                      onClick={() => this.handleItemModal()}
+                      className='bi bi-app-indicator'
+                    ></i>
+                  </button>
+                </div>
+              ),
+            },
+          ]}
+          data={this.state.itApplications}
+        />
       </div>
     );
   }

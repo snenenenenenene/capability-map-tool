@@ -70,76 +70,68 @@ export default class BusinessProcess extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+        <nav aria-label='breadcrumb'>
+          <ol className='breadcrumb'>
+            <li className='breadcrumb-item'>
               <Link to={`/`}>Home</Link>
             </li>
-            <li className="breadcrumb-item">
+            <li className='breadcrumb-item'>
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className="breadcrumb-item">Business Processes</li>
+            <li className='breadcrumb-item'>Business Processes</li>
           </ol>
         </nav>
-        <div className="jumbotron">
-          <div>
-            <h1 className="display-4" style={{ display: "inline-block" }}>
-              Business Processes
-            </h1>
-            <Link
-              to={`/environment/${this.state.environmentName}/businessProcess/add`}
-            >
-              <button className="btn btn-primary float-right">
-                Add Business Process
-              </button>
-            </Link>
-          </div>
-          <br />
-          <br />
-          <MaterialTable
-            columns={[
-              { title: "ID", field: "businessProcessId" },
-              { title: "Name", field: "businessProcessName" },
-              {
-                title: "",
-                name: "delete",
-                render: (rowData) => (
-                  <button className="btn btn-secondary">
+        <MaterialTable
+          title='Business Processes'
+          actions={[
+            {
+              icon: "add",
+              tooltip: "Add Business Process",
+              isFreeAction: true,
+              onClick: (event) => {
+                this.props.history.push(
+                  `/environment/${this.state.environmentName}/businessprocess/add`
+                );
+              },
+            },
+          ]}
+          columns={[
+            { title: "ID", field: "businessProcessId" },
+            { title: "Name", field: "businessProcessName" },
+            {
+              title: "Actions",
+              name: "actions",
+              render: (rowData) => (
+                <div>
+                  <button className='btn'>
                     <i
                       onClick={this.delete.bind(
                         this,
-                        rowData.businessProcessesId
+                        rowData.businessProcessId
                       )}
-                      className="bi bi-trash"
+                      className='bi bi-trash'
                     ></i>
                   </button>
-                ),
-              },
-              {
-                title: "",
-                name: "edit",
-                render: (rowData) => (
-                  <button className="btn btn-secondary">
+                  <button className='btn'>
                     <i
-                      onClick={this.edit.bind(
-                        this,
-                        rowData.businessProcessesId
-                      )}
-                      className="bi bi-pencil"
+                      onClick={this.edit.bind(this, rowData.businessProcessId)}
+                      className='bi bi-pencil'
                     ></i>
                   </button>
-                ),
-              },
-            ]}
-            data={this.state.businessProcesses}
-            options={{
-              showTitle: false,
-              search: false,
-            }}
-          />
-        </div>
+                  <button className='btn'>
+                    <i
+                      onClick={() => this.handleItemModal()}
+                      className='bi bi-app-indicator'
+                    ></i>
+                  </button>
+                </div>
+              ),
+            },
+          ]}
+          data={this.state.businessProcesses}
+        />
       </div>
     );
   }

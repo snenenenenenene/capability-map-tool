@@ -116,12 +116,12 @@ export default class StrategyItem extends Component {
     toast(
       (t) => (
         <span>
-          <p className="text-center">
+          <p className='text-center'>
             Are you sure you want to remove this strategyItem?
           </p>
-          <div className="text-center">
+          <div className='text-center'>
             <button
-              className="btn btn-primary btn-sm m-3"
+              className='btn btn-primary btn-sm m-3'
               stlye={{ width: 50, height: 30 }}
               onClick={() => {
                 toast.dismiss(t.id);
@@ -131,7 +131,7 @@ export default class StrategyItem extends Component {
               Yes!
             </button>
             <button
-              className="btn btn-secondary btn-sm m-3"
+              className='btn btn-secondary btn-sm m-3'
               stlye={{ width: 50, height: 30 }}
               onClick={() => toast.dismiss(t.id)}
             >
@@ -161,17 +161,17 @@ export default class StrategyItem extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+        <nav aria-label='breadcrumb'>
+          <ol className='breadcrumb'>
+            <li className='breadcrumb-item'>
               <Link to={`/`}>Home</Link>
             </li>
-            <li className="breadcrumb-item">
+            <li className='breadcrumb-item'>
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className="breadcrumb-item">
+            <li className='breadcrumb-item'>
               <Link
                 to={`/environment/${this.state.environmentName}/strategyItem`}
               >
@@ -180,139 +180,130 @@ export default class StrategyItem extends Component {
             </li>
           </ol>
         </nav>
-        <div className="jumbotron">
-          <div>
-            <h1 className="display-4" style={{ display: "inline-block" }}>
-              Strategy Items
-            </h1>
-            <Link
-              to={`/environment/${this.state.environmentName}/strategyitem/add`}
-            >
-              <button className="btn btn-primary float-right">
-                Add Strategy Item
-              </button>
-            </Link>
-          </div>
-          <br />
-          <br />
-          <MaterialTable
-            columns={[
-              { title: "ID", field: "itemId" },
-              { title: "Name", field: "strategyItemName" },
-              { title: "Strategy", field: "strategy.strategyName" },
-              { title: "Start", field: "strategy.timeFrameStart" },
-              { title: "End", field: "strategy.timeFrameEnd" },
-              {
-                title: "",
-                name: "delete",
-                render: (rowData) => (
-                  <button className="btn btn-danger">
-                    <i
-                      onClick={this.delete.bind(this, rowData.itemId)}
-                      className="bi bi-trash"
-                    ></i>
-                  </button>
-                ),
+        <MaterialTable
+          title='Strategy Items'
+          actions={[
+            {
+              icon: "add",
+              tooltip: "Add Strategy Item",
+              isFreeAction: true,
+              onClick: (event) => {
+                this.props.history.push(
+                  `/environment/${this.state.environmentName}/strategyitem/add`
+                );
               },
-              {
-                title: "",
-                name: "edit",
-                render: (rowData) => (
-                  <button className="btn btn-secondary">
-                    <i
-                      onClick={this.edit.bind(this, rowData.itemId)}
-                      className="bi bi-pencil"
-                    ></i>
-                  </button>
-                ),
-              },
-            ]}
-            data={this.state.strategyItems}
-            detailPanel={(rowData) => {
-              return (
-                <div>
-                  <div className="card-deck" style={{ padding: 10 }}>
-                    {this.state.capabilityItems.map((capabilityItem) => {
-                      return (
-                        <div
-                          className="card"
-                          style={{ margin: 10, padding: 10 }}
-                        >
-                          <div className="card-header text-center text-uppercase">
-                            {capabilityItem.capability.capabilityName}
-                          </div>
-                          <div className="card-body"></div>
+            },
+          ]}
+          columns={[
+            { title: "ID", field: "itemId" },
+            { title: "Name", field: "strategyItemName" },
+            { title: "Strategy", field: "strategy.strategyName" },
+            { title: "Start", field: "strategy.timeFrameStart" },
+            { title: "End", field: "strategy.timeFrameEnd" },
+            {
+              title: "",
+              name: "delete",
+              render: (rowData) => (
+                <button className='btn btn-danger'>
+                  <i
+                    onClick={this.delete.bind(this, rowData.itemId)}
+                    className='bi bi-trash'
+                  ></i>
+                </button>
+              ),
+            },
+            {
+              title: "",
+              name: "edit",
+              render: (rowData) => (
+                <button className='btn btn-secondary'>
+                  <i
+                    onClick={this.edit.bind(this, rowData.itemId)}
+                    className='bi bi-pencil'
+                  ></i>
+                </button>
+              ),
+            },
+          ]}
+          data={this.state.strategyItems}
+          detailPanel={(rowData) => {
+            return (
+              <div>
+                <div className='card-deck' style={{ padding: 10 }}>
+                  {this.state.capabilityItems.map((capabilityItem) => {
+                    return (
+                      <div className='card' style={{ margin: 10, padding: 10 }}>
+                        <div className='card-header text-center text-uppercase'>
+                          {capabilityItem.capability.capabilityName}
                         </div>
-                      );
-                    })}
-                  </div>
-                  <button
-                    className="btn btn-secondary btn-block"
-                    type="button"
-                    onClick={() => this.handleModal()}
-                  >
-                    Add Capability
-                  </button>
-                  <Modal show={this.state.showModal}>
-                    <Modal.Header>Add Capability</Modal.Header>
-                    <Modal.Body>
-                      <form onSubmit={this.handleSubmit(rowData.itemId)}>
-                        <label htmlFor="capabilityId">Capability</label>
-                        <Select
-                          options={this.state.capabilities}
-                          noOptionsMessage={() => "No Capabilities"}
-                          onChange={(capability) => {
-                            if (capability) {
-                              this.setState({
-                                capabilityId: capability.capabilityId,
-                              });
-                            } else {
-                              this.setState({ capabilityId: 0 });
-                            }
-                          }}
-                          placeholder="Optional"
-                        />
-                        <label htmlFor="strategicImportance">Importance</label>
-                        <select
-                          className="form-control"
-                          name="strategicImportance"
-                          id="strategicImportance"
-                          placeholder="Add Importance"
-                          value={this.state.strategicImportance}
-                          onChange={this.handleInputChange}
-                        >
-                          <option value="LOWEST">Lowest</option>
-                          <option value="MEDIUM">Medium</option>
-                          <option value="HIGH">High</option>
-                          <option value="HIGHEST">Highest</option>
-                        </select>
-                        <button className="btn btn-primary" type="sumbit">
-                          SUBMIT
-                        </button>
-                      </form>
-                    </Modal.Body>
-                    <Modal.Footer>
-                      <button
-                        type="button"
-                        className="btn btn-secondary"
-                        onClick={() => this.handleModal()}
-                      >
-                        Close Modal
-                      </button>
-                    </Modal.Footer>
-                  </Modal>
+                        <div className='card-body'></div>
+                      </div>
+                    );
+                  })}
                 </div>
-              );
-            }}
-            onRowClick={(event, rowData, togglePanel) => {
-              this.capabilityTable(rowData.itemId);
-              togglePanel();
-            }}
-            options={{
-              showTitle: false,
-            }}
-          />
-        </div>
+                <button
+                  className='btn btn-secondary btn-block'
+                  type='button'
+                  onClick={() => this.handleModal()}
+                >
+                  Add Capability
+                </button>
+                <Modal show={this.state.showModal}>
+                  <Modal.Header>Add Capability</Modal.Header>
+                  <Modal.Body>
+                    <form onSubmit={this.handleSubmit(rowData.itemId)}>
+                      <label htmlFor='capabilityId'>Capability</label>
+                      <Select
+                        options={this.state.capabilities}
+                        noOptionsMessage={() => "No Capabilities"}
+                        onChange={(capability) => {
+                          if (capability) {
+                            this.setState({
+                              capabilityId: capability.capabilityId,
+                            });
+                          } else {
+                            this.setState({ capabilityId: 0 });
+                          }
+                        }}
+                        placeholder='Optional'
+                      />
+                      <label htmlFor='strategicImportance'>Importance</label>
+                      <select
+                        className='form-control'
+                        name='strategicImportance'
+                        id='strategicImportance'
+                        placeholder='Add Importance'
+                        value={this.state.strategicImportance}
+                        onChange={this.handleInputChange}
+                      >
+                        <option value='LOWEST'>Lowest</option>
+                        <option value='MEDIUM'>Medium</option>
+                        <option value='HIGH'>High</option>
+                        <option value='HIGHEST'>Highest</option>
+                      </select>
+                      <button className='btn btn-primary' type='sumbit'>
+                        SUBMIT
+                      </button>
+                    </form>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <button
+                      type='button'
+                      className='btn btn-secondary'
+                      onClick={() => this.handleModal()}
+                    >
+                      Close Modal
+                    </button>
+                  </Modal.Footer>
+                </Modal>
+              </div>
+            );
+          }}
+          onRowClick={(event, rowData, togglePanel) => {
+            this.capabilityTable(rowData.itemId);
+            togglePanel();
+          }}
+        />
       </div>
     );
   }

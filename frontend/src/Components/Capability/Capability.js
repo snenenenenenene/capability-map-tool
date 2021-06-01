@@ -5,7 +5,7 @@ import "./GeneralTable.css";
 import axios from "axios";
 import { Modal } from "react-bootstrap";
 import Select from "react-select";
-
+import { Route, Redirect } from "react-router-dom";
 import toast from "react-hot-toast";
 
 export default class Capability extends Component {
@@ -184,142 +184,131 @@ export default class Capability extends Component {
             <li className='breadcrumb-item'>Capability</li>
           </ol>
         </nav>
-        <div className='jumbotron'>
-          <div>
-            <h1 className='display-4' style={{ display: "inline-block" }}>
-              Capabilities
-            </h1>
-            <Link
-              to={`/environment/${this.state.environmentName}/capability/add`}
-            >
-              <button className='btn btn-primary float-right'>
-                Add Capability
-              </button>
-            </Link>
-          </div>
-          <br />
-          <br />
-          <MaterialTable
-            columns={[
-              { title: "ID", field: "capabilityId" },
-              { title: "Name", field: "capabilityName" },
-              { title: "Parent ID", field: "parentCapabilityId" },
-              { title: "Level", field: "level" },
-              { title: "Expiration", field: "status.validityPeriod" },
-              {
-                title: "Actions",
-                name: "actions",
-                render: (rowData) => (
-                  <div>
-                    <button className='btn'>
-                      <i
-                        onClick={this.delete.bind(this, rowData.capabilityId)}
-                        className='bi bi-trash'
-                      ></i>
-                    </button>
-                    <button className='btn'>
-                      <i
-                        onClick={this.edit.bind(this, rowData.capabilityId)}
-                        className='bi bi-pencil'
-                      ></i>
-                    </button>
-                    <button className='btn'>
-                      <i
-                        onClick={() => this.handleItemModal()}
-                        className='bi bi-app-indicator'
-                      ></i>
-                    </button>
-                  </div>
-                ),
+        <MaterialTable
+          title='Capabilities'
+          actions={[
+            {
+              icon: "add",
+              tooltip: "Add Capability",
+              isFreeAction: true,
+              onClick: (event) => {
+                this.props.history.push(
+                  `/environment/${this.state.environmentName}/capability/add`
+                );
               },
-            ]}
-            data={this.state.capabilities}
-            parentChildData={(row, rows) =>
-              rows.find((a) => a.capabilityId === row.parentCapabilityId)
-            }
-            detailPanel={(rowData) => {
-              return (
+            },
+          ]}
+          columns={[
+            { title: "ID", field: "capabilityId" },
+            { title: "Name", field: "capabilityName" },
+            { title: "Parent ID", field: "parentCapabilityId" },
+            { title: "Level", field: "level" },
+            { title: "Expiration", field: "status.validityPeriod" },
+            {
+              title: "Actions",
+              name: "actions",
+              render: (rowData) => (
                 <div>
-                  <div className='card-deck' style={{ padding: 10 }}>
-                    {this.state.capabilityItems.map((capabilityItem) => {
-                      return (
-                        <div
-                          className='card'
-                          style={{ margin: 10, padding: 10 }}
-                        >
-                          <div className='card-header text-center text-uppercase'>
-                            {capabilityItem.strategyItem.strategyItemName}
-                          </div>
-                          <div className='card-body'>
-                            {capabilityItem.strategyItem.description}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <Modal show={this.state.showItemModal}>
-                    <Modal.Header>
-                      {rowData.capabilityId}. Add Items
-                    </Modal.Header>
-                    <Modal.Body>
-                      <form onSubmit={this.handleSubmit(rowData.capabilityId)}>
-                        <label htmlFor='itemId'>Strategy Items</label>
-                        <Select
-                          options={this.state.strategyItems}
-                          noOptionsMessage={() => "No Strategy Items"}
-                          onChange={(item) => {
-                            if (item) {
-                              this.setState({
-                                itemId: item.itemId,
-                              });
-                            } else {
-                              this.setState({ itemId: 0 });
-                            }
-                          }}
-                          placeholder='Optional'
-                        />
-                        <label htmlFor='strategicImportance'>Importance</label>
-                        <select
-                          className='form-control'
-                          name='strategicImportance'
-                          id='strategicImportance'
-                          placeholder='Add Importance'
-                          value={this.state.strategicImportance}
-                          onChange={this.handleInputChange}
-                        >
-                          <option value='LOWEST'>Lowest</option>
-                          <option value='MEDIUM'>Medium</option>
-                          <option value='HIGH'>High</option>
-                          <option value='HIGHEST'>Highest</option>
-                        </select>
-                        <button className='btn btn-primary' type='sumbit'>
-                          SUBMIT
-                        </button>
-                      </form>
-                    </Modal.Body>
-                    <Modal.Footer>
-                      <button
-                        type='button'
-                        className='btn btn-secondary'
-                        onClick={() => this.handleItemModal()}
-                      >
-                        Close Modal
-                      </button>
-                    </Modal.Footer>
-                  </Modal>
+                  <button className='btn'>
+                    <i
+                      onClick={this.delete.bind(this, rowData.capabilityId)}
+                      className='bi bi-trash'
+                    ></i>
+                  </button>
+                  <button className='btn'>
+                    <i
+                      onClick={this.edit.bind(this, rowData.capabilityId)}
+                      className='bi bi-pencil'
+                    ></i>
+                  </button>
+                  <button className='btn'>
+                    <i
+                      onClick={() => this.handleItemModal()}
+                      className='bi bi-app-indicator'
+                    ></i>
+                  </button>
                 </div>
-              );
-            }}
-            onRowClick={(event, rowData, togglePanel) => {
-              this.strategyItemTable(rowData.capabilityId);
+              ),
+            },
+          ]}
+          data={this.state.capabilities}
+          parentChildData={(row, rows) =>
+            rows.find((a) => a.capabilityId === row.parentCapabilityId)
+          }
+          detailPanel={(rowData) => {
+            return (
+              <div>
+                <div className='card-deck' style={{ padding: 10 }}>
+                  {this.state.capabilityItems.map((capabilityItem) => {
+                    return (
+                      <div className='card' style={{ margin: 10, padding: 10 }}>
+                        <div className='card-header text-center text-uppercase'>
+                          {capabilityItem.strategyItem.strategyItemName}
+                        </div>
+                        <div className='card-body'>
+                          {capabilityItem.strategyItem.description}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <Modal show={this.state.showItemModal}>
+                  <Modal.Header>{rowData.capabilityId}. Add Items</Modal.Header>
+                  <Modal.Body>
+                    <form onSubmit={this.handleSubmit(rowData.capabilityId)}>
+                      <label htmlFor='itemId'>Strategy Items</label>
+                      <Select
+                        options={this.state.strategyItems}
+                        noOptionsMessage={() => "No Strategy Items"}
+                        onChange={(item) => {
+                          if (item) {
+                            this.setState({
+                              itemId: item.itemId,
+                            });
+                          } else {
+                            this.setState({ itemId: 0 });
+                          }
+                        }}
+                        placeholder='Optional'
+                      />
+                      <label htmlFor='strategicImportance'>Importance</label>
+                      <select
+                        className='form-control'
+                        name='strategicImportance'
+                        id='strategicImportance'
+                        placeholder='Add Importance'
+                        value={this.state.strategicImportance}
+                        onChange={this.handleInputChange}
+                      >
+                        <option value='LOWEST'>Lowest</option>
+                        <option value='MEDIUM'>Medium</option>
+                        <option value='HIGH'>High</option>
+                        <option value='HIGHEST'>Highest</option>
+                      </select>
+                      <button className='btn btn-primary' type='sumbit'>
+                        SUBMIT
+                      </button>
+                    </form>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <button
+                      type='button'
+                      className='btn btn-secondary'
+                      onClick={() => this.handleItemModal()}
+                    >
+                      Close Modal
+                    </button>
+                  </Modal.Footer>
+                </Modal>
+              </div>
+            );
+          }}
+          onRowClick={(event, rowData, togglePanel) => {
+            this.strategyItemTable(rowData.capabilityId);
 
-              togglePanel();
-            }}
-            options={{
-              showTitle: false,
-            }}
-          />
-        </div>
+            togglePanel();
+          }}
+        />
       </div>
     );
   }

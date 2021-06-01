@@ -68,70 +68,65 @@ export default class Resource extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+        <nav aria-label='breadcrumb'>
+          <ol className='breadcrumb'>
+            <li className='breadcrumb-item'>
               <Link to={`/`}>Home</Link>
             </li>
-            <li className="breadcrumb-item">
+            <li className='breadcrumb-item'>
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className="breadcrumb-item">Resources</li>
+            <li className='breadcrumb-item'>Resources</li>
           </ol>
         </nav>
-        <div className="jumbotron">
-          <div>
-            <h1 className="display-4" style={{ display: "inline-block" }}>
-              Resources
-            </h1>
-            <Link
-              to={`/environment/${this.state.environmentName}/resource/add`}
-            >
-              <button className="btn btn-primary float-right">
-                Add Resource
-              </button>
-            </Link>
-          </div>
-          <br />
-          <br />
-          <MaterialTable
-            columns={[
-              { title: "ID", field: "resourceId" },
-              { title: "Name", field: "resourceName" },
-              {
-                title: "",
-                name: "delete",
-                render: (rowData) => (
-                  <button className="btn btn-secondary">
+        <MaterialTable
+          title='Resources'
+          actions={[
+            {
+              icon: "add",
+              tooltip: "Add Resource",
+              isFreeAction: true,
+              onClick: (event) => {
+                this.props.history.push(
+                  `/environment/${this.state.environmentName}/resource/add`
+                );
+              },
+            },
+          ]}
+          columns={[
+            { title: "ID", field: "resourceId" },
+            { title: "Name", field: "resourceName" },
+            {
+              title: "Actions",
+              name: "actions",
+              render: (rowData) => (
+                <div>
+                  <button className='btn'>
                     <i
                       onClick={this.delete.bind(this, rowData.resourceId)}
-                      className="bi bi-trash"
+                      className='bi bi-trash'
                     ></i>
                   </button>
-                ),
-              },
-              {
-                title: "",
-                name: "edit",
-                render: (rowData) => (
-                  <button className="btn btn-secondary">
+                  <button className='btn'>
                     <i
                       onClick={this.edit.bind(this, rowData.resourceId)}
-                      className="bi bi-pencil"
+                      className='bi bi-pencil'
                     ></i>
                   </button>
-                ),
-              },
-            ]}
-            data={this.state.resources}
-            options={{
-              showTitle: false,
-              search: false,
-            }}
-          />
-        </div>
+                  <button className='btn'>
+                    <i
+                      onClick={() => this.handleItemModal()}
+                      className='bi bi-app-indicator'
+                    ></i>
+                  </button>
+                </div>
+              ),
+            },
+          ]}
+          data={this.state.resources}
+        />
       </div>
     );
   }

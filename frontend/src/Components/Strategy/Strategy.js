@@ -67,12 +67,12 @@ export default class Strategy extends Component {
     toast(
       (t) => (
         <span>
-          <p className="text-center">
+          <p className='text-center'>
             Are you sure you want to remove this strategy?
           </p>
-          <div className="text-center">
+          <div className='text-center'>
             <button
-              className="btn btn-primary btn-sm m-3"
+              className='btn btn-primary btn-sm m-3'
               stlye={{ width: 50, height: 30 }}
               onClick={() => {
                 toast.dismiss(t.id);
@@ -82,7 +82,7 @@ export default class Strategy extends Component {
               Yes!
             </button>
             <button
-              className="btn btn-secondary btn-sm m-3"
+              className='btn btn-secondary btn-sm m-3'
               stlye={{ width: 50, height: 30 }}
               onClick={() => toast.dismiss(t.id)}
             >
@@ -99,77 +99,70 @@ export default class Strategy extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+        <nav aria-label='breadcrumb'>
+          <ol className='breadcrumb'>
+            <li className='breadcrumb-item'>
               <Link to={`/`}>Home</Link>
             </li>
-            <li className="breadcrumb-item">
+            <li className='breadcrumb-item'>
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className="breadcrumb-item">
+            <li className='breadcrumb-item'>
               <Link to={`/environment/${this.state.environmentName}/strategy`}>
                 Strategy
               </Link>
             </li>
           </ol>
         </nav>
-        <div className="jumbotron">
-          <div>
-            <h1 className="display-4" style={{ display: "inline-block" }}>
-              Strategies
-            </h1>
-            <Link
-              to={`/environment/${this.state.environmentName}/strategy/add`}
-            >
-              <button className="btn btn-primary float-right">
-                Add Strategy
-              </button>
-            </Link>
-          </div>
-          <br />
-          <br />
-          <MaterialTable
-            columns={[
-              { title: "ID", field: "strategyId" },
-              { title: "Name", field: "strategyName" },
-              { title: "Start", field: "timeFrameStart" },
-              { title: "End", field: "timeFrameEnd" },
-              { title: "Environment", field: "status.environmentId" },
-              {
-                title: "",
-                name: "delete",
-                render: (rowData) => (
-                  <button className="btn btn-secondary">
-                    <i
-                      onClick={this.delete.bind(this, rowData.strategyId)}
-                      className="bi bi-trash"
-                    ></i>
-                  </button>
-                ),
+        <MaterialTable
+          columns={[
+            { title: "ID", field: "strategyId" },
+            { title: "Name", field: "strategyName" },
+            { title: "Start", field: "timeFrameStart" },
+            { title: "End", field: "timeFrameEnd" },
+            { title: "Environment", field: "status.environmentId" },
+            {
+              title: "",
+              name: "delete",
+              render: (rowData) => (
+                <button className='btn btn-secondary'>
+                  <i
+                    onClick={this.delete.bind(this, rowData.strategyId)}
+                    className='bi bi-trash'
+                  ></i>
+                </button>
+              ),
+            },
+            {
+              title: "",
+              name: "edit",
+              render: (rowData) => (
+                <button className='btn btn-secondary'>
+                  <i
+                    onClick={this.edit.bind(this, rowData.strategyId)}
+                    className='bi bi-pencil'
+                  ></i>
+                </button>
+              ),
+            },
+          ]}
+          data={this.state.strategies}
+          title='Strategies'
+          actions={[
+            {
+              icon: "add",
+              tooltip: "Add Strategy",
+              isFreeAction: true,
+              onClick: (event) => {
+                this.props.history.push(
+                  `/environment/${this.state.environmentName}/strategy/add`
+                );
               },
-              {
-                title: "",
-                name: "edit",
-                render: (rowData) => (
-                  <button className="btn btn-secondary">
-                    <i
-                      onClick={this.edit.bind(this, rowData.strategyId)}
-                      className="bi bi-pencil"
-                    ></i>
-                  </button>
-                ),
-              },
-            ]}
-            data={this.state.strategies}
-            options={{
-              showTitle: false,
-              search: false,
-            }}
-          />
-        </div>
+            },
+          ]}
+        />
       </div>
     );
   }

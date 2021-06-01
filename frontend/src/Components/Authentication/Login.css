@@ -17,9 +17,36 @@
   }
 }
 
-.linear-jumbotron {
-  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.89), rgb(0, 0, 0));
-  border-style: solid;
-  border-color: rgb(255, 115, 0);
-  border-width: 5px;
+.login-input {
+  font-family: inherit;
+  width: 100%;
+  border: 0;
+  border-bottom: 2px solid gray;
+  outline: 0;
+  font-size: 1.3rem;
+  color: rgb(0, 0, 0);
+  padding: 7px 0;
+  background: transparent;
+  transition: border-color 0.2s;
+}
+
+.login-input::placeholder {
+  text-align: center;
+  display: block;
+}
+
+.login-input:focus .login-input-label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.2s;
+  font-size: 1rem;
+  color: orange;
+}
+
+.login-input:focus {
+  padding-bottom: 6px;
+  border-width: 3px;
+  border-image: linear-gradient(to right, orange, red);
+  border-image-slice: 1;
 }
