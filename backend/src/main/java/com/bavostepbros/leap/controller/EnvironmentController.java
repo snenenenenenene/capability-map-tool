@@ -26,6 +26,7 @@ import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.Information;
 import com.bavostepbros.leap.domain.model.Program;
 import com.bavostepbros.leap.domain.model.Project;
+import com.bavostepbros.leap.domain.model.Resource;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.Strategy;
 import com.bavostepbros.leap.domain.model.StrategyItem;
@@ -36,6 +37,7 @@ import com.bavostepbros.leap.domain.model.dto.EnvironmentDto;
 import com.bavostepbros.leap.domain.model.dto.InformationDto;
 import com.bavostepbros.leap.domain.model.dto.ProgramDto;
 import com.bavostepbros.leap.domain.model.dto.ProjectDto;
+import com.bavostepbros.leap.domain.model.dto.ResourceDto;
 import com.bavostepbros.leap.domain.model.dto.StatusDto;
 import com.bavostepbros.leap.domain.model.dto.StrategyDto;
 import com.bavostepbros.leap.domain.model.dto.StrategyItemDto;
@@ -182,6 +184,11 @@ public class EnvironmentController {
 		return new CapabilityInformationDto(convertInformation(capabilityInformation.getInformation()),
 				capabilityInformation.getCriticality());
 	}
+	
+	private ResourceDto convertResource(Resource resource) {
+		return new ResourceDto(resource.getResourceId(), resource.getResourceName(), resource.getResourceDescription(), 
+				resource.getFullTimeEquivalentYearlyValue());
+	}
 
 	private CapabilityMapItemDto constructGraph(Capability capability, List<Capability> pool) {
 		List<CapabilityItemDto> capabilityItemsDto = new ArrayList<CapabilityItemDto>();
@@ -211,6 +218,13 @@ public class EnvironmentController {
 					.map(capabilityInformation -> convertCapabilityInformation(capabilityInformation))
 					.collect(Collectors.toList());
 		}
+		
+		List<ResourceDto> resourceDto = new ArrayList<ResourceDto>();
+		if (capability.getResources() != null) {
+			resourceDto = capability.getResources().stream()
+					.map(resource -> convertResource(resource))
+					.collect(Collectors.toList());
+		}
 
 		return new CapabilityMapItemDto(capability.getCapabilityId(), capability.getCapabilityName(),
 				capability.getLevel(), capability.isPaceOfChange(), capability.getTargetOperatingModel(),
@@ -218,6 +232,6 @@ public class EnvironmentController {
 				convertBasicStatus(capability.getStatus()),
 				pool.stream().filter(i -> i.getParentCapabilityId().equals(capability.getCapabilityId()))
 						.map(i -> constructGraph(i, pool)).collect(Collectors.toList()),
-				capabilityItemsDto, projectsDto, businessProcessDto, capabilityInformationDto);
+				capabilityItemsDto, projectsDto, businessProcessDto, capabilityInformationDto, resourceDto);
 	}
 }
