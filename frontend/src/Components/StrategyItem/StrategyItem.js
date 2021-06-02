@@ -33,7 +33,7 @@ export default class StrategyItem extends Component {
         this.setState({ environmentId: response.data.environmentId })
       )
       .catch((error) => {
-        this.props.history.push("/notfounderror");
+        this.props.history.push("/404");
       });
 
     await axios
@@ -68,7 +68,7 @@ export default class StrategyItem extends Component {
   fetchDeleteStrategyItems = async (itemId) => {
     await axios
       .delete(`${process.env.REACT_APP_API_URL}/strategyitem/${itemId}`)
-      .then((response) => toast.success("Succesfully Deleted Strategy Item"))
+      .then((response) => toast.success("Successfully Deleted Strategy Item"))
       .catch((error) => toast.error("Could not Delete Strategy Item"));
     //REFRESH Strategy Items
     await axios
@@ -157,6 +157,10 @@ export default class StrategyItem extends Component {
       });
   }
 
+  handleModal() {
+    this.setState({ showModal: !this.state.showModal });
+  }
+
   render() {
     return (
       <div>
@@ -201,27 +205,29 @@ export default class StrategyItem extends Component {
             { title: "Start", field: "strategy.timeFrameStart" },
             { title: "End", field: "strategy.timeFrameEnd" },
             {
-              title: "",
-              name: "delete",
+              title: "Actions",
+              name: "actions",
               render: (rowData) => (
-                <button className='btn btn-danger'>
-                  <i
-                    onClick={this.delete.bind(this, rowData.itemId)}
-                    className='bi bi-trash'
-                  ></i>
-                </button>
-              ),
-            },
-            {
-              title: "",
-              name: "edit",
-              render: (rowData) => (
-                <button className='btn btn-secondary'>
-                  <i
-                    onClick={this.edit.bind(this, rowData.itemId)}
-                    className='bi bi-pencil'
-                  ></i>
-                </button>
+                <div>
+                  <button className='btn'>
+                    <i
+                      onClick={this.delete.bind(this, rowData.itemId)}
+                      className='bi bi-trash'
+                    ></i>
+                  </button>
+                  <button className='btn'>
+                    <i
+                      onClick={this.edit.bind(this, rowData.itemId)}
+                      className='bi bi-pencil'
+                    ></i>
+                  </button>
+                  <button className='btn'>
+                    <i
+                      onClick={() => this.handleModal()}
+                      className='bi bi-chat-square'
+                    ></i>
+                  </button>
+                </div>
               ),
             },
           ]}
@@ -229,25 +235,24 @@ export default class StrategyItem extends Component {
           detailPanel={(rowData) => {
             return (
               <div>
-                <div className='card-deck' style={{ padding: 10 }}>
+                <div className='card-deck' style={{ padding: 10, margin: 5 }}>
                   {this.state.capabilityItems.map((capabilityItem) => {
                     return (
-                      <div className='card' style={{ margin: 10, padding: 10 }}>
-                        <div className='card-header text-center text-uppercase'>
+                      <div
+                        className='card'
+                        style={{
+                          margin: 3,
+                          maxWidth: 100,
+                          backgroundColor: "#ff754f65",
+                        }}
+                      >
+                        <div className='card-body text-center text-uppercase'>
                           {capabilityItem.capability.capabilityName}
                         </div>
-                        <div className='card-body'></div>
                       </div>
                     );
                   })}
                 </div>
-                <button
-                  className='btn btn-secondary btn-block'
-                  type='button'
-                  onClick={() => this.handleModal()}
-                >
-                  Add Capability
-                </button>
                 <Modal show={this.state.showModal}>
                   <Modal.Header>Add Capability</Modal.Header>
                   <Modal.Body>

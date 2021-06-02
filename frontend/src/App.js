@@ -1,9 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { Component } from "react";
-import Environment from "./Components/Environment/Environment";
 import NewEnvironment from "./Components/Environment/NewEnvironment";
 import User from "./Components/User/User";
-import RecentEnvironments from "./Components/Environment/RecentEnvironments";
 import AddCapability from "./Components/Capability/AddCapability";
 import "./App.css";
 import Signup from "./Components/Authentication/Login";
@@ -20,7 +18,7 @@ import AddProject from "./Components/Project/AddProject";
 import EditCapability from "./Components/Capability/EditCapability";
 import Capability from "./Components/Capability/Capability";
 import Project from "./Components/Project/Project";
-import NotFoundError from "./Components/Error/NotFound";
+import NotFound from "./Components/Error/NotFound";
 import GeneralError from "./Components/Error/Error";
 import Status from "./Components/Status/Status";
 import NotFoundPage from "./Components/Error/NotFoundPage";
@@ -45,7 +43,6 @@ import ConfigurePassword from "./Components/Authentication/ConfigurePassword";
 import CapabilityMap from "./Components/Environment/CapabilityMap";
 import EditEnvironment from "./Components/Environment/EditEnvironment";
 import Settings from "./Components/User/Settings";
-import background from "./img/cool-background.svg";
 
 class App extends Component {
   constructor(props) {
@@ -151,10 +148,13 @@ class App extends Component {
                         data-bs-toggle='dropdown'
                         aria-expanded='false'
                       >
-                        {this.state.user.username}
+                        <i
+                          className='bi bi-person-circle'
+                          style={{ fontSize: 30 }}
+                        ></i>
                       </li>
                       <ul
-                        className='dropdown-menu dropdown-menu-right dropdown-menu-dark'
+                        className='dropdown-menu dropdown-menu-right dropdown-menu-dark text-center'
                         aria-labelledby='navbarDarkDropdownMenuLink'
                       >
                         <Link to='/settings'>
@@ -164,6 +164,13 @@ class App extends Component {
                         <Link to={""} onClick={this.logout}>
                           <li className='dropdown-item'>Logout</li>
                         </Link>
+                        <hr></hr>
+                        <li
+                          classname='dropdown-item my-auto'
+                          style={{ marginBottom: 5 }}
+                        >
+                          {this.state.user.username}
+                        </li>
                       </ul>
                     </li>
                   </ul>
@@ -197,6 +204,11 @@ class App extends Component {
               >
                 <li className='nav__items '>
                   <i className='bi bi-calendar-date'></i> <p>Status</p>
+                </li>
+              </Link>
+              <Link to={`/environment/${this.state.environmentName}/strategy`}>
+                <li className='nav__items '>
+                  <i className='bi bi-app'></i> <p>Strategy</p>
                 </li>
               </Link>
               <Link
@@ -242,6 +254,8 @@ class App extends Component {
               {/* ROOT */}
               <Route exact path='/home' component={NewEnvironment} />
               <Route exact path='/' component={NewEnvironment} />
+              <Route exact path='/error' component={GeneralError} />
+              <Route exact path='/404' component={NotFoundPage} />
               {/* ENVIRONMENTS */}
               <Route exact path='/add' component={NewEnvironment} />
               <Route
@@ -254,7 +268,6 @@ class App extends Component {
                 path='/environment/:id/edit'
                 component={EditEnvironment}
               />
-              <Route exact path='/recent' component={RecentEnvironments} />
               {/* CAPABILITIES */}
               <Route
                 exact
@@ -415,9 +428,7 @@ class App extends Component {
               />
               {this.adminRoutes()}
               {/* ERRORS */}
-              <Route exact path='/error' component={GeneralError} />
-              <Route exact path='/notfound' component={NotFoundError} />
-              <Route path='/*' component={NotFoundPage} />
+              <Route path='/*' component={NotFound} />
             </Switch>
           </div>
           <nav className='shadow-lg navbar fixed-bottom navbar-dark bg-dark text-center'>

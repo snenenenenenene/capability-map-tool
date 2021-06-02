@@ -110,8 +110,7 @@ export default class AddITApplication extends Component {
         this.setState({ environmentId: response.data.environmentId })
       )
       .catch((error) => {
-        console.log(error);
-        this.props.history.push("/notfounderror");
+        this.props.history.push("/404");
       });
 
     await axios
@@ -138,76 +137,76 @@ export default class AddITApplication extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label="shadow breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+        <nav aria-label='shadow breadcrumb'>
+          <ol className='breadcrumb'>
+            <li className='breadcrumb-item'>
               <Link to={`/`}>Home</Link>
             </li>
-            <li className="breadcrumb-item">
+            <li className='breadcrumb-item'>
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className="breadcrumb-item active" aria-current="page">
+            <li className='breadcrumb-item active' aria-current='page'>
               Add IT Application
             </li>
           </ol>
         </nav>
-        <div className="jumbotron shadow">
+        <div className='jumbotron shadow'>
           <h3>Add IT Application</h3>
           <form onSubmit={this.handleSubmit}>
-            <div className="row">
-              <div className="col-sm">
-                <div className="form-row">
-                  <div className="form-group col-md">
-                    <label htmlFor="itApplicationName">
+            <div className='row'>
+              <div className='col-sm'>
+                <div className='form-row'>
+                  <div className='form-group col-md'>
+                    <label htmlFor='itApplicationName'>
                       Name IT-Application
                     </label>
                     <input
-                      type="text"
-                      id="itApplicationName"
-                      name="itApplicationName"
-                      className="form-control"
-                      placeholder="Name IT-Application"
+                      type='text'
+                      id='itApplicationName'
+                      name='itApplicationName'
+                      className='form-control'
+                      placeholder='Name IT-Application'
                       value={this.state.itApplicationName}
                       onChange={this.handleInputChange}
                     />
                   </div>
                 </div>
-                <div className="form-row">
-                  <div className="form-group col-md">
-                    <label htmlFor="technology">Technology</label>
+                <div className='form-row'>
+                  <div className='form-group col-md'>
+                    <label htmlFor='technology'>Technology</label>
                     <input
-                      type="text"
-                      id="technology"
-                      name="technology"
-                      className="form-control"
-                      placeholder="Technology"
+                      type='text'
+                      id='technology'
+                      name='technology'
+                      className='form-control'
+                      placeholder='Technology'
                       value={this.state.technology}
                       onChange={this.handleInputChange}
                     />
                   </div>
                 </div>
-                <div className="form-row">
-                  <div className="form-group col-md">
-                    <label htmlFor="version">Version</label>
+                <div className='form-row'>
+                  <div className='form-group col-md'>
+                    <label htmlFor='version'>Version</label>
                     <input
-                      type="text"
-                      id="version"
-                      name="version"
-                      className="form-control"
-                      placeholder="Version"
+                      type='text'
+                      id='version'
+                      name='version'
+                      className='form-control'
+                      placeholder='Version'
                       value={this.state.version}
                       onChange={this.handleInputChange}
                     />
                   </div>
                 </div>
-                <div className="form-row">
-                  <div className="form-group col-md">
+                <div className='form-row'>
+                  <div className='form-group col-md'>
                     <button
-                      className="btn btn-secondary btn-block"
+                      className='btn btn-secondary btn-block'
                       style={{ marginTop: 32 }}
-                      type="button"
+                      type='button'
                       onClick={this.handleSubmit}
                     >
                       Submit
@@ -215,52 +214,52 @@ export default class AddITApplication extends Component {
                   </div>
                 </div>
               </div>
-              <div className="col-sm">
-                <div className="form-row">
-                  <div className="form-group col-md">
-                    <label htmlFor="purchaseDate">Acquisition Date</label>
+              <div className='col-sm'>
+                <div className='form-row'>
+                  <div className='form-group col-md'>
+                    <label htmlFor='purchaseDate'>Acquisition Date</label>
                     <input
-                      type="date"
-                      id="purchaseDate"
-                      name="purchaseDate"
-                      className="form-control"
-                      placeholder="Acquisition Date"
+                      type='date'
+                      id='purchaseDate'
+                      name='purchaseDate'
+                      className='form-control'
+                      placeholder='Acquisition Date'
                       value={this.state.purchaseDate}
                       onChange={this.handleInputChange}
                     />
                   </div>
                 </div>
-                <div className="form-row">
-                  <div className="form-group col-md">
-                    <label htmlFor="technology">End Of Life</label>
+                <div className='form-row'>
+                  <div className='form-group col-md'>
+                    <label htmlFor='technology'>End Of Life</label>
                     <input
-                      type="date"
-                      id="endOfLife"
-                      name="endOfLife"
-                      className="form-control"
-                      placeholder="End Of Life"
+                      type='date'
+                      id='endOfLife'
+                      name='endOfLife'
+                      className='form-control'
+                      placeholder='End Of Life'
                       value={this.state.endOfLife}
                       onChange={this.handleInputChange}
                     />
                   </div>
                 </div>
-                <div className="form-row">
-                  <div className="form-group col-md">
-                    <label htmlFor="statusId">Validity Period</label>
-                    <div className="input-group">
+                <div className='form-row'>
+                  <div className='form-group col-md'>
+                    <label htmlFor='statusId'>Validity Period</label>
+                    <div className='input-group'>
                       <select
-                        id="statusId"
-                        name="statusId"
-                        className="form-control"
-                        placeholder="Validity Period"
+                        id='statusId'
+                        name='statusId'
+                        className='form-control'
+                        placeholder='Validity Period'
                         value={this.state.expirationDate}
                         onChange={this.handleInputChange}
                       >
                         <option
-                          key="-1"
-                          defaultValue="selected"
-                          hidden="hidden"
-                          value=""
+                          key='-1'
+                          defaultValue='selected'
+                          hidden='hidden'
+                          value=''
                         >
                           Select status
                         </option>
@@ -268,8 +267,8 @@ export default class AddITApplication extends Component {
                       </select>
                       <button
                         style={{ marginLeft: 3 }}
-                        type="button"
-                        className="btn btn-sm btn-secondary"
+                        type='button'
+                        className='btn btn-sm btn-secondary'
                         onClick={() => this.handleStatusModal()}
                       >
                         Add Status
@@ -285,8 +284,8 @@ export default class AddITApplication extends Component {
                       </Modal.Body>
                       <Modal.Footer>
                         <button
-                          type="button"
-                          className="btn btn-secondary"
+                          type='button'
+                          className='btn btn-secondary'
                           onClick={() => this.handleStatusModal()}
                         >
                           Close Modal
@@ -295,74 +294,87 @@ export default class AddITApplication extends Component {
                     </Modal>
                   </div>
                 </div>
-                <div className="form-row">
-                  <div className="form-group col-md">
-                    <label htmlFor="timeValue">Time Value</label>
-                    <input
-                      type="time"
-                      id="timeValue"
-                      name="timeValue"
-                      className="form-control"
-                      placeholder="Time Value"
+                <div className='form-row'>
+                  <div className='form-group col-md'>
+                    <label htmlFor='timeValue'>Time Value</label>
+                    <select
+                      className='form-control'
+                      name='timeValue'
+                      placeholder='Add Time Value'
+                      id='timeValue'
                       value={this.state.timeValue}
                       onChange={this.handleInputChange}
-                    />
+                      required
+                    >
+                      <option
+                        key='-1'
+                        defaultValue='selected'
+                        hidden='hidden'
+                        value=''
+                      >
+                        Select Time Value
+                      </option>
+                      <option value='TOLERATE'>TOLERATE</option>
+                      <option value='INVEST'>INVEST</option>
+                      <option value='ELIMINATE'>ELIMINATE</option>
+                      <option value='MIGRATE'>MIGRATE</option>
+                    </select>
                   </div>
                 </div>
               </div>
-              <div className="col-sm">
-                <div className="form-row">
-                  <div className="form-group col-md">
-                    <label htmlFor="costCurrency">Cost Currency</label>
+              <div className='col-sm'>
+                <div className='form-row'>
+                  <div className='form-group col-md'>
+                    <label htmlFor='costCurrency'>Cost Currency</label>
                     <input
-                      type="text"
-                      id="costCurrency"
-                      name="costCurrency"
-                      className="form-control"
-                      placeholder="Cost Currency"
+                      type='text'
+                      id='costCurrency'
+                      name='costCurrency'
+                      className='form-control'
+                      placeholder='Cost Currency'
                       value={this.state.costCurrency}
                       onChange={this.handleInputChange}
                     />
                   </div>
                 </div>
-                <div className="form-row">
-                  <div className="form-group col-md">
-                    <label htmlFor="currentYearlyCost">
+                <div className='form-row'>
+                  <div className='form-group col-md'>
+                    <label htmlFor='currentYearlyCost'>
                       Current Total Cost Per Year
                     </label>
                     <input
-                      type="text"
-                      id="currentYearlyCost"
-                      name="currentYearlyCost"
-                      className="form-control"
-                      placeholder="Current Total Cost Per Year"
+                      type='text'
+                      id='currentYearlyCost'
+                      name='currentYearlyCost'
+                      className='form-control'
+                      placeholder='Current Total Cost Per Year'
                       value={this.state.currentYearlyCost}
                       onChange={this.handleInputChange}
                     />
                   </div>
                 </div>
-                <div className="form-row">
-                  <div className="form-group col-md">
-                    <label htmlFor="acceptedYearlyCost">
+                <div className='form-row'>
+                  <div className='form-group col-md'>
+                    <label htmlFor='acceptedYearlyCost'>
                       Tolerated Total Cost Per Year
                     </label>
                     <input
-                      type="text"
-                      id="acceptedYearlyCost"
-                      name="acceptedYearlyCost"
-                      className="form-control"
-                      placeholder="Tolerated Total Cost Per Year"
+                      type='text'
+                      id='acceptedYearlyCost'
+                      name='acceptedYearlyCost'
+                      className='form-control'
+                      placeholder='Tolerated Total Cost Per Year'
                       value={this.state.acceptedYearlyCost}
                       onChange={this.handleInputChange}
                     />
                   </div>
                 </div>
-                <div className="form-row">
-                  <div className="form-group col-md">
+                <div className='form-row'>
+                  <div className='form-group col-md'>
                     <button
-                      type="button"
+                      type='button'
                       style={{ marginTop: 32 }}
-                      className="btn btn-primary btn-block"
+                      className='btn btn-primary btn-block'
                       onClick={() => this.handleModal()}
                     >
                       Ratings
@@ -390,8 +402,8 @@ export default class AddITApplication extends Component {
                 </Modal.Body>
                 <Modal.Footer>
                   <button
-                    type="button"
-                    className="btn btn-secondary"
+                    type='button'
+                    className='btn btn-secondary'
                     onClick={() => this.handleModal()}
                   >
                     Close Modal

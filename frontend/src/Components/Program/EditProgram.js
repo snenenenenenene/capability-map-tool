@@ -70,21 +70,21 @@ export default class EditProgram extends Component {
         this.setState({ environmentId: response.data.environmentId })
       )
       .catch((error) => {
-        this.props.history.push("/error");
+        this.props.history.push("/404");
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/all`)
+      .get(`${process.env.REACT_APP_API_URL}/status/`)
       .then((response) => this.setState({ statuses: response.data }))
       .catch((error) => {
-        this.props.history.push("/error");
+        this.props.history.push("/404");
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/capability/all`)
+      .get(`${process.env.REACT_APP_API_URL}/capability/`)
       .then((response) => this.setState({ capabilities: response.data }))
       .catch((error) => {
-        this.props.history.push("/error");
+        this.props.history.push("/404");
       });
 
     await axios

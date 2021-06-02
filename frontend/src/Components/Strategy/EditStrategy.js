@@ -2,14 +2,20 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { Modal } from "react-bootstrap";
+import Select from "react-select";
+import StatusQuickAdd from "../Status/StatusQuickAdd";
 
 export default class EditStrategy extends Component {
   constructor(props) {
     super(props);
     this.state = {
       environments: [],
+      statuses: [],
+      statusId: "",
       environmentName: this.props.match.params.name,
       environmentId: "",
+      strategyId: this.props.match.params.id,
       strategyName: "",
       timeFrameStart: new Date(),
       timeFrameEnd: new Date(),
@@ -26,17 +32,19 @@ export default class EditStrategy extends Component {
     formData.append("strategyName", this.state.strategyName);
     formData.append("timeFrameStart", this.state.timeFrameStart);
     formData.append("timeFrameEnd", this.state.timeFrameEnd);
-    console.log(this.state.environmentId);
-    console.log(this.state.strategyName);
-    console.log(this.state.timeFrameStart);
-    console.log(this.state.timeFrameEnd);
+    formData.append("statusId", this.state.statusId);
     await axios
-      .post(`${process.env.REACT_APP_API_URL}/strategy/`, formData)
-      .then((response) => toast.success("Strategy Added Successfully!"))
+      .put(
+        `${process.env.REACT_APP_API_URL}/strategy/${this.state.strategyId}`,
+        formData
+      )
+      .then((response) => {
+        toast.success("Strategy Added Successfully!");
+        this.props.history.push(
+          `/environment/${this.state.environmentName}/strategy`
+        );
+      })
       .catch((error) => toast.error("Could not Add Strategy"));
-    this.props.history.push(
-      `/environment/${this.state.environmentName}/strategy`
-    );
   };
 
   async componentDidMount() {
@@ -49,7 +57,35 @@ export default class EditStrategy extends Component {
       })
       .catch((error) => {
         console.log(error);
-        this.props.history.push("/notfounderror");
+        this.props.history.push("/404");
+      });
+
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/status/`)
+      .then((response) => {
+        response.data.forEach((status) => {
+          status.label = status.validityPeriod;
+          status.value = status.statusId;
+        });
+        this.setState({ statuses: response.data });
+      })
+      .catch((error) => {
+        toast.error("Could not load Statuses");
+      });
+
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/strategy/${this.state.strategyId}`)
+      .then((response) => {
+        this.setState({
+          strategyName: response.data.strategyName,
+          statusId: response.data.status.statusId,
+          timeFrameEnd: response.data.timeFrameEnd,
+          timeFrameStart: response.data.timeFrameStart,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        this.props.history.push("/404");
       });
   }
 
@@ -81,12 +117,12 @@ export default class EditStrategy extends Component {
               </Link>
             </li>
             <li className='breadcrumb-item active' aria-current='page'>
-              Add Strategy
+              {this.state.strategyId}
             </li>
           </ol>
         </nav>
         <div className='jumbotron'>
-          <h3>Add Strategy</h3>
+          <h3>Edit Strategy</h3>
           <form onSubmit={this.handleSubmit}>
             <div className='row'>
               <div className='col-sm-6'>
@@ -103,6 +139,50 @@ export default class EditStrategy extends Component {
                       onChange={this.handleInputChange}
                     />
                   </div>
+                </div>
+                <div className='form-row'>
+                  <div className='form-group col-md-9'>
+                    <label htmlFor='statusId'>Status</label>
+                    <Select
+                      value={this.state.statuses.filter(
+                        (status) => status.statusId === this.state.statusId
+                      )}
+                      id='statusId'
+                      name='statusId'
+                      placeholder='Validity Period'
+                      options={this.state.statuses}
+                      required
+                      onChange={(status) => {
+                        this.setState({ statusId: status.statusId });
+                      }}
+                    ></Select>
+                    <Modal show={this.state.showModal}>
+                      <Modal.Header>Add Status</Modal.Header>
+                      <Modal.Body>
+                        <StatusQuickAdd
+                          environmentName={this.state.environmentName}
+                          updateDate={this.updateDate}
+                        />
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <button
+                          type='button'
+                          className='btn btn-secondary'
+                          onClick={() => this.handleModal()}
+                        >
+                          Close Modal
+                        </button>
+                      </Modal.Footer>
+                    </Modal>
+                  </div>
+                  <button
+                    type='button'
+                    className='btn btn-secondary'
+                    style={{ height: 40, marginTop: 30 }}
+                    onClick={() => this.handleModal()}
+                  >
+                    Add Status
+                  </button>
                 </div>
               </div>
               <div className='col-sm-6'>

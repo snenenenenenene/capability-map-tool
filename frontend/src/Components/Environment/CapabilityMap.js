@@ -37,12 +37,14 @@ export default class CapabilityMap extends Component {
             className='capability-title card-header text-center text-uppercase'
             onClick={() => this.handleCapabilityClick(capability)}
           >
-            {i} {capability.capabilityName}
+            {capability.capabilityName}
           </div>
           <div class='card-body'>
-            <div className='card-deck justify-content-center'>
-              {this.capabilityMapping(capability.children)}
-              <p className='card-text'></p>
+            <div className='row'>
+              <div className='card-deck justify-content-center mx-auto'>
+                {this.capabilityMapping(capability.children)}
+                <p className='card-text'></p>
+              </div>
             </div>
           </div>
         </div>
@@ -70,8 +72,7 @@ export default class CapabilityMap extends Component {
         );
       })
       .catch((error) => {
-        console.log("environment not found");
-        this.props.history.push("/notfound");
+        this.props.history.push("/home");
       });
 
     await axios
@@ -110,8 +111,10 @@ export default class CapabilityMap extends Component {
         </nav>
 
         <div ref={targetRef}>
-          <div className='card-deck justify-content-center'>
-            {this.capabilityMapping(this.state.capabilities)}
+          <div className='row'>
+            <div className='card-deck justify-content-center mx-auto'>
+              {this.capabilityMapping(this.state.capabilities)}
+            </div>
           </div>
         </div>
         <div>

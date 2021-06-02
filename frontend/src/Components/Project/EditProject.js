@@ -1,64 +1,54 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { Modal } from "react-bootstrap";
+import StatusQuickAdd from "../Status/StatusQuickAdd";
+import toast from "react-hot-toast";
+import Select from "react-select";
 
 export default class EditProject extends Component {
   constructor(props) {
     super(props);
     this.state = {
       statuses: [],
-      environments: [],
-      capabilities: [],
+      programs: [],
+
+      selectedStatus: "",
+      selectedProgram: "",
 
       environmentName: this.props.match.params.name,
-      capabilityId: this.props.match.params.id,
       environmentId: "",
-      capabilityName: "",
-      parentCapabilityId: "",
-      description: "",
-      paceOfChange: "",
-      TOM: "",
-      informationQuality: "",
-      applicationFit: "",
-      resourceQuality: "",
+      projectName: "",
+      programId: "",
       statusId: "",
-      capabilityLevel: "",
-      validityPeriod: "",
+      projectId: this.props.match.params.id,
+      showModal: false,
+      showItemModal: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.updateDate = this.updateDate.bind(this);
   }
 
   handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("environmentName", this.state.environmentName);
-    formData.append("environmentId", this.state.environmentId);
-    formData.append("capabilityName", this.state.capabilityName);
-    formData.append("capabilityId", this.state.capabilityId);
-    formData.append("parentCapabilityId", this.state.parentCapabilityId);
-    formData.append("paceOfChange", this.state.paceOfChange);
-    formData.append("targetOperatingModel", this.state.TOM);
-    formData.append("informationQuality", this.state.informationQuality);
-    formData.append("applicationFit", this.state.applicationFit);
-    formData.append("resourceQuality", this.state.resourceQuality);
+    formData.append("projectName", this.state.projectName);
+    formData.append("programId", this.state.programId);
     formData.append("statusId", this.state.statusId);
-    formData.append("level", this.state.capabilityLevel);
-    console.log(formData);
-    for (var pair of formData.entries()) {
-      console.log(pair[0] + ", " + pair[1]);
-    }
-
     await axios
-      .put(`${process.env.REACT_APP_API_URL}/capability/update`, formData)
-      .then((reponse) => {
+      .put(
+        `${process.env.REACT_APP_API_URL}/project/${this.state.projectId}`,
+        formData
+      )
+      .then((response) => {
+        toast.success("Project Edited Successfully!");
+        this.setState({ projectId: response.data.projectId });
         this.props.history.push(
-          `/environment/${this.state.environmentName}/capability/all`
+          `/environment/${this.state.environmentName}/project`
         );
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => toast.error("Could not Edit Project"));
   };
 
   async componentDidMount() {
@@ -66,79 +56,71 @@ export default class EditProject extends Component {
       .get(
         `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
       )
-      .then((response) =>
-        this.setState({ environmentId: response.data.environmentId })
-      )
+      .then((response) => {
+        this.setState({ environmentId: response.data.environmentId });
+      })
       .catch((error) => {
-        this.props.history.push("/error");
+        console.log(error);
+        this.props.history.push("/404");
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/all`)
-      .then((response) => this.setState({ statuses: response.data }))
+      .get(`${process.env.REACT_APP_API_URL}/program/`)
+      .then((response) => {
+        response.data.forEach((program) => {
+          program.label = program.programName;
+          program.value = program.programId;
+        });
+        this.setState({ programs: response.data });
+      })
       .catch((error) => {
-        this.props.history.push("/error");
+        toast.error("Could not load Programs");
+      });
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/status/`)
+      .then((response) => {
+        response.data.forEach((status) => {
+          status.label = status.validityPeriod;
+          status.value = status.statusId;
+        });
+        this.setState({ statuses: response.data });
+      })
+      .catch((error) => {
+        toast.error("Could not load Statuses");
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/capability/all`)
-      .then((response) => this.setState({ capabilities: response.data }))
-      .catch((error) => {
-        this.props.history.push("/error");
-      });
-
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/capability/${this.state.capabilityId}`
-      )
+      .get(`${process.env.REACT_APP_API_URL}/project/${this.state.projectId}`)
       .then((response) => {
         this.setState({
-          environmentId: response.data.environment.environmentId,
-          capabilityName: response.data.capabilityName,
-          parentCapabilityId: response.data.parentCapabilityId,
-          paceOfChange: response.data.paceOfChange,
-          TOM: response.data.targetOperatingModel,
-          informationQuality: response.data.informationQuality,
-          applicationFit: response.data.applicationFit,
-          resourceQuality: response.data.resourceQuality,
+          projectName: response.data.projectName,
+
           statusId: response.data.status.statusId,
-          capabilityLevel: response.data.level,
-          validityPeriod: response.data.status.validityPeriod,
+          programId: response.data.program.programId,
         });
       })
       .catch((error) => {
-        this.props.history.push("/error");
+        toast.error("Could not load Project");
       });
+  }
+
+  handleItemModal() {
+    this.setState({ showItemModal: !this.state.showItemModal });
   }
 
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
 
-  statusListRows() {
-    return this.state.statuses.map((status) => {
-      return (
-        <option key={status.statusId} value={status.statusId}>
-          {status.validityPeriod}
-        </option>
-      );
-    });
+  async updateDate() {
+    this.componentDidMount();
   }
 
-  capabilityListRows() {
-    return this.state.capabilities.map((capability) => {
-      return (
-        <option key={capability.capabilityId} value={capability.capabilityId}>
-          {capability.capabilityName}
-        </option>
-      );
-    });
+  handleModal() {
+    this.setState({ showModal: !this.state.showModal });
   }
 
   render() {
-    const environmentName = this.props.match.params.name;
-    const capabilityID = this.props.match.params.id;
-
     return (
       <div>
         <br></br>
@@ -148,240 +130,106 @@ export default class EditProject extends Component {
               <Link to={`/`}>Home</Link>
             </li>
             <li className='breadcrumb-item'>
-              <Link to={`/environment/${environmentName}`}>
-                {environmentName}
+              <Link to={`/environment/${this.state.environmentName}`}>
+                {this.state.environmentName}
               </Link>
             </li>
             <li className='breadcrumb-item'>
-              <Link to={`/environment/${environmentName}/capability/all`}>
-                Capability
+              <Link to={`/environment/${this.state.environmentName}/project`}>
+                Projects
               </Link>
             </li>
-            <li className='breadcrumb-item'>{capabilityID}</li>
             <li className='breadcrumb-item active' aria-current='page'>
-              Edit Capability
+              Edit Project
             </li>
           </ol>
         </nav>
         <div className='jumbotron'>
-          <h3>Add Capability</h3>
+          <h3>Edit Project</h3>
           <form onSubmit={this.handleSubmit}>
             <div className='row'>
-              <div className='col-sm-6'>
+              <div className='col-sm-12'>
                 <div className='form-row'>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='nameCapability'>Name Capability</label>
+                  <div className='form-group col-md-12'>
+                    <label htmlFor='projectName'>Name Project</label>
                     <input
                       type='text'
-                      id='capabilityName'
-                      name='capabilityName'
+                      id='projectName'
+                      name='projectName'
                       className='form-control'
-                      placeholder='Name Capability'
-                      value={this.state.capabilityName}
+                      placeholder='Name Project'
+                      value={this.state.projectName}
                       onChange={this.handleInputChange}
+                      required
                     />
                   </div>
-                </div>
-                <div className='form-row'>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='paceOfChange'>Parent Capability</label>
-                    <select
-                      className='form-control'
-                      name='parentCapabilityId'
-                      id='parentCapabilityId'
-                      placeholder='Add Parent Capability'
-                      value={this.state.parentCapabilityId}
-                      onChange={this.handleInputChange}
-                    >
-                      <option
-                        key='-1'
-                        defaultValue='selected'
-                        hidden='hidden'
-                        value={1}
-                      >
-                        None
-                      </option>
-                      {this.capabilityListRows()}
-                    </select>
-                  </div>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='capabilityLevel'>Capability Level</label>
-                    <select
-                      className='form-control'
-                      name='capabilityLevel'
-                      id='capabilityLevel'
-                      placeholder='Add Level'
-                      value={this.state.capabilityLevel}
-                      onChange={this.handleInputChange}
-                    >
-                      <option
-                        key='-1'
-                        defaultValue='selected'
-                        hidden='hidden'
-                        value=''
-                      >
-                        Select Level
-                      </option>
-                      <option value='ONE'>ONE</option>
-                      <option value='TWO'>TWO</option>
-                      <option value='THREE'>THREE</option>
-                    </select>
-                  </div>
-                </div>
-                <div className='form-group'>
-                  <label htmlFor='description'>Description</label>
-                  <textarea
-                    type='text'
-                    id='description'
-                    name='description'
-                    className='form-control'
-                    rows='4'
-                    placeholder='Description'
-                    value={this.state.description}
-                    onChange={this.handleInputChange}
-                  />
                 </div>
               </div>
               <div className='col-sm-6'>
                 <div className='form-row'>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='paceOfChange'>Pace of Change</label>
-                    <select
-                      className='form-control'
-                      name='paceOfChange'
-                      placeholder='Add Pace of Change'
-                      id='paceOfChange'
-                      value={this.state.paceOfChange}
-                      onChange={this.handleInputChange}
-                    >
-                      <option
-                        key='-1'
-                        defaultValue='selected'
-                        hidden='hidden'
-                        value=''
-                      >
-                        Select Pace of Change
-                      </option>
-                      <option value='true'>True</option>
-                      <option value='false'>False</option>
-                    </select>
-                  </div>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='informationQuality'>
-                      Information Quality
-                    </label>
-                    <select
-                      className='form-control'
-                      name='informationQuality'
-                      placeholder='Add Information Quality'
-                      id='informationQuality'
-                      value={this.state.informationQuality}
-                      onChange={this.handleInputChange}
-                    >
-                      <option
-                        key='-1'
-                        defaultValue='selected'
-                        hidden='hidden'
-                        value=''
-                      >
-                        Select Information Quality
-                      </option>
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                    </select>
+                  <div className='form-group col-md'>
+                    <label htmlFor='paceOfChange'>Program</label>
+                    <Select
+                      value={this.state.programs.filter(
+                        (program) => program.programId === this.state.programId
+                      )}
+                      options={this.state.programs}
+                      name='program'
+                      id='program'
+                      placeholder='Add Program'
+                      defaultValue={this.state.program}
+                      onChange={(program) => {
+                        this.setState({ programId: program.programId });
+                      }}
+                      required
+                    ></Select>
                   </div>
                 </div>
+              </div>
+              <div className='col-sm-6'>
                 <div className='form-row'>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='paceOfChange'>TOM</label>
-                    <select
-                      className='form-control'
-                      name='TOM'
-                      placeholder='Add TOM'
-                      id='TOM'
-                      value={this.state.TOM}
-                      onChange={this.handleInputChange}
-                    >
-                      <option
-                        key='-1'
-                        defaultValue='selected'
-                        hidden='hidden'
-                        value=''
-                      >
-                        Select TOM
-                      </option>
-                      <option value='TOM'>TOM</option>
-                    </select>
-                  </div>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='applicationFit'>Application Fit</label>
-                    <select
-                      className='form-control'
-                      name='applicationFit'
-                      placeholder='Add Application Fit'
-                      id='applicationFit'
-                      value={this.state.applicationFit}
-                      onChange={this.handleInputChange}
-                    >
-                      <option
-                        key='-1'
-                        defaultValue='selected'
-                        hidden='hidden'
-                        value=''
-                      >
-                        Select Application Fit
-                      </option>
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                    </select>
-                  </div>
-                </div>
-                <div className='form-group'>
-                  <label htmlFor='resourceQuality'>Resource Quality</label>
-                  <select
-                    id='resourceQuality'
-                    name='resourceQuality'
-                    className='form-control'
-                    placeholder='Resource Quality'
-                    value={this.state.resourceQuality}
-                    onChange={this.handleInputChange}
-                  >
-                    <option key='-1' defaultValue='selected' hidden='hidden'>
-                      {this.state.resourceQuality}
-                    </option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                  </select>
-                  <div className='select-container'>
-                    <label htmlFor='statusId'>Validity Period</label>
-                    <select
+                  <div className='form-group col-md-9'>
+                    <label htmlFor='statusId'>Status</label>
+                    <Select
+                      value={this.state.statuses.filter(
+                        (status) => status.statusId === this.state.statusId
+                      )}
                       id='statusId'
                       name='statusId'
-                      className='form-control'
-                      placeholder='Validity Period'
-                      value={this.state.statusId}
-                      onChange={this.handleInputChange}
-                    >
-                      <option
-                        key='-1'
-                        defaultValue='selected'
-                        hidden='hidden'
-                        value=''
-                      >
-                        {this.state.validityPeriod}
-                      </option>
-                      {this.statusListRows()}
-                    </select>
+                      placeholder='Add Status'
+                      options={this.state.statuses}
+                      required
+                      onChange={(status) => {
+                        this.setState({ statusId: status.statusId });
+                      }}
+                    ></Select>
+                    <Modal show={this.state.showModal}>
+                      <Modal.Header>Add Status</Modal.Header>
+                      <Modal.Body>
+                        <StatusQuickAdd
+                          environmentName={this.state.environmentName}
+                          updateDate={this.updateDate}
+                        />
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <button
+                          type='button'
+                          className='btn btn-secondary'
+                          onClick={() => this.handleModal()}
+                        >
+                          Close Modal
+                        </button>
+                      </Modal.Footer>
+                    </Modal>
                   </div>
+                  <button
+                    type='button'
+                    className='btn btn-secondary'
+                    style={{ height: 40, marginTop: 30 }}
+                    onClick={() => this.handleModal()}
+                  >
+                    Add Status
+                  </button>
                 </div>
               </div>
             </div>

@@ -18,7 +18,7 @@ export default class AddProject extends Component {
 
       environmentName: this.props.match.params.name,
       environmentId: "",
-      projectId: "",
+      projectName: "",
       showModal: false,
       showItemModal: false,
     };
@@ -30,10 +30,9 @@ export default class AddProject extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
+    formData.append("projectName", this.state.projectName);
     formData.append("programId", this.state.selectedProgram.programId);
     formData.append("statusId", this.state.selectedStatus.statusId);
-    console.log(this.state.selectedProgram.programId);
-    console.log(this.state.selectedStatus.statusId);
     await axios
       .post(`${process.env.REACT_APP_API_URL}/project/`, formData)
       .then((response) => {
@@ -56,7 +55,7 @@ export default class AddProject extends Component {
       })
       .catch((error) => {
         console.log(error);
-        this.props.history.push("/notfounderror");
+        this.props.history.push("/404");
       });
 
     await axios
@@ -105,34 +104,51 @@ export default class AddProject extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+        <nav aria-label='breadcrumb'>
+          <ol className='breadcrumb'>
+            <li className='breadcrumb-item'>
               <Link to={`/`}>Home</Link>
             </li>
-            <li className="breadcrumb-item">
+            <li className='breadcrumb-item'>
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className="breadcrumb-item active" aria-current="page">
+            <li className='breadcrumb-item active' aria-current='page'>
               Add Project
             </li>
           </ol>
         </nav>
-        <div className="jumbotron">
+        <div className='jumbotron'>
           <h3>Add Project</h3>
           <form onSubmit={this.handleSubmit}>
-            <div className="row">
-              <div className="col-sm-6">
-                <div className="form-row">
-                  <div className="form-group col-md">
-                    <label htmlFor="paceOfChange">Program</label>
+            <div className='row'>
+              <div className='col-sm-12'>
+                <div className='form-row'>
+                  <div className='form-group col-md-12'>
+                    <label htmlFor='projectName'>Name Project</label>
+                    <input
+                      type='text'
+                      id='projectName'
+                      name='projectName'
+                      className='form-control'
+                      placeholder='Name Project'
+                      value={this.state.projectName}
+                      onChange={this.handleInputChange}
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className='col-sm-6'>
+                <div className='form-row'>
+                  <div className='form-group col-md'>
+                    <label htmlFor='paceOfChange'>Program</label>
                     <Select
                       options={this.state.programs}
-                      name="program"
-                      id="program"
-                      placeholder="Add Program"
+                      name='program'
+                      id='program'
+                      placeholder='Add Program'
                       value={this.state.programId}
                       onChange={(program) =>
                         this.setState({ selectedProgram: program })
@@ -142,14 +158,14 @@ export default class AddProject extends Component {
                   </div>
                 </div>
               </div>
-              <div className="col-sm-6">
-                <div className="form-row">
-                  <div className="form-group col-md-9">
-                    <label htmlFor="statusId">Status</label>
+              <div className='col-sm-6'>
+                <div className='form-row'>
+                  <div className='form-group col-md-9'>
+                    <label htmlFor='statusId'>Status</label>
                     <Select
-                      id="statusId"
-                      name="statusId"
-                      placeholder="Validity Period"
+                      id='statusId'
+                      name='statusId'
+                      placeholder='Validity Period'
                       value={this.state.statusId}
                       options={this.state.statuses}
                       required
@@ -167,8 +183,8 @@ export default class AddProject extends Component {
                       </Modal.Body>
                       <Modal.Footer>
                         <button
-                          type="button"
-                          className="btn btn-secondary"
+                          type='button'
+                          className='btn btn-secondary'
                           onClick={() => this.handleModal()}
                         >
                           Close Modal
@@ -177,8 +193,8 @@ export default class AddProject extends Component {
                     </Modal>
                   </div>
                   <button
-                    type="button"
-                    className="btn btn-secondary"
+                    type='button'
+                    className='btn btn-secondary'
                     style={{ height: 40, marginTop: 30 }}
                     onClick={() => this.handleModal()}
                   >
@@ -188,8 +204,8 @@ export default class AddProject extends Component {
               </div>
             </div>
             <button
-              className="btn btn-primary"
-              type="button"
+              className='btn btn-primary'
+              type='button'
               onClick={this.handleSubmit}
             >
               Submit

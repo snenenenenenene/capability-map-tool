@@ -92,7 +92,7 @@ export default class Login extends Component {
         <div className='text-center'>
           <img
             alt='leap'
-            className='mx-auto d-block'
+            className='mx-auto d-block logo'
             src={LeapImg}
             width='320'
             height='88'
