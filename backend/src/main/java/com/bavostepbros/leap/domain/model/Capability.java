@@ -91,6 +91,12 @@ public class Capability {
     	joinColumns = {@JoinColumn(name = "CAPABILITYID")}, 
     	inverseJoinColumns = {@JoinColumn(name = "BUSINESSPROCESSID")})
     private List<BusinessProcess> businessProcess;
+    
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "CAPABILITY_RESOURCE", 
+    	joinColumns = {@JoinColumn(name = "CAPABILITYID")}, 
+    	inverseJoinColumns = {@JoinColumn(name = "RESOURCEID")})
+    private List<Resource> resources;
 
     public Capability(Environment environment, Status status, Integer parentCapabilityId, String capabilityName, 
     		boolean paceOfChange, String targetOperatingModel, Integer resourceQuality,
@@ -142,6 +148,16 @@ public class Capability {
     
     public void removeBusinessProcess(BusinessProcess businessProcessItem) {
     	businessProcess.remove(businessProcessItem);
+    	return;
+    }
+    
+    public void addResource(Resource resource) {
+    	resources.add(resource);
+    	return;
+    }
+    
+    public void removeResource(Resource resource) {
+    	resources.remove(resource);
     	return;
     }
 

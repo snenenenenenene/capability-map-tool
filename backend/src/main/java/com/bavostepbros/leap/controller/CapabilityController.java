@@ -53,13 +53,13 @@ public class CapabilityController {
 		return convertCapability(capability);
 	}
 
-	@GetMapping("{capabilityid}")
+	@GetMapping(path = "{capabilityid}")
 	public CapabilityDto getCapabilityByCapabilityid(@PathVariable("capabilityid") Integer capabilityId) {
 		Capability capability = capabilityService.get(capabilityId);
 		return convertCapability(capability);
 	}
 
-	@GetMapping("capabilityname/{capabilityname}")
+	@GetMapping(path = "capabilityname/{capabilityname}")
 	public CapabilityDto getCapabilityByCapabilityname(@PathVariable("capabilityname") String capabilityName) {
 		Capability capability = capabilityService.getCapabilityByCapabilityName(capabilityName);
 		return convertCapability(capability);
@@ -168,6 +168,18 @@ public class CapabilityController {
 	public void unlinkBusinessProcess(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("businessProcessId") Integer businessProcessId) {
 		capabilityService.deleteBusinessProcess(capabilityId, businessProcessId);
+	}
+	
+	@PutMapping(path = "link-resource/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public void linkResource(@ModelAttribute("capabilityId") Integer capabilityId,
+			@ModelAttribute("resourceId") Integer resourceId) {
+		capabilityService.addResource(capabilityId, resourceId);
+	}
+	
+	@DeleteMapping(path = "unlink-resource/{capabilityId}/{resourceId}")
+	public void unlinkResource(@PathVariable("capabilityId") Integer capabilityId,
+			@PathVariable("resourceId") Integer resourceId) {
+		capabilityService.deleteResource(capabilityId, resourceId);
 	}
 	
 	private CapabilityDto convertCapability(Capability capability) {

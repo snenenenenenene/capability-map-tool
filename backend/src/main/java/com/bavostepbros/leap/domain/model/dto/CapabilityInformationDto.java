@@ -15,4 +15,10 @@ public class CapabilityInformationDto {
 	private CapabilityDto capability;
 	private InformationDto information;
 	private StrategicImportance criticality;
+	
+	public CapabilityInformationDto(InformationDto information, StrategicImportance criticality) {
+		this.information = information;
+		this.criticality = criticality;
+	}
+	
 }
