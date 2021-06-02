@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Pdf from "react-to-pdf";
-import { Modal } from "react-bootstrap";
+import { Modal, OverlayTrigger, Tooltip } from "react-bootstrap";
 
 export default class CapabilityMap extends Component {
   constructor(props) {
@@ -40,6 +40,9 @@ export default class CapabilityMap extends Component {
             {capability.capabilityName}
           </div>
           <div class='card-body'>
+            <div class='card-deck justify-content-center'>
+              {this.renderStrategyItemsinBody(capability)}
+            </div>
             <div className='row'>
               <div className='card-deck justify-content-center mx-auto'>
                 {this.capabilityMapping(capability.children)}
@@ -85,7 +88,114 @@ export default class CapabilityMap extends Component {
       .catch((error) => {
         toast.error("Could Not Find Capabilities");
       });
-    console.log(this.state.capabilities);
+  }
+
+  renderStrategyItemsinBody(capability) {
+    if (capability.capabilityItems !== undefined) {
+      return capability.capabilityItems.map((capabilityItem) => {
+        let itemColour;
+        switch (capabilityItem.strategicImportance) {
+          case "NONE":
+            itemColour = "#fff";
+            break;
+          case "LOWEST":
+            itemColour = "#13ff71";
+            break;
+          case "LOW":
+            itemColour = "#b2f711";
+            break;
+          case "MEDIUM":
+            itemColour = "#f7f711";
+            break;
+          case "HIGH":
+            itemColour = "#f7b211";
+            break;
+          case "HIGHEST":
+            itemColour = "#f75211";
+            break;
+          default:
+            itemColour = "red";
+        }
+        return (
+          <OverlayTrigger
+            placement='bottom'
+            overlay={
+              <Tooltip id='button-tooltip-2'>
+                <div>{capabilityItem.strategyItem.strategyItemName}</div>
+                <div>{capabilityItem.strategyItem.description}</div>
+              </Tooltip>
+            }
+          >
+            <div
+              className='card'
+              style={{
+                margin: 3,
+                maxWidth: 10,
+                maxHeight: 10,
+                backgroundColor: itemColour,
+              }}
+            >
+              <div className='card-body'></div>
+            </div>
+          </OverlayTrigger>
+        );
+      });
+    } else return;
+  }
+
+  renderStrategyItems(capability) {
+    if (capability.capabilityItems !== undefined) {
+      return capability.capabilityItems.map((capabilityItem) => {
+        let itemColour;
+        switch (capabilityItem.strategicImportance) {
+          case "NONE":
+            itemColour = "#fff";
+            break;
+          case "LOWEST":
+            itemColour = "#13ff71";
+            break;
+          case "LOW":
+            itemColour = "#b2f711";
+            break;
+          case "MEDIUM":
+            itemColour = "#f7f711";
+            break;
+          case "HIGH":
+            itemColour = "#f7b211";
+            break;
+          case "HIGHEST":
+            itemColour = "#f75211";
+            break;
+          default:
+            itemColour = "red";
+        }
+        return (
+          <OverlayTrigger
+            placement='bottom'
+            overlay={
+              <Tooltip id='button-tooltip-2'>
+                <div>{capabilityItem.strategyItem.strategyItemName}</div>
+                <div>{capabilityItem.strategyItem.description}</div>
+              </Tooltip>
+            }
+          >
+            <div
+              className='card'
+              style={{
+                margin: 3,
+                maxWidth: 60,
+                minWidth: 60,
+                maxHeight: 60,
+                minHeight: 60,
+                backgroundColor: itemColour,
+              }}
+            >
+              <div className='card-body'></div>
+            </div>
+          </OverlayTrigger>
+        );
+      });
+    } else return;
   }
 
   render() {
@@ -100,7 +210,11 @@ export default class CapabilityMap extends Component {
               <Link to={`/`}>Home</Link>
             </li>
             <li className='breadcrumb-item'>{this.state.environmentName}</li>
-            <Pdf targetRef={targetRef} filename='capabilitymap.pdf'>
+            <Pdf
+              targetRef={targetRef}
+              filename='capabilitymap.pdf'
+              options={{ orientation: "landscape", unit: "in" }}
+            >
               {({ toPdf }) => (
                 <div className='ml-auto' onClick={toPdf}>
                   <i class='bi bi-file-earmark-pdf-fill' onClick={toPdf}></i>
@@ -128,14 +242,9 @@ export default class CapabilityMap extends Component {
               <Modal.Title>{capability.capabilityName}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              {/* {capability.capabilityItems.map((capabilityItem) => {
-                  return (
-                    <div
-                      className='card'
-                      style={{ margin: 10, padding: 10 }}
-                    ></div>
-                  );
-                })} */}
+              <div className='card-deck  justify-content-center mx-auto'>
+                {this.renderStrategyItems(this.state.capability)}
+              </div>
             </Modal.Body>
           </Modal>
         </div>

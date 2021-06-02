@@ -281,6 +281,8 @@ export default class StrategyItem extends Component {
                         value={this.state.strategicImportance}
                         onChange={this.handleInputChange}
                       >
+                        <option value='NONE'>None</option>
+                        <option value='LOW'>Low</option>
                         <option value='LOWEST'>Lowest</option>
                         <option value='MEDIUM'>Medium</option>
                         <option value='HIGH'>High</option>
