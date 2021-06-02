@@ -28,11 +28,11 @@ export default class User extends Component {
   fetchDeleteUsers = async (userId) => {
     await axios
       .delete(`${process.env.REACT_APP_API_URL}/user/${userId}`)
-      .then((response) => toast.success("Succesfully Deleted Capability"))
-      .catch((error) => toast.error("Could not Delete Capability"));
-    //REFRESH CAPABILITIES
+      .then((response) => toast.success("Successfully Deleted User"))
+      .catch((error) => toast.error("Could not Delete User"));
+    //REFRESH USERS
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/user/${userId}`)
+      .get(`${process.env.REACT_APP_API_URL}/user/`)
       .then((response) => {
         this.setState({ users: response.data });
       })
@@ -45,12 +45,12 @@ export default class User extends Component {
     toast(
       (t) => (
         <span>
-          <p className="text-center">
+          <p className='text-center'>
             Are you sure you want to remove this User?
           </p>
-          <div className="text-center">
+          <div className='text-center'>
             <button
-              className="btn btn-primary btn-sm m-3"
+              className='btn btn-primary btn-sm m-3'
               stlye={{ width: 50, height: 30 }}
               onClick={() => {
                 toast.dismiss(t.id);
@@ -60,7 +60,7 @@ export default class User extends Component {
               Yes!
             </button>
             <button
-              className="btn btn-secondary btn-sm m-3"
+              className='btn btn-secondary btn-sm m-3'
               stlye={{ width: 50, height: 30 }}
               onClick={() => toast.dismiss(t.id)}
             >
@@ -77,62 +77,54 @@ export default class User extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label="breadcrumb shadow">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+        <nav aria-label='breadcrumb shadow'>
+          <ol className='breadcrumb'>
+            <li className='breadcrumb-item'>
               <Link to={`/`}>Home</Link>
             </li>
-            <li className="breadcrumb-item">Users</li>
+            <li className='breadcrumb-item'>Users</li>
           </ol>
         </nav>
-        <div className="jumbotron shadow">
-          <div>
-            <h1 className="display-4" style={{ display: "inline-block" }}>
-              Users
-            </h1>
-            <Link to={`/user/add`}>
-              <button className="btn btn-primary float-right">Add User</button>
-            </Link>
-          </div>
-          <br />
-          <br />
-          <MaterialTable
-            columns={[
-              { title: "ID", field: "userId" },
-              { title: "Name", field: "username" },
-              { title: "Email", field: "email" },
-              { title: "Role", field: "roleId" },
-              {
-                title: "",
-                name: "delete",
-                render: (rowData) => (
-                  <button className="btn btn-secondary">
+        <MaterialTable
+          title='Users'
+          actions={[
+            {
+              icon: "add",
+              tooltip: "Add User",
+              isFreeAction: true,
+              onClick: (event) => {
+                this.props.history.push(`/user/add`);
+              },
+            },
+          ]}
+          columns={[
+            { title: "ID", field: "userId" },
+            { title: "Name", field: "username" },
+            { title: "Email", field: "email" },
+            { title: "Role", field: "roleId" },
+            {
+              title: "Actions",
+              name: "actions",
+              render: (rowData) => (
+                <div>
+                  <button className='btn'>
                     <i
                       onClick={this.delete.bind(this, rowData.userId)}
-                      className="bi bi-trash"
+                      className='bi bi-trash'
                     ></i>
                   </button>
-                ),
-              },
-              {
-                title: "",
-                name: "edit",
-                render: (rowData) => (
-                  <button className="btn btn-secondary">
+                  <button className='btn'>
                     <i
                       onClick={this.edit.bind(this, rowData.userId)}
-                      className="bi bi-pencil"
+                      className='bi bi-pencil'
                     ></i>
                   </button>
-                ),
-              },
-            ]}
-            data={this.state.users}
-            options={{
-              showTitle: false,
-            }}
-          />
-        </div>
+                </div>
+              ),
+            },
+          ]}
+          data={this.state.users}
+        />
       </div>
     );
   }

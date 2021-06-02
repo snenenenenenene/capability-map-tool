@@ -24,8 +24,7 @@ export default class ITApplication extends Component {
         this.setState({ environmentId: response.data.environmentId })
       )
       .catch((error) => {
-        console.log(error);
-        this.props.history.push("/error");
+        this.props.history.push("/404");
       });
 
     await axios

@@ -62,8 +62,7 @@ export default class Capability extends Component {
         this.setState({ environmentId: response.data.environmentId })
       )
       .catch((error) => {
-        console.log(error);
-        this.props.history.push("/notfounderror");
+        this.props.history.push("/404");
       });
 
     await axios
@@ -82,14 +81,12 @@ export default class Capability extends Component {
       .get(`${process.env.REACT_APP_API_URL}/strategyitem/`)
       .then((response) => {
         response.data.forEach((item) => {
-          console.log(item);
           item.label = item.strategyItemName;
           item.value = item.itemId;
         });
         this.setState({ strategyItems: response.data });
       })
       .catch((error) => {
-        console.log(error);
         toast.error("Could Not Find Strategy Items");
       });
   }
@@ -201,9 +198,11 @@ export default class Capability extends Component {
           columns={[
             { title: "ID", field: "capabilityId" },
             { title: "Name", field: "capabilityName" },
-            { title: "Parent ID", field: "parentCapabilityId" },
             { title: "Level", field: "level" },
             { title: "Expiration", field: "status.validityPeriod" },
+            { title: "PC", field: "paceOfChange" },
+            { title: "TOM", field: "targetOperatingModel" },
+            { title: "RQ", field: "resourceQuality" },
             {
               title: "Actions",
               name: "actions",
@@ -212,6 +211,7 @@ export default class Capability extends Component {
                   <button className='btn'>
                     <i
                       onClick={this.delete.bind(this, rowData.capabilityId)}
+                      indicator
                       className='bi bi-trash'
                     ></i>
                   </button>
@@ -238,10 +238,17 @@ export default class Capability extends Component {
           detailPanel={(rowData) => {
             return (
               <div>
-                <div className='card-deck' style={{ padding: 10 }}>
+                <div className='card-deck' style={{ padding: 10, margin: 5 }}>
                   {this.state.capabilityItems.map((capabilityItem) => {
                     return (
-                      <div className='card' style={{ margin: 10, padding: 10 }}>
+                      <div
+                        className='card'
+                        style={{
+                          margin: 3,
+                          maxWidth: 140,
+                          backgroundColor: "#ff754f65",
+                        }}
+                      >
                         <div className='card-header text-center text-uppercase'>
                           {capabilityItem.strategyItem.strategyItemName}
                         </div>
@@ -252,8 +259,13 @@ export default class Capability extends Component {
                     );
                   })}
                 </div>
-                <Modal show={this.state.showItemModal}>
-                  <Modal.Header>{rowData.capabilityId}. Add Items</Modal.Header>
+                <Modal
+                  show={this.state.showItemModal}
+                  onHide={() => this.handleItemModal()}
+                >
+                  <Modal.Header closeButton>
+                    <Modal.Title>{rowData.capabilityId}. Add Items</Modal.Title>
+                  </Modal.Header>
                   <Modal.Body>
                     <form onSubmit={this.handleSubmit(rowData.capabilityId)}>
                       <label htmlFor='itemId'>Strategy Items</label>
@@ -285,20 +297,12 @@ export default class Capability extends Component {
                         <option value='HIGH'>High</option>
                         <option value='HIGHEST'>Highest</option>
                       </select>
+                      <br></br>
                       <button className='btn btn-primary' type='sumbit'>
                         SUBMIT
                       </button>
                     </form>
                   </Modal.Body>
-                  <Modal.Footer>
-                    <button
-                      type='button'
-                      className='btn btn-secondary'
-                      onClick={() => this.handleItemModal()}
-                    >
-                      Close Modal
-                    </button>
-                  </Modal.Footer>
                 </Modal>
               </div>
             );

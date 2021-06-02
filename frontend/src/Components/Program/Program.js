@@ -24,7 +24,7 @@ export default class Program extends Component {
       )
       .catch((error) => {
         console.log(error);
-        this.props.history.push("/error");
+        this.props.history.push("/404");
       });
 
     await axios
@@ -111,12 +111,6 @@ export default class Program extends Component {
                     <i
                       onClick={this.edit.bind(this, rowData.programId)}
                       className='bi bi-pencil'
-                    ></i>
-                  </button>
-                  <button className='btn'>
-                    <i
-                      onClick={() => this.handleItemModal()}
-                      className='bi bi-app-indicator'
                     ></i>
                   </button>
                 </div>

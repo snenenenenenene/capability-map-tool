@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import MaterialTable from "material-table";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default class Project extends Component {
   constructor(props) {
@@ -25,7 +26,7 @@ export default class Project extends Component {
       )
       .catch((error) => {
         console.log(error);
-        this.props.history.push("/error");
+        this.props.history.push("/404");
       });
 
     await axios
@@ -41,27 +42,56 @@ export default class Project extends Component {
 
   edit(projectId) {
     this.props.history.push(
-      `/environment/${this.state.environmentName}/project/${projectId}/edit`
+      `/environment/${this.state.environmentName}/project/${projectId}`
     );
   }
   //DELETE project AND REMOVE ALL CHILD projects FROM STATE
   delete = async (projectId) => {
-    if (window.confirm("Are you sure you want to delete this project?")) {
-      await axios
-        .delete(`${process.env.REACT_APP_API_URL}/project/${projectId}`)
-        .catch((error) => console.error(error));
-      //REFRESH projects
-      await axios
-        .get(`${process.env.REACT_APP_API_URL}/project/`)
-        .then((response) => {
-          this.setState({ projects: [] });
-          this.setState({ projects: response.data });
-        })
-        .catch((error) => {
-          console.log(error);
-          this.props.history.push("/error");
-        });
-    }
+    toast(
+      (t) => (
+        <span>
+          <p className='text-center'>
+            Are you sure you want to remove this project?
+          </p>
+          <div className='text-center'>
+            <button
+              className='btn btn-primary btn-sm m-3'
+              stlye={{ width: 50, height: 30 }}
+              onClick={() => {
+                toast.dismiss(t.id);
+                this.fetchDeleteProjects(projectId);
+              }}
+            >
+              Yes!
+            </button>
+            <button
+              className='btn btn-secondary btn-sm m-3'
+              stlye={{ width: 50, height: 30 }}
+              onClick={() => toast.dismiss(t.id)}
+            >
+              No!
+            </button>
+          </div>
+        </span>
+      ),
+      { duration: 50000 }
+    );
+  };
+
+  fetchDeleteProjects = async (projectId) => {
+    await axios
+      .delete(`${process.env.REACT_APP_API_URL}/project/${projectId}`)
+      .then((response) => toast.success("Successfully Deleted Project"))
+      .catch((error) => toast.error("Could not Delete Project"));
+    //REFRESH CAPABILITIES
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/project/`)
+      .then((response) => {
+        this.setState({ projects: response.data });
+      })
+      .catch((error) => {
+        toast.error("Could not Find Projects");
+      });
   };
 
   render() {
@@ -98,6 +128,8 @@ export default class Project extends Component {
           columns={[
             { title: "ID", field: "projectId" },
             { title: "Name", field: "projectName" },
+            { title: "Program", field: "program.programName" },
+            { title: "Status", field: "status.validityPeriod" },
             {
               title: "Actions",
               name: "actions",
@@ -113,12 +145,6 @@ export default class Project extends Component {
                     <i
                       onClick={this.edit.bind(this, rowData.projectId)}
                       className='bi bi-pencil'
-                    ></i>
-                  </button>
-                  <button className='btn'>
-                    <i
-                      onClick={() => this.handleItemModal()}
-                      className='bi bi-app-indicator'
                     ></i>
                   </button>
                 </div>

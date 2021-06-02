@@ -7,44 +7,60 @@ html {
 }
 
 .capability-map-card {
-  width: 18rem;
+  /* width: 18rem; */
+}
+
+.card-deck {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 #capability-ONE {
+  min-width: 300px;
+  max-width: 350px;
   background-color: rgb(255, 255, 255);
-  width: 40srem;
   z-index: 100;
   border-style: solid;
-  border-color: rgba(255, 115, 0, 0.603);
+  border-color: rgba(0, 217, 255, 0.603);
   border-width: 1px;
+  /* box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.4); */
+  margin-bottom: 30px;
 }
 
 #capability-TWO {
-  background-color: rgba(207, 207, 207, 0.432);
-  width: 20rem;
+  background-color: rgba(230, 229, 229, 0.371);
+  margin: 4px;
+  min-width: 150px;
+  max-width: 170px;
   z-index: 200;
   border-style: solid;
-  border-color: rgba(255, 115, 0, 0.603);
+  border-color: rgba(0, 123, 255, 0.603);
   border-width: 1px;
+  /* box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4); */
 }
 
 #capability-THREE {
-  background-color: rgba(167, 167, 167, 0.356);
-  margin: 1px;
-  min-width: 10px;
+  background-color: rgba(194, 194, 194, 0.234);
+  margin: 2px;
+  min-width: 75px;
+  max-width: 90px;
   z-index: 300;
   border-style: solid;
-  border-color: rgba(255, 115, 0, 0.603);
+  border-color: rgba(128, 0, 255, 0.603);
   border-width: 1px;
 }
 
 div .capability-title:hover {
+  transition: all 0.3s ease;
   background-color: #ff754fbb;
+  color: white;
+  cursor: pointer;
 }
 html body {
   min-height: 100%;
   background-color: #f7f7f7;
   background-image: url("./img/cool-background.png");
+  font-family: "Montserrat", sans-serif;
 }
 div .jumbotron {
   background-color: #ffffffaf;
@@ -141,7 +157,6 @@ nav .breadcrumb {
 
 .splitScreen {
   display: flex;
-  flexdirection: row;
 }
 
 .topPane {
@@ -188,14 +203,14 @@ nav .breadcrumb {
   white-space: nowrap;
 }
 .nav:first-child {
-  padding-top: 5rem;
+  padding-top: 3.5rem;
 }
 .nav a {
   min-width: 100%;
 }
 .nav__items {
   min-width: 100%;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 .nav__items p {
   position: relative;
@@ -210,7 +225,6 @@ nav .breadcrumb {
   text-decoration: none;
   /* color: #ff754fbb; */
   color: black;
-  font-family: Arial, Helvetica, sans-serif;
   font-weight: 100;
   font-size: 1.5em;
 }
@@ -232,7 +246,6 @@ nav .breadcrumb {
     #ff754f65,
     transparent 100%
   );
-  font-family: Arial, Helvetica, sans-serif;
 }
 .nav__items:hover a:after {
   opacity: 1;

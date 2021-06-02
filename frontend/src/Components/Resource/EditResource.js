@@ -44,10 +44,6 @@ export default class EditResource extends Component {
     formData.append("resourceQuality", this.state.resourceQuality);
     formData.append("statusId", this.state.statusId);
     formData.append("level", this.state.capabilityLevel);
-    console.log(formData);
-    for (var pair of formData.entries()) {
-      console.log(pair[0] + ", " + pair[1]);
-    }
 
     await axios
       .put(`${process.env.REACT_APP_API_URL}/capability/update`, formData)

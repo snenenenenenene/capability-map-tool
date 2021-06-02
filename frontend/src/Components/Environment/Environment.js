@@ -33,8 +33,7 @@ class Environment extends Component {
         toast.success(this.state.environmentName);
       })
       .catch((error) => {
-        console.log("environment not found");
-        this.props.history.push("/notfound");
+        this.props.history.push("/home");
       });
   }
 

@@ -98,10 +98,7 @@ export default class NewEnvironment extends Component {
                   (t) => (
                     <span>
                       <p className='text-center'>New Environment</p>
-                      <form
-                        className='input-group ml-auto'
-                        onSubmit={this.handleSubmit}
-                      >
+                      <form className=' ml-auto' onSubmit={this.handleSubmit}>
                         <input
                           type='text'
                           id='environmentName'
@@ -112,7 +109,6 @@ export default class NewEnvironment extends Component {
                           required
                           autoFocus
                         />
-                        <hr></hr>
                         <div className='text-center'>
                           <button
                             className='btn btn-primary btn-sm m-3'

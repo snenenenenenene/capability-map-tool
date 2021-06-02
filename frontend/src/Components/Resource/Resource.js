@@ -25,7 +25,7 @@ export default class Resource extends Component {
       )
       .catch((error) => {
         console.log(error);
-        this.props.history.push("/error");
+        this.props.history.push("/404");
       });
 
     await axios

@@ -40,7 +40,7 @@ export default class AddProgram extends Component {
       )
       .catch((error) => {
         console.log(error);
-        this.props.history.push("/notfounderror");
+        this.props.history.push("/404");
       });
   }
   handleInputChange(event) {
@@ -51,74 +51,74 @@ export default class AddProgram extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label="shadow breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+        <nav aria-label='shadow breadcrumb'>
+          <ol className='breadcrumb'>
+            <li className='breadcrumb-item'>
               <Link to={`/`}>Home</Link>
             </li>
-            <li className="breadcrumb-item">
+            <li className='breadcrumb-item'>
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className="breadcrumb-item active" aria-current="page">
+            <li className='breadcrumb-item active' aria-current='page'>
               Add Program
             </li>
           </ol>
         </nav>
-        <div className="jumbotron shadow">
+        <div className='jumbotron shadow'>
           <h3>Add Program</h3>
           <form onSubmit={this.handleSubmit}>
-            <div className="row">
-              <div className="col-sm">
-                <div className="form-row">
-                  <div className="form-group col-md">
-                    <label htmlFor="programName">Name Program</label>
+            <div className='row'>
+              <div className='col-sm'>
+                <div className='form-row'>
+                  <div className='form-group col-md'>
+                    <label htmlFor='programName'>Name Program</label>
                     <input
-                      type="text"
-                      id="programName"
-                      name="programName"
-                      className="form-control"
-                      placeholder="Name Program"
+                      type='text'
+                      id='programName'
+                      name='programName'
+                      className='form-control'
+                      placeholder='Name Program'
                       value={this.state.programName}
                       onChange={this.handleInputChange}
                     />
                   </div>
                 </div>
-                <div className="form-row">
-                  <div className="form-group col-md">
-                    <label htmlFor="technology">Technology</label>
+                <div className='form-row'>
+                  <div className='form-group col-md'>
+                    <label htmlFor='technology'>Technology</label>
                     <input
-                      type="text"
-                      id="technology"
-                      name="technology"
-                      className="form-control"
-                      placeholder="Technology"
+                      type='text'
+                      id='technology'
+                      name='technology'
+                      className='form-control'
+                      placeholder='Technology'
                       value={this.state.technology}
                       onChange={this.handleInputChange}
                     />
                   </div>
                 </div>
-                <div className="form-row">
-                  <div className="form-group col-md">
-                    <label htmlFor="version">Version</label>
+                <div className='form-row'>
+                  <div className='form-group col-md'>
+                    <label htmlFor='version'>Version</label>
                     <input
-                      type="text"
-                      id="version"
-                      name="version"
-                      className="form-control"
-                      placeholder="Version"
+                      type='text'
+                      id='version'
+                      name='version'
+                      className='form-control'
+                      placeholder='Version'
                       value={this.state.version}
                       onChange={this.handleInputChange}
                     />
                   </div>
                 </div>
-                <div className="form-row">
-                  <div className="form-group col-md">
+                <div className='form-row'>
+                  <div className='form-group col-md'>
                     <button
-                      className="btn btn-secondary btn-block"
+                      className='btn btn-secondary btn-block'
                       style={{ marginTop: 32 }}
-                      type="button"
+                      type='button'
                       onClick={this.handleSubmit}
                     >
                       Submit
@@ -126,8 +126,8 @@ export default class AddProgram extends Component {
                   </div>
                 </div>
               </div>
-              <div className="col-sm"></div>
-              <div className="col-sm"></div>
+              <div className='col-sm'></div>
+              <div className='col-sm'></div>
             </div>
           </form>
         </div>

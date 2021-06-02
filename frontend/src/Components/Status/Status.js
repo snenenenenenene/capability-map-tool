@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import MaterialTable from "material-table";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default class Status extends Component {
   constructor(props) {
@@ -24,7 +25,19 @@ export default class Status extends Component {
       )
       .catch((error) => {
         console.log(error);
-        this.props.history.push("/error");
+        this.props.history.push("/404");
+      });
+
+    await axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+      )
+      .then((response) =>
+        this.setState({ environmentId: response.data.environmentId })
+      )
+      .catch((error) => {
+        console.log(error);
+        this.props.history.push("/404");
       });
 
     await axios
@@ -43,30 +56,52 @@ export default class Status extends Component {
     );
   }
 
-  delete = async (statusId) => {
-    if (window.confirm("Are you sure you want to delete this status?")) {
-      await axios
-        .delete(`${process.env.REACT_APP_API_URL}/status/${statusId}`)
-        .catch((error) => {
-          if (error.response.status === 500)
-            alert(
-              "This status is in use by a capability and could not be deleted!"
-            );
-          console.error(error);
-        });
-      //REFRESH CAPABILITIES
+  fetchDeleteStatuses = async (statusId) => {
+    await axios
+      .delete(`${process.env.REACT_APP_API_URL}/status/${statusId}`)
+      .then((response) => toast.success("Successfully Deleted Status"))
+      .catch((error) => toast.error("Could not Delete Status"));
+    //REFRESH STATUSES
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/status/`)
+      .then((response) => {
+        this.setState({ capabilities: response.data });
+      })
+      .catch((error) => {
+        toast.error("Could not Find Statuses");
+      });
+  };
 
-      await axios
-        .get(`${process.env.REACT_APP_API_URL}/status/`)
-        .then((response) => {
-          console.log(response.data);
-          this.setState({ statuses: response.data });
-        })
-        .catch((error) => {
-          console.log(error);
-          this.props.history.push("/error");
-        });
-    }
+  delete = async (statusId) => {
+    toast(
+      (t) => (
+        <span>
+          <p className='text-center'>
+            Are you sure you want to remove this Status?
+          </p>
+          <div className='text-center'>
+            <button
+              className='btn btn-primary btn-sm m-3'
+              stlye={{ width: 50, height: 30 }}
+              onClick={() => {
+                toast.dismiss(t.id);
+                this.fetchDeleteStatuses(statusId);
+              }}
+            >
+              Yes!
+            </button>
+            <button
+              className='btn btn-secondary btn-sm m-3'
+              stlye={{ width: 50, height: 30 }}
+              onClick={() => toast.dismiss(t.id)}
+            >
+              No!
+            </button>
+          </div>
+        </span>
+      ),
+      { duration: 50000 }
+    );
   };
 
   render() {
@@ -104,27 +139,23 @@ export default class Status extends Component {
             { title: "ID", field: "statusId" },
             { title: "Date", field: "validityPeriod" },
             {
-              title: "",
-              name: "delete",
+              title: "Actions",
+              name: "actions",
               render: (rowData) => (
-                <button className='btn btn-secondary'>
-                  <i
-                    onClick={this.delete.bind(this, rowData.statusId)}
-                    className='bi bi-trash'
-                  ></i>
-                </button>
-              ),
-            },
-            {
-              title: "",
-              name: "edit",
-              render: (rowData) => (
-                <button className='btn btn-secondary'>
-                  <i
-                    onClick={this.edit.bind(this, rowData.statusId)}
-                    className='bi bi-pencil'
-                  ></i>
-                </button>
+                <div>
+                  <button className='btn'>
+                    <i
+                      onClick={this.delete.bind(this, rowData.statusId)}
+                      className='bi bi-trash'
+                    ></i>
+                  </button>
+                  <button className='btn'>
+                    <i
+                      onClick={this.edit.bind(this, rowData.statusId)}
+                      className='bi bi-pencil'
+                    ></i>
+                  </button>
+                </div>
               ),
             },
           ]}

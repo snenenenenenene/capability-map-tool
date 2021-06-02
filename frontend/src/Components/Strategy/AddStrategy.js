@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Modal } from "react-bootstrap";
+import Select from "react-select";
 import StatusQuickAdd from "../Status/StatusQuickAdd";
 
 export default class AddStrategy extends Component {
@@ -53,12 +54,18 @@ export default class AddStrategy extends Component {
       })
       .catch((error) => {
         console.log(error);
-        this.props.history.push("/notfounderror");
+        this.props.history.push("/404");
       });
 
     await axios
       .get(`${process.env.REACT_APP_API_URL}/status/`)
-      .then((response) => this.setState({ statuses: response.data }))
+      .then((response) => {
+        response.data.forEach((status) => {
+          status.label = status.validityPeriod;
+          status.value = status.statusId;
+        });
+        this.setState({ statuses: response.data });
+      })
       .catch((error) => {
         toast.error("Could not load Statuses");
       });
@@ -68,21 +75,11 @@ export default class AddStrategy extends Component {
     this.setState({ showStatusModal: !this.state.showStatusModal });
   }
 
-  statusListRows() {
-    return this.state.statuses.map((status) => {
-      return (
-        <option key={status.statusId} value={status.statusId}>
-          {status.validityPeriod}
-        </option>
-      );
-    });
-  }
   async updateDate() {
     await axios
       .get(`${process.env.REACT_APP_API_URL}/status/`)
       .then((response) => this.setState({ statuses: response.data }))
       .catch((error) => {
-        console.log(error);
         toast.error("Could not Update Statuses");
       });
   }
@@ -99,77 +96,62 @@ export default class AddStrategy extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+        <nav aria-label='breadcrumb'>
+          <ol className='breadcrumb'>
+            <li className='breadcrumb-item'>
               <Link to={`/`}>Home</Link>
             </li>
-            <li className="breadcrumb-item">
+            <li className='breadcrumb-item'>
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className="breadcrumb-item">
+            <li className='breadcrumb-item'>
               <Link to={`/environment/${this.state.environmentName}/strategy`}>
                 Strategy
               </Link>
             </li>
-            <li className="breadcrumb-item active" aria-current="page">
+            <li className='breadcrumb-item active' aria-current='page'>
               Add Strategy
             </li>
           </ol>
         </nav>
-        <div className="jumbotron">
+        <div className='jumbotron'>
           <h3>Add Strategy</h3>
           <form onSubmit={this.handleSubmit}>
-            <div className="row">
-              <div className="col-sm-6">
-                <div className="form-row">
-                  <div className="form-group col-md">
-                    <label htmlFor="nameCapability">Name Strategy</label>
+            <div className='row'>
+              <div className='col-sm-6'>
+                <div className='form-row'>
+                  <div className='form-group col-md'>
+                    <label htmlFor='nameCapability'>Name Strategy</label>
                     <input
-                      type="text"
-                      id="strategyName"
-                      name="strategyName"
-                      className="form-control"
-                      placeholder="Name Strategy"
+                      type='text'
+                      id='strategyName'
+                      name='strategyName'
+                      className='form-control'
+                      placeholder='Name Strategy'
                       value={this.state.strategyName}
                       onChange={this.handleInputChange}
                     />
                   </div>
                 </div>
-                <div className="form-row">
-                  <div className="form-group col-md">
-                    <label htmlFor="statusId">Validity Period</label>
-                    <div className="input-group">
-                      <select
-                        id="statusId"
-                        name="statusId"
-                        className="form-control"
-                        placeholder="Validity Period"
-                        value={this.state.expirationDate}
-                        onChange={this.handleInputChange}
-                      >
-                        <option
-                          key="-1"
-                          defaultValue="selected"
-                          hidden="hidden"
-                          value=""
-                        >
-                          Select status
-                        </option>
-                        {this.statusListRows()}
-                      </select>
-                      <button
-                        style={{ marginLeft: 3 }}
-                        type="button"
-                        className="btn btn-sm btn-secondary"
-                        onClick={() => this.handleStatusModal()}
-                      >
-                        Add Status
-                      </button>
-                    </div>
-                    <Modal show={this.state.showStatusModal}>
+                <div className='form-row'>
+                  <div className='form-group col-md-9'>
+                    <label htmlFor='statusId'>Status</label>
+                    <Select
+                      value={this.state.statuses.filter(
+                        (status) => status.statusId === this.state.statusId
+                      )}
+                      id='statusId'
+                      name='statusId'
+                      placeholder='Validity Period'
+                      options={this.state.statuses}
+                      required
+                      onChange={(status) => {
+                        this.setState({ statusId: status.statusId });
+                      }}
+                    ></Select>
+                    <Modal show={this.state.showModal}>
                       <Modal.Header>Add Status</Modal.Header>
                       <Modal.Body>
                         <StatusQuickAdd
@@ -179,41 +161,49 @@ export default class AddStrategy extends Component {
                       </Modal.Body>
                       <Modal.Footer>
                         <button
-                          type="button"
-                          className="btn btn-secondary"
-                          onClick={() => this.handleStatusModal()}
+                          type='button'
+                          className='btn btn-secondary'
+                          onClick={() => this.handleModal()}
                         >
                           Close Modal
                         </button>
                       </Modal.Footer>
                     </Modal>
                   </div>
+                  <button
+                    type='button'
+                    className='btn btn-secondary'
+                    style={{ height: 40, marginTop: 30 }}
+                    onClick={() => this.handleModal()}
+                  >
+                    Add Status
+                  </button>
                 </div>
               </div>
-              <div className="col-sm-6">
-                <div className="form-row">
-                  <div className="form-group col-md-6">
-                    <label htmlFor="timeFrameStart">Time Frame Start</label>
+              <div className='col-sm-6'>
+                <div className='form-row'>
+                  <div className='form-group col-md-6'>
+                    <label htmlFor='timeFrameStart'>Time Frame Start</label>
                     <input
-                      type="date"
-                      id="timeFrameStart"
-                      name="timeFrameStart"
-                      className="form-control"
-                      placeholder="Start Date"
+                      type='date'
+                      id='timeFrameStart'
+                      name='timeFrameStart'
+                      className='form-control'
+                      placeholder='Start Date'
                       value={this.state.timeFrameStart}
                       onChange={this.handleDateChange}
                     />
                   </div>
                 </div>
-                <div className="form-row">
-                  <div className="form-group col-md-6">
-                    <label htmlFor="timeFrameEnd">Time Frame End</label>
+                <div className='form-row'>
+                  <div className='form-group col-md-6'>
+                    <label htmlFor='timeFrameEnd'>Time Frame End</label>
                     <input
-                      type="date"
-                      id="timeFrameEnd"
-                      name="timeFrameEnd"
-                      className="form-control"
-                      placeholder="End Date"
+                      type='date'
+                      id='timeFrameEnd'
+                      name='timeFrameEnd'
+                      className='form-control'
+                      placeholder='End Date'
                       value={this.state.timeFrameEnd}
                       onChange={this.handleDateChange}
                     />
@@ -222,8 +212,8 @@ export default class AddStrategy extends Component {
               </div>
             </div>
             <button
-              className="btn btn-primary"
-              type="button"
+              className='btn btn-primary'
+              type='button'
               onClick={this.handleSubmit}
             >
               Submit

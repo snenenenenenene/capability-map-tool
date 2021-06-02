@@ -25,7 +25,7 @@ export default class Strategy extends Component {
         this.setState({ environmentId: response.data.environmentId })
       )
       .catch((error) => {
-        this.props.history.push("/notfounderror");
+        this.props.history.push("/404");
       });
 
     await axios
@@ -47,15 +47,12 @@ export default class Strategy extends Component {
   fetchDeleteStrategies = async (strategyId) => {
     await axios
       .delete(`${process.env.REACT_APP_API_URL}/strategy/${strategyId}`)
-      .then((response) => toast.success("Succesfully Deleted Strategy"))
+      .then((response) => toast.success("Successfully Deleted Strategy"))
       .catch((error) => toast.error("Could not Delete Strategy"));
     //REFRESH Strategies
     await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/strategy/all-strategies-by-environmentid/${this.state.environmentId}`
-      )
+      .get(`${process.env.REACT_APP_API_URL}/strategy/`)
       .then((response) => {
-        this.setState({ strategies: [] });
         this.setState({ strategies: response.data });
       })
       .catch((error) => {
@@ -122,29 +119,25 @@ export default class Strategy extends Component {
             { title: "Name", field: "strategyName" },
             { title: "Start", field: "timeFrameStart" },
             { title: "End", field: "timeFrameEnd" },
-            { title: "Environment", field: "status.environmentId" },
+            { title: "Status", field: "status.validityPeriod" },
             {
-              title: "",
-              name: "delete",
+              title: "Actions",
+              name: "actions",
               render: (rowData) => (
-                <button className='btn btn-secondary'>
-                  <i
-                    onClick={this.delete.bind(this, rowData.strategyId)}
-                    className='bi bi-trash'
-                  ></i>
-                </button>
-              ),
-            },
-            {
-              title: "",
-              name: "edit",
-              render: (rowData) => (
-                <button className='btn btn-secondary'>
-                  <i
-                    onClick={this.edit.bind(this, rowData.strategyId)}
-                    className='bi bi-pencil'
-                  ></i>
-                </button>
+                <div>
+                  <button className='btn'>
+                    <i
+                      onClick={this.delete.bind(this, rowData.strategyId)}
+                      className='bi bi-trash'
+                    ></i>
+                  </button>
+                  <button className='btn'>
+                    <i
+                      onClick={this.edit.bind(this, rowData.strategyId)}
+                      className='bi bi-pencil'
+                    ></i>
+                  </button>
+                </div>
               ),
             },
           ]}
