@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.bavostepbros.leap.domain.model.BusinessProcess;
 import com.bavostepbros.leap.domain.model.Capability;
+import com.bavostepbros.leap.domain.model.CapabilityApplication;
 import com.bavostepbros.leap.domain.model.CapabilityInformation;
 import com.bavostepbros.leap.domain.model.CapabilityItem;
 import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapDto;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bavostepbros.leap.domain.model.Environment;
+import com.bavostepbros.leap.domain.model.ITApplication;
 import com.bavostepbros.leap.domain.model.Information;
 import com.bavostepbros.leap.domain.model.Program;
 import com.bavostepbros.leap.domain.model.Project;
@@ -30,10 +32,13 @@ import com.bavostepbros.leap.domain.model.Resource;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.Strategy;
 import com.bavostepbros.leap.domain.model.StrategyItem;
+import com.bavostepbros.leap.domain.model.Technology;
 import com.bavostepbros.leap.domain.model.dto.BusinessProcessDto;
+import com.bavostepbros.leap.domain.model.dto.CapabilityApplicationDto;
 import com.bavostepbros.leap.domain.model.dto.CapabilityInformationDto;
 import com.bavostepbros.leap.domain.model.dto.CapabilityItemDto;
 import com.bavostepbros.leap.domain.model.dto.EnvironmentDto;
+import com.bavostepbros.leap.domain.model.dto.ITApplicationDto;
 import com.bavostepbros.leap.domain.model.dto.InformationDto;
 import com.bavostepbros.leap.domain.model.dto.ProgramDto;
 import com.bavostepbros.leap.domain.model.dto.ProjectDto;
@@ -41,6 +46,7 @@ import com.bavostepbros.leap.domain.model.dto.ResourceDto;
 import com.bavostepbros.leap.domain.model.dto.StatusDto;
 import com.bavostepbros.leap.domain.model.dto.StrategyDto;
 import com.bavostepbros.leap.domain.model.dto.StrategyItemDto;
+import com.bavostepbros.leap.domain.model.dto.TechnologyDto;
 import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
 
 import lombok.RequiredArgsConstructor;
@@ -143,7 +149,8 @@ public class EnvironmentController {
 	private StrategyDto convertStrategy(Strategy strategy) {
 		List<StrategyItemDto> strategyItemsDto = new ArrayList<StrategyItemDto>();
 		if (strategy.getItems() != null) {
-			strategyItemsDto = strategy.getItems().stream().map(strategyItem -> convertStrategyItem(strategyItem))
+			strategyItemsDto = strategy.getItems().stream()
+					.map(strategyItem -> convertStrategyItem(strategyItem))
 					.collect(Collectors.toList());
 		}
 		return new StrategyDto(strategy.getStrategyId(), convertBasicStatus(strategy.getStatus()),
@@ -189,6 +196,36 @@ public class EnvironmentController {
 		return new ResourceDto(resource.getResourceId(), resource.getResourceName(), resource.getResourceDescription(), 
 				resource.getFullTimeEquivalentYearlyValue());
 	}
+	
+	private TechnologyDto convertTechnology(Technology technology) {
+		return new TechnologyDto(technology.getTechnologyId(), technology.getTechnologyName());
+	}
+	
+	private ITApplicationDto convertItApplication(ITApplication itApplication) {
+		List<TechnologyDto> technologiesDto = new ArrayList<TechnologyDto>();
+		if (itApplication.getTechnologies() != null) {
+			technologiesDto = itApplication.getTechnologies().stream()
+					.map(technology -> convertTechnology(technology))
+					.collect(Collectors.toList());
+		}
+		return new ITApplicationDto(itApplication.getItApplicationId(), convertBasicStatus(itApplication.getStatus()),
+				itApplication.getName(), itApplication.getVersion(), itApplication.getPurchaseDate(),
+				itApplication.getEndOfLife(), itApplication.getCurrentScalability(), 
+				itApplication.getExpectedScalability(), itApplication.getCurrentPerformance(),
+				itApplication.getExpectedPerformance(), itApplication.getCurrentSecurityLevel(),
+				itApplication.getExpectedSecurityLevel(), itApplication.getCurrentStability(),
+				itApplication.getExpectedStability(), itApplication.getCurrencyType(), itApplication.getCostCurrency(),
+				itApplication.getCurrentValue(), itApplication.getCurrentYearlyCost(), 
+				itApplication.getAcceptedYearlyCost(), itApplication.getTimeValue(), technologiesDto);
+	}
+	
+	private CapabilityApplicationDto convertCapabilityApplication(CapabilityApplication capabilityApplication) {
+		return new CapabilityApplicationDto(convertItApplication(capabilityApplication.getApplication()),
+				capabilityApplication.getImportance(), capabilityApplication.getEfficiencySupport(),
+				capabilityApplication.getFunctionalCoverage(), capabilityApplication.getCorrectnessBusinessFit(),
+				capabilityApplication.getFuturePotential(), capabilityApplication.getCompleteness(),
+				capabilityApplication.getCorrectnessInformationFit(), capabilityApplication.getAvailability());
+	}
 
 	private CapabilityMapItemDto constructGraph(Capability capability, List<Capability> pool) {
 		List<CapabilityItemDto> capabilityItemsDto = new ArrayList<CapabilityItemDto>();
@@ -225,6 +262,13 @@ public class EnvironmentController {
 					.map(resource -> convertResource(resource))
 					.collect(Collectors.toList());
 		}
+		
+		List<CapabilityApplicationDto> capabilityApplicationDto = new ArrayList<CapabilityApplicationDto>();
+		if (capability.getCapabilityApplication() != null) {
+			capabilityApplicationDto = capability.getCapabilityApplication().stream()
+					.map(capabilityApplication -> convertCapabilityApplication(capabilityApplication))
+					.collect(Collectors.toList());
+		}
 
 		return new CapabilityMapItemDto(capability.getCapabilityId(), capability.getCapabilityName(),
 				capability.getLevel(), capability.isPaceOfChange(), capability.getTargetOperatingModel(),
@@ -232,6 +276,7 @@ public class EnvironmentController {
 				convertBasicStatus(capability.getStatus()),
 				pool.stream().filter(i -> i.getParentCapabilityId().equals(capability.getCapabilityId()))
 						.map(i -> constructGraph(i, pool)).collect(Collectors.toList()),
-				capabilityItemsDto, projectsDto, businessProcessDto, capabilityInformationDto, resourceDto);
+				capabilityItemsDto, projectsDto, businessProcessDto, capabilityInformationDto, resourceDto,
+				capabilityApplicationDto);
 	}
 }
