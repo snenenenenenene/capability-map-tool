@@ -89,7 +89,7 @@ public class CapabilityInformationController {
 				capabilityInformation.getCapability().getParentCapabilityId(),
 				capabilityInformation.getCapability().getCapabilityName(),
 				capabilityInformation.getCapability().getLevel(),
-				capabilityInformation.getCapability().isPaceOfChange(),
+				capabilityInformation.getCapability().getPaceOfChange(),
 				capabilityInformation.getCapability().getTargetOperatingModel(),
 				capabilityInformation.getCapability().getResourceQuality(),
 				capabilityInformation.getCapability().getInformationQuality(),

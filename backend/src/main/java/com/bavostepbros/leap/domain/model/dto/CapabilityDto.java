@@ -1,6 +1,8 @@
 package com.bavostepbros.leap.domain.model.dto;
 
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
+import com.bavostepbros.leap.domain.model.paceofchange.PaceOfChange;
+import com.bavostepbros.leap.domain.model.targetoperatingmodel.TargetOperatingModel;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,8 +20,8 @@ public class CapabilityDto {
 	private Integer parentCapabilityId;
 	private String capabilityName;
 	private CapabilityLevel level;
-	private boolean paceOfChange;
-	private String targetOperatingModel;
+	private PaceOfChange paceOfChange;
+	private TargetOperatingModel targetOperatingModel;
 	private Integer resourceQuality;
 	private Integer informationQuality;
 	private Integer applicationFit;	

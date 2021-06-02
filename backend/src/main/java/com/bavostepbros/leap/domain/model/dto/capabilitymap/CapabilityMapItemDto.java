@@ -8,6 +8,8 @@ import com.bavostepbros.leap.domain.model.dto.CapabilityItemDto;
 import com.bavostepbros.leap.domain.model.dto.ProjectDto;
 import com.bavostepbros.leap.domain.model.dto.ResourceDto;
 import com.bavostepbros.leap.domain.model.dto.StatusDto;
+import com.bavostepbros.leap.domain.model.paceofchange.PaceOfChange;
+import com.bavostepbros.leap.domain.model.targetoperatingmodel.TargetOperatingModel;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,8 +26,8 @@ public class CapabilityMapItemDto {
 	private Integer capabilityId;
     private String capabilityName;
     private CapabilityLevel level;
-    private boolean paceOfChange;
-    private String targetOperatingModel;
+    private PaceOfChange paceOfChange;
+    private TargetOperatingModel targetOperatingModel;
     private Integer resourceQuality;
     private Integer informationQuality;
     private Integer applicationFit;

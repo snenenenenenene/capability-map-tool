@@ -30,6 +30,8 @@ import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
+import com.bavostepbros.leap.domain.model.paceofchange.PaceOfChange;
+import com.bavostepbros.leap.domain.model.targetoperatingmodel.TargetOperatingModel;
 import com.bavostepbros.leap.domain.service.capabilityservice.CapabilityService;
 import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
 import com.bavostepbros.leap.domain.service.statusservice.StatusService;
@@ -88,13 +90,16 @@ public class CapabilityServiceTest {
 		status = new Status(1, LocalDate.of(2021, 5, 9));
 		environment = new Environment(1, "Environment test");
 		capability = new Capability(1, environment, status, 0, "Capability 1",
-				true, "Target Operating Model", 10, 9, 8);
+				PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 
+				10, 9, 8);
 		capabilityService.updateLevel(capability);
 		capabilities = List.of(
 				new Capability(1, environment, status, 1, "Capability 1", 
-						true, "Target Operating Model", 10, 9, 8),
+						PaceOfChange.INNOVATIVE, TargetOperatingModel.DIVERSIFICATION, 
+						10, 9, 8),
 				new Capability(2, environment, status, 1, "Capability 2", 
-						true, "Target Operating Model", 10, 9, 8));
+						PaceOfChange.STANDARD, TargetOperatingModel.REPLICATION, 
+						10, 9, 8));
 		optionalStatus = Optional.of(status);
 		optionalCapability = Optional.of(capability);
 		optionalEnvironment = Optional.of(environment);
@@ -121,8 +126,8 @@ public class CapabilityServiceTest {
 	void should_throwInvalidInputException_whenSavedInputIsInvalid() {
 		Integer parentCapabilityId = capability.getParentCapabilityId();
 		String capabilityName = "";
-		boolean paceOfChange = capability.isPaceOfChange();
-		String targetOperatingModel = capability.getTargetOperatingModel();
+		String paceOfChange = capability.getPaceOfChange().toString();
+		String targetOperatingModel = capability.getTargetOperatingModel().toString();
 		Integer resourceQuality = capability.getResourceQuality();
 		Integer informationQuality = capability.getInformationQuality();
 		Integer applicationFit = capability.getApplicationFit();
@@ -143,8 +148,8 @@ public class CapabilityServiceTest {
 	void should_throwForeignKeyException_whenSavedEnvironmentIdIsInvalid() {
 		Integer parentCapabilityId = capability.getParentCapabilityId();
 		String capabilityName = capability.getCapabilityName();
-		boolean paceOfChange = capability.isPaceOfChange();
-		String targetOperatingModel = capability.getTargetOperatingModel();
+		String paceOfChange = capability.getPaceOfChange().toString();
+		String targetOperatingModel = capability.getTargetOperatingModel().toString();
 		Integer resourceQuality = capability.getResourceQuality();
 		Integer informationQuality = capability.getInformationQuality();
 		Integer applicationFit = capability.getApplicationFit();
@@ -165,8 +170,8 @@ public class CapabilityServiceTest {
 	void should_throwForeignKeyException_whenSavedStatusIdIsInvalid() {
 		Integer parentCapabilityId = capability.getParentCapabilityId();
 		String capabilityName = capability.getCapabilityName();
-		boolean paceOfChange = capability.isPaceOfChange();
-		String targetOperatingModel = capability.getTargetOperatingModel();
+		String paceOfChange = capability.getPaceOfChange().toString();
+		String targetOperatingModel = capability.getTargetOperatingModel().toString();
 		Integer resourceQuality = capability.getResourceQuality();
 		Integer informationQuality = capability.getInformationQuality();
 		Integer applicationFit = capability.getApplicationFit();
@@ -187,8 +192,8 @@ public class CapabilityServiceTest {
 	void should_throwDuplicateValueException_whenSavedCapabilityNameExists() {
 		Integer parentCapabilityId = capability.getParentCapabilityId();
 		String capabilityName = capability.getCapabilityName();
-		boolean paceOfChange = capability.isPaceOfChange();
-		String targetOperatingModel = capability.getTargetOperatingModel();
+		String paceOfChange = capability.getPaceOfChange().toString();
+		String targetOperatingModel = capability.getTargetOperatingModel().toString();
 		Integer resourceQuality = capability.getResourceQuality();
 		Integer informationQuality = capability.getInformationQuality();
 		Integer applicationFit = capability.getApplicationFit();
@@ -211,8 +216,8 @@ public class CapabilityServiceTest {
 	void should_throwForeignKeyException_whenSavedStatusDoesNotExists() {
 		Integer parentCapabilityId = capability.getParentCapabilityId();
 		String capabilityName = capability.getCapabilityName();
-		boolean paceOfChange = capability.isPaceOfChange();
-		String targetOperatingModel = capability.getTargetOperatingModel();
+		String paceOfChange = capability.getPaceOfChange().toString();
+		String targetOperatingModel = capability.getTargetOperatingModel().toString();
 		Integer resourceQuality = capability.getResourceQuality();
 		Integer informationQuality = capability.getInformationQuality();
 		Integer applicationFit = capability.getApplicationFit();
@@ -236,8 +241,8 @@ public class CapabilityServiceTest {
 	void should_throwForeignKeyException_whenSavedEnvironmentDoesNotExists() {
 		Integer parentCapabilityId = capability.getParentCapabilityId();
 		String capabilityName = capability.getCapabilityName();
-		boolean paceOfChange = capability.isPaceOfChange();
-		String targetOperatingModel = capability.getTargetOperatingModel();
+		String paceOfChange = capability.getPaceOfChange().toString();
+		String targetOperatingModel = capability.getTargetOperatingModel().toString();
 		Integer resourceQuality = capability.getResourceQuality();
 		Integer informationQuality = capability.getInformationQuality();
 		Integer applicationFit = capability.getApplicationFit();
@@ -288,8 +293,8 @@ public class CapabilityServiceTest {
 	void should_saveCapability_whenCapabilityIsSaved() {
 		Integer parentCapabilityId = capability.getParentCapabilityId();
 		String capabilityName = capability.getCapabilityName();
-		boolean paceOfChange = capability.isPaceOfChange();
-		String targetOperatingModel = capability.getTargetOperatingModel();
+		String paceOfChange = capability.getPaceOfChange().toString();
+		String targetOperatingModel = capability.getTargetOperatingModel().toString();
 		Integer resourceQuality = capability.getResourceQuality();
 		Integer informationQuality = capability.getInformationQuality();
 		Integer applicationFit = capability.getApplicationFit();
@@ -319,7 +324,7 @@ public class CapabilityServiceTest {
 		assertEquals(capability.getParentCapabilityId(), result.getParentCapabilityId());
 		assertEquals(capability.getCapabilityName(), result.getCapabilityName());
 		assertEquals(capability.getLevel(), result.getLevel());
-		assertEquals(capability.isPaceOfChange(), result.isPaceOfChange());
+		assertEquals(capability.getPaceOfChange(), result.getPaceOfChange());
 		assertEquals(capability.getTargetOperatingModel(), result.getTargetOperatingModel());
 		assertEquals(capability.getResourceQuality(), result.getResourceQuality());
 		assertEquals(capability.getInformationQuality(), result.getInformationQuality());
@@ -366,7 +371,7 @@ public class CapabilityServiceTest {
 		assertEquals(capability.getParentCapabilityId(), fetchedCapability.getParentCapabilityId());
 		assertEquals(capability.getCapabilityName(), fetchedCapability.getCapabilityName());
 		assertEquals(capability.getLevel(), fetchedCapability.getLevel());
-		assertEquals(capability.isPaceOfChange(), fetchedCapability.isPaceOfChange());
+		assertEquals(capability.getPaceOfChange(), fetchedCapability.getPaceOfChange());
 		assertEquals(capability.getTargetOperatingModel(), fetchedCapability.getTargetOperatingModel());
 		assertEquals(capability.getResourceQuality(), fetchedCapability.getResourceQuality());
 		assertEquals(capability.getInformationQuality(), fetchedCapability.getInformationQuality());
@@ -388,8 +393,8 @@ public class CapabilityServiceTest {
 		Integer capabilityId = capability.getCapabilityId();
 		Integer parentCapabilityId = capability.getParentCapabilityId();
 		String capabilityName = "";
-		boolean paceOfChange = capability.isPaceOfChange();
-		String targetOperatingModel = capability.getTargetOperatingModel();
+		String paceOfChange = capability.getPaceOfChange().toString();
+		String targetOperatingModel = capability.getTargetOperatingModel().toString();
 		Integer resourceQuality = capability.getResourceQuality();
 		Integer informationQuality = capability.getInformationQuality();
 		Integer applicationFit = capability.getApplicationFit();
@@ -411,8 +416,8 @@ public class CapabilityServiceTest {
 		Integer capabilityId = capability.getCapabilityId();
 		Integer parentCapabilityId = capability.getParentCapabilityId();
 		String capabilityName = capability.getCapabilityName();
-		boolean paceOfChange = capability.isPaceOfChange();
-		String targetOperatingModel = capability.getTargetOperatingModel();
+		String paceOfChange = capability.getPaceOfChange().toString();
+		String targetOperatingModel = capability.getTargetOperatingModel().toString();
 		Integer resourceQuality = capability.getResourceQuality();
 		Integer informationQuality = capability.getInformationQuality();
 		Integer applicationFit = capability.getApplicationFit();
@@ -434,8 +439,8 @@ public class CapabilityServiceTest {
 		Integer capabilityId = capability.getCapabilityId();
 		Integer parentCapabilityId = capability.getParentCapabilityId();
 		String capabilityName = capability.getCapabilityName();
-		boolean paceOfChange = capability.isPaceOfChange();
-		String targetOperatingModel = capability.getTargetOperatingModel();
+		String paceOfChange = capability.getPaceOfChange().toString();
+		String targetOperatingModel = capability.getTargetOperatingModel().toString();
 		Integer resourceQuality = capability.getResourceQuality();
 		Integer informationQuality = capability.getInformationQuality();
 		Integer applicationFit = capability.getApplicationFit();
@@ -457,8 +462,8 @@ public class CapabilityServiceTest {
 		Integer capabilityId = capability.getCapabilityId();
 		Integer parentCapabilityId = capability.getParentCapabilityId();
 		String capabilityName = capability.getCapabilityName();
-		boolean paceOfChange = capability.isPaceOfChange();
-		String targetOperatingModel = capability.getTargetOperatingModel();
+		String paceOfChange = capability.getPaceOfChange().toString();
+		String targetOperatingModel = capability.getTargetOperatingModel().toString();
 		Integer resourceQuality = capability.getResourceQuality();
 		Integer informationQuality = capability.getInformationQuality();
 		Integer applicationFit = capability.getApplicationFit();
@@ -482,8 +487,8 @@ public class CapabilityServiceTest {
 		Integer capabilityId = capability.getCapabilityId();
 		Integer parentCapabilityId = capability.getParentCapabilityId();
 		String capabilityName = "xyz";
-		boolean paceOfChange = capability.isPaceOfChange();
-		String targetOperatingModel = capability.getTargetOperatingModel();
+		String paceOfChange = capability.getPaceOfChange().toString();
+		String targetOperatingModel = capability.getTargetOperatingModel().toString();
 		Integer resourceQuality = capability.getResourceQuality();
 		Integer informationQuality = capability.getInformationQuality();
 		Integer applicationFit = capability.getApplicationFit();
@@ -510,8 +515,8 @@ public class CapabilityServiceTest {
 		Integer capabilityId = capability.getCapabilityId();
 		Integer parentCapabilityId = capability.getParentCapabilityId();
 		String capabilityName = capability.getCapabilityName();
-		boolean paceOfChange = capability.isPaceOfChange();
-		String targetOperatingModel = capability.getTargetOperatingModel();
+		String paceOfChange = capability.getPaceOfChange().toString();
+		String targetOperatingModel = capability.getTargetOperatingModel().toString();
 		Integer resourceQuality = capability.getResourceQuality();
 		Integer informationQuality = capability.getInformationQuality();
 		Integer applicationFit = capability.getApplicationFit();
@@ -539,8 +544,8 @@ public class CapabilityServiceTest {
 		Integer capabilityId = capability.getCapabilityId();
 		Integer parentCapabilityId = capability.getParentCapabilityId();
 		String capabilityName = capability.getCapabilityName();
-		boolean paceOfChange = capability.isPaceOfChange();
-		String targetOperatingModel = capability.getTargetOperatingModel();
+		String paceOfChange = capability.getPaceOfChange().toString();
+		String targetOperatingModel = capability.getTargetOperatingModel().toString();
 		Integer resourceQuality = capability.getResourceQuality();
 		Integer informationQuality = capability.getInformationQuality();
 		Integer applicationFit = capability.getApplicationFit();
@@ -599,8 +604,8 @@ public class CapabilityServiceTest {
 		Integer capabilityId = capability.getCapabilityId();
 		Integer parentCapabilityId = capability.getParentCapabilityId();
 		String capabilityName = capability.getCapabilityName();
-		boolean paceOfChange = capability.isPaceOfChange();
-		String targetOperatingModel = capability.getTargetOperatingModel();
+		String paceOfChange = capability.getPaceOfChange().toString();
+		String targetOperatingModel = capability.getTargetOperatingModel().toString();
 		Integer resourceQuality = capability.getResourceQuality();
 		Integer informationQuality = capability.getInformationQuality();
 		Integer applicationFit = capability.getApplicationFit();
@@ -632,7 +637,7 @@ public class CapabilityServiceTest {
 		assertEquals(capability.getParentCapabilityId(), fetchedCapability.getParentCapabilityId());
 		assertEquals(capability.getCapabilityName(), fetchedCapability.getCapabilityName());
 		assertEquals(capability.getLevel(), fetchedCapability.getLevel());
-		assertEquals(capability.isPaceOfChange(), fetchedCapability.isPaceOfChange());
+		assertEquals(capability.getPaceOfChange(), fetchedCapability.getPaceOfChange());
 		assertEquals(capability.getTargetOperatingModel(), fetchedCapability.getTargetOperatingModel());
 		assertEquals(capability.getResourceQuality(), fetchedCapability.getResourceQuality());
 		assertEquals(capability.getInformationQuality(), fetchedCapability.getInformationQuality());

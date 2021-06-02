@@ -271,7 +271,7 @@ public class EnvironmentController {
 		}
 
 		return new CapabilityMapItemDto(capability.getCapabilityId(), capability.getCapabilityName(),
-				capability.getLevel(), capability.isPaceOfChange(), capability.getTargetOperatingModel(),
+				capability.getLevel(), capability.getPaceOfChange(), capability.getTargetOperatingModel(),
 				capability.getResourceQuality(), capability.getInformationQuality(), capability.getApplicationFit(),
 				convertBasicStatus(capability.getStatus()),
 				pool.stream().filter(i -> i.getParentCapabilityId().equals(capability.getCapabilityId()))
