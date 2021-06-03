@@ -109,12 +109,7 @@ public class UserServiceImpl implements UserService {
 		if (!existsById(userId)){
 			throw new UserException("Can not update user if it does not exist.");
 		}
-//		if (!userService.existsByUsername(user.getUsername())){
-//			throw new DuplicateValueException("User name already exists.");
-//		}
-//		if (!userService.existsByEmail(user.getEmail())) {
-//			throw new DuplicateValueException("Email already exists");
-//		}
+
 		if (!roleService.existsById(roleId)) {
 			throw new ForeignKeyException("Role ID does not exist.");
 		}
@@ -138,8 +133,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean existsById(Integer id) {
-		boolean result = userDAL.findById(id) == null;
-		return !result;
+		return userDAL.findById(id).isPresent();
 	}
 
 	@Override
@@ -150,8 +144,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean existsByEmail(String email){
-		boolean result = userDAL.findByEmail(email) == null;
-		return !result;
+		return !(userDAL.findByEmail(email) == null);
 	}
 
 }
