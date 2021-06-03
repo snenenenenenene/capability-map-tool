@@ -49,6 +49,9 @@ export default class AddCapability extends Component {
     formData.append("applicationFit", this.state.applicationFit);
     formData.append("resourceQuality", this.state.resourcesQuality);
     formData.append("statusId", this.state.statusId);
+    for (var pair of formData.entries()) {
+      console.log(pair[0] + ", " + pair[1]);
+    }
     await axios
       .post(`${process.env.REACT_APP_API_URL}/capability/`, formData)
       .then((response) => {
@@ -178,7 +181,7 @@ export default class AddCapability extends Component {
                 </div>
                 <div className="form-row">
                   <div className="form-group col-md">
-                    <label htmlFor="paceOfChange">Parent Capability</label>
+                    <label htmlFor="parentCapability">Parent Capability</label>
                     <Select
                       options={this.state.capabilities}
                       name="parentCapability"
@@ -234,8 +237,9 @@ export default class AddCapability extends Component {
                       >
                         Select Pace of Change
                       </option>
-                      <option value="true">True</option>
-                      <option value="false">False</option>
+                      <option value="STANDARD">Standard</option>
+                      <option value="DIFFERNTIATION">Differentiation</option>
+                      <option value="INNOVATIVE">Innovative</option>
                     </select>
                   </div>
                   <div className="form-group col-md-6">
@@ -287,10 +291,10 @@ export default class AddCapability extends Component {
                       >
                         Select TOM
                       </option>
-                      <option value="Coordination">Coordination</option>
-                      <option value="Diversification">Diversification</option>
-                      <option value="Replication">Replication</option>
-                      <option value="Unification">Unification</option>
+                      <option value="COORDINATION">Coordination</option>
+                      <option value="DIVERSIFICATION">Diversification</option>
+                      <option value="REPLICATION">Replication</option>
+                      <option value="UNIFICATION">Unification</option>
                     </select>
                   </div>
                   <div className="form-group col-md-6">
