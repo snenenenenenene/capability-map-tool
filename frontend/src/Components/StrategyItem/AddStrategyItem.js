@@ -15,10 +15,8 @@ export default class AddStrategyItem extends Component {
       environmentName: this.props.match.params.name,
       itemId: "",
       environmentId: "",
-      capabilityId: "",
       strategyItemName: "",
       strategyItemDescription: "",
-      strategicImportance: "",
       showModal: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -35,32 +33,11 @@ export default class AddStrategyItem extends Component {
       .post(`${process.env.REACT_APP_API_URL}/strategyitem/`, formData)
       .then((response) => {
         toast.success("Strategy Item Added Successfully!");
-        this.setState({ itemId: response.data.itemId });
+        this.props.history.push(
+          `/environment/${this.state.environmentName}/strategyitem`
+        );
       })
       .catch((error) => toast.error("Could not Add Strategy Item"));
-    if (this.state.selectedCapabilities.length !== 0) {
-      let promises = [];
-
-      this.state.selectedCapabilities.forEach((cap) => {
-        const formData = new FormData();
-        formData.append("itemId", this.state.itemId);
-        formData.append("capabilityId", cap.capabilityId);
-        formData.append("strategicImportance", this.state.strategicImportance);
-        promises.push(
-          axios.post(
-            `${process.env.REACT_APP_API_URL}/capabilityitem/`,
-            formData
-          )
-        );
-
-        Promise.all(promises)
-          .then()
-          .catch((error) => toast.error("Failed to Connect to Capability"));
-      });
-    }
-    this.props.history.push(
-      `/environment/${this.state.environmentName}/strategyitem`
-    );
   };
 
   handleChange = (selectedOption) => {
@@ -81,22 +58,7 @@ export default class AddStrategyItem extends Component {
       })
       .catch((error) => {
         console.log(error);
-        this.props.history.push("/notfounderror");
-      });
-
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/capability/all-capabilities-by-environmentid/${this.state.environmentId}`
-      )
-      .then((response) => {
-        response.data.forEach((capability) => {
-          capability.label = capability.capabilityName;
-          capability.value = capability.capabilityId;
-        });
-        this.setState({ capabilities: response.data });
-      })
-      .catch((error) => {
-        toast.error("Could not load Capabilities");
+        this.props.history.push("/404");
       });
 
     await axios
@@ -135,114 +97,82 @@ export default class AddStrategyItem extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+        <nav aria-label='breadcrumb'>
+          <ol className='breadcrumb'>
+            <li className='breadcrumb-item'>
               <Link to={`/`}>Home</Link>
             </li>
-            <li className="breadcrumb-item">
+            <li className='breadcrumb-item'>
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className="breadcrumb-item">
+            <li className='breadcrumb-item'>
               <Link
                 to={`/environment/${this.state.environmentName}/strategyitem`}
               >
                 Strategy Item
               </Link>
             </li>
-            <li className="breadcrumb-item active" aria-current="page">
+            <li className='breadcrumb-item active' aria-current='page'>
               Add Strategy Item
             </li>
           </ol>
         </nav>
-        <div className="jumbotron">
+        <div className='jumbotron'>
           <h3>Add Strategy Item</h3>
           <form onSubmit={this.handleSubmit}>
-            <div className="row">
-              <div className="col-sm-6">
-                <div className="form-row">
-                  <div className="form-group col-md-6">
-                    <label htmlFor="strategyItemName">Name Strategy Item</label>
+            <div className='row'>
+              <div className='col-sm-6'>
+                <div className='form-row'>
+                  <div className='form-group col-md-6'>
+                    <label htmlFor='strategyItemName'>Name Strategy Item</label>
                     <input
-                      type="text"
-                      id="strategyItemName"
-                      name="strategyItemName"
-                      className="form-control"
-                      placeholder="Name Strategy Item"
+                      type='text'
+                      id='strategyItemName'
+                      name='strategyItemName'
+                      className='form-control'
+                      placeholder='Name Strategy Item'
                       value={this.state.strategyItemName}
                       onChange={this.handleInputChange}
                     />
                   </div>
-                  <div className="form-group col-md-6">
-                    <label htmlFor="strategyId">Strategy</label>
+                  <div className='form-group col-md-6'>
+                    <label htmlFor='strategyId'>Strategy</label>
                     <select
-                      className="form-control"
-                      name="strategyId"
-                      id="strategyId"
-                      placeholder="Add Status"
+                      className='form-control'
+                      name='strategyId'
+                      id='strategyId'
+                      placeholder='Add Status'
                       value={this.state.strategyId}
                       onChange={this.handleInputChange}
                     >
-                      <option key="-1" defaultValue="selected" hidden value={0}>
+                      <option key='-1' defaultValue='selected' hidden value={0}>
                         None
                       </option>
                       {this.strategyListRows()}
                     </select>
                   </div>
                 </div>
-                <div className="form-row"></div>
-                <div className="form-group">
-                  <label htmlFor="strategyItemDescription">Description</label>
+                <div className='form-row'></div>
+                <div className='form-group'>
+                  <label htmlFor='strategyItemDescription'>Description</label>
                   <textarea
-                    type="text"
-                    id="strategyItemDescription"
-                    name="strategyItemDescription"
-                    className="form-control"
-                    rows="5"
-                    placeholder="Description"
+                    type='text'
+                    id='strategyItemDescription'
+                    name='strategyItemDescription'
+                    className='form-control'
+                    rows='5'
+                    placeholder='Description'
                     value={this.state.strategyItemDescription}
                     onChange={this.handleInputChange}
                   />
                 </div>
               </div>
-              <div className="col-sm-6">
-                <div className="form-group col-md">
-                  <label htmlFor="strategicImportance">Importance</label>
-                  <select
-                    className="form-control"
-                    name="strategicImportance"
-                    id="strategicImportance"
-                    placeholder="Add Importance"
-                    value={this.state.strategicImportance}
-                    onChange={this.handleInputChange}
-                  >
-                    <option defaultValue="selected" hidden value={null}>
-                      Optional
-                    </option>
-                    <option value="NONE">None</option>
-                    <option value="LOWEST">Lowest</option>
-                    <option value="MEDIUM">Medium</option>
-                    <option value="HIGH">High</option>
-                    <option value="HIGHEST">Highest</option>
-                  </select>
-                </div>
-                <div className="form-group col-md">
-                  <label htmlFor="capabilityId">Capability</label>
-                  <Select
-                    options={this.state.capabilities}
-                    isMulti
-                    closeMenuOnSelect={false}
-                    onChange={this.handleChange}
-                    placeholder="Optional"
-                  />
-                </div>
-              </div>
             </div>
             <button
-              className="btn btn-primary"
-              type="button"
+              className='btn btn-primary'
+              type='button'
               onClick={this.handleSubmit}
             >
               Submit

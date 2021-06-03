@@ -1,8 +1,11 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { Modal } from "react-bootstrap";
+import StatusQuickAdd from "../Status/StatusQuickAdd";
 import toast from "react-hot-toast";
-
+import Select from "react-select";
+import ReactStars from "react-stars";
 export default class EditCapability extends Component {
   constructor(props) {
     super(props);
@@ -10,50 +13,65 @@ export default class EditCapability extends Component {
       statuses: [],
       environments: [],
       capabilities: [],
+      strategyItems: [],
+      selectedItems: [],
 
       environmentName: this.props.match.params.name,
       capabilityId: this.props.match.params.id,
       environmentId: "",
-      oldCapabilityName: "",
       capabilityName: "",
-      parentCapabilityId: "",
+      parentCapabilityId: 0,
       description: "",
       paceOfChange: "",
-      TOM: "",
+      targetOperatingModel: "",
       informationQuality: "",
       applicationFit: "",
       resourceQuality: "",
       statusId: "",
-      capabilityLevel: "",
-      validityPeriod: "",
+      showModal: false,
+      showItemModal: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.updateDate = this.updateDate.bind(this);
+  }
+  handleItemModal() {
+    this.setState({ showItemModal: !this.state.showItemModal });
+  }
+  handleModal() {
+    this.setState({ showModal: !this.state.showModal });
+  }
+  async updateDate() {
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/status/`)
+      .then((response) => this.setState({ statuses: response.data }))
+      .catch((error) => {
+        toast.error("Could not Update Statuses");
+      });
   }
 
+  ratingChanged = (newRating) => {
+    this.setState({ resourceQuality: newRating });
+  };
   handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (this.state.capabilityName === this.state.oldCapabilityName) {
-      toast.error("The Capability Name Can't be the Same");
-      return;
-    }
     const formData = new FormData();
     formData.append("environmentName", this.state.environmentName);
     formData.append("environmentId", this.state.environmentId);
     formData.append("capabilityName", this.state.capabilityName);
-    formData.append("capabilityId", this.state.capabilityId);
     formData.append("parentCapabilityId", this.state.parentCapabilityId);
     formData.append("paceOfChange", this.state.paceOfChange);
-    formData.append("targetOperatingModel", this.state.TOM);
+    formData.append("targetOperatingModel", this.state.targetOperatingModel);
     formData.append("informationQuality", this.state.informationQuality);
     formData.append("applicationFit", this.state.applicationFit);
     formData.append("resourceQuality", this.state.resourceQuality);
     formData.append("statusId", this.state.statusId);
     formData.append("level", this.state.capabilityLevel);
-    console.log(formData);
     await axios
-      .put(`${process.env.REACT_APP_API_URL}/capability/`, formData)
+      .put(
+        `${process.env.REACT_APP_API_URL}/capability/${this.state.capabilityId}`,
+        formData
+      )
       .then((response) => {
         toast.success("Capability Successfully Updated!");
         this.props.history.push(
@@ -74,19 +92,31 @@ export default class EditCapability extends Component {
         this.setState({ environmentId: response.data.environmentId })
       )
       .catch((error) => {
-        this.props.history.push("/notfounderror");
+        this.props.history.push("/404");
       });
 
     await axios
       .get(`${process.env.REACT_APP_API_URL}/status/`)
-      .then((response) => this.setState({ statuses: response.data }))
+      .then((response) => {
+        response.data.forEach((status) => {
+          status.label = status.validityPeriod;
+          status.value = status.statusId;
+        });
+        this.setState({ statuses: response.data });
+      })
       .catch((error) => {
         toast.error("Could not Load Statuses");
       });
 
     await axios
       .get(`${process.env.REACT_APP_API_URL}/capability/`)
-      .then((response) => this.setState({ capabilities: response.data }))
+      .then((response) => {
+        response.data.forEach((cap) => {
+          cap.label = `${cap.capabilityName} - lvl: ${cap.level}`;
+          cap.value = cap.capabilityId;
+        });
+        this.setState({ capabilities: response.data });
+      })
       .catch((error) => {
         toast.error("Could not Load Capabilities");
       });
@@ -102,7 +132,7 @@ export default class EditCapability extends Component {
           capabilityName: response.data.capabilityName,
           parentCapabilityId: response.data.parentCapabilityId,
           paceOfChange: response.data.paceOfChange,
-          TOM: response.data.targetOperatingModel,
+          targetOperatingModel: response.data.targetOperatingModel,
           informationQuality: response.data.informationQuality,
           applicationFit: response.data.applicationFit,
           resourceQuality: response.data.resourceQuality,
@@ -118,26 +148,6 @@ export default class EditCapability extends Component {
 
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
-  }
-
-  statusListRows() {
-    return this.state.statuses.map((status) => {
-      return (
-        <option key={status.statusId} value={status.statusId}>
-          {status.validityPeriod}
-        </option>
-      );
-    });
-  }
-
-  capabilityListRows() {
-    return this.state.capabilities.map((capability) => {
-      return (
-        <option key={capability.capabilityId} value={capability.capabilityId}>
-          {capability.capabilityName}
-        </option>
-      );
-    });
   }
 
   render() {
@@ -161,7 +171,7 @@ export default class EditCapability extends Component {
                 Capability
               </Link>
             </li>
-            <li className='breadcrumb-item'>{this.state.capabilityID}</li>
+            <li className='breadcrumb-item'>{this.state.capabilityId}</li>
             <li className='breadcrumb-item active' aria-current='page'>
               Edit Capability
             </li>
@@ -183,53 +193,36 @@ export default class EditCapability extends Component {
                       placeholder='Name Capability'
                       value={this.state.capabilityName}
                       onChange={this.handleInputChange}
+                      required
                     />
                   </div>
                 </div>
                 <div className='form-row'>
-                  <div className='form-group col-md-6'>
+                  <div className='form-group col-md'>
                     <label htmlFor='paceOfChange'>Parent Capability</label>
-                    <select
-                      className='form-control'
-                      name='parentCapabilityId'
-                      id='parentCapabilityId'
+                    <Select
+                      options={this.state.capabilities}
+                      value={this.state.capabilities.filter(
+                        (capability) =>
+                          capability.capabilityId ===
+                          this.state.parentCapabilityId
+                      )}
+                      name='parentCapability'
+                      id='parentCapability'
                       placeholder='Add Parent Capability'
-                      value={this.state.parentCapabilityId}
-                      onChange={this.handleInputChange}
-                    >
-                      <option
-                        key='-1'
-                        defaultValue='selected'
-                        hidden='hidden'
-                        value={1}
-                      >
-                        None
-                      </option>
-                      {this.capabilityListRows()}
-                    </select>
-                  </div>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='capabilityLevel'>Capability Level</label>
-                    <select
-                      className='form-control'
-                      name='capabilityLevel'
-                      id='capabilityLevel'
-                      placeholder='Add Level'
-                      value={this.state.capabilityLevel}
-                      onChange={this.handleInputChange}
-                    >
-                      <option
-                        key='-1'
-                        defaultValue='selected'
-                        hidden='hidden'
-                        value=''
-                      >
-                        Select Level
-                      </option>
-                      <option value='ONE'>ONE</option>
-                      <option value='TWO'>TWO</option>
-                      <option value='THREE'>THREE</option>
-                    </select>
+                      noOptionsMessage={() => "No Level 1 Capabilities"}
+                      onChange={(cap) => {
+                        if (cap) {
+                          this.setState({
+                            parentCapabilityId: cap.capabilityId,
+                          });
+                        } else {
+                          this.setState({ parentCapabilityId: 0 });
+                        }
+                      }}
+                      isClearable={true}
+                      required
+                    ></Select>
                   </div>
                 </div>
                 <div className='form-group'>
@@ -239,7 +232,7 @@ export default class EditCapability extends Component {
                     id='description'
                     name='description'
                     className='form-control'
-                    rows='4'
+                    rows='5'
                     placeholder='Description'
                     value={this.state.description}
                     onChange={this.handleInputChange}
@@ -257,6 +250,7 @@ export default class EditCapability extends Component {
                       id='paceOfChange'
                       value={this.state.paceOfChange}
                       onChange={this.handleInputChange}
+                      required
                     >
                       <option
                         key='-1'
@@ -281,6 +275,7 @@ export default class EditCapability extends Component {
                       id='informationQuality'
                       value={this.state.informationQuality}
                       onChange={this.handleInputChange}
+                      required
                     >
                       <option
                         key='-1'
@@ -300,14 +295,15 @@ export default class EditCapability extends Component {
                 </div>
                 <div className='form-row'>
                   <div className='form-group col-md-6'>
-                    <label htmlFor='paceOfChange'>TOM</label>
+                    <label htmlFor='targetOperatingModel'>TOM</label>
                     <select
                       className='form-control'
-                      name='TOM'
-                      placeholder='Add TOM'
-                      id='TOM'
-                      value={this.state.TOM}
+                      name='targetOperatingModel'
+                      placeholder='Add targetOperatingModel'
+                      id='targetOperatingModel'
+                      value={this.state.targetOperatingModel}
                       onChange={this.handleInputChange}
+                      required
                     >
                       <option
                         key='-1'
@@ -317,7 +313,10 @@ export default class EditCapability extends Component {
                       >
                         Select TOM
                       </option>
-                      <option value='TOM'>TOM</option>
+                      <option value='Coordination'>Coordination</option>
+                      <option value='Diversification'>Diversification</option>
+                      <option value='Replication'>Replication</option>
+                      <option value='Unification'>Unification</option>
                     </select>
                   </div>
                   <div className='form-group col-md-6'>
@@ -329,6 +328,7 @@ export default class EditCapability extends Component {
                       id='applicationFit'
                       value={this.state.applicationFit}
                       onChange={this.handleInputChange}
+                      required
                     >
                       <option
                         key='-1'
@@ -346,45 +346,62 @@ export default class EditCapability extends Component {
                     </select>
                   </div>
                 </div>
-                <div className='form-group'>
-                  <label htmlFor='resourceQuality'>Resource Quality</label>
-                  <select
-                    id='resourceQuality'
-                    name='resourceQuality'
-                    className='form-control'
-                    placeholder='Resource Quality'
-                    value={this.state.resourceQuality}
-                    onChange={this.handleInputChange}
-                  >
-                    <option key='-1' defaultValue='selected' hidden='hidden'>
-                      {this.state.resourceQuality}
-                    </option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                  </select>
-                  <div className='select-container'>
-                    <label htmlFor='statusId'>Validity Period</label>
-                    <select
+                <div className='form-row'>
+                  <div className='form-group col-md-9'>
+                    <label htmlFor='statusId'>Status</label>
+                    <Select
+                      value={this.state.statuses.filter(
+                        (status) => status.statusId === this.state.statusId
+                      )}
                       id='statusId'
                       name='statusId'
-                      className='form-control'
                       placeholder='Validity Period'
-                      value={this.state.statusId}
-                      onChange={this.handleInputChange}
-                    >
-                      <option
-                        key='-1'
-                        defaultValue='selected'
-                        hidden='hidden'
-                        value=''
-                      >
-                        {this.state.validityPeriod}
-                      </option>
-                      {this.statusListRows()}
-                    </select>
+                      options={this.state.statuses}
+                      required
+                      onChange={(statusId) => {
+                        this.setState({ statusId: statusId });
+                      }}
+                    ></Select>
+                    <Modal show={this.state.showModal}>
+                      <Modal.Header>Add Status</Modal.Header>
+                      <Modal.Body>
+                        <StatusQuickAdd
+                          environmentName={this.state.environmentName}
+                          updateDate={this.updateDate}
+                        />
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <button
+                          type='button'
+                          className='btn btn-secondary'
+                          onClick={() => this.handleModal()}
+                        >
+                          Close Modal
+                        </button>
+                      </Modal.Footer>
+                    </Modal>
+                  </div>
+                  <button
+                    type='button'
+                    className='btn btn-secondary'
+                    style={{ height: 40, marginTop: 30 }}
+                    onClick={() => this.handleModal()}
+                  >
+                    Add Status
+                  </button>
+                </div>
+                <div className='form-row'>
+                  <div className='form-group col-md'>
+                    <label htmlFor='resourceQuality'>Resource Quality</label>
+                    <ReactStars
+                      count={5}
+                      onChange={this.ratingChanged}
+                      size={24}
+                      half={false}
+                      color2={"#ffd700"}
+                      value={this.state.resourceQuality}
+                      required
+                    />
                   </div>
                 </div>
               </div>

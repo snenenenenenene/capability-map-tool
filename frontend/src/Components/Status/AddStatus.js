@@ -34,6 +34,18 @@ export default class AddStatus extends Component {
 
   async componentDidMount() {
     await axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+      )
+      .then((response) =>
+        this.setState({ environmentId: response.data.environmentId })
+      )
+      .catch((error) => {
+        console.log(error);
+        this.props.history.push("/404");
+      });
+
+    await axios
       .get(`${process.env.REACT_APP_API_URL}/status/`)
       .then((response) => this.setState({ statuses: response.data }));
   }

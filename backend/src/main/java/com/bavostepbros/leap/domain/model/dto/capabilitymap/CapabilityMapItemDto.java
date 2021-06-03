@@ -2,9 +2,14 @@ package com.bavostepbros.leap.domain.model.dto.capabilitymap;
 
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 import com.bavostepbros.leap.domain.model.dto.BusinessProcessDto;
+import com.bavostepbros.leap.domain.model.dto.CapabilityApplicationDto;
+import com.bavostepbros.leap.domain.model.dto.CapabilityInformationDto;
 import com.bavostepbros.leap.domain.model.dto.CapabilityItemDto;
 import com.bavostepbros.leap.domain.model.dto.ProjectDto;
+import com.bavostepbros.leap.domain.model.dto.ResourceDto;
 import com.bavostepbros.leap.domain.model.dto.StatusDto;
+import com.bavostepbros.leap.domain.model.paceofchange.PaceOfChange;
+import com.bavostepbros.leap.domain.model.targetoperatingmodel.TargetOperatingModel;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,8 +26,8 @@ public class CapabilityMapItemDto {
 	private Integer capabilityId;
     private String capabilityName;
     private CapabilityLevel level;
-    private boolean paceOfChange;
-    private String targetOperatingModel;
+    private PaceOfChange paceOfChange;
+    private TargetOperatingModel targetOperatingModel;
     private Integer resourceQuality;
     private Integer informationQuality;
     private Integer applicationFit;
@@ -31,4 +36,7 @@ public class CapabilityMapItemDto {
     private List<CapabilityItemDto> capabilityItems;
     private List<ProjectDto> projects;
     private List<BusinessProcessDto> businessprocess;
+    private List<CapabilityInformationDto> capabilityInformation;
+    private List<ResourceDto> resources;
+    private List<CapabilityApplicationDto> capabilityApplications;
 }

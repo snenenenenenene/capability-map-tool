@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 class Environment extends Component {
   constructor(props) {
@@ -29,10 +30,10 @@ class Environment extends Component {
         this.setState({
           environmentId: response.data.environmentId,
         });
+        toast.success(this.state.environmentName);
       })
       .catch((error) => {
-        console.log("environment not found");
-        this.props.history.push("/notfound");
+        this.props.history.push("/home");
       });
   }
 
@@ -40,12 +41,12 @@ class Environment extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+        <nav aria-label='breadcrumb'>
+          <ol className='breadcrumb'>
+            <li className='breadcrumb-item'>
               <Link to={`/`}>Home</Link>
             </li>
-            <li className="breadcrumb-item">
+            <li className='breadcrumb-item'>
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
@@ -54,158 +55,158 @@ class Environment extends Component {
         </nav>
         <Link to={`/environment/${this.state.environmentName}/export`}>
           <button
-            className="btn btn-danger float-right"
+            className='btn btn-danger float-right'
             style={{ marginRight: 34, marginTop: 15 }}
           >
             Map
           </button>
         </Link>
-        <div className="container jumbotron">
-          <div className="card-deck">
-            <div className="card">
+        <div className='container jumbotron'>
+          <div className='card-deck'>
+            <div className='card'>
               <Link to={`${this.state.environmentName}/capability`}>
-                <div className="card-body">
-                  <h5 className="card-title text-center">Capabilities</h5>
-                  <div className="text-center">
+                <div className='card-body'>
+                  <h5 className='card-title text-center'>Capabilities</h5>
+                  <div className='text-center'>
                     <Link to={`${this.state.environmentName}/capability/add`}>
-                      <button className="btn btn-circle btn-sm btn-success">
-                        <i class="bi bi-plus-lg"></i>
+                      <button className='btn btn-circle btn-sm btn-success'>
+                        <i class='bi bi-plus-lg'></i>
                       </button>
                     </Link>
                   </div>
                 </div>
               </Link>
-              <div className="card-footer"></div>
+              <div className='card-footer'></div>
             </div>
-            <div className="card">
+            <div className='card'>
               <Link to={`${this.state.environmentName}/strategy`}>
-                <div className="card-body">
-                  <h5 className="card-title text-center">Strategies</h5>
-                  <div className="text-center">
+                <div className='card-body'>
+                  <h5 className='card-title text-center'>Strategies</h5>
+                  <div className='text-center'>
                     <Link to={`${this.state.environmentName}/strategy/add`}>
-                      <button className="btn btn-circle btn-sm btn-success">
-                        <i class="bi bi-plus-lg"></i>
+                      <button className='btn btn-circle btn-sm btn-success'>
+                        <i class='bi bi-plus-lg'></i>
                       </button>
                     </Link>
                   </div>
                 </div>
               </Link>
-              <div className="card-footer"></div>
+              <div className='card-footer'></div>
             </div>
-            <div className="card">
+            <div className='card'>
               <Link to={`${this.state.environmentName}/resource`}>
-                <div className="card-body">
-                  <h5 className="card-title text-center">Resources</h5>
-                  <div className="text-center">
+                <div className='card-body'>
+                  <h5 className='card-title text-center'>Resources</h5>
+                  <div className='text-center'>
                     <Link to={`${this.state.environmentName}/resource/add`}>
-                      <button className="btn btn-circle btn-sm btn-success">
-                        <i class="bi bi-plus-lg"></i>
+                      <button className='btn btn-circle btn-sm btn-success'>
+                        <i class='bi bi-plus-lg'></i>
                       </button>
                     </Link>
                   </div>
                 </div>
               </Link>
-              <div className="card-footer"></div>
+              <div className='card-footer'></div>
             </div>
           </div>
           <br></br>
-          <div className="card-deck">
-            <div className="card">
+          <div className='card-deck'>
+            <div className='card'>
               <Link to={`${this.state.environmentName}/itapplication`}>
-                <div className="card-body">
-                  <h5 className="card-title text-center">IT-Applications</h5>
-                  <div className="text-center">
+                <div className='card-body'>
+                  <h5 className='card-title text-center'>IT-Applications</h5>
+                  <div className='text-center'>
                     <Link
                       to={`${this.state.environmentName}/itapplication/add`}
                     >
-                      <button className="btn btn-circle btn-sm btn-success">
-                        <i class="bi bi-plus-lg"></i>
+                      <button className='btn btn-circle btn-sm btn-success'>
+                        <i class='bi bi-plus-lg'></i>
                       </button>
                     </Link>
                   </div>
                 </div>
               </Link>
-              <div className="card-footer"></div>
+              <div className='card-footer'></div>
             </div>
-            <div className="card">
+            <div className='card'>
               <Link to={`${this.state.environmentName}/strategyitem`}>
-                <div className="card-body">
-                  <h5 className="card-title text-center">Strategy Items</h5>
-                  <div className="text-center">
+                <div className='card-body'>
+                  <h5 className='card-title text-center'>Strategy Items</h5>
+                  <div className='text-center'>
                     <Link to={`${this.state.environmentName}/strategyitem/add`}>
-                      <button className="btn btn-circle btn-sm btn-success">
-                        <i class="bi bi-plus-lg"></i>
+                      <button className='btn btn-circle btn-sm btn-success'>
+                        <i class='bi bi-plus-lg'></i>
                       </button>
                     </Link>
                   </div>
                 </div>
               </Link>
-              <div className="card-footer"></div>
+              <div className='card-footer'></div>
             </div>
-            <div className="card">
+            <div className='card'>
               <Link to={`${this.state.environmentName}/businessprocess`}>
-                <div className="card-body">
-                  <h5 className="card-title text-center">Business Processes</h5>
-                  <div className="text-center">
+                <div className='card-body'>
+                  <h5 className='card-title text-center'>Business Processes</h5>
+                  <div className='text-center'>
                     <Link
                       to={`${this.state.environmentName}/businessprocess/add`}
                     >
-                      <button className="btn btn-circle btn-sm btn-success">
-                        <i class="bi bi-plus-lg"></i>
+                      <button className='btn btn-circle btn-sm btn-success'>
+                        <i class='bi bi-plus-lg'></i>
                       </button>
                     </Link>
                   </div>
                 </div>
               </Link>
-              <div className="card-footer"></div>
+              <div className='card-footer'></div>
             </div>
           </div>
           <br></br>
-          <div className="card-deck">
-            <div className="card">
+          <div className='card-deck'>
+            <div className='card'>
               <Link to={`${this.state.environmentName}/program`}>
-                <div className="card-body">
-                  <h5 className="card-title text-center">Programs</h5>
-                  <div className="text-center">
+                <div className='card-body'>
+                  <h5 className='card-title text-center'>Programs</h5>
+                  <div className='text-center'>
                     <Link to={`${this.state.environmentName}/program/add`}>
-                      <button className="btn btn-circle btn-sm btn-success">
-                        <i class="bi bi-plus-lg"></i>
+                      <button className='btn btn-circle btn-sm btn-success'>
+                        <i class='bi bi-plus-lg'></i>
                       </button>
                     </Link>
                   </div>
                 </div>
               </Link>
-              <div className="card-footer"></div>
+              <div className='card-footer'></div>
             </div>
-            <div className="card">
+            <div className='card'>
               <Link to={`${this.state.environmentName}/project`}>
-                <div className="card-body">
-                  <h5 className="card-title text-center">Projects</h5>
-                  <div className="text-center">
+                <div className='card-body'>
+                  <h5 className='card-title text-center'>Projects</h5>
+                  <div className='text-center'>
                     <Link to={`${this.state.environmentName}/project/add`}>
-                      <button className="btn btn-circle btn-sm btn-success">
-                        <i class="bi bi-plus-lg"></i>
+                      <button className='btn btn-circle btn-sm btn-success'>
+                        <i class='bi bi-plus-lg'></i>
                       </button>
                     </Link>
                   </div>
                 </div>
               </Link>
-              <div className="card-footer"></div>
+              <div className='card-footer'></div>
             </div>
-            <div className="card">
+            <div className='card'>
               <Link to={`${this.state.environmentName}/status`}>
-                <div className="card-body">
-                  <h5 className="card-title text-center">Status</h5>
-                  <div className="text-center">
+                <div className='card-body'>
+                  <h5 className='card-title text-center'>Status</h5>
+                  <div className='text-center'>
                     <Link to={`${this.state.environmentName}/status/add`}>
-                      <button className="btn btn-circle btn-sm btn-success">
-                        <i class="bi bi-plus-lg"></i>
+                      <button className='btn btn-circle btn-sm btn-success'>
+                        <i class='bi bi-plus-lg'></i>
                       </button>
                     </Link>
                   </div>
                 </div>
               </Link>
-              <div className="card-footer"></div>
+              <div className='card-footer'></div>
             </div>
           </div>
         </div>

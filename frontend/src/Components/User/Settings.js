@@ -56,70 +56,64 @@ export default class Settings extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+        <nav aria-label='breadcrumb'>
+          <ol className='breadcrumb'>
+            <li className='breadcrumb-item'>
               <Link to={`/home`}>Home</Link>
             </li>
-            <li className="breadcrumb-item">Settings</li>
+            <li className='breadcrumb-item'>Settings</li>
           </ol>
         </nav>
-        <div className="jumbotron">
+        <div className='jumbotron'>
           <h3>User Settings</h3>
           <form onSubmit={this.handleSubmit}>
-            <div className="row">
-              <div className="col-sm">
-                <div className="form-row">
-                  <div className="form-group col-md-6">
-                    <label htmlFor="email" className="sr-only">
-                      Email
-                    </label>
-                    <input
-                      type="text"
-                      id="email"
-                      name="email"
-                      className="form-control-plaintext"
-                      placeholder="email"
-                      readonly
-                      value={this.state.email}
-                    />
-                  </div>
-                </div>
-                <div className="form-row">
-                  <div className="form-group col-md-6">
-                    <label htmlFor="username">Username</label>
-                    <input
-                      type="text"
-                      id="username"
-                      name="username"
-                      className="form-control"
-                      placeholder="Username"
-                      value={this.state.username}
-                      onChange={this.handleInputChange}
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="form-row">
-                  <div className="form-group col-md-6">
-                    <label htmlFor="password">Password</label>
-                    <input
-                      type="password"
-                      id="password"
-                      name="password"
-                      className="form-control"
-                      placeholder="Password"
-                      value={this.state.password}
-                      onChange={this.handleInputChange}
-                      required
-                    />
-                  </div>
-                </div>
+            <div className='form-group'>
+              <label htmlFor='email' className='sr-only'>
+                Email
+              </label>
+              <input
+                type='text'
+                id='email'
+                name='email'
+                className='form-control-plaintext'
+                placeholder='email'
+                readonly
+                value={this.state.email}
+              />
+            </div>
+            <div className='form-row'>
+              <div className='form-group col-md-6'>
+                <label htmlFor='username'>Username</label>
+                <input
+                  type='text'
+                  id='username'
+                  name='username'
+                  className='form-control'
+                  placeholder='Username'
+                  value={this.state.username}
+                  onChange={this.handleInputChange}
+                  required
+                />
+              </div>
+            </div>
+            <div className='form-row'>
+              <div className='form-group col-md-6'>
+                <label htmlFor='password'>Password</label>
+                <input
+                  type='password'
+                  id='password'
+                  name='password'
+                  className='form-control'
+                  placeholder='Password'
+                  value={this.state.password}
+                  onChange={this.handleInputChange}
+                  required
+                />
               </div>
             </div>
             <button
-              className="btn btn-primary"
-              type="submit"
+              className='btn btn-primary'
+              type='submit'
               onClick={this.handleSubmit}
             >
               Submit

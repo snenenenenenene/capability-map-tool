@@ -25,9 +25,10 @@ import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.Strategy;
 import com.bavostepbros.leap.domain.model.StrategyItem;
-import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 import com.bavostepbros.leap.domain.model.dto.CapabilityItemDto;
+import com.bavostepbros.leap.domain.model.paceofchange.PaceOfChange;
 import com.bavostepbros.leap.domain.model.strategicimportance.StrategicImportance;
+import com.bavostepbros.leap.domain.model.targetoperatingmodel.TargetOperatingModel;
 import com.bavostepbros.leap.domain.service.capabilityitemservice.CapabilityItemService;
 import com.bavostepbros.leap.persistence.CapabilityDAL;
 import com.bavostepbros.leap.persistence.CapabilityItemDAL;
@@ -92,11 +93,12 @@ public class CapabilityItemControllerTest {
 		environmentFirst = environmentDAL.save(new Environment(1, "Test 1"));
 		environmentSecond = environmentDAL.save(new Environment(2, "Test 2"));
 		capabilityFirst = capabilityDAL.save(new Capability(1, environmentFirst,
-				statusFirst, 1, "Capability 1", true,
-				"Target Operating Model", 1, 1, 1));
+				statusFirst, 1, "Capability 1", PaceOfChange.DIFFERENTIATION,
+				TargetOperatingModel.COORDINATION, 1, 1, 1));
 		capabilitySecond = capabilityDAL.save(new Capability(2, environmentFirst,
 				statusFirst, capabilityFirst.getCapabilityId(), "Capability 2", 
-				true, "Target Operating Model", 1, 1, 1));
+				PaceOfChange.INNOVATIVE, TargetOperatingModel.DIVERSIFICATION, 
+				1, 1, 1));
 		strategyFirst = strategyDAL.save(new Strategy(1, statusFirst, "Strategy 1",
 				LocalDate.of(2021, 05, 15), LocalDate.of(2021, 05, 20), 
 				environmentFirst));
@@ -265,7 +267,7 @@ public class CapabilityItemControllerTest {
 		assertEquals(expectedObject.getCapability().getParentCapabilityId(), actualObject.getCapability().getParentCapabilityId());
 		assertEquals(expectedObject.getCapability().getCapabilityName(), actualObject.getCapability().getCapabilityName());
 		assertEquals(expectedObject.getCapability().getLevel(), actualObject.getCapability().getLevel());
-		assertEquals(expectedObject.getCapability().isPaceOfChange(), actualObject.getCapability().isPaceOfChange());
+		assertEquals(expectedObject.getCapability().getPaceOfChange(), actualObject.getCapability().getPaceOfChange());
 		assertEquals(expectedObject.getCapability().getTargetOperatingModel(), actualObject.getCapability().getTargetOperatingModel());
 		assertEquals(expectedObject.getCapability().getResourceQuality(), actualObject.getCapability().getResourceQuality());
 		assertEquals(expectedObject.getCapability().getInformationQuality(), actualObject.getCapability().getInformationQuality());

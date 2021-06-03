@@ -36,6 +36,18 @@ export default class EditStatus extends Component {
 
   async componentDidMount() {
     await axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+      )
+      .then((response) =>
+        this.setState({ environmentId: response.data.environmentId })
+      )
+      .catch((error) => {
+        console.log(error);
+        this.props.history.push("/404");
+      });
+
+    await axios
       .get(`${process.env.REACT_APP_API_URL}/api/status/${this.state.statusId}`)
       .then((response) =>
         this.setState({ validityPeriod: response.data.validityPeriod })
@@ -51,49 +63,49 @@ export default class EditStatus extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+        <nav aria-label='breadcrumb'>
+          <ol className='breadcrumb'>
+            <li className='breadcrumb-item'>
               <Link to={`/`}>Home</Link>
             </li>
-            <li className="breadcrumb-item">
+            <li className='breadcrumb-item'>
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className="breadcrumb-item">
+            <li className='breadcrumb-item'>
               <Link to={`/environment/${this.state.environmentName}/status`}>
                 Status
               </Link>
             </li>
-            <li className="breadcrumb-item">{this.state.statusId}</li>
+            <li className='breadcrumb-item'>{this.state.statusId}</li>
           </ol>
         </nav>
-        <div className="jumbotron">
+        <div className='jumbotron'>
           <h3>Edit Status</h3>
           <form onSubmit={this.handleSubmit}>
-            <div className="row">
-              <div className="col-sm-6">
-                <div className="form-row">
-                  <div className="form-group col-md-6">
-                    <label htmlFor="validityPeriod">Validity Period</label>
+            <div className='row'>
+              <div className='col-sm-6'>
+                <div className='form-row'>
+                  <div className='form-group col-md-6'>
+                    <label htmlFor='validityPeriod'>Validity Period</label>
                     <input
-                      type="date"
-                      id="validityPeriod"
-                      name="validityPeriod"
-                      className="form-control"
-                      placeholder="End Date"
+                      type='date'
+                      id='validityPeriod'
+                      name='validityPeriod'
+                      className='form-control'
+                      placeholder='End Date'
                       value={this.state.validityPeriod}
                       onChange={this.handleDateChange}
                     />
                   </div>
                 </div>
               </div>
-              <div className="col-sm-6"></div>
+              <div className='col-sm-6'></div>
             </div>
             <button
-              className="btn btn-primary"
-              type="button"
+              className='btn btn-primary'
+              type='button'
               onClick={this.handleSubmit}
             >
               Submit

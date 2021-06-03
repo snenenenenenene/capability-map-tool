@@ -1,57 +1,65 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import toast from "react-hot-toast";
+import Select from "react-select";
 
 export default class AddBusinessProcess extends Component {
   constructor(props) {
     super(props);
     this.state = {
       environments: [],
-      environmentName: "",
-      capabilityName: "",
-      parentCapability: "",
-      description: "",
-      paceOfChange: "",
-      TOM: "",
-      informationQuality: "",
-      applicationFit: "",
-      resourcesQuality: "",
-      expirationDate: "",
-      level: 0,
+      environmentName: this.props.match.params.name,
+      environmentId: "",
+      businessProcessName: "",
+      businessProcessDescription: "",
     };
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
-  async handleSubmit() {
-    var Capability = {
-      environment: this.state.environmentName,
-      capabilityName: this.state.capabilityName.value,
-      parentCapabilityId: this.state.parentCapability.value,
-      // description: this.state.description.value,
-      paceOfChange: this.state.paceOfChange.value,
-      targetOperatingModel: this.state.TOM.value,
-      informationQuality: this.state.informationQuality.value,
-      applicationFit: this.state.applicationFit.value,
-      resourceQuality: this.state.resourcesQuality.value,
-      status: this.state.expirationDate.value,
-      level: this.state.level.value,
-    };
-    console.log(Capability);
-    const post_response = await fetch(
-      `${process.env.REACT_APP_API_URL}/strategy/add`,
-      { method: "POST", body: Capability }
+  handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("businessProcessName", this.state.businessProcessName);
+    formData.append(
+      "businessProcessDescription",
+      this.state.businessProcessDescription
     );
-    if (!post_response.ok) {
-      console.log("Failed to upload via presigned POST");
-    }
-    console.log(
-      `File uploaded via presigned POST with key: ${Capability.capabilityName}`
-    );
+    await axios
+      .post(`${process.env.REACT_APP_API_URL}/businessprocess/`, formData)
+      .then((response) => {
+        toast.success("Business Process Added Successfully!");
+        this.props.history.push(
+          `/environment/${this.state.environmentName}/businessprocess`
+        );
+      })
+      .catch((error) => toast.error("Could not Add Business Process"));
+  };
+
+  handleChange = (selectedOption) => {
+    this.setState({ selectedCapabilities: selectedOption });
+  };
+
+  async componentDidMount() {
+    await axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+      )
+      .then((response) => {
+        this.setState({ environmentId: response.data.environmentId });
+      })
+      .catch((error) => {
+        console.log(error);
+        this.props.history.push("/404");
+      });
   }
 
-  componentDidMount() {}
+  handleInputChange(event) {
+    this.setState({ [event.target.name]: event.target.value });
+  }
 
   render() {
-    const environmentName = this.props.match.params.name;
     return (
       <div>
         <br></br>
@@ -61,8 +69,15 @@ export default class AddBusinessProcess extends Component {
               <Link to={`/`}>Home</Link>
             </li>
             <li className='breadcrumb-item'>
-              <Link to={`/environment/${environmentName}`}>
-                {environmentName}
+              <Link to={`/environment/${this.state.environmentName}`}>
+                {this.state.environmentName}
+              </Link>
+            </li>
+            <li className='breadcrumb-item'>
+              <Link
+                to={`/environment/${this.state.environmentName}/businessprocess`}
+              >
+                Business Process
               </Link>
             </li>
             <li className='breadcrumb-item active' aria-current='page'>
@@ -70,163 +85,40 @@ export default class AddBusinessProcess extends Component {
             </li>
           </ol>
         </nav>
-        <div class='jumbotron'>
+        <div className='jumbotron'>
           <h3>Add Business Process</h3>
-          <form onSubmit={this.handleSubmit} method='POST'>
+          <form onSubmit={this.handleSubmit}>
             <div className='row'>
               <div className='col-sm-6'>
                 <div className='form-row'>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='nameCapability'>Name Capability</label>
+                  <div className='form-group col-md'>
+                    <label htmlFor='businessProcessName'>
+                      Name Business Process
+                    </label>
                     <input
                       type='text'
-                      id='capabilityName'
-                      name='capabilityName'
+                      id='businessProcessName'
+                      name='businessProcessName'
                       className='form-control'
-                      placeholder='Name Capability'
-                      value={this.state.capabilityName}
+                      placeholder='Name Business Process'
+                      value={this.state.businessProcessName}
                       onChange={this.handleInputChange}
                     />
                   </div>
                 </div>
-                <div className='form-row'>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='paceOfChange'>Parent Capability</label>
-                    <select
-                      className='form-control'
-                      name='parentCapability'
-                      id='parentCapability'
-                      placeholder='Add Parent Capability'
-                      value={this.state.parentCapabilityId}
-                      onChange={this.handleInputChange}
-                    >
-                      <option value='1'>Capability 1</option>
-                      <option value='2'>Capability 2</option>
-                      <option value='3'>Capability 3</option>
-                    </select>
-                  </div>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='capabilityLevel'>Capability Level</label>
-                    <select
-                      className='form-control'
-                      name='capabilityLevel'
-                      id='capabilityLevel'
-                      placeholder='Add Level'
-                      value={this.state.capabilityLevel}
-                      onChange={this.handleInputChange}
-                    >
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                    </select>
-                  </div>
-                </div>
+                <div className='form-row'></div>
                 <div className='form-group'>
-                  <label htmlFor='description'>Description</label>
+                  <label htmlFor='businessProcessDescription'>
+                    Description
+                  </label>
                   <textarea
                     type='text'
-                    id='description'
-                    name='description'
+                    id='businessProcessDescription'
+                    name='businessProcessDescription'
                     className='form-control'
-                    rows='4'
+                    rows='5'
                     placeholder='Description'
-                    value={this.state.description}
-                    onChange={this.handleInputChange}
-                  />
-                </div>
-              </div>
-              <div className='col-sm-6'>
-                <div className='form-row'>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='paceOfChange'>Pace of Change</label>
-                    <select
-                      className='form-control'
-                      name='paceOfChange'
-                      placeholder='Add Pace of Change'
-                      id='paceOfChange'
-                      value={this.state.paceOfChange}
-                      onChange={this.handleInputChange}
-                    >
-                      <option>True</option>
-                      <option>False</option>
-                    </select>
-                  </div>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='informationQuality'>
-                      Information Quality
-                    </label>
-                    <select
-                      className='form-control'
-                      name='informationQuality'
-                      placeholder='Add Information Quality'
-                      id='informationQuality'
-                      value={this.state.informationQuality}
-                      onChange={this.handleInputChange}
-                    >
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                    </select>
-                  </div>
-                </div>
-                <div className='form-row'>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='paceOfChange'>TOM</label>
-                    <select
-                      className='form-control'
-                      name='TOM'
-                      placeholder='Add TOM'
-                      id='TOM'
-                      value={this.state.TOM}
-                      onChange={this.handleInputChange}
-                    >
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                    </select>
-                  </div>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='applicationFit'>Application Fit</label>
-                    <select
-                      className='form-control'
-                      placeholder='Add Application Fit'
-                      id='applicationFit'
-                      value={this.state.applicationFit}
-                    >
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className='form-group'>
-                  <label htmlFor='resourcesQuality'>Resources Quality</label>
-                  <select
-                    id='resourcesQuality'
-                    name='resourcesQuality'
-                    className='form-control'
-                    placeholder='Resources Quality'
-                    value={this.state.resourcesQuality}
-                    onChange={this.handleInputChange}
-                  >
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                  </select>
-                  <label htmlFor='expirationDate'>Expiration Date</label>
-                  <input
-                    id='expirationDate'
-                    name='expirationDate'
-                    type='date'
-                    className='form-control'
-                    value={this.state.expirationDate}
+                    value={this.state.businessProcessDescription}
                     onChange={this.handleInputChange}
                   />
                 </div>

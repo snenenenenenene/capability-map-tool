@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import MaterialTable from "material-table";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default class Status extends Component {
   constructor(props) {
@@ -24,7 +25,19 @@ export default class Status extends Component {
       )
       .catch((error) => {
         console.log(error);
-        this.props.history.push("/error");
+        this.props.history.push("/404");
+      });
+
+    await axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+      )
+      .then((response) =>
+        this.setState({ environmentId: response.data.environmentId })
+      )
+      .catch((error) => {
+        console.log(error);
+        this.props.history.push("/404");
       });
 
     await axios
@@ -43,94 +56,111 @@ export default class Status extends Component {
     );
   }
 
-  delete = async (statusId) => {
-    if (window.confirm("Are you sure you want to delete this status?")) {
-      await axios
-        .delete(`${process.env.REACT_APP_API_URL}/status/${statusId}`)
-        .catch((error) => {
-          if (error.response.status === 500)
-            alert(
-              "This status is in use by a capability and could not be deleted!"
-            );
-          console.error(error);
-        });
-      //REFRESH CAPABILITIES
+  fetchDeleteStatuses = async (statusId) => {
+    await axios
+      .delete(`${process.env.REACT_APP_API_URL}/status/${statusId}`)
+      .then((response) => toast.success("Successfully Deleted Status"))
+      .catch((error) => toast.error("Could not Delete Status"));
+    //REFRESH STATUSES
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/status/`)
+      .then((response) => {
+        this.setState({ capabilities: response.data });
+      })
+      .catch((error) => {
+        toast.error("Could not Find Statuses");
+      });
+  };
 
-      await axios
-        .get(`${process.env.REACT_APP_API_URL}/status/`)
-        .then((response) => {
-          console.log(response.data);
-          this.setState({ statuses: response.data });
-        })
-        .catch((error) => {
-          console.log(error);
-          this.props.history.push("/error");
-        });
-    }
+  delete = async (statusId) => {
+    toast(
+      (t) => (
+        <span>
+          <p className='text-center'>
+            Are you sure you want to remove this Status?
+          </p>
+          <div className='text-center'>
+            <button
+              className='btn btn-primary btn-sm m-3'
+              stlye={{ width: 50, height: 30 }}
+              onClick={() => {
+                toast.dismiss(t.id);
+                this.fetchDeleteStatuses(statusId);
+              }}
+            >
+              Yes!
+            </button>
+            <button
+              className='btn btn-secondary btn-sm m-3'
+              stlye={{ width: 50, height: 30 }}
+              onClick={() => toast.dismiss(t.id)}
+            >
+              No!
+            </button>
+          </div>
+        </span>
+      ),
+      { duration: 50000 }
+    );
   };
 
   render() {
     return (
       <div>
         <br></br>
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+        <nav aria-label='breadcrumb'>
+          <ol className='breadcrumb'>
+            <li className='breadcrumb-item'>
               <Link to={`/`}>Home</Link>
             </li>
-            <li className="breadcrumb-item">
+            <li className='breadcrumb-item'>
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className="breadcrumb-item">Statuses</li>
+            <li className='breadcrumb-item'>Statuses</li>
           </ol>
         </nav>
-        <div className="jumbotron">
-          <h1 style={{ display: "inline-block" }} className="display-4">
-            Statuses
-          </h1>
-          <Link to={`/environment/${this.state.environmentName}/status/add`}>
-            <button className="btn btn-primary float-right">Add Status</button>
-          </Link>
-          <br />
-          <br />
-          <MaterialTable
-            columns={[
-              { title: "ID", field: "statusId" },
-              { title: "Date", field: "validityPeriod" },
-              {
-                title: "",
-                name: "delete",
-                render: (rowData) => (
-                  <button className="btn btn-secondary">
+        <MaterialTable
+          title='Statuses'
+          actions={[
+            {
+              icon: "add",
+              tooltip: "Add Status",
+              isFreeAction: true,
+              onClick: (event) => {
+                this.props.history.push(
+                  `/environment/${this.state.environmentName}/status/add`
+                );
+              },
+            },
+          ]}
+          columns={[
+            { title: "ID", field: "statusId" },
+            { title: "Date", field: "validityPeriod" },
+            {
+              title: "Actions",
+              name: "actions",
+              render: (rowData) => (
+                <div>
+                  <button className='btn'>
                     <i
                       onClick={this.delete.bind(this, rowData.statusId)}
-                      className="bi bi-trash"
+                      className='bi bi-trash'
                     ></i>
                   </button>
-                ),
-              },
-              {
-                title: "",
-                name: "edit",
-                render: (rowData) => (
-                  <button className="btn btn-secondary">
+                  <button className='btn'>
                     <i
                       onClick={this.edit.bind(this, rowData.statusId)}
-                      className="bi bi-pencil"
+                      className='bi bi-pencil'
                     ></i>
                   </button>
-                ),
-              },
-            ]}
-            data={this.state.statuses}
-            options={{
-              showTitle: false,
-              search: false,
-            }}
-          />
-        </div>
+                </div>
+              ),
+            },
+          ]}
+          data={this.state.statuses}
+        />
       </div>
     );
   }

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import MaterialTable from "material-table";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default class Project extends Component {
   constructor(props) {
@@ -25,7 +26,7 @@ export default class Project extends Component {
       )
       .catch((error) => {
         console.log(error);
-        this.props.history.push("/error");
+        this.props.history.push("/404");
       });
 
     await axios
@@ -41,95 +42,117 @@ export default class Project extends Component {
 
   edit(projectId) {
     this.props.history.push(
-      `/environment/${this.state.environmentName}/project/${projectId}/edit`
+      `/environment/${this.state.environmentName}/project/${projectId}`
     );
   }
   //DELETE project AND REMOVE ALL CHILD projects FROM STATE
   delete = async (projectId) => {
-    if (window.confirm("Are you sure you want to delete this project?")) {
-      await axios
-        .delete(`${process.env.REACT_APP_API_URL}/project/${projectId}`)
-        .catch((error) => console.error(error));
-      //REFRESH projects
-      await axios
-        .get(`${process.env.REACT_APP_API_URL}/project/`)
-        .then((response) => {
-          this.setState({ projects: [] });
-          this.setState({ projects: response.data });
-        })
-        .catch((error) => {
-          console.log(error);
-          this.props.history.push("/error");
-        });
-    }
+    toast(
+      (t) => (
+        <span>
+          <p className='text-center'>
+            Are you sure you want to remove this project?
+          </p>
+          <div className='text-center'>
+            <button
+              className='btn btn-primary btn-sm m-3'
+              stlye={{ width: 50, height: 30 }}
+              onClick={() => {
+                toast.dismiss(t.id);
+                this.fetchDeleteProjects(projectId);
+              }}
+            >
+              Yes!
+            </button>
+            <button
+              className='btn btn-secondary btn-sm m-3'
+              stlye={{ width: 50, height: 30 }}
+              onClick={() => toast.dismiss(t.id)}
+            >
+              No!
+            </button>
+          </div>
+        </span>
+      ),
+      { duration: 50000 }
+    );
+  };
+
+  fetchDeleteProjects = async (projectId) => {
+    await axios
+      .delete(`${process.env.REACT_APP_API_URL}/project/${projectId}`)
+      .then((response) => toast.success("Successfully Deleted Project"))
+      .catch((error) => toast.error("Could not Delete Project"));
+    //REFRESH CAPABILITIES
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/project/`)
+      .then((response) => {
+        this.setState({ projects: response.data });
+      })
+      .catch((error) => {
+        toast.error("Could not Find Projects");
+      });
   };
 
   render() {
     return (
       <div>
         <br></br>
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+        <nav aria-label='breadcrumb'>
+          <ol className='breadcrumb'>
+            <li className='breadcrumb-item'>
               <Link to={`/`}>Home</Link>
             </li>
-            <li className="breadcrumb-item">
+            <li className='breadcrumb-item'>
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className="breadcrumb-item">Projects</li>
+            <li className='breadcrumb-item'>Projects</li>
           </ol>
         </nav>
-        <div className="jumbotron">
-          <div>
-            <h1 className="display-4" style={{ display: "inline-block" }}>
-              Projects
-            </h1>
-            <Link to={`/environment/${this.state.environmentName}/project/add`}>
-              <button className="btn btn-primary float-right">
-                Add project
-              </button>
-            </Link>
-          </div>
-          <br />
-          <br />
-          <MaterialTable
-            columns={[
-              { title: "ID", field: "projectId" },
-              { title: "Name", field: "projectName" },
-              {
-                title: "",
-                name: "delete",
-                render: (rowData) => (
-                  <button className="btn btn-secondary">
+        <MaterialTable
+          title='Projects'
+          actions={[
+            {
+              icon: "add",
+              tooltip: "Add Project",
+              isFreeAction: true,
+              onClick: (event) => {
+                this.props.history.push(
+                  `/environment/${this.state.environmentName}/project/add`
+                );
+              },
+            },
+          ]}
+          columns={[
+            { title: "ID", field: "projectId" },
+            { title: "Name", field: "projectName" },
+            { title: "Program", field: "program.programName" },
+            { title: "Status", field: "status.validityPeriod" },
+            {
+              title: "Actions",
+              name: "actions",
+              render: (rowData) => (
+                <div>
+                  <button className='btn'>
                     <i
                       onClick={this.delete.bind(this, rowData.projectId)}
-                      className="bi bi-trash"
+                      className='bi bi-trash'
                     ></i>
                   </button>
-                ),
-              },
-              {
-                title: "",
-                name: "edit",
-                render: (rowData) => (
-                  <button className="btn btn-secondary">
+                  <button className='btn'>
                     <i
                       onClick={this.edit.bind(this, rowData.projectId)}
-                      className="bi bi-pencil"
+                      className='bi bi-pencil'
                     ></i>
                   </button>
-                ),
-              },
-            ]}
-            data={this.state.projects}
-            options={{
-              showTitle: false,
-              search: false,
-            }}
-          />
-        </div>
+                </div>
+              ),
+            },
+          ]}
+          data={this.state.projects}
+        />
       </div>
     );
   }

@@ -42,7 +42,7 @@ public class CapabilityItemController {
 		return convertCapabilityItem(capabilityItem);
 	}
 
-	@GetMapping("{capabilityId}/{itemId}")
+	@GetMapping(path = "{capabilityId}/{itemId}")
 	public CapabilityItemDto getCapabilityItem(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("itemId") Integer itemId) {
 
@@ -93,7 +93,7 @@ public class CapabilityItemController {
 						capabilityItem.getCapability().getStatus().getValidityPeriod()),
 				capabilityItem.getCapability().getParentCapabilityId(),
 				capabilityItem.getCapability().getCapabilityName(), capabilityItem.getCapability().getLevel(),
-				capabilityItem.getCapability().isPaceOfChange(),
+				capabilityItem.getCapability().getPaceOfChange(),
 				capabilityItem.getCapability().getTargetOperatingModel(),
 				capabilityItem.getCapability().getResourceQuality(),
 				capabilityItem.getCapability().getInformationQuality(),

@@ -2,16 +2,28 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import MaterialTable from "material-table";
 import axios from "axios";
+import toast from "react-hot-toast";
+import { Modal } from "react-bootstrap";
+import Select from "react-select";
 
 export default class BusinessProcess extends Component {
   constructor(props) {
     super(props);
     this.state = {
       environments: [],
+      capabilities: [],
       environmentName: this.props.match.params.name,
       environmentId: "",
+      capabilityId: "",
       businessProcesses: [],
+      showItemModal: false,
     };
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+  }
+
+  handleInputChange(event) {
+    this.setState({ [event.target.name]: event.target.value });
   }
 
   async componentDidMount() {
@@ -23,123 +35,223 @@ export default class BusinessProcess extends Component {
         this.setState({ environmentId: response.data.environmentId })
       )
       .catch((error) => {
-        console.log(error);
-        this.props.history.push("/error");
+        this.props.history.push("/404");
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/businessProcesses/`)
+      .get(`${process.env.REACT_APP_API_URL}/capability/`)
+      .then((response) => {
+        response.data.forEach((capability) => {
+          capability.label = capability.capabilityName;
+          capability.value = capability.capabilityId;
+        });
+        this.setState({ capabilities: response.data });
+      })
+      .catch((error) => {
+        toast.error("Could not Load Capabilities");
+      });
+
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/businessprocess/`)
       .then((response) => {
         this.setState({ businessProcesses: response.data });
       })
       .catch((error) => {
-        console.log(error);
+        toast.error("Could not Load Business Processes");
       });
   }
 
-  edit(businessProcessesId) {
+  edit(businessProcessId) {
     this.props.history.push(
-      `/environment/${this.state.environmentName}/businessProcess/${businessProcessesId}`
+      `/environment/${this.state.environmentName}/businessprocess/${businessProcessId}`
     );
   }
-  //DELETE CAPABILITY AND REMOVE ALL CHILD CAPABILITIES FROM STATE
-  delete = async (businessProcessesId) => {
-    if (
-      window.confirm("Are you sure you want to delete this business process?")
-    ) {
-      await axios
-        .delete(
-          `${process.env.REACT_APP_API_URL}/businessProcess/${businessProcessesId}`
-        )
-        .catch((error) => console.error(error));
-      //REFRESH CAPABILITIES
-      await axios
-        .get(`${process.env.REACT_APP_API_URL}/businessProcess/`)
-        .then((response) => {
-          this.setState({ businessProcesses: [] });
-          this.setState({ businessProcesses: response.data });
-        })
-        .catch((error) => {
-          console.log(error);
-          this.props.history.push("/error");
-        });
-    }
+  fetchDeleteBusinessProcesses = async (businessProcessId) => {
+    await axios
+      .delete(
+        `${process.env.REACT_APP_API_URL}/businessprocess/${businessProcessId}`
+      )
+      .then((response) =>
+        toast.success("Successfully Deleted Business Process")
+      )
+      .catch((error) => toast.error("Could not Delete Business Process"));
+    //REFRESH BUSINESS PROCESSES
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/businessprocess/`)
+      .then((response) => {
+        this.setState({ businessprocesses: response.data });
+      })
+      .catch((error) => {
+        toast.error("Could not Find Business Processes");
+      });
   };
+
+  handleSubmit = (businessProcessId) => async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("businessProcessId", businessProcessId);
+    formData.append("capabilityId", this.state.capabilityId);
+    await axios
+      .put(
+        `${process.env.REACT_APP_API_URL}/capability/link-businessprocess/`,
+        formData
+      )
+      .then(toast.success("Business Process Successfully Linked"))
+      .catch((error) => toast.error("Could not Link Business Process"));
+  };
+
+  delete = async (businessProcessId) => {
+    toast(
+      (t) => (
+        <span>
+          <p className='text-center'>
+            Are you sure you want to remove this Business Process?
+          </p>
+          <div className='text-center'>
+            <button
+              className='btn btn-primary btn-sm m-3'
+              stlye={{ width: 50, height: 30 }}
+              onClick={() => {
+                toast.dismiss(t.id);
+                this.fetchDeleteBusinessProcesses(businessProcessId);
+              }}
+            >
+              Yes!
+            </button>
+            <button
+              className='btn btn-secondary btn-sm m-3'
+              stlye={{ width: 50, height: 30 }}
+              onClick={() => toast.dismiss(t.id)}
+            >
+              No!
+            </button>
+          </div>
+        </span>
+      ),
+      { duration: 50000 }
+    );
+  };
+  handleModal() {
+    this.setState({ showModal: !this.state.showModal });
+  }
 
   render() {
     return (
       <div>
         <br></br>
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+        <nav aria-label='breadcrumb'>
+          <ol className='breadcrumb'>
+            <li className='breadcrumb-item'>
               <Link to={`/`}>Home</Link>
             </li>
-            <li className="breadcrumb-item">
+            <li className='breadcrumb-item'>
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className="breadcrumb-item">Business Processes</li>
+            <li className='breadcrumb-item'>Business Processes</li>
           </ol>
         </nav>
-        <div className="jumbotron">
-          <div>
-            <h1 className="display-4" style={{ display: "inline-block" }}>
-              Business Processes
-            </h1>
-            <Link
-              to={`/environment/${this.state.environmentName}/businessProcess/add`}
-            >
-              <button className="btn btn-primary float-right">
-                Add Business Process
-              </button>
-            </Link>
-          </div>
-          <br />
-          <br />
-          <MaterialTable
-            columns={[
-              { title: "ID", field: "businessProcessId" },
-              { title: "Name", field: "businessProcessName" },
-              {
-                title: "",
-                name: "delete",
-                render: (rowData) => (
-                  <button className="btn btn-secondary">
+        <MaterialTable
+          title='Business Processes'
+          actions={[
+            {
+              icon: "add",
+              tooltip: "Add Business Process",
+              isFreeAction: true,
+              onClick: (event) => {
+                this.props.history.push(
+                  `/environment/${this.state.environmentName}/businessprocess/add`
+                );
+              },
+            },
+          ]}
+          columns={[
+            { title: "ID", field: "businessProcessId" },
+            { title: "Name", field: "businessProcessName" },
+            {
+              title: "Actions",
+              name: "actions",
+              render: (rowData) => (
+                <div>
+                  <button className='btn'>
                     <i
                       onClick={this.delete.bind(
                         this,
-                        rowData.businessProcessesId
+                        rowData.businessProcessId
                       )}
-                      className="bi bi-trash"
+                      className='bi bi-trash'
                     ></i>
                   </button>
-                ),
-              },
-              {
-                title: "",
-                name: "edit",
-                render: (rowData) => (
-                  <button className="btn btn-secondary">
+                  <button className='btn'>
                     <i
-                      onClick={this.edit.bind(
-                        this,
-                        rowData.businessProcessesId
-                      )}
-                      className="bi bi-pencil"
+                      onClick={this.edit.bind(this, rowData.businessProcessId)}
+                      className='bi bi-pencil'
                     ></i>
                   </button>
-                ),
-              },
-            ]}
-            data={this.state.businessProcesses}
-            options={{
-              showTitle: false,
-              search: false,
-            }}
-          />
-        </div>
+                  <button className='btn'>
+                    <i
+                      onClick={() => this.handleModal()}
+                      className='bi bi-chat-square'
+                    ></i>
+                  </button>
+                </div>
+              ),
+            },
+          ]}
+          data={this.state.businessProcesses}
+          detailPanel={(rowData) => {
+            return (
+              <div>
+                <Modal
+                  show={this.state.showModal}
+                  onHide={() => this.handleModal()}
+                >
+                  <Modal.Header closeButton>
+                    <Modal.Title>Add Capability</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <form
+                      onSubmit={this.handleSubmit(rowData.businessProcessId)}
+                    >
+                      <label htmlFor='capabilityId'>Capability</label>
+                      <Select
+                        options={this.state.capabilities}
+                        noOptionsMessage={() => "No Capabilities"}
+                        onChange={(capability) => {
+                          if (capability) {
+                            this.setState({
+                              capabilityId: capability.capabilityId,
+                            });
+                          } else {
+                            this.setState({ capabilityId: 0 });
+                          }
+                        }}
+                        placeholder='Optional'
+                      />
+                      <br></br>
+                      <button className='btn btn-primary' type='sumbit'>
+                        SUBMIT
+                      </button>
+                    </form>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <button
+                      type='button'
+                      className='btn btn-secondary'
+                      onClick={() => this.handleModal()}
+                    >
+                      Close Modal
+                    </button>
+                  </Modal.Footer>
+                </Modal>
+              </div>
+            );
+          }}
+          onRowClick={(event, rowData, togglePanel) => {
+            togglePanel();
+          }}
+        />
       </div>
     );
   }
