@@ -42,7 +42,7 @@ public class CapabilityController {
 			@ModelAttribute("statusId") Integer statusId,
 			@ModelAttribute("parentCapabilityId") Integer parentCapabilityId,
 			@ModelAttribute("capabilityName") String capabilityName,
-			@ModelAttribute("paceOfChange") boolean paceOfChange,
+			@ModelAttribute("paceOfChange") String paceOfChange,
 			@ModelAttribute("targetOperatingModel") String targetOperatingModel,
 			@ModelAttribute("resourceQuality") Integer resourceQuality,
 			@ModelAttribute("informationQuality") Integer informationQuality,
@@ -127,7 +127,7 @@ public class CapabilityController {
 			@ModelAttribute("environmentId") Integer environmentId, @ModelAttribute("statusId") Integer statusId,
 			@ModelAttribute("parentCapabilityId") Integer parentCapabilityId,
 			@ModelAttribute("capabilityName") String capabilityName, @ModelAttribute("level") String level,
-			@ModelAttribute("paceOfChange") boolean paceOfChange,
+			@ModelAttribute("paceOfChange") String paceOfChange,
 			@ModelAttribute("targetOperatingModel") String targetOperatingModel,
 			@ModelAttribute("resourceQuality") Integer resourceQuality,
 			@ModelAttribute("informationQuality") Integer informationQuality,
@@ -188,21 +188,9 @@ public class CapabilityController {
 		StatusDto statusDto = new StatusDto(capability.getStatus().getStatusId(),
 				capability.getStatus().getValidityPeriod());
 		
-		/*
-		 * List<ProjectDto> projectsDto = new ArrayList<ProjectDto>(); if
-		 * (capability.getProjects() != null) { projectsDto =
-		 * capability.getProjects().stream() .map(project -> new
-		 * ProjectDto(project.getProjectId(), project.getProjectName(), new
-		 * ProgramDto(project.getProgram().getProgramId(),
-		 * project.getProgram().getProgramName()), new
-		 * StatusDto(project.getStatus().getStatusId(),
-		 * project.getStatus().getValidityPeriod()))) .filter(out -> out != null)
-		 * .collect(Collectors.toList()); }
-		 */
-		
 		return new CapabilityDto(capability.getCapabilityId(), environmentDto, statusDto,
 				capability.getParentCapabilityId(), capability.getCapabilityName(), capability.getLevel(),
-				capability.isPaceOfChange(), capability.getTargetOperatingModel(), capability.getResourceQuality(),
+				capability.getPaceOfChange(), capability.getTargetOperatingModel(), capability.getResourceQuality(),
 				capability.getInformationQuality(), capability.getApplicationFit());
 	}
 }

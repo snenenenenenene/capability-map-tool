@@ -22,8 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.Status;
-import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 import com.bavostepbros.leap.domain.model.dto.CapabilityDto;
+import com.bavostepbros.leap.domain.model.paceofchange.PaceOfChange;
+import com.bavostepbros.leap.domain.model.targetoperatingmodel.TargetOperatingModel;
 import com.bavostepbros.leap.domain.service.capabilityservice.CapabilityService;
 import com.bavostepbros.leap.persistence.CapabilityDAL;
 import com.bavostepbros.leap.persistence.EnvironmentDAL;
@@ -71,14 +72,15 @@ public class CapabilityControllerTest {
 		environmentFirst = environmentDAL.save(new Environment(1, "Test 1"));
 		environmentSecond = environmentDAL.save(new Environment(2, "Test 2"));
 		capabilityFirst = capabilityDAL.save(new Capability(1, environmentFirst,
-				statusFirst, 1, "Capability 1", true,
-				"Target Operating Model", 1, 1, 1));
+				statusFirst, 0, "Capability 1", PaceOfChange.DIFFERENTIATION,
+				TargetOperatingModel.COORDINATION, 1, 1, 1));
 		capabilitySecond = capabilityDAL.save(new Capability(2, environmentFirst,
 				statusFirst, capabilityFirst.getCapabilityId(), "Capability 2", 
-				true, "Target Operating Model", 1, 1, 1));
+				PaceOfChange.INNOVATIVE, TargetOperatingModel.DIVERSIFICATION, 
+				1, 1, 1));
 		capabilityThirth = capabilityDAL.save(new Capability(3, environmentSecond,
 				statusSecond, capabilityFirst.getCapabilityId(), "Capability 3", 
-				true, "Target Operating Model", 1, 1, 1));
+				PaceOfChange.STANDARD, TargetOperatingModel.REPLICATION, 1, 1, 1));
 	}
 	
 	@AfterEach
@@ -110,11 +112,10 @@ public class CapabilityControllerTest {
 	public void should_postCapability_whenSaveCapability() throws Exception {
 		Integer environmentId = environmentFirst.getEnvironmentId();
 		Integer statusId = statusFirst.getStatusId();
-		Integer parentCapabilityId = 1;
-		String capabilityName = "Posttest";
-		String level = "THREE";
-		String paceOfChange = "true";
-		String targetOperatingModel = "Target Operating Model";
+		Integer parentCapabilityId = 0;
+		String capabilityName = "Posttest haha";
+		String paceOfChange = PaceOfChange.DIFFERENTIATION.toString();
+		String targetOperatingModel = TargetOperatingModel.COORDINATION.toString();
 		Integer resourceQuality = 1;
 		Integer informationQuality = 1;
 		Integer applicationFit = 1;
@@ -125,7 +126,6 @@ public class CapabilityControllerTest {
 				.param("statusId", statusId.toString())
 				.param("parentCapabilityId", parentCapabilityId.toString())
 				.param("capabilityName", capabilityName)
-				.param("level", level)
 				.param("paceOfChange", paceOfChange)
 				.param("targetOperatingModel", targetOperatingModel)
 				.param("resourceQuality", resourceQuality.toString())
@@ -281,11 +281,11 @@ public class CapabilityControllerTest {
 		Integer capabilityId = capabilityFirst.getCapabilityId();
 		Integer environmentId = environmentFirst.getEnvironmentId();
 		Integer statusId = statusFirst.getStatusId();
-		Integer parentCapabilityId = 1;
+		Integer parentCapabilityId = 0;
 		String capabilityName = "Update test";
 		String level = "THREE";
-		String paceOfChange = "true";
-		String targetOperatingModel = "Target Operating Model";
+		String paceOfChange = PaceOfChange.DIFFERENTIATION.toString();
+		String targetOperatingModel = TargetOperatingModel.COORDINATION.toString();
 		Integer resourceQuality = 1;
 		Integer informationQuality = 1;
 		Integer applicationFit = 1;
@@ -333,7 +333,7 @@ public class CapabilityControllerTest {
 		assertEquals(expectedObject.getParentCapabilityId(), actualObject.getParentCapabilityId());
 		assertEquals(expectedObject.getCapabilityName(), actualObject.getCapabilityName());
 		assertEquals(expectedObject.getLevel(), actualObject.getLevel());
-		assertEquals(expectedObject.isPaceOfChange(), actualObject.isPaceOfChange());
+		assertEquals(expectedObject.getPaceOfChange(), actualObject.getPaceOfChange());
 		assertEquals(expectedObject.getTargetOperatingModel(), actualObject.getTargetOperatingModel());
 		assertEquals(expectedObject.getResourceQuality(), actualObject.getResourceQuality());
 		assertEquals(expectedObject.getInformationQuality(), actualObject.getInformationQuality());

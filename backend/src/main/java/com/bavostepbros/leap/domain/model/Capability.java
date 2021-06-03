@@ -13,6 +13,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
+import com.bavostepbros.leap.domain.model.paceofchange.PaceOfChange;
+import com.bavostepbros.leap.domain.model.targetoperatingmodel.TargetOperatingModel;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -57,10 +59,10 @@ public class Capability {
     private CapabilityLevel level;
     
     @Column(name = "PACEOFCHANGE")
-    private boolean paceOfChange;
+    private PaceOfChange paceOfChange;
     
     @Column(name = "TARGETOPERATINGMODEL")
-    private String targetOperatingModel;
+    private TargetOperatingModel targetOperatingModel;
     
     @Column(name = "RESOURCEQUALITY")
     private Integer resourceQuality;
@@ -99,7 +101,7 @@ public class Capability {
     private List<Resource> resources;
 
     public Capability(Environment environment, Status status, Integer parentCapabilityId, String capabilityName, 
-    		boolean paceOfChange, String targetOperatingModel, Integer resourceQuality,
+    		PaceOfChange paceOfChange, TargetOperatingModel targetOperatingModel, Integer resourceQuality,
     		Integer informationQuality, Integer applicationFit) {
         this.environment = environment;
         this.status = status;
@@ -113,7 +115,7 @@ public class Capability {
     }
     
     public Capability(Integer capabilityId, Environment environment, Status status, Integer parentCapabilityId,
-			String capabilityName, boolean paceOfChange, String targetOperatingModel,
+			String capabilityName, PaceOfChange paceOfChange, TargetOperatingModel targetOperatingModel,
 			Integer resourceQuality, Integer informationQuality, Integer applicationFit) {
 		super();
 		this.capabilityId = capabilityId;
@@ -170,7 +172,7 @@ public class Capability {
             ", parentCapabilityId='" + getParentCapabilityId() + "'" +
             ", name='" + getCapabilityName() + "'" +
             ", level='" + getLevel() + "'" +
-            ", paceOfChange='" + isPaceOfChange() + "'" +
+            ", paceOfChange='" + getPaceOfChange() + "'" +
             ", targetOperatingModel='" + getTargetOperatingModel() + "'" +
             ", resourceQuality='" + getResourceQuality() + "'" +
             ", informationQuality='" + getInformationQuality() + "'" +

@@ -101,7 +101,7 @@ public class CapabilityApplicationController {
 				capabilityApplication.getCapability().getParentCapabilityId(),
 				capabilityApplication.getCapability().getCapabilityName(),
 				capabilityApplication.getCapability().getLevel(),
-				capabilityApplication.getCapability().isPaceOfChange(),
+				capabilityApplication.getCapability().getPaceOfChange(),
 				capabilityApplication.getCapability().getTargetOperatingModel(),
 				capabilityApplication.getCapability().getResourceQuality(),
 				capabilityApplication.getCapability().getInformationQuality(),
