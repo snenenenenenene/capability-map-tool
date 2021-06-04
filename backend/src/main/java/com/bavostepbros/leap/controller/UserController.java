@@ -55,11 +55,12 @@ public class UserController {
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public UserDto addUser(
 			@ModelAttribute("username") String username,
-			@ModelAttribute("password") String password,
 			@ModelAttribute("email") String email,
 			@ModelAttribute("roleId") Integer roleId) {		
+		String password = userService.generatePassword();
+		
 		User user = userService.save(roleId, username, password, email);
-		emailService.sendNewUserMessage(user.getEmail(), user.getPassword());
+		emailService.sendNewUserMessage(user.getEmail(), password);
 		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail(), user.getPassword());
 	}
 	
