@@ -30,23 +30,23 @@ export default class CapabilityMap extends Component {
     return capabilities.map((capability, i) => {
       return (
         <div
-          className='card capability-card'
+          className="card capability-card"
           id={`capability-${capability.level}`}
         >
           <div
-            className='capability-title card-header text-center text-uppercase'
+            className="capability-title card-header text-center text-uppercase"
             onClick={() => this.handleCapabilityClick(capability)}
           >
             {capability.capabilityName}
           </div>
-          <div class='card-body'>
-            <div class='card-deck justify-content-center'>
+          <div class="card-body">
+            <div class="card-deck justify-content-center">
               {this.renderStrategyItemsinBody(capability)}
             </div>
-            <div className='row'>
-              <div className='card-deck justify-content-center mx-auto'>
+            <div className="row">
+              <div className="card-deck justify-content-center mx-auto">
                 {this.capabilityMapping(capability.children)}
-                <p className='card-text'></p>
+                <p className="card-text"></p>
               </div>
             </div>
           </div>
@@ -64,15 +64,6 @@ export default class CapabilityMap extends Component {
         this.setState({
           environmentId: response.data.environmentId,
         });
-        if (localStorage.getItem("environment"))
-          console.log(this.state.environmentName);
-        localStorage.removeItem("environment");
-        localStorage.setItem(
-          "environment",
-          JSON.stringify({
-            environmentName: this.state.environmentName,
-          })
-        );
       })
       .catch((error) => {
         this.props.history.push("/home");
@@ -118,16 +109,16 @@ export default class CapabilityMap extends Component {
         }
         return (
           <OverlayTrigger
-            placement='bottom'
+            placement="bottom"
             overlay={
-              <Tooltip id='button-tooltip-2'>
+              <Tooltip id="button-tooltip-2">
                 <div>{capabilityItem.strategyItem.strategyItemName}</div>
                 <div>{capabilityItem.strategyItem.description}</div>
               </Tooltip>
             }
           >
             <div
-              className='card'
+              className="card"
               style={{
                 margin: 3,
                 maxWidth: 10,
@@ -135,7 +126,7 @@ export default class CapabilityMap extends Component {
                 backgroundColor: itemColour,
               }}
             >
-              <div className='card-body'></div>
+              <div className="card-body"></div>
             </div>
           </OverlayTrigger>
         );
@@ -171,16 +162,16 @@ export default class CapabilityMap extends Component {
         }
         return (
           <OverlayTrigger
-            placement='bottom'
+            placement="bottom"
             overlay={
-              <Tooltip id='button-tooltip-2'>
+              <Tooltip id="button-tooltip-2">
                 <div>{capabilityItem.strategyItem.strategyItemName}</div>
                 <div>{capabilityItem.strategyItem.description}</div>
               </Tooltip>
             }
           >
             <div
-              className='card'
+              className="card"
               style={{
                 margin: 3,
                 maxWidth: 60,
@@ -190,7 +181,7 @@ export default class CapabilityMap extends Component {
                 backgroundColor: itemColour,
               }}
             >
-              <div className='card-body'></div>
+              <div className="card-body"></div>
             </div>
           </OverlayTrigger>
         );
@@ -204,20 +195,20 @@ export default class CapabilityMap extends Component {
     return (
       <div>
         <br></br>
-        <nav aria-label='breadcrumb'>
-          <ol className='breadcrumb'>
-            <li className='breadcrumb-item'>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
               <Link to={`/`}>Home</Link>
             </li>
-            <li className='breadcrumb-item'>{this.state.environmentName}</li>
+            <li className="breadcrumb-item">{this.state.environmentName}</li>
             <Pdf
               targetRef={targetRef}
-              filename='capabilitymap.pdf'
+              filename="capabilitymap.pdf"
               options={{ orientation: "landscape", unit: "in" }}
             >
               {({ toPdf }) => (
-                <div className='ml-auto' onClick={toPdf}>
-                  <i class='bi bi-file-earmark-pdf-fill' onClick={toPdf}></i>
+                <div className="ml-auto" onClick={toPdf}>
+                  <i class="bi bi-file-earmark-pdf-fill" onClick={toPdf}></i>
                 </div>
               )}
             </Pdf>
@@ -225,15 +216,15 @@ export default class CapabilityMap extends Component {
         </nav>
 
         <div ref={targetRef}>
-          <div className='row'>
-            <div className='card-deck justify-content-center mx-auto'>
+          <div className="row">
+            <div className="card-deck justify-content-center mx-auto">
               {this.capabilityMapping(this.state.capabilities)}
             </div>
           </div>
         </div>
         <div>
           <Modal
-            className='capability-modal'
+            className="capability-modal"
             show={this.state.showModal}
             onHide={() => this.handleModal()}
             centered
@@ -242,7 +233,7 @@ export default class CapabilityMap extends Component {
               <Modal.Title>{capability.capabilityName}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <div className='card-deck  justify-content-center mx-auto'>
+              <div className="card-deck  justify-content-center mx-auto">
                 {this.renderStrategyItems(this.state.capability)}
               </div>
             </Modal.Body>

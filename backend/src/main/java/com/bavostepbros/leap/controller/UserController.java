@@ -24,6 +24,7 @@ import com.bavostepbros.leap.domain.service.roleservice.RoleService;
 import com.bavostepbros.leap.domain.service.userservice.UserService;
 import com.bavostepbros.leap.domain.model.User;
 import com.bavostepbros.leap.domain.model.dto.UserDto;
+import com.bavostepbros.leap.domain.service.emailservice.EmailService;
 
 import com.bavostepbros.leap.configuration.jwtconfig.JwtUtility;
 
@@ -41,6 +42,10 @@ public class UserController {
 	@Autowired
 	private RoleService roleService;
 
+
+	@Autowired
+	private EmailService emailService;
+
 	@Autowired
 	private JwtUtility jwtUtility;
 
@@ -54,6 +59,7 @@ public class UserController {
 			@ModelAttribute("email") String email,
 			@ModelAttribute("roleId") Integer roleId) {		
 		User user = userService.save(roleId, username, password, email);
+		emailService.sendNewUserMessage(user.getEmail(), user.getPassword());
 		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail(), user.getPassword());
 	}
 	
