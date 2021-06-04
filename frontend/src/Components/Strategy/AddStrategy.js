@@ -94,7 +94,7 @@ export default class AddStrategy extends Component {
 
   render() {
     return (
-      <div>
+      <div className='container'>
         <br></br>
         <nav aria-label='breadcrumb'>
           <ol className='breadcrumb'>
@@ -151,7 +151,7 @@ export default class AddStrategy extends Component {
                         this.setState({ statusId: status.statusId });
                       }}
                     ></Select>
-                    <Modal show={this.state.showModal}>
+                    <Modal show={this.state.showStatusModal}>
                       <Modal.Header>Add Status</Modal.Header>
                       <Modal.Body>
                         <StatusQuickAdd
@@ -163,9 +163,9 @@ export default class AddStrategy extends Component {
                         <button
                           type='button'
                           className='btn btn-secondary'
-                          onClick={() => this.handleModal()}
+                          onClick={() => this.handleStatusModal()}
                         >
-                          Close Modal
+                          Close
                         </button>
                       </Modal.Footer>
                     </Modal>
@@ -174,7 +174,7 @@ export default class AddStrategy extends Component {
                     type='button'
                     className='btn btn-secondary'
                     style={{ height: 40, marginTop: 30 }}
-                    onClick={() => this.handleModal()}
+                    onClick={() => this.handleStatusModal()}
                   >
                     Add Status
                   </button>

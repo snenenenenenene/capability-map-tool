@@ -75,7 +75,7 @@ export default class User extends Component {
 
   render() {
     return (
-      <div>
+      <div className='container'>
         <br></br>
         <nav aria-label='breadcrumb shadow'>
           <ol className='breadcrumb'>

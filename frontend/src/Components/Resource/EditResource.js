@@ -136,7 +136,7 @@ export default class EditResource extends Component {
     const capabilityID = this.props.match.params.id;
 
     return (
-      <div>
+      <div className='container'>
         <br></br>
         <nav aria-label='breadcrumb'>
           <ol className='breadcrumb'>

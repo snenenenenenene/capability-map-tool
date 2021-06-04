@@ -66,7 +66,7 @@ export default class Resource extends Component {
 
   render() {
     return (
-      <div>
+      <div className='container'>
         <br></br>
         <nav aria-label='breadcrumb'>
           <ol className='breadcrumb'>

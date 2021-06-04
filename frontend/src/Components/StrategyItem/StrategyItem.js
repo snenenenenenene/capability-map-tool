@@ -163,7 +163,7 @@ export default class StrategyItem extends Component {
 
   render() {
     return (
-      <div>
+      <div className='container'>
         <br></br>
         <nav aria-label='breadcrumb'>
           <ol className='breadcrumb'>
@@ -282,8 +282,8 @@ export default class StrategyItem extends Component {
                         onChange={this.handleInputChange}
                       >
                         <option value='NONE'>None</option>
-                        <option value='LOW'>Low</option>
                         <option value='LOWEST'>Lowest</option>
+                        <option value='LOW'>Low</option>
                         <option value='MEDIUM'>Medium</option>
                         <option value='HIGH'>High</option>
                         <option value='HIGHEST'>Highest</option>
