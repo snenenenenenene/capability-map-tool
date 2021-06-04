@@ -1,9 +1,4 @@
 @import url("https://fonts.googleapis.com/css?family=Nunito+Sans");
-:root {
-  --blue: #0e0620;
-  --white: #fff;
-  --green: #f8733f;
-}
 html,
 button {
   font-family: "Nunito Sans";
@@ -34,10 +29,10 @@ ul {
   transition: 0.2s ease;
   font-weight: bold;
   margin: 5px 0px;
-  border: 4px solid #ff754f;
-  color: blue;
+  border-style: none;
+  color: #ff754f;
 }
-.btn.green:before {
+.custom-button.green:before {
   content: "";
   position: absolute;
   left: 0;
@@ -48,12 +43,12 @@ ul {
   z-index: -1;
   transition: 0.2s ease;
 }
-.btn.green:hover {
+.custom-button.green:hover {
   color: white;
   background: #ff754f;
   transition: 0.2s ease;
 }
-.btn.green:hover:before {
+.custom-button.green:hover:before {
   width: 100%;
 }
 @media screen and (max-width: 768px) {

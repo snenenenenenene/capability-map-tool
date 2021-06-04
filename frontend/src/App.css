@@ -15,52 +15,113 @@ html {
   flex-wrap: wrap;
 }
 
+.capability-map-container {
+}
+
+.capability-map {
+  padding-bottom: 50px;
+  padding-left: 2.1%;
+}
+
 #capability-ONE {
-  min-width: 300px;
-  max-width: 350px;
+  min-width: 500px;
+  min-height: 300px;
+  width: 500px;
+  max-width: 500px;
   background-color: rgb(255, 255, 255);
   z-index: 100;
   border-style: solid;
-  border-color: rgba(0, 217, 255, 0.603);
+  font-size: 1vw;
+  border-color: rgba(255, 123, 0, 0.603);
   border-width: 1px;
   /* box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.4); */
   margin-bottom: 30px;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.131);
+}
+.pdf-button {
+  cursor: pointer;
+  background-color: #ff754f;
+  text-align: center;
+  justify-content: center;
+  padding-top: 1px;
+  width: 25px;
+  height: 25px;
+  border-radius: 100%;
+  color: white;
+}
+
+.pdf-button:hover {
+  background-color: white;
+  border-style: solid;
+  border-width: 0.5px;
+  border-color: #ff754f;
+  color: #ff754f;
+  transition: all 0.6s ease;
+}
+
+.strat-items {
+  border-style: solid;
+  border-width: 0.01vw;
+  border-color: rgba(255, 123, 0, 0.74);
+  background-color: rgba(236, 236, 236, 0.466);
+}
+.strat-item {
+  margin: auto 0 0 auto;
+  max-width: 1vw;
+  max-height: 1vw;
 }
 
 #capability-TWO {
-  background-color: rgba(230, 229, 229, 0.371);
+  background-color: rgba(236, 236, 236, 0.247);
   margin: 4px;
-  min-width: 150px;
-  max-width: 170px;
+  min-width: 200px;
+  min-height: 200px;
+  width: 200px;
+  max-width: 200px;
   z-index: 200;
+  font-size: 0.8vw;
   border-style: solid;
-  border-color: rgba(0, 123, 255, 0.603);
+  border-color: rgba(255, 81, 0, 0.603);
   border-width: 1px;
   /* box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4); */
 }
 
 #capability-THREE {
-  background-color: rgba(194, 194, 194, 0.234);
-  margin: 2px;
-  min-width: 75px;
+  background-color: rgba(228, 228, 228, 0.234);
+  margin: 4px;
+  min-width: 100px;
+  font-size: 0.6vw;
+  min-height: 100px;
   max-width: 90px;
+  max-height: 90px;
   z-index: 300;
   border-style: solid;
-  border-color: rgba(128, 0, 255, 0.603);
+  border-color: rgba(255, 0, 0, 0.603);
   border-width: 1px;
 }
 
+div .capability-title {
+  background-color: rgba(253, 99, 57, 0.281);
+}
+
 div .capability-title:hover {
-  transition: all 0.3s ease;
+  transition: all 0.6s ease;
   background-color: #ff754fbb;
   color: white;
   cursor: pointer;
 }
+
 html body {
   min-height: 100%;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
   background-color: #f7f7f7;
   background-image: url("./img/cool-background.png");
   font-family: "Montserrat", sans-serif;
+}
+
+html body::-webkit-scrollbar {
+  display: none;
 }
 div .jumbotron {
   background-color: #ffffffaf;
@@ -70,6 +131,7 @@ div .jumbotron {
 }
 
 nav .breadcrumb {
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.131);
   background-color: #ffffffaf;
   border-style: solid;
   border-color: rgba(255, 115, 0, 0.603);
@@ -241,11 +303,14 @@ nav .breadcrumb {
 }
 
 .nav__items:hover {
-  background: radial-gradient(
-    circle at 94.02% 88.03%,
-    #ff754f65,
-    transparent 100%
-  );
+  background-color: #ff754f;
+}
+
+.nav__items:hover p {
+  color: white;
+}
+.nav__items:hover i {
+  color: white;
 }
 .nav__items:hover a:after {
   opacity: 1;

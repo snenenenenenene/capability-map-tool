@@ -135,7 +135,7 @@ export default class AddITApplication extends Component {
 
   render() {
     return (
-      <div>
+      <div className='container'>
         <br></br>
         <nav aria-label='shadow breadcrumb'>
           <ol className='breadcrumb'>

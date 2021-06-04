@@ -61,7 +61,7 @@ export default class EditStatus extends Component {
 
   render() {
     return (
-      <div>
+      <div className='container'>
         <br></br>
         <nav aria-label='breadcrumb'>
           <ol className='breadcrumb'>
