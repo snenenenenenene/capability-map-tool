@@ -70,7 +70,7 @@ public class UserController {
 		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail(), user.getPassword());
     }
 
-    @GetMapping("/email")
+    @GetMapping("/email/{email}")
 	public UserDto getUserByEmail(
 			@ModelAttribute("email") String email) {
 		User user = userService.getByEmail(email);
