@@ -69,7 +69,15 @@ public class UserController {
 		User user = userService.get(id);
 		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail(), user.getPassword());
     }
-	
+
+    @GetMapping("/email")
+	public UserDto getUserByEmail(
+			@ModelAttribute("email") String email) {
+		User user = userService.getByEmail(email);
+		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail(), user.getPassword());
+	}
+
+
 	@GetMapping()
 	public List<UserDto> getAllUsers() {
 		List<User> users = userService.getAll();
