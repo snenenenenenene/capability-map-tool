@@ -5,9 +5,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,25 +15,25 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.bavostepbros.leap.domain.service.roleservice.RoleService;
 import com.bavostepbros.leap.domain.service.userservice.UserService;
-import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
-import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
-import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
 import com.bavostepbros.leap.domain.model.User;
-import com.bavostepbros.leap.domain.model.dto.StatusDto;
 import com.bavostepbros.leap.domain.model.dto.UserDto;
+import com.bavostepbros.leap.domain.service.emailservice.EmailService;
+
+import com.bavostepbros.leap.configuration.jwtconfig.JwtUtility;
 
 import lombok.RequiredArgsConstructor;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user/")
+@RequestMapping("/api/user")
 public class UserController {
 	
 	@Autowired
@@ -42,7 +41,17 @@ public class UserController {
 
 	@Autowired
 	private RoleService roleService;
-	
+
+
+	@Autowired
+	private EmailService emailService;
+
+	@Autowired
+	private JwtUtility jwtUtility;
+
+	private static Logger log = LoggerFactory.getLogger(UserController.class);
+
+
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public UserDto addUser(
 			@ModelAttribute("username") String username,
@@ -50,21 +59,22 @@ public class UserController {
 			@ModelAttribute("email") String email,
 			@ModelAttribute("roleId") Integer roleId) {		
 		User user = userService.save(roleId, username, password, email);
-		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getPassword(), user.getEmail());
+		emailService.sendNewUserMessage(user.getEmail(), user.getPassword());
+		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail(), user.getPassword());
 	}
 	
-	@GetMapping("{id}")
+	@GetMapping("/{id}")
     public UserDto getUserById(
 			@ModelAttribute("id") Integer id) {
 		User user = userService.get(id);
-        return  new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getPassword(), user.getEmail());
+		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail(), user.getPassword());
     }
 	
 	@GetMapping()
 	public List<UserDto> getAllUsers() {
 		List<User> users = userService.getAll();
 		List<UserDto> usersDto = users.stream()
-				.map(user -> new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getPassword(), user.getEmail()))
+				.map(user -> new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail(), user.getPassword()))
 				.collect(Collectors.toList());
 		return usersDto;
 	}
@@ -78,20 +88,27 @@ public class UserController {
 			@ModelAttribute("roleId") Integer roleId) {
 		
 		User user = userService.update(userId, roleId, username, password, email);
-		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getPassword(), user.getEmail());
+		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail(), user.getPassword());
 	}
 	
-	@DeleteMapping(path = "{id}")
+	@DeleteMapping(path = "/{id}")
 	public void deleteUser(@PathVariable("id") Integer id) {		
 		userService.delete(id);
 	}
 
-	@PostMapping(path = "authenticate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public User login(
-		@ModelAttribute("email") String email) {
-		User user = userService.getByEmail(email);
-//		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getPassword(), user.getEmail());
-		return user;
+
+	//TODO remove password from response and userDTO
+	@PostMapping(value = "/authenticate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<String> authenticate(
+				@ModelAttribute("email") String email,
+				@ModelAttribute("password") String password) {
+		try {
+			userService.authenticate(email, password);
+			User user = userService.getByEmail(email);
+			return ResponseEntity.ok(jwtUtility.createToken(user.getEmail(), roleService.get(user.getRoleId())));
+		} catch (AuthenticationException e) {
+			return ResponseEntity.ok(e.getMessage() + " " + email + " " + password);
+		}
 	}
 
 	@PutMapping(path = "changePassword", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -100,11 +117,7 @@ public class UserController {
 		@ModelAttribute("id") Integer id) {
 
 		User user = userService.get(id);
-		String username = user.getUsername();
-		String email = user.getEmail();
-		Integer roleId = user.getRoleId();
-		userService.update(id, roleId, username, password, email);
-		String result = "Password saved";
-		return result;
+		userService.update(id, user.getRoleId(), user.getUsername(), password, user.getEmail());
+		return "Password saved";
 	}
 }

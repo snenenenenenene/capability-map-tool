@@ -13,6 +13,6 @@ public class UserDto {
     Integer userId;
     Integer roleId;
     String username;
-    String password;
     String email;
+    String password;
 }
