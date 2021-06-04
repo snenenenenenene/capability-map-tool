@@ -1,17 +1,14 @@
 package com.bavostepbros.leap.controller;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -19,7 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.bavostepbros.leap.domain.model.Mail;
+import com.bavostepbros.leap.domain.model.Email;
 import com.bavostepbros.leap.domain.service.emailservice.EmailService;
 
 @Controller
@@ -81,20 +78,20 @@ public class EmailController {
             model.addAttribute(key, props.get(key));
         }
 
-        model.addAttribute("mailObject", new Mail());
+        model.addAttribute("mailObject", new Email());
         return "mail/send";
     }
 
 
     @RequestMapping(value = "/send", method = RequestMethod.POST)
     public String createMail(Model model,
-                             @ModelAttribute("mailObject") @Valid Mail mailObject,
+                             @ModelAttribute("mailObject") @Valid Email emailObject,
                              Errors errors) {
         if (errors.hasErrors()) {
             return "mail/send";
         }
-        emailService.sendSimpleMessage(mailObject.getTo(),
-                mailObject.getSubject(), mailObject.getText());
+        emailService.sendSimpleMessage(emailObject.getTo(),
+                emailObject.getSubject(), emailObject.getText());
 
         return "emails";
     }
