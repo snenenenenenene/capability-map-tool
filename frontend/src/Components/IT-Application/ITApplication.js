@@ -16,9 +16,16 @@ export default class ITApplication extends Component {
   }
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) =>
         this.setState({ environmentId: response.data.environmentId })
@@ -28,7 +35,11 @@ export default class ITApplication extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/itapplication/`)
+      .get(`${process.env.REACT_APP_API_URL}/itapplication/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         this.setState({ itApplications: response.data });
       })
@@ -44,15 +55,26 @@ export default class ITApplication extends Component {
   }
 
   fetchDeleteITApplications = async (itApplicationId) => {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .delete(
-        `${process.env.REACT_APP_API_URL}/itapplication/${itApplicationId}`
+        `${process.env.REACT_APP_API_URL}/itapplication/${itApplicationId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => toast.success("Succesfully Deleted IT Application"))
       .catch((error) => toast.error("Could not Delete IT Application"));
     //REFRESH CAPABILITIES
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/itapplication/`)
+      .get(`${process.env.REACT_APP_API_URL}/itapplication/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         this.setState({ itApplications: [] });
         this.setState({ itApplications: response.data });

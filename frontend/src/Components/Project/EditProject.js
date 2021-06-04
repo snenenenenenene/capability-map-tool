@@ -32,6 +32,8 @@ export default class EditProject extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     const formData = new FormData();
     formData.append("projectName", this.state.projectName);
     formData.append("programId", this.state.programId);
@@ -39,7 +41,12 @@ export default class EditProject extends Component {
     await axios
       .put(
         `${process.env.REACT_APP_API_URL}/project/${this.state.projectId}`,
-        formData
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => {
         toast.success("Project Edited Successfully!");
@@ -52,9 +59,16 @@ export default class EditProject extends Component {
   };
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => {
         this.setState({ environmentId: response.data.environmentId });
@@ -65,7 +79,11 @@ export default class EditProject extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/program/`)
+      .get(`${process.env.REACT_APP_API_URL}/program/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         response.data.forEach((program) => {
           program.label = program.programName;
@@ -77,7 +95,11 @@ export default class EditProject extends Component {
         toast.error("Could not load Programs");
       });
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`)
+      .get(`${process.env.REACT_APP_API_URL}/status/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         response.data.forEach((status) => {
           status.label = status.validityPeriod;
@@ -90,7 +112,11 @@ export default class EditProject extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/project/${this.state.projectId}`)
+      .get(`${process.env.REACT_APP_API_URL}/project/${this.state.projectId}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         this.setState({
           projectName: response.data.projectName,

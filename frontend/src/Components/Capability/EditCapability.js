@@ -42,8 +42,14 @@ export default class EditCapability extends Component {
     this.setState({ showModal: !this.state.showModal });
   }
   async updateDate() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`)
+      .get(`${process.env.REACT_APP_API_URL}/status/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => this.setState({ statuses: response.data }))
       .catch((error) => {
         toast.error("Could not Update Statuses");
@@ -54,6 +60,8 @@ export default class EditCapability extends Component {
     this.setState({ resourceQuality: newRating });
   };
   handleSubmit = async (e) => {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     e.preventDefault();
     const formData = new FormData();
     formData.append("environmentName", this.state.environmentName);
@@ -70,12 +78,22 @@ export default class EditCapability extends Component {
     await axios
       .put(
         `${process.env.REACT_APP_API_URL}/capability/${this.state.capabilityId}`,
-        formData
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => {
         toast.success("Capability Successfully Updated!");
         this.props.history.push(
-          `/environment/${this.state.environmentName}/capability`
+          `/environment/${this.state.environmentName}/capability`,
+          {
+            headers: {
+              Authorization: `Bearer ${jwt}`,
+            },
+          }
         );
       })
       .catch((error) => {
@@ -84,9 +102,16 @@ export default class EditCapability extends Component {
   };
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) =>
         this.setState({ environmentId: response.data.environmentId })
@@ -96,7 +121,11 @@ export default class EditCapability extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`)
+      .get(`${process.env.REACT_APP_API_URL}/status/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         response.data.forEach((status) => {
           status.label = status.validityPeriod;
@@ -109,7 +138,11 @@ export default class EditCapability extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/capability/`)
+      .get(`${process.env.REACT_APP_API_URL}/capability/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         response.data.forEach((cap) => {
           cap.label = `${cap.capabilityName} - lvl: ${cap.level}`;
@@ -123,7 +156,12 @@ export default class EditCapability extends Component {
 
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/capability/${this.state.capabilityId}`
+        `${process.env.REACT_APP_API_URL}/capability/${this.state.capabilityId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => {
         this.setState({
@@ -260,8 +298,9 @@ export default class EditCapability extends Component {
                       >
                         Select Pace of Change
                       </option>
-                      <option value='true'>True</option>
-                      <option value='false'>False</option>
+                      <option value='STANDARD'>Standard</option>
+                      <option value='DIFFERNTIATION'>Differentiation</option>
+                      <option value='INNOVATIVE'>Innovative</option>
                     </select>
                   </div>
                   <div className='form-group col-md-6'>
@@ -313,10 +352,10 @@ export default class EditCapability extends Component {
                       >
                         Select TOM
                       </option>
-                      <option value='Coordination'>Coordination</option>
-                      <option value='Diversification'>Diversification</option>
-                      <option value='Replication'>Replication</option>
-                      <option value='Unification'>Unification</option>
+                      <option value='COORDINATION'>Coordination</option>
+                      <option value='DIVERSIFICATION'>Diversification</option>
+                      <option value='REPLICATION'>Replication</option>
+                      <option value='UNIFICATION'>Unification</option>
                     </select>
                   </div>
                   <div className='form-group col-md-6'>

@@ -17,9 +17,16 @@ export default class Project extends Component {
   }
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) =>
         this.setState({ environmentId: response.data.environmentId })
@@ -30,13 +37,16 @@ export default class Project extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/project/`)
+      .get(`${process.env.REACT_APP_API_URL}/project/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         this.setState({ projects: response.data });
       })
       .catch((error) => {
-        console.log(error);
-        // this.props.history.push('/error')
+        this.props.history.push("/error");
       });
   }
 
@@ -45,7 +55,7 @@ export default class Project extends Component {
       `/environment/${this.state.environmentName}/project/${projectId}`
     );
   }
-  //DELETE project AND REMOVE ALL CHILD projects FROM STATE
+  //DELETE PROJECT
   delete = async (projectId) => {
     toast(
       (t) => (
@@ -79,13 +89,19 @@ export default class Project extends Component {
   };
 
   fetchDeleteProjects = async (projectId) => {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .delete(`${process.env.REACT_APP_API_URL}/project/${projectId}`)
       .then((response) => toast.success("Successfully Deleted Project"))
       .catch((error) => toast.error("Could not Delete Project"));
-    //REFRESH CAPABILITIES
+    //REFRESH PROJECTS
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/project/`)
+      .get(`${process.env.REACT_APP_API_URL}/project/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         this.setState({ projects: response.data });
       })

@@ -32,18 +32,28 @@ export default class Capability extends Component {
 
   handleSubmit = (capabilityId) => async (e) => {
     e.preventDefault();
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
     const formData = new FormData();
     formData.append("itemId", this.state.itemId);
     formData.append("capabilityId", capabilityId);
     formData.append("strategicImportance", this.state.strategicImportance);
     await axios
-      .post(`${process.env.REACT_APP_API_URL}/capabilityitem/`, formData)
+      .post(`${process.env.REACT_APP_API_URL}/capabilityitem/`, formData, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then(toast.success("Item Successfully Added"))
       .catch((error) => toast.error("Could not add Item"));
 
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/capabilityitem/all-capabilityitems-by-capabilityid/${capabilityId}/`
+        `${process.env.REACT_APP_API_URL}/capabilityitem/all-capabilityitems-by-capabilityid/${capabilityId}/`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => {
         this.setState({ capabilityItems: response.data });
@@ -54,9 +64,16 @@ export default class Capability extends Component {
   };
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) =>
         this.setState({ environmentId: response.data.environmentId })
@@ -67,7 +84,12 @@ export default class Capability extends Component {
 
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/capability/all-capabilities-by-environmentid/${this.state.environmentId}`
+        `${process.env.REACT_APP_API_URL}/capability/all-capabilities-by-environmentid/${this.state.environmentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => {
         this.setState({ capabilities: response.data });
@@ -78,7 +100,11 @@ export default class Capability extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/strategyitem/`)
+      .get(`${process.env.REACT_APP_API_URL}/strategyitem/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         response.data.forEach((item) => {
           item.label = item.strategyItemName;
@@ -98,9 +124,16 @@ export default class Capability extends Component {
   }
 
   async strategyItemTable(capabilityId) {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/capabilityitem/all-capabilityitems-by-capabilityid/${capabilityId}/`
+        `${process.env.REACT_APP_API_URL}/capabilityitem/all-capabilityitems-by-capabilityid/${capabilityId}/`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => {
         this.setState({ capabilityItems: response.data });
@@ -115,6 +148,8 @@ export default class Capability extends Component {
   }
 
   fetchDeleteCapabilities = async (capabilityId) => {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .delete(`${process.env.REACT_APP_API_URL}/capability/${capabilityId}`)
       .then((response) => toast.success("Succesfully Deleted Capability"))
@@ -122,7 +157,12 @@ export default class Capability extends Component {
     //REFRESH CAPABILITIES
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/capability/all-capabilities-by-environmentid/${this.state.environmentId}`
+        `${process.env.REACT_APP_API_URL}/capability/all-capabilities-by-environmentid/${this.state.environmentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => {
         this.setState({ capabilities: response.data });

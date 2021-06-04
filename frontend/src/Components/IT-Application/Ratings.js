@@ -21,20 +21,6 @@ export default class AddITApplication extends Component {
     };
     this.handleInputChange = this.handleInputChange.bind(this);
   }
-
-  async componentDidMount() {
-    console.log(this.state.currentScalability);
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/itapplication/`)
-      .then((response) => {
-        this.setState({ capabilities: response.data });
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error("Could Not Find IT Applications");
-      });
-  }
-
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
@@ -43,16 +29,16 @@ export default class AddITApplication extends Component {
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
-          <div className="row">
-            <div className="col-sm">
-              <div className="form-row">
-                <div className="form-group col-md">
-                  <label htmlFor="currentScalability: ">
+          <div className='row'>
+            <div className='col-sm'>
+              <div className='form-row'>
+                <div className='form-group col-md'>
+                  <label htmlFor='currentScalability: '>
                     Current Scalability
                   </label>
                   <ReactStars
-                    name="currentScalability"
-                    id="currentScalability"
+                    name='currentScalability'
+                    id='currentScalability'
                     count={5}
                     onChange={(newValue) => {
                       this.setState({ currentScalability: newValue });
@@ -68,9 +54,9 @@ export default class AddITApplication extends Component {
                   />
                 </div>
               </div>
-              <div className="form-row">
-                <div className="form-group col-md">
-                  <label htmlFor="expectedScalability">
+              <div className='form-row'>
+                <div className='form-group col-md'>
+                  <label htmlFor='expectedScalability'>
                     Expected Scalability
                   </label>
                   <ReactStars
@@ -89,9 +75,9 @@ export default class AddITApplication extends Component {
                   />
                 </div>
               </div>
-              <div className="form-row">
-                <div className="form-group col-md">
-                  <label htmlFor="currentPerformance">
+              <div className='form-row'>
+                <div className='form-group col-md'>
+                  <label htmlFor='currentPerformance'>
                     Current Performance
                   </label>
                   <ReactStars
@@ -111,10 +97,10 @@ export default class AddITApplication extends Component {
                 </div>
               </div>
             </div>
-            <div className="col-sm">
-              <div className="form-row">
-                <div className="form-group col-md">
-                  <label htmlFor="expectedPerformance">
+            <div className='col-sm'>
+              <div className='form-row'>
+                <div className='form-group col-md'>
+                  <label htmlFor='expectedPerformance'>
                     Expected Performance
                   </label>
                   <ReactStars
@@ -133,9 +119,9 @@ export default class AddITApplication extends Component {
                   />
                 </div>
               </div>
-              <div className="form-row">
-                <div className="form-group col-md">
-                  <label htmlFor="currentSecurityLevel">
+              <div className='form-row'>
+                <div className='form-group col-md'>
+                  <label htmlFor='currentSecurityLevel'>
                     Current Security Level
                   </label>
                   <ReactStars
@@ -154,9 +140,9 @@ export default class AddITApplication extends Component {
                   />
                 </div>
               </div>
-              <div className="form-row">
-                <div className="form-group col-md">
-                  <label htmlFor="expectedSecurityLevel">
+              <div className='form-row'>
+                <div className='form-group col-md'>
+                  <label htmlFor='expectedSecurityLevel'>
                     Expected Security Level
                   </label>
                   <ReactStars
@@ -176,10 +162,10 @@ export default class AddITApplication extends Component {
                 </div>
               </div>
             </div>
-            <div className="col-sm">
-              <div className="form-row">
-                <div className="form-group col-md">
-                  <label htmlFor="currentStability">Current Stability</label>
+            <div className='col-sm'>
+              <div className='form-row'>
+                <div className='form-group col-md'>
+                  <label htmlFor='currentStability'>Current Stability</label>
                   <ReactStars
                     count={5}
                     onChange={(newValue) => {
@@ -193,9 +179,9 @@ export default class AddITApplication extends Component {
                   />
                 </div>
               </div>
-              <div className="form-row">
-                <div className="form-group col-md">
-                  <label htmlFor="expectedStability">Expected Stability</label>
+              <div className='form-row'>
+                <div className='form-group col-md'>
+                  <label htmlFor='expectedStability'>Expected Stability</label>
                   <ReactStars
                     count={5}
                     onChange={(newValue) => {
@@ -209,9 +195,9 @@ export default class AddITApplication extends Component {
                   />
                 </div>
               </div>
-              <div className="form-row">
-                <div className="form-group col-md">
-                  <label htmlFor="currentValue">Current Value</label>
+              <div className='form-row'>
+                <div className='form-group col-md'>
+                  <label htmlFor='currentValue'>Current Value</label>
                   <ReactStars
                     count={5}
                     onChange={(newValue) => {

@@ -45,6 +45,8 @@ export default class AddITApplication extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     const formData = new FormData();
     formData.append("statusId", this.state.statusId);
     formData.append("name", this.state.itApplicationName);
@@ -67,7 +69,11 @@ export default class AddITApplication extends Component {
     formData.append("acceptedYearlyCost", this.state.acceptedYearlyCost);
     formData.append("timeValue", this.state.timeValue);
     await axios
-      .post(`${process.env.REACT_APP_API_URL}/itapplication/`, formData)
+      .post(`${process.env.REACT_APP_API_URL}/itapplication/`, formData, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         toast.success("IT Application Added Successfully!");
         this.props.history.push(
@@ -92,19 +98,31 @@ export default class AddITApplication extends Component {
   }
 
   async updateDate() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`)
+      .get(`${process.env.REACT_APP_API_URL}/status/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => this.setState({ statuses: response.data }))
       .catch((error) => {
-        console.log(error);
         toast.error("Could not Update Statuses");
       });
   }
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) =>
         this.setState({ environmentId: response.data.environmentId })
@@ -114,7 +132,11 @@ export default class AddITApplication extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`)
+      .get(`${process.env.REACT_APP_API_URL}/status/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => this.setState({ statuses: response.data }))
       .catch((error) => {
         toast.error("Could not load Statuses");
@@ -122,7 +144,6 @@ export default class AddITApplication extends Component {
   }
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
-    console.log(this.state.timeValue);
   }
 
   handleModal() {

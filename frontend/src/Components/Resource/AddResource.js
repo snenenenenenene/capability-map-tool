@@ -21,6 +21,8 @@ export default class AddResource extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     const formData = new FormData();
     formData.append(
       "fullTimeEquivalentYearlyValue",
@@ -28,11 +30,12 @@ export default class AddResource extends Component {
     );
     formData.append("resourceName", this.state.resourceName);
     formData.append("resourceDescription", this.state.resourceDescription);
-    console.log(this.state.resourceName);
-    console.log(this.state.resourceDescription);
-    console.log(this.state.fullTimeEquivalentYearlyValue);
     await axios
-      .post(`${process.env.REACT_APP_API_URL}/resource/`, formData)
+      .post(`${process.env.REACT_APP_API_URL}/resource/`, formData, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         toast.success("Resource Added Successfully!");
         this.props.history.push(
@@ -43,9 +46,16 @@ export default class AddResource extends Component {
   };
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => {
         this.setState({ environmentId: response.data.environmentId });

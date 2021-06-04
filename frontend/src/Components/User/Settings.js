@@ -17,8 +17,14 @@ export default class Settings extends Component {
   }
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/user/${this.state.user.userId}`)
+      .get(`${process.env.REACT_APP_API_URL}/user/${this.state.user.userId}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) =>
         this.setState({
           username: response.data.username,
@@ -36,6 +42,8 @@ export default class Settings extends Component {
   }
 
   handleSubmit = async (e) => {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     e.preventDefault();
     const formData = new FormData();
     formData.append("userId", this.state.user.userId);
@@ -44,7 +52,11 @@ export default class Settings extends Component {
     formData.append("password", sha1(this.state.password));
     formData.append("roleId", this.state.user.roleId);
     await axios
-      .put(`${process.env.REACT_APP_API_URL}/user/`, formData)
+      .put(`${process.env.REACT_APP_API_URL}/user/`, formData, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         toast.success("User Updated Successfully!");
         this.props.history.push(`/user`);
