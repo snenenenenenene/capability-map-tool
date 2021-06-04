@@ -3,6 +3,7 @@ package com.bavostepbros.leap.domain.service.roleservice;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -21,6 +22,13 @@ import com.bavostepbros.leap.persistence.RoleDAL;
 @RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
 
+	//TODO put in application.properties
+	@PostConstruct
+	private void init() {
+		save("user");
+		save("admin");
+	}
+
 	private final RoleDAL roleDAL;
 
 	@Override
@@ -32,10 +40,7 @@ public class RoleServiceImpl implements RoleService {
 		if (!existsByRoleName(roleName)) {
 			throw new DuplicateValueException("Role name already exists.");
 		}
-
-		Role role = new Role(roleName);
-		Role savedRole = roleDAL.save(role);
-		return savedRole;
+		return roleDAL.save(new Role(roleName));
 	}
 
 

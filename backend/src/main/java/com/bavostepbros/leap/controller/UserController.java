@@ -3,14 +3,10 @@ package com.bavostepbros.leap.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.h2.security.auth.AuthConfigException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,20 +17,15 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 
 import com.bavostepbros.leap.domain.service.roleservice.RoleService;
 import com.bavostepbros.leap.domain.service.userservice.UserService;
 import com.bavostepbros.leap.domain.model.User;
 import com.bavostepbros.leap.domain.model.dto.UserDto;
 
-import com.bavostepbros.leap.configuration.JWTConfig.JwtTokenProvider;
+import com.bavostepbros.leap.configuration.jwtconfig.JwtUtility;
 
 import lombok.RequiredArgsConstructor;
 
@@ -50,14 +41,12 @@ public class UserController {
 	@Autowired
 	private RoleService roleService;
 
+	@Autowired
+	private JwtUtility jwtUtility;
+
 	private static Logger log = LoggerFactory.getLogger(UserController.class);
 
-	@Autowired
-	private AuthenticationManager authenticationManager;
 
-	@Autowired
-	private JwtTokenProvider tokenProvider;
-	
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public UserDto addUser(
 			@ModelAttribute("username") String username,
@@ -101,19 +90,19 @@ public class UserController {
 		userService.delete(id);
 	}
 
+
+	//TODO remove password from response and userDTO
 	@PostMapping(value = "/authenticate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<String> authenticate(
 				@ModelAttribute("email") String email,
-				@ModelAttribute("password") String password) throws AuthenticationException {
-		String jwt;
+				@ModelAttribute("password") String password) {
 		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+			userService.authenticate(email, password);
 			User user = userService.getByEmail(email);
-			jwt = tokenProvider.createToken(user.getUsername(), roleService.get(user.getRoleId()));
+			return ResponseEntity.ok(jwtUtility.createToken(user.getEmail(), roleService.get(user.getRoleId())));
 		} catch (AuthenticationException e) {
 			return ResponseEntity.ok(e.getMessage() + " " + email + " " + password);
 		}
-			return ResponseEntity.ok(jwt);
 	}
 
 	@PutMapping(path = "changePassword", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

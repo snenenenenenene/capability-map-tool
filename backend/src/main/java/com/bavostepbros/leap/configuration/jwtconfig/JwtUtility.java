@@ -1,4 +1,4 @@
-package com.bavostepbros.leap.configuration.JWTConfig;
+package com.bavostepbros.leap.configuration.jwtconfig;
 
 import java.io.Serializable;
 import java.util.Base64;
@@ -20,19 +20,22 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
-public class JwtTokenProvider implements Serializable {
+public class JwtUtility implements Serializable {
 
 	private static final long serialVersionUID = 2569800841756370596L;
 
+	@Autowired
+	private UserDetailsService userDetailsService;
+
 	// TODO put in aplication.properties
-	private String secretKey = "leap-groep-5";
+	private String SECRETKEY = "leap-groep-5";
+	private final long VALIDITYTIME = 12 * 3600000; // 12 hours
 
 	@PostConstruct
 	protected void init() {
-		secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+		SECRETKEY = Base64.getEncoder().encodeToString(SECRETKEY.getBytes());
 	}
 
-	private final long validityInMilliseconds = 50 * 60 * 60; // 2 minute
 
 	public String createToken(String username, Role role) {
 		Claims claims = Jwts.claims().setSubject(username);
@@ -40,12 +43,9 @@ public class JwtTokenProvider implements Serializable {
 
 		Date now = new Date();
 		return Jwts.builder().setClaims(claims).setIssuedAt(now)
-				.setExpiration(new Date(now.getTime() + validityInMilliseconds))
-				.signWith(SignatureAlgorithm.HS256, secretKey).compact();
+				.setExpiration(new Date(now.getTime() + VALIDITYTIME))
+				.signWith(SignatureAlgorithm.HS256, SECRETKEY).compact();
 	}
-
-	@Autowired
-	private UserDetailsService userDetailsService;
 
 	public Authentication getAuthentication(String username) {
 		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -53,7 +53,24 @@ public class JwtTokenProvider implements Serializable {
 				userDetails.getAuthorities());
 	}
 
-	public Claims getClaimsFromToken(String token) {
-		return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+	public Claims getClaimsFromToken(String jwt) {
+		return Jwts.parser().setSigningKey(SECRETKEY).parseClaimsJws(jwt).getBody();
+	}
+
+	public String extractUsername(String jwt) {
+		return getClaimsFromToken(jwt).getSubject();
+	}
+
+	public Date extractExpirationDate(String jwt) {
+		return getClaimsFromToken(jwt).getExpiration();
+	}
+
+	public Boolean isExpired(String jwt) {
+		return extractExpirationDate(jwt).before(new Date());
+	}
+
+	public Boolean validateToken(String jwt) {
+		UserDetails userDetails = userDetailsService.loadUserByUsername(extractUsername(jwt));
+		return userDetails.getUsername().equals(extractUsername(jwt)) && !isExpired(jwt);
 	}
 }

@@ -1,12 +1,13 @@
 package com.bavostepbros.leap.configuration;
 
-import com.bavostepbros.leap.configuration.JWTConfig.JwtTokenConfigurer;
-import com.bavostepbros.leap.configuration.JWTConfig.JwtTokenProvider;
+import com.bavostepbros.leap.configuration.jwtconfig.JwtConfigurer;
+import com.bavostepbros.leap.configuration.jwtconfig.JwtUtility;
+import com.bavostepbros.leap.domain.service.userservice.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -19,7 +20,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
-	private JwtTokenProvider tokenProvider;
+	private UserDetailsServiceImpl userDetailsService;
+
+	private JwtUtility jwtUtility;
+	public SpringSecurityConfig(JwtUtility jwtUtility) {
+		this.jwtUtility = jwtUtility;
+	}
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -33,13 +39,18 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailsService);
+	}
+
+	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 				.csrf().disable()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-				.authorizeRequests().antMatchers("/api/user/authenticate", "/api/user").permitAll()
+				.authorizeRequests().antMatchers("/api/user/authenticate").permitAll()
 				.anyRequest().authenticated().and()
-				.apply(new JwtTokenConfigurer(tokenProvider));
+				.apply(new JwtConfigurer(jwtUtility));
 	}
 
 }
