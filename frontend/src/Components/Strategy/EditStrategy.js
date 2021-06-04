@@ -27,6 +27,8 @@ export default class EditStrategy extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     const formData = new FormData();
     formData.append("environmentId", this.state.environmentId);
     formData.append("strategyName", this.state.strategyName);
@@ -36,7 +38,12 @@ export default class EditStrategy extends Component {
     await axios
       .put(
         `${process.env.REACT_APP_API_URL}/strategy/${this.state.strategyId}`,
-        formData
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => {
         toast.success("Strategy Added Successfully!");
@@ -48,9 +55,16 @@ export default class EditStrategy extends Component {
   };
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => {
         this.setState({ environmentId: response.data.environmentId });
@@ -61,7 +75,11 @@ export default class EditStrategy extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`)
+      .get(`${process.env.REACT_APP_API_URL}/status/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         response.data.forEach((status) => {
           status.label = status.validityPeriod;
@@ -74,7 +92,14 @@ export default class EditStrategy extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/strategy/${this.state.strategyId}`)
+      .get(
+        `${process.env.REACT_APP_API_URL}/strategy/${this.state.strategyId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
+      )
       .then((response) => {
         this.setState({
           strategyName: response.data.strategyName,

@@ -27,9 +27,16 @@ export default class BusinessProcess extends Component {
   }
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) =>
         this.setState({ environmentId: response.data.environmentId })
@@ -39,7 +46,11 @@ export default class BusinessProcess extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/capability/`)
+      .get(`${process.env.REACT_APP_API_URL}/capability/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         response.data.forEach((capability) => {
           capability.label = capability.capabilityName;
@@ -52,7 +63,11 @@ export default class BusinessProcess extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/businessprocess/`)
+      .get(`${process.env.REACT_APP_API_URL}/businessprocess/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         this.setState({ businessProcesses: response.data });
       })
@@ -67,9 +82,16 @@ export default class BusinessProcess extends Component {
     );
   }
   fetchDeleteBusinessProcesses = async (businessProcessId) => {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .delete(
-        `${process.env.REACT_APP_API_URL}/businessprocess/${businessProcessId}`
+        `${process.env.REACT_APP_API_URL}/businessprocess/${businessProcessId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) =>
         toast.success("Successfully Deleted Business Process")
@@ -77,7 +99,11 @@ export default class BusinessProcess extends Component {
       .catch((error) => toast.error("Could not Delete Business Process"));
     //REFRESH BUSINESS PROCESSES
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/businessprocess/`)
+      .get(`${process.env.REACT_APP_API_URL}/businessprocess/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         this.setState({ businessprocesses: response.data });
       })
@@ -88,13 +114,20 @@ export default class BusinessProcess extends Component {
 
   handleSubmit = (businessProcessId) => async (e) => {
     e.preventDefault();
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     const formData = new FormData();
     formData.append("businessProcessId", businessProcessId);
     formData.append("capabilityId", this.state.capabilityId);
     await axios
       .put(
         `${process.env.REACT_APP_API_URL}/capability/link-businessprocess/`,
-        formData
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then(toast.success("Business Process Successfully Linked"))
       .catch((error) => toast.error("Could not Link Business Process"));

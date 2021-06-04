@@ -25,9 +25,16 @@ export default class StrategyItem extends Component {
   }
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) =>
         this.setState({ environmentId: response.data.environmentId })
@@ -37,7 +44,11 @@ export default class StrategyItem extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/strategyitem/`)
+      .get(`${process.env.REACT_APP_API_URL}/strategyitem/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         this.setState({ strategyItems: response.data });
       })
@@ -46,7 +57,11 @@ export default class StrategyItem extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/capability/`)
+      .get(`${process.env.REACT_APP_API_URL}/capability/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         response.data.forEach((capability) => {
           capability.label = capability.capabilityName;
@@ -66,13 +81,19 @@ export default class StrategyItem extends Component {
   }
 
   fetchDeleteStrategyItems = async (itemId) => {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .delete(`${process.env.REACT_APP_API_URL}/strategyitem/${itemId}`)
       .then((response) => toast.success("Successfully Deleted Strategy Item"))
       .catch((error) => toast.error("Could not Delete Strategy Item"));
     //REFRESH Strategy Items
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/strategyitem/`)
+      .get(`${process.env.REACT_APP_API_URL}/strategyitem/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         this.setState({ strategyItems: response.data });
       })
@@ -91,18 +112,29 @@ export default class StrategyItem extends Component {
 
   handleSubmit = (itemId) => async (e) => {
     e.preventDefault();
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     const formData = new FormData();
     formData.append("itemId", itemId);
     formData.append("capabilityId", this.state.capabilityId);
     formData.append("strategicImportance", this.state.strategicImportance);
     await axios
-      .post(`${process.env.REACT_APP_API_URL}/capabilityitem/`, formData)
+      .post(`${process.env.REACT_APP_API_URL}/capabilityitem/`, formData, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then(toast.success("Capability Successfully Added"))
       .catch((error) => toast.error("Could not add Capability"));
 
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/capabilityitem/all-capabilityitems-by-strategyitemid/${itemId}/`
+        `${process.env.REACT_APP_API_URL}/capabilityitem/all-capabilityitems-by-strategyitemid/${itemId}/`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => {
         this.setState({ capabilityItems: response.data });
@@ -145,9 +177,16 @@ export default class StrategyItem extends Component {
   };
 
   async capabilityTable(itemId) {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/capabilityitem/all-capabilityitems-by-strategyitemid/${itemId}/`
+        `${process.env.REACT_APP_API_URL}/capabilityitem/all-capabilityitems-by-strategyitemid/${itemId}/`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => {
         this.setState({ capabilityItems: response.data });

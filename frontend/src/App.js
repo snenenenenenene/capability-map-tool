@@ -43,6 +43,7 @@ import ConfigurePassword from "./Components/Authentication/ConfigurePassword";
 import CapabilityMap from "./Components/Environment/CapabilityMap";
 import EditEnvironment from "./Components/Environment/EditEnvironment";
 import Settings from "./Components/User/Settings";
+import axios from "axios";
 
 class App extends Component {
   constructor(props) {
@@ -63,6 +64,12 @@ class App extends Component {
       this.setState({ authenticated: user.authenticated });
       this.setState({ user: user });
     }
+
+    // axios
+    //   .post(`${process.env.REACT_APP_API_URL}/user/`, formData)
+    //   .then((response) => {
+    //     localStorage.setItem("user", JSON.stringify({}));
+    //   });
   }
 
   componentWillMount() {

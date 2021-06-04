@@ -17,9 +17,16 @@ export default class Strategy extends Component {
   }
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) =>
         this.setState({ environmentId: response.data.environmentId })
@@ -29,7 +36,11 @@ export default class Strategy extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/strategy/`)
+      .get(`${process.env.REACT_APP_API_URL}/strategy/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         this.setState({ strategies: response.data });
       })
@@ -45,13 +56,24 @@ export default class Strategy extends Component {
   }
 
   fetchDeleteStrategies = async (strategyId) => {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
-      .delete(`${process.env.REACT_APP_API_URL}/strategy/${strategyId}`)
+      .delete(`${process.env.REACT_APP_API_URL}/strategy/${strategyId}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => toast.success("Successfully Deleted Strategy"))
       .catch((error) => toast.error("Could not Delete Strategy"));
-    //REFRESH Strategies
+    //REFRESH Strategies    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/strategy/`)
+      .get(`${process.env.REACT_APP_API_URL}/strategy/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         this.setState({ strategies: response.data });
       })

@@ -18,12 +18,19 @@ export default class EditEnvironment extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     const formData = new FormData();
     formData.append("environmentName", this.state.environmentName);
     await axios
       .put(
         `${process.env.REACT_APP_API_URL}/environment/${this.state.environmentId}`,
-        formData
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => toast.success("Updated Environment"))
       .catch((error) => {
@@ -38,9 +45,16 @@ export default class EditEnvironment extends Component {
   }
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/${this.state.environmentId}`
+        `${process.env.REACT_APP_API_URL}/environment/${this.state.environmentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => {
         this.setState({
