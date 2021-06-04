@@ -29,12 +29,18 @@ export default class AddProject extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     const formData = new FormData();
     formData.append("projectName", this.state.projectName);
     formData.append("programId", this.state.selectedProgram.programId);
     formData.append("statusId", this.state.selectedStatus.statusId);
     await axios
-      .post(`${process.env.REACT_APP_API_URL}/project/`, formData)
+      .post(`${process.env.REACT_APP_API_URL}/project/`, formData, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         toast.success("Project Added Successfully!");
         this.setState({ projectId: response.data.projectId });
@@ -46,9 +52,16 @@ export default class AddProject extends Component {
   };
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => {
         this.setState({ environmentId: response.data.environmentId });
@@ -59,7 +72,11 @@ export default class AddProject extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/program/`)
+      .get(`${process.env.REACT_APP_API_URL}/program/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         response.data.forEach((program) => {
           program.label = program.programName;
@@ -71,7 +88,11 @@ export default class AddProject extends Component {
         toast.error("Could not load Programs");
       });
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`)
+      .get(`${process.env.REACT_APP_API_URL}/status/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         response.data.forEach((status) => {
           status.label = status.validityPeriod;

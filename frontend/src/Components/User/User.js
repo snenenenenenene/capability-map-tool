@@ -13,8 +13,14 @@ export default class User extends Component {
   }
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/user/`)
+      .get(`${process.env.REACT_APP_API_URL}/user/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => this.setState({ users: response.data }))
       .catch((error) => {
         toast.error("No Users Were Found");
@@ -26,13 +32,23 @@ export default class User extends Component {
   }
 
   fetchDeleteUsers = async (userId) => {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
-      .delete(`${process.env.REACT_APP_API_URL}/user/${userId}`)
+      .delete(`${process.env.REACT_APP_API_URL}/user/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => toast.success("Successfully Deleted User"))
       .catch((error) => toast.error("Could not Delete User"));
     //REFRESH USERS
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/user/`)
+      .get(`${process.env.REACT_APP_API_URL}/user/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         this.setState({ users: response.data });
       })

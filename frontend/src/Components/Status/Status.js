@@ -16,9 +16,15 @@ export default class Status extends Component {
   }
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) =>
         this.setState({ environmentId: response.data.environmentId })
@@ -30,7 +36,12 @@ export default class Status extends Component {
 
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) =>
         this.setState({ environmentId: response.data.environmentId })
@@ -41,7 +52,11 @@ export default class Status extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`)
+      .get(`${process.env.REACT_APP_API_URL}/status/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => this.setState({ statuses: response.data }))
       .catch((error) => {
         console.log(error);
@@ -50,20 +65,29 @@ export default class Status extends Component {
   }
 
   edit(id) {
-    console.log("edit");
     this.props.history.push(
       `/environment/${this.state.environmentName}/status/${id}`
     );
   }
 
   fetchDeleteStatuses = async (statusId) => {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
-      .delete(`${process.env.REACT_APP_API_URL}/status/${statusId}`)
+      .delete(`${process.env.REACT_APP_API_URL}/status/${statusId}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => toast.success("Successfully Deleted Status"))
       .catch((error) => toast.error("Could not Delete Status"));
     //REFRESH STATUSES
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`)
+      .get(`${process.env.REACT_APP_API_URL}/status/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         this.setState({ capabilities: response.data });
       })

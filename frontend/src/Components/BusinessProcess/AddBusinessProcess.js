@@ -19,6 +19,8 @@ export default class AddBusinessProcess extends Component {
   }
 
   handleSubmit = async (e) => {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     e.preventDefault();
     const formData = new FormData();
     formData.append("businessProcessName", this.state.businessProcessName);
@@ -27,7 +29,11 @@ export default class AddBusinessProcess extends Component {
       this.state.businessProcessDescription
     );
     await axios
-      .post(`${process.env.REACT_APP_API_URL}/businessprocess/`, formData)
+      .post(`${process.env.REACT_APP_API_URL}/businessprocess/`, formData, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         toast.success("Business Process Added Successfully!");
         this.props.history.push(
@@ -42,9 +48,16 @@ export default class AddBusinessProcess extends Component {
   };
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => {
         this.setState({ environmentId: response.data.environmentId });

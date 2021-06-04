@@ -70,9 +70,16 @@ export default class CapabilityMap extends Component {
   }
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => {
         this.setState({
@@ -85,7 +92,12 @@ export default class CapabilityMap extends Component {
 
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/capabilitymap/${this.state.environmentId}`
+        `${process.env.REACT_APP_API_URL}/environment/capabilitymap/${this.state.environmentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => {
         this.setState({ capabilities: response.data.capabilities });

@@ -18,10 +18,16 @@ export default class AddStatus extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     const formData = new FormData();
     formData.append("validityPeriod", this.state.validityPeriod);
     await axios
-      .post(`${process.env.REACT_APP_API_URL}/status/`, formData)
+      .post(`${process.env.REACT_APP_API_URL}/status/`, formData, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => toast.success("Added Status"))
       .catch((error) => {
         console.log(error);
@@ -33,9 +39,16 @@ export default class AddStatus extends Component {
   };
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) =>
         this.setState({ environmentId: response.data.environmentId })
@@ -46,7 +59,11 @@ export default class AddStatus extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`)
+      .get(`${process.env.REACT_APP_API_URL}/status/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => this.setState({ statuses: response.data }));
   }
 
@@ -56,7 +73,6 @@ export default class AddStatus extends Component {
 
   handleDateChange(event) {
     this.setState({ [event.target.name]: event.target.value.toLocaleString() });
-    console.log(this.state.validityPeriod);
   }
 
   render() {

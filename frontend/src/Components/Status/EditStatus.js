@@ -19,14 +19,18 @@ export default class EditStatus extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
     const formData = new FormData();
     formData.append("validityPeriod", this.state.validityPeriod);
     formData.append("statusId", this.state.statusId);
     await axios
-      .put(`${process.env.REACT_APP_API_URL}/api/status/`, formData)
+      .put(`${process.env.REACT_APP_API_URL}/api/status/`, formData, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => toast.success("Updated Status"))
       .catch((error) => {
-        console.log(error);
         toast.error("Failed to Update Status");
       });
     this.props.history.push(
@@ -35,9 +39,16 @@ export default class EditStatus extends Component {
   };
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) =>
         this.setState({ environmentId: response.data.environmentId })
@@ -48,7 +59,14 @@ export default class EditStatus extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/api/status/${this.state.statusId}`)
+      .get(
+        `${process.env.REACT_APP_API_URL}/api/status/${this.state.statusId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
+      )
       .then((response) =>
         this.setState({ validityPeriod: response.data.validityPeriod })
       );
@@ -56,7 +74,6 @@ export default class EditStatus extends Component {
 
   handleDateChange(event) {
     this.setState({ [event.target.name]: event.target.value.toLocaleString() });
-    console.log(this.state.validityPeriod);
   }
 
   render() {

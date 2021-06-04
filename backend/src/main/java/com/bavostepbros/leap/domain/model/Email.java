@@ -1,6 +1,5 @@
 package com.bavostepbros.leap.domain.model;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -15,8 +14,8 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class Mail {
-    @Email
+public class Email {
+    @javax.validation.constraints.Email
     @NotNull
     @Size(min = 1, message = "Please, set an email address to send the message to it")
     private String to;

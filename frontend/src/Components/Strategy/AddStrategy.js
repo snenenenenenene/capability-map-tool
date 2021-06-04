@@ -27,6 +27,8 @@ export default class AddStrategy extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     const formData = new FormData();
     formData.append("environmentId", this.state.environmentId);
     formData.append("strategyName", this.state.strategyName);
@@ -34,7 +36,11 @@ export default class AddStrategy extends Component {
     formData.append("timeFrameEnd", this.state.timeFrameEnd);
     formData.append("statusId", this.state.statusId);
     await axios
-      .post(`${process.env.REACT_APP_API_URL}/strategy/`, formData)
+      .post(`${process.env.REACT_APP_API_URL}/strategy/`, formData, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         toast.success("Strategy Added Successfully!");
         this.props.history.push(
@@ -45,9 +51,16 @@ export default class AddStrategy extends Component {
   };
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => {
         this.setState({ environmentId: response.data.environmentId });
@@ -58,7 +71,11 @@ export default class AddStrategy extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`)
+      .get(`${process.env.REACT_APP_API_URL}/status/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         response.data.forEach((status) => {
           status.label = status.validityPeriod;
@@ -76,8 +93,14 @@ export default class AddStrategy extends Component {
   }
 
   async updateDate() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`)
+      .get(`${process.env.REACT_APP_API_URL}/status/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => this.setState({ statuses: response.data }))
       .catch((error) => {
         toast.error("Could not Update Statuses");

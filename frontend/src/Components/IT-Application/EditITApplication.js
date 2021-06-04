@@ -44,6 +44,8 @@ export default class EditITApplication extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     const formData = new FormData();
     formData.append("statusId", this.state.statusId);
     formData.append("name", this.state.itApplicationName);
@@ -68,7 +70,12 @@ export default class EditITApplication extends Component {
     await axios
       .put(
         `${process.env.REACT_APP_API_URL}/itapplication/${this.state.itApplicationId}`,
-        formData
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => {
         toast.success("IT Application Added Successfully!");
@@ -80,9 +87,16 @@ export default class EditITApplication extends Component {
   };
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) =>
         this.setState({ environmentId: response.data.environmentId })
@@ -92,14 +106,23 @@ export default class EditITApplication extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`)
+      .get(`${process.env.REACT_APP_API_URL}/status/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => this.setState({ statuses: response.data }))
       .catch((error) => {
         toast.error("Could not load Statuses");
       });
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/itapplication/${this.state.itApplicationId}`
+        `${process.env.REACT_APP_API_URL}/itapplication/${this.state.itApplicationId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => {
         this.setState({
@@ -150,7 +173,6 @@ export default class EditITApplication extends Component {
 
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
-    console.log(this.state.timeValue);
   }
 
   handleModal() {
@@ -162,9 +184,6 @@ export default class EditITApplication extends Component {
   }
 
   render() {
-    const environmentName = this.props.match.params.name;
-    const capabilityID = this.props.match.params.id;
-
     return (
       <div className='container'>
         <br></br>

@@ -19,10 +19,16 @@ export default class AddProgram extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     const formData = new FormData();
     formData.append("programName", this.state.programName);
     await axios
-      .post(`${process.env.REACT_APP_API_URL}/program/`, formData)
+      .post(`${process.env.REACT_APP_API_URL}/program/`, formData, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => toast.success("Program Added Successfully!"))
       .catch((error) => toast.error("Could not Add Program"));
     this.props.history.push(
@@ -31,9 +37,16 @@ export default class AddProgram extends Component {
   };
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) =>
         this.setState({ environmentId: response.data.environmentId })

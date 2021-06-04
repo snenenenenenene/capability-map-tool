@@ -24,13 +24,19 @@ export default class AddStrategyItem extends Component {
   }
 
   handleSubmit = async (e) => {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     e.preventDefault();
     const formData = new FormData();
     formData.append("strategyId", this.state.strategyId);
     formData.append("strategyItemName", this.state.strategyItemName);
     formData.append("description", this.state.strategyItemDescription);
     await axios
-      .post(`${process.env.REACT_APP_API_URL}/strategyitem/`, formData)
+      .post(`${process.env.REACT_APP_API_URL}/strategyitem/`, formData, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         toast.success("Strategy Item Added Successfully!");
         this.props.history.push(
@@ -49,9 +55,16 @@ export default class AddStrategyItem extends Component {
   }
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => {
         this.setState({ environmentId: response.data.environmentId });
@@ -62,7 +75,11 @@ export default class AddStrategyItem extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/strategy/`)
+      .get(`${process.env.REACT_APP_API_URL}/strategy/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => this.setState({ strategies: response.data }))
       .catch((error) => {
         toast.error("Could not load Strategies");
@@ -71,16 +88,6 @@ export default class AddStrategyItem extends Component {
 
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
-  }
-
-  capabilityListRows() {
-    return this.state.capabilities.map((capability) => {
-      return (
-        <option key={capability.capabilityId} value={capability.capabilityId}>
-          {capability.capabilityName}
-        </option>
-      );
-    });
   }
 
   strategyListRows() {

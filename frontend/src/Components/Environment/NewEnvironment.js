@@ -19,9 +19,9 @@ export default class NewEnvironment extends Component {
   fetchDeleteEnvironments = async (environmentId) => {
     await axios
       .delete(`${process.env.REACT_APP_API_URL}/environment/${environmentId}`)
-      .then((response) => toast.success("Succesfully Deleted Environment"))
+      .then((response) => toast.success("Successfully Deleted Environment"))
       .catch((error) => toast.error("Could not Delete Environment"));
-    //REFRESH CAPABILITIES
+    //REFRESH ENVIRONMENTS
     await axios
       .get(`${process.env.REACT_APP_API_URL}/environment/`)
       .then((response) => {
@@ -34,9 +34,15 @@ export default class NewEnvironment extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/exists-by-environmentname/${this.state.environmentName}`
+        `${process.env.REACT_APP_API_URL}/environment/exists-by-environmentname/${this.state.environmentName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => {
         if (response.data === true) {
@@ -53,7 +59,11 @@ export default class NewEnvironment extends Component {
         const formData = new FormData();
         formData.append("environmentName", this.state.environmentName);
         axios
-          .post(`${process.env.REACT_APP_API_URL}/environment/`, formData)
+          .post(`${process.env.REACT_APP_API_URL}/environment/`, formData, {
+            headers: {
+              Authorization: `Bearer ${jwt}`,
+            },
+          })
           .then((response) => {
             toast.success("Environment Successfully Created!");
             localStorage.setItem(
@@ -80,10 +90,16 @@ export default class NewEnvironment extends Component {
   }
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/environment/`)
+      .get(`${process.env.REACT_APP_API_URL}/environment/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => this.setState({ environments: response.data }))
       .catch((error) => {
+        console.error(error);
         toast.error("Could not Load Environments");
       });
   }

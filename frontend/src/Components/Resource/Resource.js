@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import MaterialTable from "material-table";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default class Resource extends Component {
   constructor(props) {
@@ -16,9 +17,16 @@ export default class Resource extends Component {
   }
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) =>
         this.setState({ environmentId: response.data.environmentId })
@@ -29,7 +37,11 @@ export default class Resource extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/resource/`)
+      .get(`${process.env.REACT_APP_API_URL}/resource/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         this.setState({ resources: response.data });
       })
@@ -44,24 +56,62 @@ export default class Resource extends Component {
       `/environment/${this.state.environmentName}/resource/${resourceId}`
     );
   }
-  //DELETE resource AND REMOVE ALL CHILD resources FROM STATE
+  fetchDeleteResources = async (resourceId) => {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
+    await axios
+      .delete(`${process.env.REACT_APP_API_URL}/resource/${resourceId}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
+      .then((response) => toast.success("Successfully Deleted Resource"))
+      .catch((error) => toast.error("Could not Delete Resource"));
+    //REFRESH RESOURCES
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/resource/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
+      .then((response) => {
+        this.setState({ capabilities: response.data });
+      })
+      .catch((error) => {
+        toast.error("Could not Find Resources");
+      });
+  };
+
   delete = async (resourceId) => {
-    if (window.confirm("Are you sure you want to delete this resource?")) {
-      await axios
-        .delete(`${process.env.REACT_APP_API_URL}/resource/${resourceId}`)
-        .catch((error) => console.error(error));
-      //REFRESH resources
-      await axios
-        .get(`${process.env.REACT_APP_API_URL}/resource/`)
-        .then((response) => {
-          this.setState({ resources: [] });
-          this.setState({ resources: response.data });
-        })
-        .catch((error) => {
-          console.log(error);
-          this.props.history.push("/error");
-        });
-    }
+    toast(
+      (t) => (
+        <span>
+          <p className='text-center'>
+            Are you sure you want to remove this resource?
+          </p>
+          <div className='text-center'>
+            <button
+              className='btn btn-primary btn-sm m-3'
+              stlye={{ width: 50, height: 30 }}
+              onClick={() => {
+                toast.dismiss(t.id);
+                this.fetchDeleteResources(resourceId);
+              }}
+            >
+              Yes!
+            </button>
+            <button
+              className='btn btn-secondary btn-sm m-3'
+              stlye={{ width: 50, height: 30 }}
+              onClick={() => toast.dismiss(t.id)}
+            >
+              No!
+            </button>
+          </div>
+        </span>
+      ),
+      { duration: 50000 }
+    );
   };
 
   render() {

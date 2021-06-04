@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,8 @@ public class CapabilityControllerTest {
 	
 	@Autowired
 	private CapabilityService capabilityService;
-	
+
+	private String jwt;
 	private Status statusFirst;
 	private Status statusSecond;
 	private Environment environmentFirst;
@@ -64,7 +66,13 @@ public class CapabilityControllerTest {
 	private Capability capabilityThirth;
 	
 	static final String PATH = "/api/capability/";
-	
+
+//	@BeforeAll
+//	static void authenticate() {
+////		jwt =
+//	}
+
+
 	@BeforeEach
 	public void init() {
 		statusFirst = statusDAL.save(new Status(1, LocalDate.of(2021, 5, 15)));

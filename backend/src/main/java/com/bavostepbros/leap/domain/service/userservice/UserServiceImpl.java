@@ -1,6 +1,7 @@
 package com.bavostepbros.leap.domain.service.userservice;
 
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
@@ -151,6 +152,24 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean existsByEmail(String email){
 		return !(userDAL.findByEmail(email) == null);
+	}
+
+	@Override
+	public String generatePassword(){
+		String generatedPassword;
+
+		int lowerLimit = 48; // numeral '0'
+  	    int higherLimit = 122; // letter 'z'
+	    int passwordLength = 10;
+	    Random random = new Random();
+
+	    generatedPassword = random.ints(lowerLimit, higherLimit + 1)
+	      .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+	      .limit(passwordLength)
+	      .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+	      .toString();
+		
+		return generatedPassword;
 	}
 
 }

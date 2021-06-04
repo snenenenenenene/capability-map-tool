@@ -38,6 +38,7 @@ export default class AddCapability extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
     const formData = new FormData();
     formData.append("environmentName", this.state.environmentName);
     formData.append("environmentId", this.state.environmentId);
@@ -53,7 +54,11 @@ export default class AddCapability extends Component {
       console.log(pair[0] + ", " + pair[1]);
     }
     await axios
-      .post(`${process.env.REACT_APP_API_URL}/capability/`, formData)
+      .post(`${process.env.REACT_APP_API_URL}/capability/`, formData, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         toast.success("Capability Added Successfully!");
         this.props.history.push(
@@ -64,9 +69,16 @@ export default class AddCapability extends Component {
   };
 
   async componentDidMount() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => {
         this.setState({ environmentId: response.data.environmentId });
@@ -77,7 +89,11 @@ export default class AddCapability extends Component {
       });
 
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`)
+      .get(`${process.env.REACT_APP_API_URL}/status/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         response.data.forEach((status) => {
           status.label = status.validityPeriod;
@@ -91,7 +107,12 @@ export default class AddCapability extends Component {
 
     await axios
       .get(
-        `${process.env.REACT_APP_API_URL}/capability/all-capabilities-by-environmentid/${this.state.environmentId}`
+        `${process.env.REACT_APP_API_URL}/capability/all-capabilities-by-environmentid/${this.state.environmentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
       )
       .then((response) => {
         response.data.forEach((cap) => {
@@ -122,8 +143,14 @@ export default class AddCapability extends Component {
   };
 
   async updateDate() {
+    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`)
+      .get(`${process.env.REACT_APP_API_URL}/status/`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      })
       .then((response) => {
         response.data.forEach((status) => {
           status.label = status.validityPeriod;
