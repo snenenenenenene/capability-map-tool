@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Pdf from "react-to-pdf";
+import jsPDF from "jspdf";
 import { Modal, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
 
 export default class CapabilityMap extends Component {
   constructor(props) {
@@ -14,6 +16,7 @@ export default class CapabilityMap extends Component {
       capabilities: [],
       showModal: false,
       capability: {},
+      pdfExportComponent: React.createRef(),
     };
   }
 
@@ -26,27 +29,38 @@ export default class CapabilityMap extends Component {
     this.handleModal();
   }
 
+  strategyItemExists(capability) {
+    if (capability.capabilityItems.length !== 0) {
+      return (
+        <div
+          class='card-deck justify-content-center strat-items mx-auto'
+          style={{ marginBottom: 10 }}
+        >
+          {this.renderStrategyItemsinBody(capability)}
+        </div>
+      );
+    }
+  }
+
   capabilityMapping(capabilities) {
     return capabilities.map((capability, i) => {
       return (
         <div
-          className="card capability-card"
+          className='card capability-card'
           id={`capability-${capability.level}`}
         >
           <div
-            className="capability-title card-header text-center text-uppercase"
+            className='capability-title card-header text-center text-uppercase text-truncate'
             onClick={() => this.handleCapabilityClick(capability)}
           >
             {capability.capabilityName}
           </div>
-          <div class="card-body">
-            <div class="card-deck justify-content-center">
-              {this.renderStrategyItemsinBody(capability)}
-            </div>
-            <div className="row">
-              <div className="card-deck justify-content-center mx-auto">
+          <div class='card-body'>
+            {this.strategyItemExists(capability)}
+            <div className='row'>
+              <div className='card-deck justify-content-center mx-auto'>
                 {this.capabilityMapping(capability.children)}
-                <p className="card-text"></p>
+                <p className='card-text'></p>
               </div>
             </div>
           </div>
@@ -108,27 +122,28 @@ export default class CapabilityMap extends Component {
             itemColour = "red";
         }
         return (
-          <OverlayTrigger
-            placement="bottom"
-            overlay={
-              <Tooltip id="button-tooltip-2">
-                <div>{capabilityItem.strategyItem.strategyItemName}</div>
-                <div>{capabilityItem.strategyItem.description}</div>
-              </Tooltip>
-            }
-          >
-            <div
-              className="card"
-              style={{
-                margin: 3,
-                maxWidth: 10,
-                maxHeight: 10,
-                backgroundColor: itemColour,
-              }}
+          <div>
+            <OverlayTrigger
+              placement='bottom'
+              overlay={
+                <Tooltip id='button-tooltip-2'>
+                  <div>{capabilityItem.strategyItem.strategyItemName}</div>
+                  <div>{capabilityItem.strategyItem.description}</div>
+                </Tooltip>
+              }
             >
-              <div className="card-body"></div>
-            </div>
-          </OverlayTrigger>
+              <div className=''>
+                <div
+                  className='card strat-item'
+                  style={{
+                    backgroundColor: itemColour,
+                  }}
+                >
+                  <div className='card-body'></div>
+                </div>
+              </div>
+            </OverlayTrigger>
+          </div>
         );
       });
     } else return;
@@ -162,16 +177,16 @@ export default class CapabilityMap extends Component {
         }
         return (
           <OverlayTrigger
-            placement="bottom"
+            placement='bottom'
             overlay={
-              <Tooltip id="button-tooltip-2">
+              <Tooltip id='button-tooltip-2'>
                 <div>{capabilityItem.strategyItem.strategyItemName}</div>
                 <div>{capabilityItem.strategyItem.description}</div>
               </Tooltip>
             }
           >
             <div
-              className="card"
+              className='card'
               style={{
                 margin: 3,
                 maxWidth: 60,
@@ -181,7 +196,7 @@ export default class CapabilityMap extends Component {
                 backgroundColor: itemColour,
               }}
             >
-              <div className="card-body"></div>
+              <div className='card-body'></div>
             </div>
           </OverlayTrigger>
         );
@@ -189,51 +204,60 @@ export default class CapabilityMap extends Component {
     } else return;
   }
 
+  handleExportWithComponent = (event) => {
+    this.state.pdfExportComponent.current.save();
+  };
+
   render() {
     const targetRef = React.createRef();
     const capability = this.state.capability;
     return (
-      <div>
+      <div className='capability-map'>
         <br></br>
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
+        <nav aria-label='breadcrumb' className='container'>
+          <ol className='breadcrumb'>
+            <li className='breadcrumb-item'>
               <Link to={`/`}>Home</Link>
             </li>
-            <li className="breadcrumb-item">{this.state.environmentName}</li>
-            <Pdf
-              targetRef={targetRef}
-              filename="capabilitymap.pdf"
-              options={{ orientation: "landscape", unit: "in" }}
+            <li className='breadcrumb-item'>{this.state.environmentName}</li>
+            <div
+              className='ml-auto pdf-button'
+              onClick={this.handleExportWithComponent}
             >
-              {({ toPdf }) => (
-                <div className="ml-auto" onClick={toPdf}>
-                  <i class="bi bi-file-earmark-pdf-fill" onClick={toPdf}></i>
-                </div>
-              )}
-            </Pdf>
+              <i class='bi bi-file-earmark-pdf-fill'></i>
+            </div>
           </ol>
         </nav>
 
-        <div ref={targetRef}>
-          <div className="row">
-            <div className="card-deck justify-content-center mx-auto">
-              {this.capabilityMapping(this.state.capabilities)}
-            </div>
+        <div className='capability-map-container'>
+          <div className='row justify-content-center' ref={targetRef}>
+            <PDFExport
+              ref={this.state.pdfExportComponent}
+              paperSize='auto'
+              margin={40}
+              fileName={`${this.state.environmentName} ${new Date().getDate()}`}
+              author='LEAP'
+            >
+              <div className='card-deck justify-content-center mx-auto'>
+                {this.capabilityMapping(this.state.capabilities)}
+              </div>
+            </PDFExport>
           </div>
         </div>
         <div>
           <Modal
-            className="capability-modal"
+            className='capability-modal'
             show={this.state.showModal}
             onHide={() => this.handleModal()}
             centered
           >
             <Modal.Header closeButton>
-              <Modal.Title>{capability.capabilityName}</Modal.Title>
+              <Modal.Title className='text-truncate'>
+                {capability.capabilityName}
+              </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <div className="card-deck  justify-content-center mx-auto">
+              <div className='card-deck justify-content-center mx-auto'>
                 {this.renderStrategyItems(this.state.capability)}
               </div>
             </Modal.Body>

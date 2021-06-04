@@ -98,7 +98,6 @@ export default class Login extends Component {
             height='88'
           />
           <br></br>
-          {/* <div className='jumbotron'> */}
           <form onSubmit={this.authenticateUser}>
             <div className='form-group col-sm-5 mx-auto'>
               <input
@@ -128,12 +127,13 @@ export default class Login extends Component {
             </div>
             <button
               style={{ height: 40 }}
-              className='btn green'
+              className='custom-button green'
               onClick={this.authenticateUser}
               type='submit'
             >
               LOGIN
             </button>
+            <p>@Bavo&amp;Stepbros</p>
           </form>
           {/* </div> */}
         </div>

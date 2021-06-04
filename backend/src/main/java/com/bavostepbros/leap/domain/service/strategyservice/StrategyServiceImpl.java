@@ -137,7 +137,7 @@ public class StrategyServiceImpl implements StrategyService {
 
 	@Override
 	public boolean existsByStrategyName(String strategyName) {
-		return !strategyDAL.findByStrategyName(strategyName).isEmpty();
+		return strategyDAL.findByStrategyName(strategyName).isPresent();
 	}
 
 	@Override

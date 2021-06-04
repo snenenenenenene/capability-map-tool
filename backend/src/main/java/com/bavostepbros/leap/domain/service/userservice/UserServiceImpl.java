@@ -1,11 +1,16 @@
 package com.bavostepbros.leap.domain.service.userservice;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.bavostepbros.leap.domain.model.User;
@@ -20,16 +25,22 @@ import com.bavostepbros.leap.domain.customexceptions.UserException;
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
-	private final UserDAL userDAL;
+	@Autowired
+	private UserDAL userDAL;
 
 	@Autowired
-	public UserServiceImpl(UserDAL userDAL) {
-		super();
-		this.userDAL = userDAL;
-	}
+	private AuthenticationManager authenticationManager;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@Autowired
 	private RoleService roleService;
+
+	@PostConstruct
+	private void init() {
+		save(2, "super_admin", "super_admin", "super_admin");
+	}
 
 	@Override
 	public User save(Integer roleId, String username, String password, String email) {
@@ -53,9 +64,7 @@ public class UserServiceImpl implements UserService {
 		if(!roleService.existsById(roleId)) {
 			throw new ForeignKeyException("Role ID is invalid.");
 		}
-		
-    	User user = new User(username, roleId, password, email);
-        return userDAL.save(user);
+    	return userDAL.save(new User(username, roleId, passwordEncoder.encode(password), email));
 	}
 
 	@Override
@@ -66,8 +75,7 @@ public class UserServiceImpl implements UserService {
 		if (!existsById(id)){
 			throw new IndexDoesNotExistException("User ID does not exist.");
 		}
-		User user = userDAL.findById(id).get();
-		return user;
+		return userDAL.findById(id).get();
 	}
 
 	
@@ -79,16 +87,12 @@ public class UserServiceImpl implements UserService {
 		if(!existsByEmail(email)){
 			throw new UserException("Email does not exist.");
 		}
-		
-		User user = userDAL.findByEmail(email);
-		return user;
+		return userDAL.findByEmail(email);
 	}
 	
 	@Override
 	public List<User> getAll() {
-		List<User> users = new ArrayList<User>();
-		users = userDAL.findAll();
-		return users;
+		return userDAL.findAll();
 	}
 	
 	@Override
@@ -109,19 +113,11 @@ public class UserServiceImpl implements UserService {
 		if (!existsById(userId)){
 			throw new UserException("Can not update user if it does not exist.");
 		}
-//		if (!userService.existsByUsername(user.getUsername())){
-//			throw new DuplicateValueException("User name already exists.");
-//		}
-//		if (!userService.existsByEmail(user.getEmail())) {
-//			throw new DuplicateValueException("Email already exists");
-//		}
+
 		if (!roleService.existsById(roleId)) {
 			throw new ForeignKeyException("Role ID does not exist.");
 		}
-
-		User user = new User(userId, roleId, username, password, email);
-		User updatedUser = userDAL.save(user);
-		return updatedUser;
+		return userDAL.save(new User(userId, roleId, username, passwordEncoder.encode(password), email));
 	}
 
 	@Override
@@ -136,22 +132,25 @@ public class UserServiceImpl implements UserService {
 		userDAL.deleteById(id);
 	}	
 
+	//TODO fix exception handling here or in controller?
+	@Override
+	public Authentication authenticate(String email, String password) throws AuthenticationException {
+		return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+	}
+
 	@Override
 	public boolean existsById(Integer id) {
-		boolean result = userDAL.findById(id) == null;
-		return !result;
+		return userDAL.findById(id).isPresent();
 	}
 
 	@Override
 	public boolean existsByUsername(String username){
-		boolean result = userDAL.findByUsername(username) == null;
-		return !result;
+		return !(userDAL.findByUsername(username) == null);
 	}
 
 	@Override
 	public boolean existsByEmail(String email){
-		boolean result = userDAL.findByEmail(email) == null;
-		return !result;
+		return !(userDAL.findByEmail(email) == null);
 	}
 
 }

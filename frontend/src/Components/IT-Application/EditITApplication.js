@@ -166,7 +166,7 @@ export default class EditITApplication extends Component {
     const capabilityID = this.props.match.params.id;
 
     return (
-      <div>
+      <div className='container'>
         <br></br>
         <nav aria-label='shadow breadcrumb'>
           <ol className='breadcrumb'>

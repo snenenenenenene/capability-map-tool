@@ -48,11 +48,4 @@ public class Environment {
 		this.environmentId = environmentId;
 		this.environmentName = environmentName;
 	}
-
-//    public Environment(Integer environmentId, String environmentName, List<Capability> capabilities, List<Strategy> strategies) {
-//        this.environmentId = environmentId;
-//        this.environmentName = environmentName;
-//        this.capabilities = capabilities;
-//        this.strategies = strategies;
-//    }
 }

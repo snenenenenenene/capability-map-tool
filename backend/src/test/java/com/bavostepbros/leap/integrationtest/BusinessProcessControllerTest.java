@@ -3,6 +3,8 @@ package com.bavostepbros.leap.integrationtest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.List;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +22,7 @@ import com.bavostepbros.leap.domain.model.BusinessProcess;
 import com.bavostepbros.leap.domain.model.dto.BusinessProcessDto;
 import com.bavostepbros.leap.domain.service.businessprocessservice.BusinessProcessService;
 import com.bavostepbros.leap.persistence.BusinessProcessDAL;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Transactional
@@ -84,6 +87,81 @@ public class BusinessProcessControllerTest {
 		
 		assertNotNull(businessProcessDto);
 		testBusinessProcess(businessProcess, businessProcessDto);
+	}
+	
+	@Test
+	public void should_getBusinessProcess_whenGetBusinessProcess() throws Exception {
+		Integer businessProcessId = businessProcessFirst.getBusinessProcessId();
+		
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + businessProcessId))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn();
+		
+		BusinessProcessDto businessProcessDto = objectMapper.readValue(
+				mvcResult.getResponse().getContentAsString(), BusinessProcessDto.class);
+		
+		assertNotNull(businessProcessDto);
+		testBusinessProcess(businessProcessFirst, businessProcessDto);
+	}
+	
+	@Test
+	public void should_putBusinessProcess_whenUpdateBusinessProcess() throws Exception {
+		Integer businessProcessId = businessProcessFirst.getBusinessProcessId();
+		String newBusinessProcessName = "Update test";
+		String businessProcessDescription = businessProcessFirst.getBusinessProcessDescription();
+		
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH + businessProcessId)
+				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+				.param("businessProcessName", newBusinessProcessName)
+				.param("businessProcessDescription", businessProcessDescription)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn();
+		
+		BusinessProcessDto businessProcessDto = objectMapper.readValue(
+				mvcResult.getResponse().getContentAsString(), BusinessProcessDto.class);
+		
+		BusinessProcess businessProcess = businessProcessService.getBusinessProcessByName(newBusinessProcessName);
+		
+		assertNotNull(businessProcessDto);
+		testBusinessProcess(businessProcess, businessProcessDto);
+	}
+	
+	@Test
+	public void should_deleteBusinessProcess_whenDeleteBusinessProcess() throws Exception {
+		Integer businessProcessId = businessProcessFirst.getBusinessProcessId();
+		
+		mockMvc.perform(MockMvcRequestBuilders.delete(PATH + businessProcessId))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+	
+	@Test
+	public void should_getBusinessProcess_whenGetBusinessProcessByName() throws Exception {
+		String businessProcessName = businessProcessFirst.getBusinessProcessName();
+		
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + "businessProcessName/" + businessProcessName))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn();
+		
+		BusinessProcessDto businessProcessDto = objectMapper.readValue(
+				mvcResult.getResponse().getContentAsString(), BusinessProcessDto.class);
+		
+		assertNotNull(businessProcessDto);
+		testBusinessProcess(businessProcessFirst, businessProcessDto);
+	}
+	
+	@Test
+	public void should_getAllBusinessProcess_whenGetAllBusinessProcessByName() throws Exception {
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn();
+		
+		List<BusinessProcessDto> businessProcessDto = objectMapper.readValue(
+				mvcResult.getResponse().getContentAsString(), new TypeReference<List<BusinessProcessDto>>() {});
+		
+		assertNotNull(businessProcessDto);
+		testBusinessProcess(businessProcessFirst, businessProcessDto.get(0));
+		testBusinessProcess(businessProcessSecond, businessProcessDto.get(1));
 	}
 	
 	@Test
