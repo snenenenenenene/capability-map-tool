@@ -28,6 +28,7 @@ import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
 import com.bavostepbros.leap.domain.model.User;
 import com.bavostepbros.leap.domain.model.dto.StatusDto;
 import com.bavostepbros.leap.domain.model.dto.UserDto;
+import com.bavostepbros.leap.domain.service.emailservice.EmailService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -42,6 +43,9 @@ public class UserController {
 
 	@Autowired
 	private RoleService roleService;
+
+	@Autowired
+	private EmailService emailService;
 	
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public UserDto addUser(
@@ -50,6 +54,7 @@ public class UserController {
 			@ModelAttribute("email") String email,
 			@ModelAttribute("roleId") Integer roleId) {		
 		User user = userService.save(roleId, username, password, email);
+		emailService.sendNewUserMessage(user.getEmail(), user.getPassword());
 		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getPassword(), user.getEmail());
 	}
 	
