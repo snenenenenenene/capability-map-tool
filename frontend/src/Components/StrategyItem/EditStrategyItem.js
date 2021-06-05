@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import toast from "react-hot-toast";
-import Select from "react-select";
+import API from "../../Services/API";
 
 export default class EditStrategy extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
+
       environments: [],
       selectedCapabilities: [],
       capabilities: [],
@@ -32,11 +33,8 @@ export default class EditStrategy extends Component {
     formData.append("itemId", this.state.itemId);
     formData.append("strategyItemName", this.state.strategyItemName);
     formData.append("description", this.state.strategyItemDescription);
-    await axios
-      .put(
-        `${process.env.REACT_APP_API_URL}/strategyitem/${this.state.itemId}`,
-        formData
-      )
+    await this.state.api.endpoints.strategyitem
+      .update(formData, this.state.strategyItemId)
       .then((response) => {
         toast.success("Strategy Item Edited Successfully!");
         this.props.history.push(
@@ -51,22 +49,22 @@ export default class EditStrategy extends Component {
   };
 
   async componentDidMount() {
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+    this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "status" });
+    this.state.api.createEntity({ name: "strategy" });
+    this.state.api.createEntity({ name: "capabiliy" });
+
+    await this.state.api.endpoints.environment
+      .getEnvironmentByName({ name: this.state.environmentName })
+      .then((response) =>
+        this.setState({ environmentId: response.data.environmentId })
       )
-      .then((response) => {
-        this.setState({ environmentId: response.data.environmentId });
-      })
       .catch((error) => {
-        console.log(error);
         this.props.history.push("/404");
       });
 
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/capability/all-capabilities-by-environmentid/${this.state.environmentId}`
-      )
+    await this.state.api.endpoints.capability
+      .getAllCapabilitiesByEnvironmentId({ id: this.state.environmentId })
       .then((response) => {
         response.data.forEach((capability) => {
           capability.label = capability.capabilityName;
@@ -78,15 +76,15 @@ export default class EditStrategy extends Component {
         toast.error("Could not load Capabilities");
       });
 
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/strategy/`)
+    await this.state.api.endpoints.strategy
+      .getAll()
       .then((response) => this.setState({ strategies: response.data }))
       .catch((error) => {
         toast.error("Could not load Strategies");
       });
 
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/strategyitem/${this.state.itemId}`)
+    await this.state.api.endpoints.strategyitem
+      .getOne({ id: this.state.strategyItemId })
       .then((response) =>
         this.setState({
           capabilityId: response.data.capabilityId,
@@ -103,16 +101,6 @@ export default class EditStrategy extends Component {
 
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
-  }
-
-  onSelect(selectedList, selectedItem) {
-    console.log(selectedItem);
-    console.log(selectedList);
-  }
-
-  onRemove(selectedList, removedItem) {
-    console.log(removedItem);
-    console.log(selectedList);
   }
 
   strategyListRows() {

@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import toast from "react-hot-toast";
 import Select from "react-select";
-
+import API from "../../Services/API";
 export default class AddBusinessProcess extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
       environments: [],
       environmentName: this.props.match.params.name,
       environmentId: "",
@@ -19,8 +19,6 @@ export default class AddBusinessProcess extends Component {
   }
 
   handleSubmit = async (e) => {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
     e.preventDefault();
     const formData = new FormData();
     formData.append("businessProcessName", this.state.businessProcessName);
@@ -28,12 +26,8 @@ export default class AddBusinessProcess extends Component {
       "businessProcessDescription",
       this.state.businessProcessDescription
     );
-    await axios
-      .post(`${process.env.REACT_APP_API_URL}/businessprocess/`, formData, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.businessprocess
+      .create(formData)
       .then((response) => {
         toast.success("Business Process Added Successfully!");
         this.props.history.push(
@@ -48,22 +42,16 @@ export default class AddBusinessProcess extends Component {
   };
 
   async componentDidMount() {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+    this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "businessprocess" });
+    this.state.api.createEntity({ name: "capability" });
 
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      )
+    await this.state.api.endpoints.environment
+      .getEnvironmentByName({ name: this.state.environmentName })
       .then((response) => {
         this.setState({ environmentId: response.data.environmentId });
       })
       .catch((error) => {
-        console.log(error);
         this.props.history.push("/404");
       });
   }

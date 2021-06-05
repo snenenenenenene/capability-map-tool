@@ -1,11 +1,12 @@
-import axios from "axios";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import API from "../../Services/API";
 export default class AddStatus extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
       statuses: [],
       environments: [],
       environmentName: this.props.match.params.name,
@@ -18,19 +19,12 @@ export default class AddStatus extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
     const formData = new FormData();
     formData.append("validityPeriod", this.state.validityPeriod);
-    await axios
-      .post(`${process.env.REACT_APP_API_URL}/status/`, formData, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.status
+      .create(formData)
       .then((response) => toast.success("Added Status"))
       .catch((error) => {
-        console.log(error);
         toast.error("Failed to Add Status");
       });
     this.props.history.push(
@@ -39,31 +33,20 @@ export default class AddStatus extends Component {
   };
 
   async componentDidMount() {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+    this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "status" });
 
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      )
+    await this.state.api.endpoints.environment
+      .getEnvironmentByName({ name: this.state.environmentName })
       .then((response) =>
         this.setState({ environmentId: response.data.environmentId })
       )
       .catch((error) => {
-        console.log(error);
         this.props.history.push("/404");
       });
 
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.status
+      .getAll()
       .then((response) => this.setState({ statuses: response.data }));
   }
 

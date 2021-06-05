@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import { Modal } from "react-bootstrap";
 import StatusQuickAdd from "../Status/StatusQuickAdd";
 import toast from "react-hot-toast";
 import Select from "react-select";
 import ReactStars from "react-stars";
+import API from "../../Services/API";
 export default class EditCapability extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
       statuses: [],
       environments: [],
       capabilities: [],
@@ -42,17 +43,17 @@ export default class EditCapability extends Component {
     this.setState({ showModal: !this.state.showModal });
   }
   async updateDate() {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
+    await this.state.api.endpoints.status
+      .getAll()
+      .then((response) => {
+        response.data.forEach((status) => {
+          status.label = status.validityPeriod;
+          status.value = status.statusId;
+        });
+        this.setState({ statuses: response.data });
       })
-      .then((response) => this.setState({ statuses: response.data }))
       .catch((error) => {
-        toast.error("Could not Update Statuses");
+        toast.error("Could not load Statuses");
       });
   }
 
@@ -60,8 +61,6 @@ export default class EditCapability extends Component {
     this.setState({ resourceQuality: newRating });
   };
   handleSubmit = async (e) => {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
     e.preventDefault();
     const formData = new FormData();
     formData.append("environmentName", this.state.environmentName);
@@ -75,25 +74,12 @@ export default class EditCapability extends Component {
     formData.append("resourceQuality", this.state.resourceQuality);
     formData.append("statusId", this.state.statusId);
     formData.append("level", this.state.capabilityLevel);
-    await axios
-      .put(
-        `${process.env.REACT_APP_API_URL}/capability/${this.state.capabilityId}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      )
+    await this.state.api.endpoints.capability
+      .update(formData, this.state.capabilityId)
       .then((response) => {
         toast.success("Capability Successfully Updated!");
         this.props.history.push(
-          `/environment/${this.state.environmentName}/capability`,
-          {
-            headers: {
-              Authorization: `Bearer ${jwt}`,
-            },
-          }
+          `/environment/${this.state.environmentName}/capability`
         );
       })
       .catch((error) => {
@@ -102,30 +88,23 @@ export default class EditCapability extends Component {
   };
 
   async componentDidMount() {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+    this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "capability" });
+    this.state.api.createEntity({ name: "status" });
 
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      )
+    await this.state.api.endpoints.environment
+      .getEnvironmentByName({ name: this.state.environmentName })
       .then((response) =>
-        this.setState({ environmentId: response.data.environmentId })
+        this.setState({
+          environmentId: response.data.environmentId,
+        })
       )
       .catch((error) => {
-        this.props.history.push("/404");
+        this.props.history.push("/home");
       });
 
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.status
+      .getAll()
       .then((response) => {
         response.data.forEach((status) => {
           status.label = status.validityPeriod;
@@ -134,15 +113,11 @@ export default class EditCapability extends Component {
         this.setState({ statuses: response.data });
       })
       .catch((error) => {
-        toast.error("Could not Load Statuses");
+        toast.error("Could not load Statuses");
       });
 
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/capability/`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.capability
+      .getAllCapabilitiesByEnvironmentId({ id: this.state.environmentId })
       .then((response) => {
         response.data.forEach((cap) => {
           cap.label = `${cap.capabilityName} - lvl: ${cap.level}`;
@@ -151,18 +126,11 @@ export default class EditCapability extends Component {
         this.setState({ capabilities: response.data });
       })
       .catch((error) => {
-        toast.error("Could not Load Capabilities");
+        toast.error("Could not load Capabilities");
       });
 
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/capability/${this.state.capabilityId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      )
+    await this.state.api.endpoints.capability
+      .getOne({ id: this.state.capabilityId })
       .then((response) => {
         this.setState({
           environmentId: response.data.environment.environmentId,

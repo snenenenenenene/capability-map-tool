@@ -1,15 +1,17 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { Modal } from "react-bootstrap";
 import Select from "react-select";
 import StatusQuickAdd from "../Status/StatusQuickAdd";
+import API from "../../Services/API";
 
 export default class AddStrategy extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
+
       environments: [],
       statuses: [],
       environmentName: this.props.match.params.name,
@@ -27,20 +29,14 @@ export default class AddStrategy extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
     const formData = new FormData();
     formData.append("environmentId", this.state.environmentId);
     formData.append("strategyName", this.state.strategyName);
     formData.append("timeFrameStart", this.state.timeFrameStart);
     formData.append("timeFrameEnd", this.state.timeFrameEnd);
     formData.append("statusId", this.state.statusId);
-    await axios
-      .post(`${process.env.REACT_APP_API_URL}/strategy/`, formData, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.strategy
+      .create(formData)
       .then((response) => {
         toast.success("Strategy Added Successfully!");
         this.props.history.push(
@@ -51,31 +47,21 @@ export default class AddStrategy extends Component {
   };
 
   async componentDidMount() {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+    this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "status" });
+    this.state.api.createEntity({ name: "strategy" });
 
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
+    await this.state.api.endpoints.environment
+      .getEnvironmentByName({ name: this.state.environmentName })
+      .then((response) =>
+        this.setState({ environmentId: response.data.environmentId })
       )
-      .then((response) => {
-        this.setState({ environmentId: response.data.environmentId });
-      })
       .catch((error) => {
-        console.log(error);
         this.props.history.push("/404");
       });
 
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.status
+      .getAll()
       .then((response) => {
         response.data.forEach((status) => {
           status.label = status.validityPeriod;
@@ -93,14 +79,8 @@ export default class AddStrategy extends Component {
   }
 
   async updateDate() {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.status
+      .getAll()
       .then((response) => this.setState({ statuses: response.data }))
       .catch((error) => {
         toast.error("Could not Update Statuses");

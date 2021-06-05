@@ -1,16 +1,19 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import toast from "react-hot-toast";
+import API from "../../Services/API";
 
 export default class EditProgram extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
+
       environments: [],
       statuses: [],
       environmentName: this.props.match.params.name,
       environmentId: "",
+      programId: this.props.match.params.id,
       programName: "",
     };
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -19,16 +22,10 @@ export default class EditProgram extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
     const formData = new FormData();
     formData.append("programName", this.state.programName);
-    await axios
-      .post(`${process.env.REACT_APP_API_URL}/program/`, formData, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.program
+      .update(formData, this.state.programId)
       .then((response) => toast.success("Program Added Successfully!"))
       .catch((error) => toast.error("Could not Add Program"));
     this.props.history.push(
@@ -37,22 +34,23 @@ export default class EditProgram extends Component {
   };
 
   async componentDidMount() {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      )
+    this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "program" });
+    await this.state.api.endpoints.environment
+      .getEnvironmentByName({ name: this.state.environmentName })
       .then((response) =>
         this.setState({ environmentId: response.data.environmentId })
       )
       .catch((error) => {
-        console.log(error);
+        this.props.history.push("/404");
+      });
+
+    await this.state.api.endpoints.program
+      .getOne({ id: this.state.programId })
+      .then((response) =>
+        this.setState({ programName: response.data.programName })
+      )
+      .catch((error) => {
         this.props.history.push("/404");
       });
   }
@@ -75,12 +73,12 @@ export default class EditProgram extends Component {
               </Link>
             </li>
             <li className='breadcrumb-item active' aria-current='page'>
-              Add Program
+              {this.state.programId}
             </li>
           </ol>
         </nav>
         <div className='jumbotron shadow'>
-          <h3>Add Program</h3>
+          <h3>Edit Program</h3>
           <form onSubmit={this.handleSubmit}>
             <div className='row'>
               <div className='col-sm'>

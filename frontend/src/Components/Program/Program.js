@@ -1,12 +1,15 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import MaterialTable from "material-table";
-import axios from "axios";
 import toast from "react-hot-toast";
+import API from "../../Services/API";
+
 export default class Program extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
+
       environments: [],
       environmentName: this.props.match.params.name,
       environmentId: "",
@@ -15,17 +18,10 @@ export default class Program extends Component {
   }
 
   async componentDidMount() {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      )
+    this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "program" });
+    await this.state.api.endpoints.environment
+      .getEnvironmentByName({ name: this.state.environmentName })
       .then((response) =>
         this.setState({ environmentId: response.data.environmentId })
       )
@@ -33,12 +29,8 @@ export default class Program extends Component {
         this.props.history.push("/404");
       });
 
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/program/`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.program
+      .getAll()
       .then((response) => {
         this.setState({ programs: response.data });
       })
@@ -52,21 +44,16 @@ export default class Program extends Component {
       `/environment/${this.state.environmentName}/program/${programId}`
     );
   }
-  fetchDeleteCapabilities = async (programId) => {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
-    await axios
-      .delete(`${process.env.REACT_APP_API_URL}/program/${programId}`)
+  fetchDeletePrograms = async (programId) => {
+    await this.state.api.endpoints.program
+      .delete({ id: programId })
       .then((response) => toast.success("Successfully Deleted Program"))
       .catch((error) => toast.error("Could not Delete Program"));
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/program/`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+
+    await this.state.api.endpoints.program
+      .getAll()
       .then((response) => {
-        this.setState({ capabilities: response.data });
+        this.setState({ programs: response.data });
       })
       .catch((error) => {
         toast.error("Could not Find Programs");

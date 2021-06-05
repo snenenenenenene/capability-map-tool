@@ -2,16 +2,17 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import MaterialTable from "material-table";
 import "./GeneralTable.css";
-import axios from "axios";
 import { Modal } from "react-bootstrap";
 import Select from "react-select";
 import { Route, Redirect } from "react-router-dom";
 import toast from "react-hot-toast";
+import API from "../../Services/API";
 
 export default class Capability extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
       environments: [],
       environmentName: this.props.match.params.name,
       environmentId: "",
@@ -32,29 +33,17 @@ export default class Capability extends Component {
 
   handleSubmit = (capabilityId) => async (e) => {
     e.preventDefault();
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
     const formData = new FormData();
     formData.append("itemId", this.state.itemId);
     formData.append("capabilityId", capabilityId);
     formData.append("strategicImportance", this.state.strategicImportance);
-    await axios
-      .post(`${process.env.REACT_APP_API_URL}/capabilityitem/`, formData, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.capabilityitem
+      .create(formData)
       .then(toast.success("Item Successfully Added"))
       .catch((error) => toast.error("Could not add Item"));
 
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/capabilityitem/all-capabilityitems-by-capabilityid/${capabilityId}/`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      )
+    await this.state.api.endpoints.capabilityitem
+      .getAllCapabilityItemsByCapabilityId({ id: capabilityId })
       .then((response) => {
         this.setState({ capabilityItems: response.data });
       })
@@ -64,47 +53,33 @@ export default class Capability extends Component {
   };
 
   async componentDidMount() {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+    this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "capability" });
+    this.state.api.createEntity({ name: "strategyitem" });
+    this.state.api.createEntity({ name: "capabilityitem" });
 
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      )
+    await this.state.api.endpoints.environment
+      .getEnvironmentByName({ name: this.state.environmentName })
       .then((response) =>
-        this.setState({ environmentId: response.data.environmentId })
+        this.setState({
+          environmentId: response.data.environmentId,
+        })
       )
       .catch((error) => {
-        this.props.history.push("/404");
+        this.props.history.push("/home");
       });
 
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/capability/all-capabilities-by-environmentid/${this.state.environmentId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      )
+    await this.state.api.endpoints.capability
+      .getAllCapabilitiesByEnvironmentId({ id: this.state.environmentId })
       .then((response) => {
         this.setState({ capabilities: response.data });
       })
       .catch((error) => {
-        console.log(error);
         toast.error("Could Not Find Capabilities");
       });
 
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/strategyitem/`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.strategyitem
+      .getAll()
       .then((response) => {
         response.data.forEach((item) => {
           item.label = item.strategyItemName;
@@ -124,17 +99,8 @@ export default class Capability extends Component {
   }
 
   async strategyItemTable(capabilityId) {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/capabilityitem/all-capabilityitems-by-capabilityid/${capabilityId}/`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      )
+    await this.state.api.endpoints.capabilityitem
+      .getAllCapabilityItemsByCapabilityId({ id: capabilityId })
       .then((response) => {
         this.setState({ capabilityItems: response.data });
       })
@@ -148,22 +114,15 @@ export default class Capability extends Component {
   }
 
   fetchDeleteCapabilities = async (capabilityId) => {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
-    await axios
-      .delete(`${process.env.REACT_APP_API_URL}/capability/${capabilityId}`)
-      .then((response) => toast.success("Succesfully Deleted Capability"))
+    await this.state.api.endpoints.capability
+      .delete({ id: capabilityId })
+      .then((response) => toast.success("Successfully Deleted Capability"))
       .catch((error) => toast.error("Could not Delete Capability"));
+
     //REFRESH CAPABILITIES
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/capability/all-capabilities-by-environmentid/${this.state.environmentId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      )
+
+    await this.state.api.endpoints.capability
+      .getAllCapabilitiesByEnvironmentId({ id: this.state.environmentId })
       .then((response) => {
         this.setState({ capabilities: response.data });
       })

@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import toast from "react-hot-toast";
-import Select from "react-select";
+import API from "../../Services/API";
 
 export default class AddStrategyItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
+
       environments: [],
       selectedCapabilities: [],
       capabilities: [],
@@ -24,19 +25,13 @@ export default class AddStrategyItem extends Component {
   }
 
   handleSubmit = async (e) => {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
     e.preventDefault();
     const formData = new FormData();
     formData.append("strategyId", this.state.strategyId);
     formData.append("strategyItemName", this.state.strategyItemName);
     formData.append("description", this.state.strategyItemDescription);
-    await axios
-      .post(`${process.env.REACT_APP_API_URL}/strategyitem/`, formData, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.strategyitem
+      .create(formData)
       .then((response) => {
         toast.success("Strategy Item Added Successfully!");
         this.props.history.push(
@@ -55,31 +50,21 @@ export default class AddStrategyItem extends Component {
   }
 
   async componentDidMount() {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+    this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "status" });
+    this.state.api.createEntity({ name: "strategy" });
 
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
+    await this.state.api.endpoints.environment
+      .getEnvironmentByName({ name: this.state.environmentName })
+      .then((response) =>
+        this.setState({ environmentId: response.data.environmentId })
       )
-      .then((response) => {
-        this.setState({ environmentId: response.data.environmentId });
-      })
       .catch((error) => {
-        console.log(error);
         this.props.history.push("/404");
       });
 
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/strategy/`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.strategy
+      .getAll()
       .then((response) => this.setState({ strategies: response.data }))
       .catch((error) => {
         toast.error("Could not load Strategies");

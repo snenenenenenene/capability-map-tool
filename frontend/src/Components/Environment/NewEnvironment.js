@@ -3,11 +3,13 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import MaterialTable from "material-table";
+import API from "../../Services/API";
 
 export default class NewEnvironment extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
       environmentName: "",
       environments: [],
       showModal: false,
@@ -17,33 +19,25 @@ export default class NewEnvironment extends Component {
   }
 
   fetchDeleteEnvironments = async (environmentId) => {
-    await axios
-      .delete(`${process.env.REACT_APP_API_URL}/environment/${environmentId}`)
-      .then((response) => toast.success("Successfully Deleted Environment"))
+    await this.state.api.endpoints.environment
+      .delete({ id: environmentId })
+      .then((response) => {
+        toast.success("Successfully Deleted Environment");
+        this.state.api.endpoints.environment
+          .getAll()
+          .then((response) => this.setState({ environments: response.data }))
+          .catch((error) => {
+            toast.error("Could not Load Environments");
+          });
+      })
       .catch((error) => toast.error("Could not Delete Environment"));
     //REFRESH ENVIRONMENTS
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/environment/`)
-      .then((response) => {
-        this.setState({ environments: response.data });
-      })
-      .catch((error) => {
-        toast.error("Could not Find Environment");
-      });
   };
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/exists-by-environmentname/${this.state.environmentName}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      )
+    await this.state.api.endpoints.environment
+      .environmentExists({ name: this.state.environmentName })
       .then((response) => {
         if (response.data === true) {
           toast.success("This Environment Already Exists!");
@@ -58,12 +52,8 @@ export default class NewEnvironment extends Component {
         }
         const formData = new FormData();
         formData.append("environmentName", this.state.environmentName);
-        axios
-          .post(`${process.env.REACT_APP_API_URL}/environment/`, formData, {
-            headers: {
-              Authorization: `Bearer ${jwt}`,
-            },
-          })
+        this.state.api.endpoints.environment
+          .create(formData)
           .then((response) => {
             toast.success("Environment Successfully Created!");
             localStorage.setItem(
@@ -90,16 +80,11 @@ export default class NewEnvironment extends Component {
   }
 
   async componentDidMount() {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/environment/`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    this.state.api.createEntity({ name: "environment" });
+    await this.state.api.endpoints.environment
+      .getAll()
       .then((response) => this.setState({ environments: response.data }))
       .catch((error) => {
-        console.error(error);
         toast.error("Could not Load Environments");
       });
   }
