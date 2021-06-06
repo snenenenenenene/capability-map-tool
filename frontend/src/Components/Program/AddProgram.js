@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import toast from "react-hot-toast";
+import API from "../../Services/API";
 
 export default class AddProgram extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
+
       environments: [],
       statuses: [],
       environmentName: this.props.match.params.name,
@@ -21,8 +23,8 @@ export default class AddProgram extends Component {
     e.preventDefault();
     const formData = new FormData();
     formData.append("programName", this.state.programName);
-    await axios
-      .post(`${process.env.REACT_APP_API_URL}/program/`, formData)
+    await this.state.api.endpoints.program
+      .create(formData)
       .then((response) => toast.success("Program Added Successfully!"))
       .catch((error) => toast.error("Could not Add Program"));
     this.props.history.push(
@@ -31,15 +33,14 @@ export default class AddProgram extends Component {
   };
 
   async componentDidMount() {
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
-      )
+    this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "program" });
+    await this.state.api.endpoints.environment
+      .getEnvironmentByName({ name: this.state.environmentName })
       .then((response) =>
         this.setState({ environmentId: response.data.environmentId })
       )
       .catch((error) => {
-        console.log(error);
         this.props.history.push("/404");
       });
   }

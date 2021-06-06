@@ -1,15 +1,17 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { Modal } from "react-bootstrap";
 import Select from "react-select";
 import StatusQuickAdd from "../Status/StatusQuickAdd";
+import API from "../../Services/API";
 
 export default class EditStrategy extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
+
       environments: [],
       statuses: [],
       statusId: "",
@@ -33,11 +35,8 @@ export default class EditStrategy extends Component {
     formData.append("timeFrameStart", this.state.timeFrameStart);
     formData.append("timeFrameEnd", this.state.timeFrameEnd);
     formData.append("statusId", this.state.statusId);
-    await axios
-      .put(
-        `${process.env.REACT_APP_API_URL}/strategy/${this.state.strategyId}`,
-        formData
-      )
+    await this.state.api.endpoints.strategy
+      .update(formData, this.state.strategyId)
       .then((response) => {
         toast.success("Strategy Added Successfully!");
         this.props.history.push(
@@ -48,20 +47,21 @@ export default class EditStrategy extends Component {
   };
 
   async componentDidMount() {
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+    this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "status" });
+    this.state.api.createEntity({ name: "strategy" });
+
+    await this.state.api.endpoints.environment
+      .getEnvironmentByName({ name: this.state.environmentName })
+      .then((response) =>
+        this.setState({ environmentId: response.data.environmentId })
       )
-      .then((response) => {
-        this.setState({ environmentId: response.data.environmentId });
-      })
       .catch((error) => {
-        console.log(error);
         this.props.history.push("/404");
       });
 
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`)
+    await this.state.api.endpoints.status
+      .getAll()
       .then((response) => {
         response.data.forEach((status) => {
           status.label = status.validityPeriod;
@@ -73,8 +73,8 @@ export default class EditStrategy extends Component {
         toast.error("Could not load Statuses");
       });
 
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/strategy/${this.state.strategyId}`)
+    await this.state.api.endpoints.strategy
+      .getOne({ id: this.state.strategyId })
       .then((response) => {
         this.setState({
           strategyName: response.data.strategyName,
@@ -84,7 +84,6 @@ export default class EditStrategy extends Component {
         });
       })
       .catch((error) => {
-        console.log(error);
         this.props.history.push("/404");
       });
   }

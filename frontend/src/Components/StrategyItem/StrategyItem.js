@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import MaterialTable from "material-table";
-import axios from "axios";
 import { Modal } from "react-bootstrap";
 import Select from "react-select";
 import toast from "react-hot-toast";
-
+import API from "../../Services/API";
 export default class StrategyItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
+
       environments: [],
       environmentName: this.props.match.params.name,
       environmentId: "",
@@ -25,10 +26,13 @@ export default class StrategyItem extends Component {
   }
 
   async componentDidMount() {
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
-      )
+    this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "capability" });
+    this.state.api.createEntity({ name: "strategyitem" });
+    this.state.api.createEntity({ name: "capabilityitem" });
+
+    await this.state.api.endpoints.environment
+      .getEnvironmentByName({ name: this.state.environmentName })
       .then((response) =>
         this.setState({ environmentId: response.data.environmentId })
       )
@@ -36,8 +40,8 @@ export default class StrategyItem extends Component {
         this.props.history.push("/404");
       });
 
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/strategyitem/`)
+    await this.state.api.endpoints.strategyitem
+      .getAll()
       .then((response) => {
         this.setState({ strategyItems: response.data });
       })
@@ -45,8 +49,9 @@ export default class StrategyItem extends Component {
         toast.error("Could Not Find Strategy Items");
       });
 
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/capability/`)
+    await this.state.api.endpoints.capability
+
+      .getAll()
       .then((response) => {
         response.data.forEach((capability) => {
           capability.label = capability.capabilityName;
@@ -66,13 +71,13 @@ export default class StrategyItem extends Component {
   }
 
   fetchDeleteStrategyItems = async (itemId) => {
-    await axios
-      .delete(`${process.env.REACT_APP_API_URL}/strategyitem/${itemId}`)
+    await this.state.api.endpoints.strategyitem
+      .delete({ id: itemId })
       .then((response) => toast.success("Successfully Deleted Strategy Item"))
       .catch((error) => toast.error("Could not Delete Strategy Item"));
     //REFRESH Strategy Items
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/strategyitem/`)
+    await this.state.api.endpoints.environment
+      .getAll()
       .then((response) => {
         this.setState({ strategyItems: response.data });
       })
@@ -80,10 +85,6 @@ export default class StrategyItem extends Component {
         toast.error("Could not Find Strategy Items");
       });
   };
-
-  handleModal() {
-    this.setState({ showModal: !this.state.showModal });
-  }
 
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
@@ -95,15 +96,13 @@ export default class StrategyItem extends Component {
     formData.append("itemId", itemId);
     formData.append("capabilityId", this.state.capabilityId);
     formData.append("strategicImportance", this.state.strategicImportance);
-    await axios
-      .post(`${process.env.REACT_APP_API_URL}/capabilityitem/`, formData)
+    await this.state.api.endpoints.capabilityitem
+      .create(formData)
       .then(toast.success("Capability Successfully Added"))
       .catch((error) => toast.error("Could not add Capability"));
 
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/capabilityitem/all-capabilityitems-by-strategyitemid/${itemId}/`
-      )
+    await this.state.api.endpoints.capabilityitem
+      .getAllCapabilityItemsByItemId({ id: itemId })
       .then((response) => {
         this.setState({ capabilityItems: response.data });
       })
@@ -145,10 +144,8 @@ export default class StrategyItem extends Component {
   };
 
   async capabilityTable(itemId) {
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/capabilityitem/all-capabilityitems-by-strategyitemid/${itemId}/`
-      )
+    await this.state.api.endpoints.capabilityitem
+      .getAllCapabilityItemsByItemId({ id: itemId })
       .then((response) => {
         this.setState({ capabilityItems: response.data });
       })

@@ -1,12 +1,15 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import MaterialTable from "material-table";
-import axios from "axios";
+import toast from "react-hot-toast";
+import API from "../../Services/API";
 
 export default class Program extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
+
       environments: [],
       environmentName: this.props.match.params.name,
       environmentId: "",
@@ -15,25 +18,24 @@ export default class Program extends Component {
   }
 
   async componentDidMount() {
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
-      )
+    this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "program" });
+    await this.state.api.endpoints.environment
+      .getEnvironmentByName({ name: this.state.environmentName })
       .then((response) =>
         this.setState({ environmentId: response.data.environmentId })
       )
       .catch((error) => {
-        console.log(error);
         this.props.history.push("/404");
       });
 
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/program/`)
+    await this.state.api.endpoints.program
+      .getAll()
       .then((response) => {
         this.setState({ programs: response.data });
       })
       .catch((error) => {
-        console.log(error);
+        toast.error("Could not Load Programs");
       });
   }
 
@@ -42,26 +44,53 @@ export default class Program extends Component {
       `/environment/${this.state.environmentName}/program/${programId}`
     );
   }
-  //DELETE CAPABILITY AND REMOVE ALL CHILD CAPABILITIES FROM STATE
-  delete = async (programId) => {
-    if (window.confirm("Are you sure you want to delete this Program?")) {
-      await axios
-        .delete(`${process.env.REACT_APP_API_URL}/program/${programId}`)
-        .catch((error) => console.error(error));
-      //REFRESH CAPABILITIES
-      await axios
-        .get(`${process.env.REACT_APP_API_URL}/program/`)
-        .then((response) => {
-          this.setState({ programs: [] });
-          this.setState({ programs: response.data });
-        })
-        .catch((error) => {
-          console.log(error);
-          this.props.history.push("/error");
-        });
-    }
+  fetchDeletePrograms = async (programId) => {
+    await this.state.api.endpoints.program
+      .delete({ id: programId })
+      .then((response) => toast.success("Successfully Deleted Program"))
+      .catch((error) => toast.error("Could not Delete Program"));
+
+    await this.state.api.endpoints.program
+      .getAll()
+      .then((response) => {
+        this.setState({ programs: response.data });
+      })
+      .catch((error) => {
+        toast.error("Could not Find Programs");
+      });
   };
 
+  delete = async (programId) => {
+    toast(
+      (t) => (
+        <span>
+          <p className='text-center'>
+            Are you sure you want to remove this program?
+          </p>
+          <div className='text-center'>
+            <button
+              className='btn btn-primary btn-sm m-3'
+              stlye={{ width: 50, height: 30 }}
+              onClick={() => {
+                toast.dismiss(t.id);
+                this.fetchDeletePrograms(programId);
+              }}
+            >
+              Yes!
+            </button>
+            <button
+              className='btn btn-secondary btn-sm m-3'
+              stlye={{ width: 50, height: 30 }}
+              onClick={() => toast.dismiss(t.id)}
+            >
+              No!
+            </button>
+          </div>
+        </span>
+      ),
+      { duration: 50000 }
+    );
+  };
   render() {
     return (
       <div className='container'>

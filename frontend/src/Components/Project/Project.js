@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import MaterialTable from "material-table";
-import axios from "axios";
 import toast from "react-hot-toast";
+import API from "../../Services/API";
 
 export default class Project extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
       environments: [],
       environmentName: this.props.match.params.name,
       environmentId: "",
@@ -17,26 +18,26 @@ export default class Project extends Component {
   }
 
   async componentDidMount() {
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
-      )
-      .then((response) =>
-        this.setState({ environmentId: response.data.environmentId })
-      )
+    this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "program" });
+    this.state.api.createEntity({ name: "status" });
+    this.state.api.createEntity({ name: "project" });
+    await this.state.api.endpoints.environment
+      .getEnvironmentByName({ name: this.state.environmentName })
+      .then((response) => {
+        this.setState({ environmentId: response.data.environmentId });
+      })
       .catch((error) => {
-        console.log(error);
         this.props.history.push("/404");
       });
 
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/project/`)
+    await this.state.api.endpoints.project
+      .getAll()
       .then((response) => {
         this.setState({ projects: response.data });
       })
       .catch((error) => {
-        console.log(error);
-        // this.props.history.push('/error')
+        this.props.history.push("/error");
       });
   }
 
@@ -45,7 +46,7 @@ export default class Project extends Component {
       `/environment/${this.state.environmentName}/project/${projectId}`
     );
   }
-  //DELETE project AND REMOVE ALL CHILD projects FROM STATE
+  //DELETE PROJECT
   delete = async (projectId) => {
     toast(
       (t) => (
@@ -79,13 +80,13 @@ export default class Project extends Component {
   };
 
   fetchDeleteProjects = async (projectId) => {
-    await axios
-      .delete(`${process.env.REACT_APP_API_URL}/project/${projectId}`)
+    await this.state.api.endpoints.project
+      .delete({ id: projectId })
       .then((response) => toast.success("Successfully Deleted Project"))
       .catch((error) => toast.error("Could not Delete Project"));
-    //REFRESH CAPABILITIES
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/project/`)
+    //REFRESH PROJECTS
+    await this.state.api.endpoints.project
+      .getAll()
       .then((response) => {
         this.setState({ projects: response.data });
       })

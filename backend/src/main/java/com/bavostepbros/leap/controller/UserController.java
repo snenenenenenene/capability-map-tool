@@ -55,11 +55,12 @@ public class UserController {
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public UserDto addUser(
 			@ModelAttribute("username") String username,
-			@ModelAttribute("password") String password,
 			@ModelAttribute("email") String email,
 			@ModelAttribute("roleId") Integer roleId) {		
+		String password = userService.generatePassword();
+		
 		User user = userService.save(roleId, username, password, email);
-		emailService.sendNewUserMessage(user.getEmail(), user.getPassword());
+		emailService.sendNewUserMessage(user.getEmail(), password);
 		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail(), user.getPassword());
 	}
 	
@@ -69,7 +70,15 @@ public class UserController {
 		User user = userService.get(id);
 		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail(), user.getPassword());
     }
-	
+
+    @GetMapping("/email/{email}")
+	public UserDto getUserByEmail(
+			@ModelAttribute("email") String email) {
+		User user = userService.getByEmail(email);
+		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail(), user.getPassword());
+	}
+
+
 	@GetMapping()
 	public List<UserDto> getAllUsers() {
 		List<User> users = userService.getAll();

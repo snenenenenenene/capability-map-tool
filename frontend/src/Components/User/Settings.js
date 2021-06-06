@@ -1,15 +1,17 @@
-import axios from "axios";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import * as sha1 from "js-sha1";
+import API from "../../Services/API";
 
 export default class Settings extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
+
       environments: {},
-      user: JSON.parse(localStorage.getItem("user")),
+      userId: JSON.parse(localStorage.getItem("user")).userId,
       password: "",
     };
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -17,8 +19,10 @@ export default class Settings extends Component {
   }
 
   async componentDidMount() {
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/user/${this.state.user.userId}`)
+    this.state.api.createEntity({ name: "user" });
+    this.state.api.createEntity({ name: "role" });
+    await this.state.api.endpoints.user
+      .getOne({ id: this.state.userId })
       .then((response) =>
         this.setState({
           username: response.data.username,
@@ -43,8 +47,8 @@ export default class Settings extends Component {
     formData.append("email", this.state.user.email);
     formData.append("password", sha1(this.state.password));
     formData.append("roleId", this.state.user.roleId);
-    await axios
-      .put(`${process.env.REACT_APP_API_URL}/user/`, formData)
+    await this.state.api.endpoints.user
+      .update(formData, this.state.user.userId)
       .then((response) => {
         toast.success("User Updated Successfully!");
         this.props.history.push(`/user`);

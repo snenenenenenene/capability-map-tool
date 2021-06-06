@@ -17,4 +17,5 @@ public interface UserService {
 	boolean existsById(Integer id);
 	boolean existsByUsername(String username);
 	boolean existsByEmail(String email);
+	String generatePassword();
 }

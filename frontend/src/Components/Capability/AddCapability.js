@@ -1,16 +1,18 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import ReactStars from "react-stars";
-import axios from "axios";
 import { Modal } from "react-bootstrap";
 import StatusQuickAdd from "../Status/StatusQuickAdd";
 import toast from "react-hot-toast";
 import Select from "react-select";
+import API from "../../Services/API";
 
 export default class AddCapability extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
+
       statuses: [],
       environments: [],
       capabilities: [],
@@ -49,11 +51,8 @@ export default class AddCapability extends Component {
     formData.append("applicationFit", this.state.applicationFit);
     formData.append("resourceQuality", this.state.resourcesQuality);
     formData.append("statusId", this.state.statusId);
-    for (var pair of formData.entries()) {
-      console.log(pair[0] + ", " + pair[1]);
-    }
-    await axios
-      .post(`${process.env.REACT_APP_API_URL}/capability/`, formData)
+    await this.state.api.endpoints.capability
+      .create(formData)
       .then((response) => {
         toast.success("Capability Added Successfully!");
         this.props.history.push(
@@ -64,20 +63,23 @@ export default class AddCapability extends Component {
   };
 
   async componentDidMount() {
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+    this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "capability" });
+    this.state.api.createEntity({ name: "status" });
+
+    await this.state.api.endpoints.environment
+      .getEnvironmentByName({ name: this.state.environmentName })
+      .then((response) =>
+        this.setState({
+          environmentId: response.data.environmentId,
+        })
       )
-      .then((response) => {
-        this.setState({ environmentId: response.data.environmentId });
-      })
       .catch((error) => {
-        console.log(error);
-        this.props.history.push("/404");
+        this.props.history.push("/home");
       });
 
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`)
+    await this.state.api.endpoints.status
+      .getAll()
       .then((response) => {
         response.data.forEach((status) => {
           status.label = status.validityPeriod;
@@ -89,10 +91,8 @@ export default class AddCapability extends Component {
         toast.error("Could not load Statuses");
       });
 
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/capability/all-capabilities-by-environmentid/${this.state.environmentId}`
-      )
+    await this.state.api.endpoints.capability
+      .getAllCapabilitiesByEnvironmentId({ id: this.state.environmentId })
       .then((response) => {
         response.data.forEach((cap) => {
           cap.label = `${cap.capabilityName} - lvl: ${cap.level}`;
@@ -122,8 +122,8 @@ export default class AddCapability extends Component {
   };
 
   async updateDate() {
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`)
+    await this.state.api.endpoints.status
+      .getAll()
       .then((response) => {
         response.data.forEach((status) => {
           status.label = status.validityPeriod;
@@ -132,7 +132,7 @@ export default class AddCapability extends Component {
         this.setState({ statuses: response.data });
       })
       .catch((error) => {
-        toast.error("Could not Update Statuses");
+        toast.error("Could not load Statuses");
       });
   }
 

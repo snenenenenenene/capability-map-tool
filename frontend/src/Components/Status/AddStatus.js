@@ -1,11 +1,12 @@
-import axios from "axios";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import API from "../../Services/API";
 export default class AddStatus extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
       statuses: [],
       environments: [],
       environmentName: this.props.match.params.name,
@@ -20,11 +21,10 @@ export default class AddStatus extends Component {
     e.preventDefault();
     const formData = new FormData();
     formData.append("validityPeriod", this.state.validityPeriod);
-    await axios
-      .post(`${process.env.REACT_APP_API_URL}/status/`, formData)
+    await this.state.api.endpoints.status
+      .create(formData)
       .then((response) => toast.success("Added Status"))
       .catch((error) => {
-        console.log(error);
         toast.error("Failed to Add Status");
       });
     this.props.history.push(
@@ -33,20 +33,20 @@ export default class AddStatus extends Component {
   };
 
   async componentDidMount() {
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
-      )
+    this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "status" });
+
+    await this.state.api.endpoints.environment
+      .getEnvironmentByName({ name: this.state.environmentName })
       .then((response) =>
         this.setState({ environmentId: response.data.environmentId })
       )
       .catch((error) => {
-        console.log(error);
         this.props.history.push("/404");
       });
 
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`)
+    await this.state.api.endpoints.status
+      .getAll()
       .then((response) => this.setState({ statuses: response.data }));
   }
 
@@ -56,7 +56,6 @@ export default class AddStatus extends Component {
 
   handleDateChange(event) {
     this.setState({ [event.target.name]: event.target.value.toLocaleString() });
-    console.log(this.state.validityPeriod);
   }
 
   render() {

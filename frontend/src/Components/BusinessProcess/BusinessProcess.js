@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import MaterialTable from "material-table";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { Modal } from "react-bootstrap";
 import Select from "react-select";
+import API from "../../Services/API";
 
 export default class BusinessProcess extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
       environments: [],
       capabilities: [],
       environmentName: this.props.match.params.name,
@@ -27,10 +28,12 @@ export default class BusinessProcess extends Component {
   }
 
   async componentDidMount() {
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
-      )
+    this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "businessprocess" });
+    this.state.api.createEntity({ name: "capability" });
+
+    await this.state.api.endpoints.environment
+      .getEnvironmentByName({ name: this.state.environmentName })
       .then((response) =>
         this.setState({ environmentId: response.data.environmentId })
       )
@@ -38,8 +41,8 @@ export default class BusinessProcess extends Component {
         this.props.history.push("/404");
       });
 
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/capability/`)
+    await this.state.api.endpoints.capability
+      .getAll()
       .then((response) => {
         response.data.forEach((capability) => {
           capability.label = capability.capabilityName;
@@ -51,8 +54,8 @@ export default class BusinessProcess extends Component {
         toast.error("Could not Load Capabilities");
       });
 
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/businessprocess/`)
+    await this.state.api.endpoints.businessprocess
+      .getAll()
       .then((response) => {
         this.setState({ businessProcesses: response.data });
       })
@@ -67,17 +70,15 @@ export default class BusinessProcess extends Component {
     );
   }
   fetchDeleteBusinessProcesses = async (businessProcessId) => {
-    await axios
-      .delete(
-        `${process.env.REACT_APP_API_URL}/businessprocess/${businessProcessId}`
-      )
+    await this.state.api.endpoints.businessprocess
+      .delete({ id: businessProcessId })
       .then((response) =>
         toast.success("Successfully Deleted Business Process")
       )
       .catch((error) => toast.error("Could not Delete Business Process"));
     //REFRESH BUSINESS PROCESSES
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/businessprocess/`)
+    await this.state.api.endpoints.businessprocess
+      .getAll()
       .then((response) => {
         this.setState({ businessprocesses: response.data });
       })
@@ -88,14 +89,12 @@ export default class BusinessProcess extends Component {
 
   handleSubmit = (businessProcessId) => async (e) => {
     e.preventDefault();
+
     const formData = new FormData();
     formData.append("businessProcessId", businessProcessId);
     formData.append("capabilityId", this.state.capabilityId);
-    await axios
-      .put(
-        `${process.env.REACT_APP_API_URL}/capability/link-businessprocess/`,
-        formData
-      )
+    await this.state.api.endpoints.capability
+      .update(formData)
       .then(toast.success("Business Process Successfully Linked"))
       .catch((error) => toast.error("Could not Link Business Process"));
   };

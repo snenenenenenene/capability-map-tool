@@ -6,9 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import com.bavostepbros.leap.integrationtest.testconfiguration.RequestFactory;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,6 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CapabilityControllerTest {
 	
 	@Autowired
@@ -54,17 +54,32 @@ public class CapabilityControllerTest {
 	
 	@Autowired
 	private CapabilityService capabilityService;
-	
+
+	@Autowired
+	private RequestFactory requestFactory;
+
+	private String jwt;
 	private Status statusFirst;
 	private Status statusSecond;
 	private Environment environmentFirst;
 	private Environment environmentSecond;
 	private Capability capabilityFirst;
 	private Capability capabilitySecond;
-	private Capability capabilityThirth;
+	private Capability capabilityThird;
 	
 	static final String PATH = "/api/capability/";
-	
+
+	@BeforeAll
+	public void authenticate() throws Exception {
+		jwt = mockMvc.perform(MockMvcRequestBuilders.post("/api/user/authenticate")
+				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+				.param("email", "super_admin")
+				.param("password", "super_admin"))
+				.andReturn()
+				.getResponse().getContentAsString();
+	}
+
+
 	@BeforeEach
 	public void init() {
 		statusFirst = statusDAL.save(new Status(1, LocalDate.of(2021, 5, 15)));
@@ -75,10 +90,10 @@ public class CapabilityControllerTest {
 				statusFirst, 0, "Capability 1", PaceOfChange.DIFFERENTIATION,
 				TargetOperatingModel.COORDINATION, 1, 1, 1));
 		capabilitySecond = capabilityDAL.save(new Capability(2, environmentFirst,
-				statusFirst, capabilityFirst.getCapabilityId(), "Capability 2", 
+				statusFirst, capabilityFirst.getCapabilityId(), "Capability 2",
 				PaceOfChange.INNOVATIVE, TargetOperatingModel.DIVERSIFICATION, 
 				1, 1, 1));
-		capabilityThirth = capabilityDAL.save(new Capability(3, environmentSecond,
+		capabilityThird = capabilityDAL.save(new Capability(3, environmentSecond,
 				statusSecond, capabilityFirst.getCapabilityId(), "Capability 3", 
 				PaceOfChange.STANDARD, TargetOperatingModel.REPLICATION, 1, 1, 1));
 	}
@@ -91,7 +106,7 @@ public class CapabilityControllerTest {
 		environmentDAL.delete(environmentSecond);
 		capabilityDAL.delete(capabilityFirst);
 		capabilityDAL.delete(capabilitySecond);
-		capabilityDAL.delete(capabilityThirth);
+		capabilityDAL.delete(capabilityThird);
 	}
 	
 	@Test
@@ -120,7 +135,7 @@ public class CapabilityControllerTest {
 		Integer informationQuality = 1;
 		Integer applicationFit = 1;
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(PATH)
+		MvcResult mvcResult = mockMvc.perform(requestFactory.buildRequest(PATH, jwt)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("environmentId", environmentId.toString())
 				.param("statusId", statusId.toString())
@@ -221,7 +236,7 @@ public class CapabilityControllerTest {
 		assertNotNull(resultCapabilities);
 		assertEquals(2, resultCapabilities.size());
 		testCapability(capabilitySecond, resultCapabilities.get(0));
-		testCapability(capabilityThirth, resultCapabilities.get(1));
+		testCapability(capabilityThird, resultCapabilities.get(1));
 	}
 	
 	@Test
@@ -239,7 +254,7 @@ public class CapabilityControllerTest {
 		assertNotNull(resultCapabilities);
 		assertEquals(2, resultCapabilities.size());
 		testCapability(capabilitySecond, resultCapabilities.get(0));
-		testCapability(capabilityThirth, resultCapabilities.get(1));
+		testCapability(capabilityThird, resultCapabilities.get(1));
 	}
 	
 	@Test
@@ -255,7 +270,7 @@ public class CapabilityControllerTest {
 		assertEquals(3, resultCapabilities.size());
 		testCapability(capabilityFirst, resultCapabilities.get(0));
 		testCapability(capabilitySecond, resultCapabilities.get(1));
-		testCapability(capabilityThirth, resultCapabilities.get(2));
+		testCapability(capabilityThird, resultCapabilities.get(2));
 	}
 	
 	@Test

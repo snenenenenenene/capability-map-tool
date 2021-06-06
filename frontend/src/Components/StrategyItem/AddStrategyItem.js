@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import toast from "react-hot-toast";
-import Select from "react-select";
+import API from "../../Services/API";
 
 export default class AddStrategyItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
+
       environments: [],
       selectedCapabilities: [],
       capabilities: [],
@@ -29,8 +30,8 @@ export default class AddStrategyItem extends Component {
     formData.append("strategyId", this.state.strategyId);
     formData.append("strategyItemName", this.state.strategyItemName);
     formData.append("description", this.state.strategyItemDescription);
-    await axios
-      .post(`${process.env.REACT_APP_API_URL}/strategyitem/`, formData)
+    await this.state.api.endpoints.strategyitem
+      .create(formData)
       .then((response) => {
         toast.success("Strategy Item Added Successfully!");
         this.props.history.push(
@@ -49,20 +50,21 @@ export default class AddStrategyItem extends Component {
   }
 
   async componentDidMount() {
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`
+    this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "status" });
+    this.state.api.createEntity({ name: "strategy" });
+
+    await this.state.api.endpoints.environment
+      .getEnvironmentByName({ name: this.state.environmentName })
+      .then((response) =>
+        this.setState({ environmentId: response.data.environmentId })
       )
-      .then((response) => {
-        this.setState({ environmentId: response.data.environmentId });
-      })
       .catch((error) => {
-        console.log(error);
         this.props.history.push("/404");
       });
 
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/strategy/`)
+    await this.state.api.endpoints.strategy
+      .getAll()
       .then((response) => this.setState({ strategies: response.data }))
       .catch((error) => {
         toast.error("Could not load Strategies");
@@ -71,16 +73,6 @@ export default class AddStrategyItem extends Component {
 
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
-  }
-
-  capabilityListRows() {
-    return this.state.capabilities.map((capability) => {
-      return (
-        <option key={capability.capabilityId} value={capability.capabilityId}>
-          {capability.capabilityName}
-        </option>
-      );
-    });
   }
 
   strategyListRows() {

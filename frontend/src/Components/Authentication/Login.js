@@ -31,38 +31,26 @@ export default class Login extends Component {
 
   authenticateUser = async (e) => {
     e.preventDefault();
-    const pwd = sha1(this.state.password);
     let formData = new FormData();
     formData.append("email", this.state.email);
+    formData.append("password", this.state.password);
     axios
       .post(`${process.env.REACT_APP_API_URL}/user/authenticate`, formData)
       .then((response) => {
-        if (sha1("newUser") === response.data.password) {
-          toast.success(`Welcome ${this.state.email} Let's Pick a Password!`);
-          this.handleModal();
-          return;
-        }
-        if (pwd === response.data.password) {
-          toast.success(`Successful Login! \n Welcome ${this.state.username}`);
-          this.setState({ authenticated: true });
-          localStorage.setItem(
-            "user",
-            JSON.stringify({
-              email: this.state.email,
-              userId: response.data.userId,
-              authenticated: true,
-              roleId: response.data.roleId,
-              username: response.data.username,
-            })
-          );
-          this.props.history.push(`/home`);
-          window.location.reload();
-          return;
-        } else if (pwd !== response.data.password) {
-          toast.error("Wrong password!");
-          return;
-        }
-        toast.error("Something went Wrong");
+        toast.success(`Successful Login! \n Welcome ${this.state.username}`);
+        this.setState({ authenticated: true });
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            email: this.state.email,
+            userId: response.data.userId,
+            authenticated: true,
+            jwt: response.data,
+          })
+        );
+        this.props.history.push(`/home`);
+        window.location.reload();
+        return;
       })
       .catch((error) => {
         if (error.response) {
@@ -155,7 +143,7 @@ export default class Login extends Component {
               className='btn btn-secondary'
               onClick={() => this.handleModal()}
             >
-              Close Modal
+              Close
             </button>
           </Modal.Footer>
         </Modal>
