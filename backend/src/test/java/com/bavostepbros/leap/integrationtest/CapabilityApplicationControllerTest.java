@@ -92,10 +92,10 @@ public class CapabilityApplicationControllerTest {
 				.save(new Capability(2, environmentFirst, statusFirst, capabilityFirst.getCapabilityId(),
 						"Capability 2", PaceOfChange.INNOVATIVE, TargetOperatingModel.DIVERSIFICATION, 1, 1, 1));
 		itApplicationFirst = itApplicationDAL.save(new ITApplication(1, statusFirst, "application 1", "1.20.1",
-				LocalDate.of(2021, 01, 20), LocalDate.of(2025, 05, 20), 1, 2, 3, 4, 5, 6, 7, 8, "EUR", 1000.0, 100.0,
+				LocalDate.of(2021, 01, 20), LocalDate.of(2025, 05, 20), 1, 2, 3, 4, 5, 6, 7, 8, "EUR", 1000.0, 5,
 				70.0, 100.0, TimeValue.MIGRATE));
 		itApplicationSecond = itApplicationDAL.save(new ITApplication(2, statusSecond, "application 2", "1.20.1",
-				LocalDate.of(2021, 01, 20), LocalDate.of(2025, 05, 20), 2, 3, 4, 5, 6, 7, 8, 9, "EUR", 1000.0, 100.0,
+				LocalDate.of(2021, 01, 20), LocalDate.of(2025, 05, 20), 2, 3, 4, 5, 6, 7, 8, 9, "EUR", 1000.0, 4,
 				70.0, 100.0, TimeValue.TOLERATE));
 		capabilityApplicationFirst = capabilityApplicationDAL
 				.save(new CapabilityApplication(capabilityFirst, itApplicationFirst, 0, 1, 2, 3, 4, 5, 4, 3));

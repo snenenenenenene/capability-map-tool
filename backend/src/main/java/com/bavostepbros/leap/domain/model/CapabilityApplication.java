@@ -34,30 +34,50 @@ public class CapabilityApplication {
     @EqualsAndHashCode.Include
     private ITApplication application;
 	
+	@Min(value = 0, message = "Importance must be between 0 and 100, inclusive.")
+    @Max(value = 100, message = "Importance must be between 0 and 100, inclusive.")
 	@Column(name = "IMPORTANCE")
     private Integer importance;
 	
-	@NotNull
-	@Min(1)
-	@Max(5)
+	@NotNull(message = "Efficiency support must not be null.")
+	@Min(value = 1, message = "Efficiency support must be between 1 and 5, inclusive.")
+    @Max(value = 5, message = "Efficiency support must be between 1 and 5, inclusive.")
 	@Column(name = "EFFICIENCYSUPPORT")
     private Integer efficiencySupport;
 	
+	@NotNull(message = "Functional coverage must not be null.")
+	@Min(value = 1, message = "Functional coverage must be between 1 and 5, inclusive.")
+    @Max(value = 5, message = "Functional coverage must be between 1 and 5, inclusive.")
 	@Column(name = "FUNCTIONALCOVERAGE")
     private Integer functionalCoverage;
 	
+	@NotNull(message = "Correctness business fit must not be null.")
+	@Min(value = 1, message = "Correctness business fit must be between 1 and 5, inclusive.")
+    @Max(value = 5, message = "Correctness business fit must be between 1 and 5, inclusive.")
 	@Column(name = "CORRECTNESSBUSINESSFIT")
     private Integer correctnessBusinessFit;
 	
+	@NotNull(message = "Future potential must not be null.")
+	@Min(value = 1, message = "Future potential must be between 1 and 5, inclusive.")
+    @Max(value = 5, message = "Future potential must be between 1 and 5, inclusive.")
 	@Column(name = "FUTUREPOTENTIAL")
     private Integer futurePotential;
 	
+	@NotNull(message = "Completeness must not be null.")
+	@Min(value = 1, message = "Completeness must be between 1 and 5, inclusive.")
+    @Max(value = 5, message = "Completeness must be between 1 and 5, inclusive.")
 	@Column(name = "COMPLETENESS")
     private Integer completeness;
 	
+	@NotNull(message = "Correctness information fit support must not be null.")
+	@Min(value = 1, message = "Correctness information fit must be between 1 and 5, inclusive.")
+    @Max(value = 5, message = "Correctness information fit must be between 1 and 5, inclusive.")
 	@Column(name = "CORRECTNESSINFORMATIONFIT")
     private Integer correctnessInformationFit;
 	
+	@NotNull(message = "Availability must not be null.")
+	@Min(value = 1, message = "Availability must be between 1 and 5, inclusive.")
+    @Max(value = 5, message = "Availability must be between 1 and 5, inclusive.")
 	@Column(name = "AVAILABILITY")
     private Integer availability;
 

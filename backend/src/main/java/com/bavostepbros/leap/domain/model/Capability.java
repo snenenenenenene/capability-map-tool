@@ -1,5 +1,7 @@
 package com.bavostepbros.leap.domain.model;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +13,11 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 import com.bavostepbros.leap.domain.model.paceofchange.PaceOfChange;
@@ -20,8 +27,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 /**
 *
@@ -49,21 +54,28 @@ public class Capability {
     @JoinColumn
     private Status status;
     
+    @PositiveOrZero(message = "The capability id must be positive.")
     @Column(name = "PARENTCAPABILITYID")
     private Integer parentCapabilityId;
     
-    @Column(name = "CAPABILITYNAME")
+    @NotBlank(message = "Capability name is required.")
+    @Column(name = "CAPABILITYNAME", unique = true)
     private String capabilityName;
-    
+
     @Column(name = "LEVEL")
     private CapabilityLevel level;
     
+    @NotNull(message = "Pace of change must not be null.")
     @Column(name = "PACEOFCHANGE")
     private PaceOfChange paceOfChange;
     
+    @NotNull(message = "Target operating model must not be null.")
     @Column(name = "TARGETOPERATINGMODEL")
     private TargetOperatingModel targetOperatingModel;
     
+    @NotNull(message = "Resource quality must not be null.")
+    @Min(value = 1, message = "Resource quality must be between 1 and 5, inclusive.")
+    @Max(value = 5, message = "Resource quality must be between 1 and 5, inclusive.")
     @Column(name = "RESOURCEQUALITY")
     private Integer resourceQuality;
     

@@ -5,6 +5,7 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.validation.constraints.NotNull;
 
 import com.bavostepbros.leap.domain.model.strategicimportance.StrategicImportance;
 
@@ -32,7 +33,8 @@ public class CapabilityInformation {
 	@MapsId("informationId")
 	@EqualsAndHashCode.Include
 	private Information information;
-
+	
+	@NotNull(message = "Criticality must not be null.")
 	@Column(name = "CRITICALITY")
 	private StrategicImportance criticality;
 
