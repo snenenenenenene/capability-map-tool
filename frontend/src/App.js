@@ -54,6 +54,7 @@ class App extends Component {
       authenticated: false,
       isOnline: window ? window.navigator.onLine : false,
       roleId: "",
+      username: "",
       user: {},
       environmentName: "",
     };
@@ -64,22 +65,29 @@ class App extends Component {
     if (localStorage.getItem("user")) {
       let user = JSON.parse(localStorage.getItem("user"));
       this.setState({ authenticated: user.authenticated });
-      let email = JSON.parse(localStorage.getItem("user")).email;
-      let jwt = JSON.parse(localStorage.getItem("user")).jwt;
 
-      const formData = new FormData();
-      formData.append("email", email);
-      // await axios
-      //   .get(`${process.env.REACT_APP_API_URL}/user/${email}`, {
-      //     headers: {
-      //       Authorization: `Bearer ${jwt}`,
-      //     },
-      //   })
-      //   .then((response) => console.log(response))
-      //   .catch((error) => {
-      //     console.error(error);
-      //     toast.error("Could not Load User");
-      //   });
+      this.state.api.createEntity({ name: "user" });
+      await this.state.api.endpoints.user
+        .getUser()
+        .then((response) => {
+          let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              email: response.data.email,
+              userId: response.data.userId,
+              username: response.data.username,
+              roleId: response.data.roleId,
+              authenticated: true,
+              jwt: jwt,
+            })
+          );
+          this.setState({ user: JSON.parse(localStorage.getItem("user")) });
+        })
+        .catch((error) => {
+          toast.error("Could not Load User");
+        });
     }
   }
 
@@ -88,7 +96,6 @@ class App extends Component {
       if (localStorage.getItem("environment")) {
         let environment = JSON.parse(localStorage.getItem("environment"));
         this.setState({ environmentName: environment.environmentName });
-        console.log(this.state.environmentName);
       }
     });
   }

@@ -35,13 +35,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
 public class UserController {
-	
+
 	@Autowired
 	private UserService userService;
 
 	@Autowired
 	private RoleService roleService;
-
 
 	@Autowired
 	private EmailService emailService;
@@ -51,79 +50,65 @@ public class UserController {
 
 	private static Logger log = LoggerFactory.getLogger(UserController.class);
 
-
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public UserDto addUser(
-			@ModelAttribute("username") String username,
-			@ModelAttribute("email") String email,
-			@ModelAttribute("roleId") Integer roleId) {		
+	public UserDto addUser(@ModelAttribute("username") String username, @ModelAttribute("email") String email,
+			@ModelAttribute("roleId") Integer roleId) {
 		String password = userService.generatePassword();
-		
+
 		User user = userService.save(roleId, username, password, email);
 		emailService.sendNewUserMessage(user.getEmail(), password);
 		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail(), user.getPassword());
 	}
-	
+
 	@GetMapping("/{id}")
-    public UserDto getUserById(
-			@ModelAttribute("id") Integer id) {
+	public UserDto getUserById(@ModelAttribute("id") Integer id) {
 		User user = userService.get(id);
 		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail(), user.getPassword());
-    }
+	}
 
-    @GetMapping("/email/{email}")
-	public UserDto getUserByEmail(
-			@ModelAttribute("email") String email) {
+	@GetMapping("/email/{email}")
+	public UserDto getUserByEmail(@ModelAttribute("email") String email) {
 		User user = userService.getByEmail(email);
 		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail(), user.getPassword());
 	}
 
-
 	@GetMapping()
 	public List<UserDto> getAllUsers() {
 		List<User> users = userService.getAll();
-		List<UserDto> usersDto = users.stream()
-				.map(user -> new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail(), user.getPassword()))
-				.collect(Collectors.toList());
+		List<UserDto> usersDto = users.stream().map(user -> new UserDto(user.getUserId(), user.getRoleId(),
+				user.getUsername(), user.getEmail(), user.getPassword())).collect(Collectors.toList());
 		return usersDto;
 	}
-	
+
 	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public UserDto updateUser(
-			@ModelAttribute("userId") Integer userId,
-			@ModelAttribute("username") String username,
-			@ModelAttribute("password") String password,
-			@ModelAttribute("email") String email,
+	public UserDto updateUser(@ModelAttribute("userId") Integer userId, @ModelAttribute("username") String username,
+			@ModelAttribute("password") String password, @ModelAttribute("email") String email,
 			@ModelAttribute("roleId") Integer roleId) {
-		
+
 		User user = userService.update(userId, roleId, username, password, email);
 		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail(), user.getPassword());
 	}
-	
+
 	@DeleteMapping(path = "/{id}")
-	public void deleteUser(@PathVariable("id") Integer id) {		
+	public void deleteUser(@PathVariable("id") Integer id) {
 		userService.delete(id);
 	}
 
-
-	//TODO remove password from response and userDTO
+	// TODO remove password from response and userDTO
 	@PostMapping(value = "/authenticate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<String> authenticate(
-				@ModelAttribute("email") String email,
-				@ModelAttribute("password") String password) {
+	public ResponseEntity<String> authenticate(@ModelAttribute("email") String email,
+			@ModelAttribute("password") String password) {
 		try {
 			userService.authenticate(email, password);
 			User user = userService.getByEmail(email);
 			return ResponseEntity.ok(jwtUtility.createToken(user.getEmail(), roleService.get(user.getRoleId())));
 		} catch (AuthenticationException e) {
-			return ResponseEntity.ok(e.getMessage() + " " + email + " " + password);
+			return ResponseEntity.ok(e.getMessage());
 		}
 	}
 
 	@PutMapping(path = "changePassword", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public String changePassword(
-		@ModelAttribute("password") String password,
-		@ModelAttribute("id") Integer id) {
+	public String changePassword(@ModelAttribute("password") String password, @ModelAttribute("id") Integer id) {
 
 		User user = userService.get(id);
 		userService.update(id, user.getRoleId(), user.getUsername(), password, user.getEmail());

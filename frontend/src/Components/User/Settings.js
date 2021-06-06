@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import * as sha1 from "js-sha1";
 import API from "../../Services/API";
+import axios from "axios";
 
 export default class Settings extends Component {
   constructor(props) {
@@ -11,7 +12,7 @@ export default class Settings extends Component {
       api: new API(),
 
       environments: {},
-      userId: JSON.parse(localStorage.getItem("user")).userId,
+      user: JSON.parse(localStorage.getItem("user")),
       password: "",
     };
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -22,7 +23,7 @@ export default class Settings extends Component {
     this.state.api.createEntity({ name: "user" });
     this.state.api.createEntity({ name: "role" });
     await this.state.api.endpoints.user
-      .getOne({ id: this.state.userId })
+      .getOne({ id: this.state.user.userId })
       .then((response) =>
         this.setState({
           username: response.data.username,
@@ -45,13 +46,13 @@ export default class Settings extends Component {
     formData.append("userId", this.state.user.userId);
     formData.append("username", this.state.username);
     formData.append("email", this.state.user.email);
-    formData.append("password", sha1(this.state.password));
+    formData.append("password", this.state.password);
     formData.append("roleId", this.state.user.roleId);
     await this.state.api.endpoints.user
-      .update(formData, this.state.user.userId)
+      .updateUser(formData)
       .then((response) => {
         toast.success("User Updated Successfully!");
-        this.props.history.push(`/user`);
+        this.props.history.push(`/home`);
       })
       .catch((error) => toast.error("Could not Update User"));
   };

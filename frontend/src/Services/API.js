@@ -4,9 +4,20 @@ export default class API {
   constructor() {
     this.url = process.env.REACT_APP_API_URL;
     this.endpoints = {};
-    this.jwt = JSON.parse(localStorage.getItem("user")).jwt;
+    this.jwt = this.jwtCheck();
+    this.email = this.emailCheck();
   }
 
+  jwtCheck() {
+    if (localStorage.getItem("user"))
+      return JSON.parse(localStorage.getItem("user")).jwt;
+    return null;
+  }
+  emailCheck() {
+    if (localStorage.getItem("user"))
+      return JSON.parse(localStorage.getItem("user")).email;
+    return null;
+  }
   createEntity(entity) {
     this.endpoints[entity.name] = this.CRUDEndpoints(entity);
   }
@@ -24,9 +35,15 @@ export default class API {
     };
     const resourceURL = `${this.url}/${name}`;
 
+    //USER
+    endpoints.updateUser = (toUpdate) =>
+      axios.put(`${resourceURL}/`, toUpdate, config);
+
     //GENERAL
     endpoints.getAll = ({ query } = {}) => axios.get(`${resourceURL}/`, config);
     endpoints.getOne = ({ id }) => axios.get(`${resourceURL}/${id}`, config);
+    endpoints.getUser = ({ query } = {}) =>
+      axios.get(`${resourceURL}/email/${this.email}`, config);
 
     //ENVIRONMENT
     endpoints.getEnvironmentByName = ({ name }) =>
