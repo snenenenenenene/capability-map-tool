@@ -27,10 +27,11 @@ public class Information {
 	@Column(name = "INFORMATIONID")
 	private Integer informationId;
 
-	@NotBlank
-	@Column(name = "INFORMATIONNAME")
+	@NotBlank(message = "Capability name is required.")
+	@Column(name = "INFORMATIONNAME", unique = true)
 	private String informationName;
-
+	
+	@NotBlank(message = "Capability description is required.")
 	@Column(name = "INFORMATIONDESCRIPTION")
 	private String informationDescription;
 

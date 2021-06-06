@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -39,12 +41,15 @@ public class Strategy {
     @JoinColumn
     private Status status;
     
+    @NotBlank(message = "Strategy name is required.")
     @Column(name = "STRATEGYNAME")
     private String strategyName;
 
+    @NotNull(message = "Time frame start must not be null.")
     @Column(name = "TIMEFRAMESTART")
     private LocalDate timeFrameStart;
     
+    @NotNull(message = "Time frame end must not be null.")
     @Column(name = "TIMEFRAMEEND")
     private LocalDate timeFrameEnd;
 

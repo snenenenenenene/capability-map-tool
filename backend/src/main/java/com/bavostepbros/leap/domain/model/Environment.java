@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotBlank;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -31,7 +32,8 @@ public class Environment {
     @Column(name = "ENVIRONMENTID")
     private Integer environmentId;
 
-    @Column(name = "ENVIRONMENTNAME")
+    @NotBlank(message = "Environment name is required.")
+    @Column(name = "ENVIRONMENTNAME", unique = true)
     private String environmentName;
     
     @OneToMany(mappedBy = "environment")

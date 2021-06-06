@@ -33,7 +33,7 @@ public class Project {
     @Column(name = "PROJECTID")
 	private Integer projectId;
 	
-	@NotBlank
+	@NotBlank(message = "Project name is required.")
 	@Column(name = "PROJECTNAME", unique = true)
 	private String projectName;
 	

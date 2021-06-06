@@ -43,7 +43,7 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 			LocalDate endOfLife, Integer currentScalability, Integer expectedScalability, Integer currentPerformance,
 			Integer expectedPerformance, Integer currentSecurityLevel, Integer expectedSecurityLevel,
 			Integer currentStability, Integer expectedStability, String currencyType, Double costCurrency,
-			Double currentValue, Double currentYearlyCost, Double acceptedYearlyCost, String timeValue) {
+			Integer currentValue, Double currentYearlyCost, Double acceptedYearlyCost, String timeValue) {
 		if (name == null || name.isBlank() || name.isEmpty()) {
 			throw new InvalidInputException("IT-application name is invalid.");
 		}
@@ -79,7 +79,7 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 			LocalDate endOfLife, Integer currentScalability, Integer expectedScalability, Integer currentPerformance,
 			Integer expectedPerformance, Integer currentSecurityLevel, Integer expectedSecurityLevel,
 			Integer currentStability, Integer expectedStability, String currencyType, Double costCurrency,
-			Double currentValue, Double currentYearlyCost, Double acceptedYearlyCost, String timeValue) {
+			Integer currentValue, Double currentYearlyCost, Double acceptedYearlyCost, String timeValue) {
 		if (id == null || id.equals(0)) {
 			throw new InvalidInputException("IT-application ID is invalid.");
 		}

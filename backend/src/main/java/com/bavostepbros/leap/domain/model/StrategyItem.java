@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.Type;
 
@@ -39,9 +40,11 @@ public class StrategyItem {
     @JoinColumn(name = "STRATEGYID", nullable = false)
     private Strategy strategy;
 
+    @NotBlank(message = "StrategyItem name is required.")
     @Column(name = "STRATEGYITEMNAME")
     private String strategyItemName;
 
+    @NotBlank(message = "StrategyItem description is required.")
     @Type(type="text")
     @Column(name = "DESCRIPTION")
     private String description;
