@@ -130,14 +130,14 @@ public class StrategyItemControllerTest extends ApiIntegrationTest {
 	@Test
 	public void should_postStrategyItem_whenSaveStrategyItem() throws Exception {
 		Integer strategyId = strategyFirst.getStrategyId();
-		String strategyItemName = "StrategyItem post test";
-		String strategyItemDescription = "StrategyItem post test description";
+		String strategyItemName = "StrategyItem post test 1";
+		String description = "StrategyItem post test description 1";
 
 		MvcResult mvcResult = mockMvc.perform(post(PATH)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("strategyId", strategyId.toString())
 				.param("strategyItemName", strategyItemName)
-				.param("strategyItemDescription", strategyItemDescription)
+				.param("description", description)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
