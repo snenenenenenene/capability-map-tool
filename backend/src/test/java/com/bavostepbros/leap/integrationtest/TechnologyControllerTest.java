@@ -5,9 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import com.bavostepbros.leap.integrationtest.testconfiguration.RequestFactory;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,7 +27,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
-public class TechnologyControllerTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class TechnologyControllerTest extends ApiIntegrationTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -46,6 +46,9 @@ public class TechnologyControllerTest {
 
 	private Technology technologyFirst;
 	private Technology technologySecond;
+
+	@BeforeAll
+	public void authenticate() throws Exception { super.authenticate(); }
 
 	@BeforeEach
 	public void init() {
@@ -71,7 +74,7 @@ public class TechnologyControllerTest {
 	public void should_postTechnology_whenSaveTechnology() throws Exception {
 		String technologyName = "Javascript";
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(PATH)
+		MvcResult mvcResult = mockMvc.perform(post(PATH)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("technologyName", technologyName)
 				.accept(MediaType.APPLICATION_JSON))
@@ -91,7 +94,7 @@ public class TechnologyControllerTest {
 	public void should_getTechnology_whenGetTechnology() throws Exception {
 		Integer technologyId = technologyFirst.getTechnologyId();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + technologyId))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + technologyId))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
@@ -107,7 +110,7 @@ public class TechnologyControllerTest {
 		Integer technologyId = technologyFirst.getTechnologyId();
 		String technologyName = "Angular";
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH + technologyId)
+		MvcResult mvcResult = mockMvc.perform(put(PATH + technologyId)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("technologyName", technologyName)
 				.accept(MediaType.APPLICATION_JSON))
@@ -127,13 +130,13 @@ public class TechnologyControllerTest {
 	public void should_deleteTechnology_whenDeleteTechnology() throws Exception {
 		Integer technologyId = technologyFirst.getTechnologyId();
 		
-		mockMvc.perform(MockMvcRequestBuilders.delete(PATH + technologyId))
+		mockMvc.perform(delete(PATH + technologyId))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
 	@Test
 	public void should_getAllTechnologies_whenGetAllTechnologies() throws Exception {
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH))
+		MvcResult mvcResult = mockMvc.perform(get(PATH))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		

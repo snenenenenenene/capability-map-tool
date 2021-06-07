@@ -6,9 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,7 +31,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProjectControllerTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class ProjectControllerTest extends ApiIntegrationTest {
 	
 	@Autowired
     private MockMvc mockMvc;
@@ -62,7 +61,10 @@ public class ProjectControllerTest {
 	private Project projectThirth;
 	
 	static final String PATH = "/api/project/";
-	
+
+	@BeforeAll
+	public void authenticate() throws Exception { super.authenticate(); }
+
 	@BeforeEach
 	public void init() {
 		statusFirst = statusDAL.save(new Status(1, LocalDate.of(2021, 05, 15)));
@@ -105,7 +107,7 @@ public class ProjectControllerTest {
 		Integer programId = programSecond.getProgramId();
 		Integer statusId = statusSecond.getStatusId();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(PATH)
+		MvcResult mvcResult = mockMvc.perform(post(PATH)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("projectName", projectName)
 				.param("programId", programId.toString())
@@ -127,7 +129,7 @@ public class ProjectControllerTest {
 	public void should_getProject_whenGetProjectById() throws Exception {
 		Integer projectId = projectFirst.getProjectId();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + projectId))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + projectId))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
@@ -145,7 +147,7 @@ public class ProjectControllerTest {
 		Integer programId = projectFirst.getProgram().getProgramId();
 		Integer statusId = projectFirst.getStatus().getStatusId();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH + projectId)
+		MvcResult mvcResult = mockMvc.perform(put(PATH + projectId)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("projectName", projectName)
 				.param("programId", programId.toString())
@@ -167,13 +169,13 @@ public class ProjectControllerTest {
 	public void should_deleteProject_whenDeleteProject() throws Exception {
 		Integer projectId = projectFirst.getProjectId();
 		
-		mockMvc.perform(MockMvcRequestBuilders.delete(PATH + projectId))
+		mockMvc.perform(delete(PATH + projectId))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
 	@Test
 	public void should_getProjects_whenGetAllProjects() throws Exception {
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH))
+		MvcResult mvcResult = mockMvc.perform(get(PATH))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
@@ -190,7 +192,7 @@ public class ProjectControllerTest {
 	public void should_getProjects_whenGetAllProjectsByProgramId() throws Exception {
 		Integer programId = projectFirst.getProgram().getProgramId();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + "get-all-projects-by-programid/" + programId))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + "get-all-projects-by-programid/" + programId))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
@@ -206,7 +208,7 @@ public class ProjectControllerTest {
 	public void should_getProject_whenGetProjectByName() throws Exception {
 		String projectName = projectSecond.getProjectName();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + "projectname/" + projectName))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + "projectname/" + projectName))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
