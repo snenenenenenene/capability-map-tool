@@ -1,6 +1,5 @@
 package com.bavostepbros.leap.integrationtest.testconfiguration;
 
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;

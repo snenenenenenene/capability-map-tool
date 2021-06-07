@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import MaterialTable from "material-table";
 import toast from "react-hot-toast";
 import API from "../../Services/API";
+import { Modal } from "react-bootstrap";
+import Select from "react-select";
 
 export default class Project extends Component {
   constructor(props) {
@@ -12,13 +14,17 @@ export default class Project extends Component {
       environments: [],
       environmentName: this.props.match.params.name,
       environmentId: "",
+      projectId: "",
       projects: [],
-      reload: false,
+      capabilities: [],
+      linkedCapabilities: [],
+      showModal: false,
     };
   }
 
   async componentDidMount() {
     this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "capability" });
     this.state.api.createEntity({ name: "program" });
     this.state.api.createEntity({ name: "status" });
     this.state.api.createEntity({ name: "project" });
@@ -39,7 +45,34 @@ export default class Project extends Component {
       .catch((error) => {
         this.props.history.push("/error");
       });
+    await this.state.api.endpoints.capability
+      .getAll()
+      .then((response) => {
+        response.data.forEach((capability) => {
+          capability.label = capability.capabilityName;
+          capability.value = capability.capabilityId;
+        });
+        this.setState({ capabilities: response.data });
+      })
+      .catch((error) => {
+        this.props.history.push("/error");
+      });
   }
+
+  handleModal() {
+    this.setState({ showModal: !this.state.showModal });
+  }
+
+  handleSubmit = (projectId) => async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("projectId", projectId);
+    formData.append("capabilityId", this.state.capabilityId);
+    await this.state.api.endpoints.capability
+      .linkProject(formData)
+      .then(toast.success("Project Successfully Linked"))
+      .catch((error) => toast.error("Could not link Project"));
+  };
 
   edit(projectId) {
     this.props.history.push(
@@ -78,6 +111,17 @@ export default class Project extends Component {
       { duration: 50000 }
     );
   };
+
+  async capabilityTable(projectId) {
+    await this.state.api.endpoints.project
+      .getCapabilities({ id: projectId })
+      .then((response) => {
+        this.setState({ linkedCapabilities: response.data });
+      })
+      .catch((error) => {
+        toast.error("Could Not Find Capabilities");
+      });
+  }
 
   fetchDeleteProjects = async (projectId) => {
     await this.state.api.endpoints.project
@@ -148,12 +192,76 @@ export default class Project extends Component {
                       className='bi bi-pencil'
                     ></i>
                   </button>
+                  <button className='btn'>
+                    <i
+                      onClick={() => this.handleModal()}
+                      className='bi bi-chat-square'
+                    ></i>
+                  </button>
                 </div>
               ),
             },
           ]}
           data={this.state.projects}
+          detailPanel={(rowData) => {
+            return (
+              <div>
+                <div className='card-deck' style={{ padding: 10, margin: 5 }}>
+                  {this.state.linkedCapabilities.map((capability) => {
+                    return (
+                      <div
+                        className='card'
+                        style={{
+                          margin: 3,
+                          maxWidth: 120,
+                          maxHeight: 120,
+                        }}
+                      >
+                        <div className='strategyitem-title card-header text-center text-uppercase text-truncate'>
+                          {capability.capabilityName}
+                        </div>
+                        <div className='card-body text-center'></div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          }}
+          onRowClick={(event, rowData, togglePanel) => {
+            this.setState({ projectId: rowData.projectId });
+            this.capabilityTable(rowData.projectId);
+            togglePanel();
+          }}
         />
+        <Modal show={this.state.showModal} onHide={() => this.handleModal()}>
+          <Modal.Header closeButton>
+            Link Project {this.state.projectId}
+          </Modal.Header>
+          <Modal.Body>
+            <form onSubmit={this.handleSubmit(this.state.projectId)}>
+              <label htmlFor='capabilityId'>Capability</label>
+              <Select
+                options={this.state.capabilities}
+                noOptionsMessage={() => "No Capabilities"}
+                onChange={(capability) => {
+                  if (capability) {
+                    this.setState({
+                      capabilityId: capability.capabilityId,
+                    });
+                  } else {
+                    this.setState({ capabilityId: 0 });
+                  }
+                }}
+                placeholder='Optional'
+              />
+              <br></br>
+              <button className='btn btn-primary' type='sumbit'>
+                SUBMIT
+              </button>
+            </form>
+          </Modal.Body>
+        </Modal>
       </div>
     );
   }

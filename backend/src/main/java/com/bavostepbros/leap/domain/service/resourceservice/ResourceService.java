@@ -1,7 +1,9 @@
 package com.bavostepbros.leap.domain.service.resourceservice;
 
 import java.util.List;
+import java.util.Set;
 
+import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Resource;
 
 public interface ResourceService {
@@ -17,4 +19,10 @@ public interface ResourceService {
 	Resource getResourceByName(String resourceName);
 	
 	List<Resource> getAll();
+	
+	void addCapability(Integer resourceId, Integer capabilityId);
+
+	void deleteCapability(Integer resourceId, Integer capabilityId);
+
+	Set<Capability> getAllCapabilitiesByResourceId(Integer resourceId);
 }

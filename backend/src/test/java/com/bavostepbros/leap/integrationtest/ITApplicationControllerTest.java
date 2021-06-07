@@ -9,14 +9,17 @@ import java.util.Currency;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,10 +80,10 @@ public class ITApplicationControllerTest extends ApiIntegrationTest {
 		technologySecond = technologyDAL.save(new Technology(2, "c#"));
 		itApplicationFirst = itApplicationDAL.save(new ITApplication(1, statusFirst, "application 1", 
 				"1.20.1", LocalDate.of(2021, 01, 20), LocalDate.of(2025, 05, 20), 1, 2, 3, 4, 5, 
-				6, 7, 8, "EUR", 1000.0, 5, 70.0, 100.0, TimeValue.ELIMINATE));
+				4, 3, 2, "EUR", 1000.0, 5, 70.0, 100.0, TimeValue.ELIMINATE));
 		itApplicationSecond = itApplicationDAL.save(new ITApplication(2, statusSecond, "application 2", 
-				"1.20.1", LocalDate.of(2021, 01, 20), LocalDate.of(2025, 05, 20), 2, 3, 4, 5, 6, 
-				7, 8, 9, "EUR", 1000.0, 4, 70.0, 100.0, TimeValue.INVEST));
+				"1.20.1", LocalDate.of(2021, 01, 20), LocalDate.of(2025, 05, 20), 2, 3, 4, 5, 4, 
+				3, 2, 1, "EUR", 1000.0, 4, 70.0, 100.0, TimeValue.INVEST));
 	}
 	
 	@AfterEach

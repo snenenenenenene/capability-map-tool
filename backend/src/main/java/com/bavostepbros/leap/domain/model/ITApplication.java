@@ -18,7 +18,6 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.bavostepbros.leap.domain.model.timevalue.TimeValue;
@@ -52,7 +51,7 @@ public class ITApplication {
     @Column(name = "VERSION")
     private String version;
     
-    @NotEmpty(message = "Purchase date is required.")
+    @NotNull(message = "Purchase date is required.")
     @Column(name = "PURCHASEDATE")
     private LocalDate purchaseDate;
     

@@ -13,6 +13,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -30,10 +31,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
-*
-* @author Bavo Van Meel
-*
-*/
+ *
+ * @author Bavo Van Meel
+ *
+ */
 @Entity
 @Getter
 @Setter
@@ -41,158 +42,178 @@ import lombok.Setter;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Capability {
 
-    @Id
-    @GeneratedValue
-    @EqualsAndHashCode.Include
-    @Column(name = "CAPABILITYID")
-    private Integer capabilityId;
-    
-    @ManyToOne
-    @JoinColumn(name = "ENVIRONMENTID", nullable = false)
-    private Environment environment;
+	@Id
+	@GeneratedValue
+	@EqualsAndHashCode.Include
+	@Column(name = "CAPABILITYID")
+	private Integer capabilityId;
 
-    @OneToOne
-    @JoinColumn
-    private Status status;
-    
-    @PositiveOrZero(message = "The capability id must be positive.")
-    @CsvBindByName
-    @Column(name = "PARENTCAPABILITYID")
-    private Integer parentCapabilityId;
-    
-    @NotBlank(message = "Capability name is required.")
-    @CsvBindByName
-    @Column(name = "CAPABILITYNAME", unique = true)
-    private String capabilityName;
+	@ManyToOne
+	@JoinColumn(name = "ENVIRONMENTID", nullable = false)
+	private Environment environment;
 
-    @Column(name = "LEVEL")
-    private CapabilityLevel level;
-    
-    @NotNull(message = "Pace of change must not be null.")
-    @CsvBindByName
-    @Column(name = "PACEOFCHANGE")
-    private PaceOfChange paceOfChange;
-    
-    @NotNull(message = "Target operating model must not be null.")
-    @CsvBindByName
-    @Column(name = "TARGETOPERATINGMODEL")
-    private TargetOperatingModel targetOperatingModel;
-    
-    @NotNull(message = "Resource quality must not be null.")
-    @Min(value = 1, message = "Resource quality must be between 1 and 5, inclusive.")
-    @Max(value = 5, message = "Resource quality must be between 1 and 5, inclusive.")
-    @CsvBindByName
-    @Column(name = "RESOURCEQUALITY")
-    private Integer resourceQuality;
+	@OneToOne
+	@JoinColumn
+	private Status status;
 
-    @CsvBindByName
-    @Column(name = "INFORMATIONQUALITY")
-    private Integer informationQuality;
+	@PositiveOrZero(message = "The capability id must be positive.")
+	@CsvBindByName
+	@Column(name = "PARENTCAPABILITYID")
+	private Integer parentCapabilityId;
 
-    @CsvBindByName
-    @Column(name = "APPLICATIONFIT")
-    private Integer applicationFit;
+	@NotBlank(message = "Capability name is required.")
+	@CsvBindByName
+	@Column(name = "CAPABILITYNAME", unique = true)
+	private String capabilityName;
 
-    @OneToMany(mappedBy = "capability")
-    private List<CapabilityItem> capabilityItems;
+	@Column(name = "CAPABILITYDESCRIPTION")
+	private String capabilityDescription;
 
-    @OneToMany(mappedBy = "capability")
-    private List<CapabilityApplication> capabilityApplication;
+	@Column(name = "LEVEL")
+	private CapabilityLevel level;
 
-    @OneToMany(mappedBy = "capability")
-    private List<CapabilityInformation> capabilityInformation;
-    
-    @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(name = "CAPABILITY_PROJECT",
-    	joinColumns = {@JoinColumn(name = "CAPABILITYID")}, 
-    	inverseJoinColumns = {@JoinColumn(name = "PROJECTID")})
-    private List<Project> projects;
-    
-    @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(name = "CAPABILITY_BUSINESSPROCESS",
-    	joinColumns = {@JoinColumn(name = "CAPABILITYID")}, 
-    	inverseJoinColumns = {@JoinColumn(name = "BUSINESSPROCESSID")})
-    private List<BusinessProcess> businessProcess;
-    
-    @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(name = "CAPABILITY_RESOURCE",
-    	joinColumns = {@JoinColumn(name = "CAPABILITYID")}, 
-    	inverseJoinColumns = {@JoinColumn(name = "RESOURCEID")})
-    private List<Resource> resources;
+	@NotNull(message = "Pace of change must not be null.")
+	@CsvBindByName
+	@Column(name = "PACEOFCHANGE")
+	private PaceOfChange paceOfChange;
 
-    public Capability(Environment environment, Status status, Integer parentCapabilityId, String capabilityName, 
-    		PaceOfChange paceOfChange, TargetOperatingModel targetOperatingModel, Integer resourceQuality,
-    		Integer informationQuality, Integer applicationFit) {
-        this.environment = environment;
-        this.status = status;
-        this.parentCapabilityId = parentCapabilityId;
-        this.capabilityName = capabilityName;
-        this.paceOfChange = paceOfChange;
-        this.targetOperatingModel = targetOperatingModel;
-        this.resourceQuality = resourceQuality;
-        this.informationQuality = informationQuality;
-        this.applicationFit = applicationFit;
-    }
-    
-    public Capability(Integer capabilityId, Environment environment, Status status, Integer parentCapabilityId,
-			String capabilityName, PaceOfChange paceOfChange, TargetOperatingModel targetOperatingModel,
+	@NotNull(message = "Target operating model must not be null.")
+	@CsvBindByName
+	@Column(name = "TARGETOPERATINGMODEL")
+	private TargetOperatingModel targetOperatingModel;
+
+	@NotNull(message = "Resource quality must not be null.")
+	@Min(value = 1, message = "Resource quality must be between 1 and 5, inclusive.")
+	@Max(value = 5, message = "Resource quality must be between 1 and 5, inclusive.")
+	@CsvBindByName
+	@Column(name = "RESOURCEQUALITY")
+	private Integer resourceQuality;
+
+	@CsvBindByName
+	@Column(name = "INFORMATIONQUALITY")
+	private Integer informationQuality;
+
+	@CsvBindByName
+	@Column(name = "APPLICATIONFIT")
+	private Integer applicationFit;
+
+	@OneToMany(mappedBy = "capability")
+	private List<CapabilityItem> capabilityItems;
+
+	@OneToMany(mappedBy = "capability")
+	private List<CapabilityApplication> capabilityApplication;
+
+	@OneToMany(mappedBy = "capability")
+	private List<CapabilityInformation> capabilityInformation;
+
+	@ManyToMany(cascade = CascadeType.MERGE)
+	@JoinTable(name = "CAPABILITY_PROJECT",
+		joinColumns = { @JoinColumn(name = "CAPABILITYID") },
+		inverseJoinColumns = {@JoinColumn(name = "PROJECTID") },
+		uniqueConstraints = { @UniqueConstraint(columnNames = {"CAPABILITYID", "PROJECTID"})})
+	private List<Project> projects;
+
+	@ManyToMany(cascade = CascadeType.MERGE)
+	@JoinTable(name = "CAPABILITY_BUSINESSPROCESS",
+		joinColumns = { @JoinColumn(name = "CAPABILITYID") },
+		inverseJoinColumns = { @JoinColumn(name = "BUSINESSPROCESSID") },
+		uniqueConstraints = { @UniqueConstraint(columnNames = {"CAPABILITYID", "BUSINESSPROCESSID"})})
+	private List<BusinessProcess> businessProcess;
+
+	@ManyToMany(cascade = CascadeType.MERGE)
+	@JoinTable(name = "CAPABILITY_RESOURCE",
+		joinColumns = { @JoinColumn(name = "CAPABILITYID") },
+		inverseJoinColumns = { @JoinColumn(name = "RESOURCEID") },
+		uniqueConstraints = { @UniqueConstraint(columnNames = {"CAPABILITYID", "RESOURCEID"})})
+	private List<Resource> resources;
+
+	public Capability(Environment environment, Status status, Integer parentCapabilityId, String capabilityName,
+			String capabilityDescription, PaceOfChange paceOfChange, TargetOperatingModel targetOperatingModel,
 			Integer resourceQuality, Integer informationQuality, Integer applicationFit) {
-		super();
-		this.capabilityId = capabilityId;
 		this.environment = environment;
 		this.status = status;
 		this.parentCapabilityId = parentCapabilityId;
 		this.capabilityName = capabilityName;
+		this.capabilityDescription = capabilityDescription;
 		this.paceOfChange = paceOfChange;
 		this.targetOperatingModel = targetOperatingModel;
 		this.resourceQuality = resourceQuality;
 		this.informationQuality = informationQuality;
 		this.applicationFit = applicationFit;
 	}
-    
-    public void addProject(Project project) {
-    	projects.add(project);
-    }
-    
-    public void removeProject(Project project) {
-    	projects.remove(project);
-    }
-    
-    public List<Project> getProjects() {
-    	return projects;
-    }
-    
-    public void addBusinessProcess(BusinessProcess businessProcessItem) {
-    	businessProcess.add(businessProcessItem);
-    }
-    
-    public void removeBusinessProcess(BusinessProcess businessProcessItem) {
-    	businessProcess.remove(businessProcessItem);
-    }
-    
-    public void addResource(Resource resource) {
-    	resources.add(resource);
-    }
-    
-    public void removeResource(Resource resource) {
-    	resources.remove(resource);
-    }
 
-    @Override
-    public String toString() {
-        return "{" +
-            " capabilityId='" + getCapabilityId() + "'" +
-            ", environment='" + getEnvironment() + "'" +
-            ", status='" + getStatus() + "'" +
-            ", parentCapabilityId='" + getParentCapabilityId() + "'" +
-            ", name='" + getCapabilityName() + "'" +
-            ", level='" + getLevel() + "'" +
-            ", paceOfChange='" + getPaceOfChange() + "'" +
-            ", targetOperatingModel='" + getTargetOperatingModel() + "'" +
-            ", resourceQuality='" + getResourceQuality() + "'" +
-            ", informationQuality='" + getInformationQuality() + "'" +
-            ", applicationFit='" + getApplicationFit() + "'" +
-            "}";
-    }
-    
+	public Capability(Integer capabilityId, Environment environment, Status status, Integer parentCapabilityId,
+			String capabilityName, String capabilityDescription, PaceOfChange paceOfChange,
+			TargetOperatingModel targetOperatingModel, Integer resourceQuality, Integer informationQuality,
+			Integer applicationFit) {
+		this.capabilityId = capabilityId;
+		this.environment = environment;
+		this.status = status;
+		this.parentCapabilityId = parentCapabilityId;
+		this.capabilityName = capabilityName;
+		this.capabilityDescription = capabilityDescription;
+		this.paceOfChange = paceOfChange;
+		this.targetOperatingModel = targetOperatingModel;
+		this.resourceQuality = resourceQuality;
+		this.informationQuality = informationQuality;
+		this.applicationFit = applicationFit;
+	}
+
+	public void addProject(Project project) {
+		projects.add(project);
+		project.getCapabilities().add(this);
+		return;
+	}
+
+	public void removeProject(Project project) {
+		projects.remove(project);
+		project.getCapabilities().remove(this);
+	}
+
+	public List<Project> getProjects() {
+		return projects;
+	}
+
+	public void addBusinessProcess(BusinessProcess businessProcessItem) {
+		businessProcess.add(businessProcessItem);
+		businessProcessItem.getCapabilities().add(this);
+		return;
+	}
+
+	public void removeBusinessProcess(BusinessProcess businessProcessItem) {
+		businessProcess.remove(businessProcessItem);
+		businessProcessItem.getCapabilities().remove(this);
+		return;
+	}
+
+	public List<BusinessProcess> getBusinessProcess() {
+		return businessProcess;
+	}
+
+	public void addResource(Resource resource) {
+		resources.add(resource);
+		resource.getCapabilities().add(this);
+		return;
+	}
+
+	public void removeResource(Resource resource) {
+		resources.remove(resource);
+		resource.getCapabilities().remove(this);
+		return;
+	}
+
+	public List<Resource> getResources() {
+		return resources;
+	}
+
+	@Override
+	public String toString() {
+		return "{" + " capabilityId='" + getCapabilityId() + "'" + ", environment='" + getEnvironment() + "'"
+				+ ", status='" + getStatus() + "'" + ", parentCapabilityId='" + getParentCapabilityId() + "'"
+				+ ", name='" + getCapabilityName() + "'" + ", level='" + getLevel() + "'" + ", paceOfChange='"
+				+ getPaceOfChange() + "'" + ", targetOperatingModel='" + getTargetOperatingModel() + "'"
+				+ ", resourceQuality='" + getResourceQuality() + "'" + ", informationQuality='"
+				+ getInformationQuality() + "'" + ", applicationFit='" + getApplicationFit() + "'" + "}";
+	}
+
 }

@@ -2,8 +2,10 @@ package com.bavostepbros.leap.domain.service.capabilityservice;
 
 import java.util.List;
 
+import com.bavostepbros.leap.domain.model.BusinessProcess;
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Project;
+import com.bavostepbros.leap.domain.model.Resource;
 
 /**
  *
@@ -12,16 +14,16 @@ import com.bavostepbros.leap.domain.model.Project;
  */
 public interface CapabilityService {
 	Capability save(Integer environmentId, Integer statusId, Integer parentCapabilityId, String capabilityName,
-			String paceOfChange, String targetOperatingModel, Integer resourceQuality, Integer informationQuality,
-			Integer applicationFit);
+			String capabilityDescription, String paceOfChange, String targetOperatingModel, Integer resourceQuality,
+			Integer informationQuality, Integer applicationFit);
 
 	Capability get(Integer id);
 
 	List<Capability> getAll();
 
 	Capability update(Integer capabilityId, Integer environmentId, Integer statusId, Integer parentCapabilityId,
-			String capabilityName, String paceOfChange, String targetOperatingModel, Integer resourceQuality,
-			Integer informationQuality, Integer applicationFit);
+			String capabilityName, String capabilityDescription, String paceOfChange, String targetOperatingModel,
+			Integer resourceQuality, Integer informationQuality, Integer applicationFit);
 
 	void updateLevel(Capability capability);
 
@@ -51,7 +53,11 @@ public interface CapabilityService {
 
 	void deleteBusinessProcess(Integer capabilityId, Integer businessProcessId);
 
+	List<BusinessProcess> getAllBusinessProcessByCapabilityId(Integer capabilityId);
+
 	void addResource(Integer capabilityId, Integer resourceId);
 
 	void deleteResource(Integer capabilityId, Integer resourceId);
+
+	List<Resource> getAllResourceByResourceId(Integer capabilityId);
 }

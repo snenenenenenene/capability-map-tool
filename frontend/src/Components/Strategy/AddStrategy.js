@@ -81,7 +81,13 @@ export default class AddStrategy extends Component {
   async updateDate() {
     await this.state.api.endpoints.status
       .getAll()
-      .then((response) => this.setState({ statuses: response.data }))
+      .then((response) => {
+        response.data.forEach((status) => {
+          status.label = status.validityPeriod;
+          status.value = status.statusId;
+        });
+        this.setState({ statuses: response.data });
+      })
       .catch((error) => {
         toast.error("Could not Update Statuses");
       });

@@ -1,6 +1,7 @@
 package com.bavostepbros.leap.controller;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotBlank;
@@ -16,8 +17,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Resource;
+import com.bavostepbros.leap.domain.model.dto.CapabilityDto;
+import com.bavostepbros.leap.domain.model.dto.EnvironmentDto;
 import com.bavostepbros.leap.domain.model.dto.ResourceDto;
+import com.bavostepbros.leap.domain.model.dto.StatusDto;
 import com.bavostepbros.leap.domain.service.resourceservice.ResourceService;
 
 import lombok.RequiredArgsConstructor;
@@ -73,10 +78,44 @@ public class ResourceController {
 				.collect(Collectors.toList());
 		return resourcesDto;
 	}
+	
+	@PutMapping(path = "link-capability/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public void linkCapability(@ModelAttribute("resourceId") Integer resourceId, 
+			@ModelAttribute("capabilityId") Integer capabilityId) {
+		resourceService.addCapability(resourceId, capabilityId);
+	}
+	
+	@DeleteMapping(path = "unlink-capability/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public void unlinkCapability(@ModelAttribute("resourceId") Integer resourceId, 
+			@ModelAttribute("capabilityId") Integer capabilityId) {
+		resourceService.deleteCapability(resourceId, capabilityId);
+	}
+	
+	@GetMapping(path = "get-capabilities/{resourceId}")
+	public List<CapabilityDto> getCapabilities(@PathVariable("resourceId") Integer resourceId) {
+		Set<Capability> capabilities = resourceService.getAllCapabilitiesByResourceId(resourceId);
+		List<CapabilityDto> capabilitiesDto = capabilities.stream()
+				.map(capability -> convertCapability(capability))
+				.collect(Collectors.toList());
+		return capabilitiesDto;
+	}
 
 	private ResourceDto convertResource(Resource resource) {
 		return new ResourceDto(resource.getResourceId(), resource.getResourceName(), resource.getResourceDescription(),
 				resource.getFullTimeEquivalentYearlyValue());
+	}
+	
+	private CapabilityDto convertCapability(Capability capability) {
+		EnvironmentDto environmentDto = new EnvironmentDto(capability.getEnvironment().getEnvironmentId(),
+				capability.getEnvironment().getEnvironmentName());
+		StatusDto statusDto = new StatusDto(capability.getStatus().getStatusId(),
+				capability.getStatus().getValidityPeriod());
+
+		return new CapabilityDto(capability.getCapabilityId(), environmentDto, statusDto,
+				capability.getParentCapabilityId(), capability.getCapabilityName(),
+				capability.getCapabilityDescription(), capability.getLevel(), capability.getPaceOfChange(),
+				capability.getTargetOperatingModel(), capability.getResourceQuality(),
+				capability.getInformationQuality(), capability.getApplicationFit());
 	}
 
 }

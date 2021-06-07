@@ -74,15 +74,17 @@ export default class EditCapability extends Component {
     formData.append("resourceQuality", this.state.resourceQuality);
     formData.append("statusId", this.state.statusId);
     formData.append("level", this.state.capabilityLevel);
+    formData.append("capabilityDescription", this.state.description);
     await this.state.api.endpoints.capability
       .update(formData, this.state.capabilityId)
-      .then((response) => {
+      .then(async (response) => {
         toast.success("Capability Successfully Updated!");
         this.props.history.push(
           `/environment/${this.state.environmentName}/capability`
         );
       })
       .catch((error) => {
+        console.log(error);
         toast.error("Could not Update Capability");
       });
   };
@@ -91,6 +93,8 @@ export default class EditCapability extends Component {
     this.state.api.createEntity({ name: "environment" });
     this.state.api.createEntity({ name: "capability" });
     this.state.api.createEntity({ name: "status" });
+    this.state.api.createEntity({ name: "information" });
+    this.state.api.createEntity({ name: "informationcapability" });
 
     await this.state.api.endpoints.environment
       .getEnvironmentByName({ name: this.state.environmentName })
@@ -178,9 +182,6 @@ export default class EditCapability extends Component {
               </Link>
             </li>
             <li className='breadcrumb-item'>{this.state.capabilityId}</li>
-            <li className='breadcrumb-item active' aria-current='page'>
-              Edit Capability
-            </li>
           </ol>
         </nav>
         <div className='jumbotron'>
@@ -189,7 +190,7 @@ export default class EditCapability extends Component {
             <div className='row'>
               <div className='col-sm-6'>
                 <div className='form-row'>
-                  <div className='form-group col-md-6'>
+                  <div className='form-group col-md'>
                     <label htmlFor='nameCapability'>Name Capability</label>
                     <input
                       type='text'

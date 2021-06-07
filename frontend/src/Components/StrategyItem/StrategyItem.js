@@ -15,6 +15,7 @@ export default class StrategyItem extends Component {
       environmentName: this.props.match.params.name,
       environmentId: "",
       strategyItems: [],
+      itemId: "",
       capabilityItems: [],
       capabilities: [],
       capabilityId: 0,
@@ -239,75 +240,71 @@ export default class StrategyItem extends Component {
                         className='card'
                         style={{
                           margin: 3,
-                          maxWidth: 100,
-                          backgroundColor: "#ff754f65",
+                          maxWidth: 120,
+                          maxHeight: 120,
                         }}
                       >
-                        <div className='card-body text-center text-uppercase'>
+                        <div className='strategyitem-title card-header text-center text-uppercase text-truncate'>
                           {capabilityItem.capability.capabilityName}
                         </div>
+                        <div className='card-body text-center'></div>
                       </div>
                     );
                   })}
                 </div>
-                <Modal show={this.state.showModal}>
-                  <Modal.Header>Add Capability</Modal.Header>
-                  <Modal.Body>
-                    <form onSubmit={this.handleSubmit(rowData.itemId)}>
-                      <label htmlFor='capabilityId'>Capability</label>
-                      <Select
-                        options={this.state.capabilities}
-                        noOptionsMessage={() => "No Capabilities"}
-                        onChange={(capability) => {
-                          if (capability) {
-                            this.setState({
-                              capabilityId: capability.capabilityId,
-                            });
-                          } else {
-                            this.setState({ capabilityId: 0 });
-                          }
-                        }}
-                        placeholder='Optional'
-                      />
-                      <label htmlFor='strategicImportance'>Importance</label>
-                      <select
-                        className='form-control'
-                        name='strategicImportance'
-                        id='strategicImportance'
-                        placeholder='Add Importance'
-                        value={this.state.strategicImportance}
-                        onChange={this.handleInputChange}
-                      >
-                        <option value='NONE'>None</option>
-                        <option value='LOWEST'>Lowest</option>
-                        <option value='LOW'>Low</option>
-                        <option value='MEDIUM'>Medium</option>
-                        <option value='HIGH'>High</option>
-                        <option value='HIGHEST'>Highest</option>
-                      </select>
-                      <button className='btn btn-primary' type='sumbit'>
-                        SUBMIT
-                      </button>
-                    </form>
-                  </Modal.Body>
-                  <Modal.Footer>
-                    <button
-                      type='button'
-                      className='btn btn-secondary'
-                      onClick={() => this.handleModal()}
-                    >
-                      Close Modal
-                    </button>
-                  </Modal.Footer>
-                </Modal>
               </div>
             );
           }}
           onRowClick={(event, rowData, togglePanel) => {
+            this.setState({ itemId: rowData.itemId });
             this.capabilityTable(rowData.itemId);
             togglePanel();
           }}
         />
+        <Modal show={this.state.showModal} onHide={() => this.handleModal()}>
+          <Modal.Header closeButton>
+            {this.state.itemId}. Add Capability
+          </Modal.Header>
+          <Modal.Body>
+            <form onSubmit={this.handleSubmit(this.state.itemId)}>
+              <label htmlFor='capabilityId'>Capability</label>
+              <Select
+                options={this.state.capabilities}
+                noOptionsMessage={() => "No Capabilities"}
+                onChange={(capability) => {
+                  if (capability) {
+                    this.setState({
+                      capabilityId: capability.capabilityId,
+                    });
+                  } else {
+                    this.setState({ capabilityId: 0 });
+                  }
+                }}
+                placeholder='Optional'
+              />
+              <label htmlFor='strategicImportance'>Importance</label>
+              <select
+                className='form-control'
+                name='strategicImportance'
+                id='strategicImportance'
+                placeholder='Add Importance'
+                value={this.state.strategicImportance}
+                onChange={this.handleInputChange}
+              >
+                <option value='NONE'>None</option>
+                <option value='LOWEST'>Lowest</option>
+                <option value='LOW'>Low</option>
+                <option value='MEDIUM'>Medium</option>
+                <option value='HIGH'>High</option>
+                <option value='HIGHEST'>Highest</option>
+              </select>
+              <br></br>
+              <button className='btn btn-primary' type='sumbit'>
+                SUBMIT
+              </button>
+            </form>
+          </Modal.Body>
+        </Modal>
       </div>
     );
   }

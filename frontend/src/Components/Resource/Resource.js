@@ -1,53 +1,62 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import MaterialTable from "material-table";
-import axios from "axios";
 import toast from "react-hot-toast";
+import API from "../../Services/API";
+import { Modal } from "react-bootstrap";
+import Select from "react-select";
 
 export default class Resource extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
       environments: [],
       environmentName: this.props.match.params.name,
       environmentId: "",
       resources: [],
-      reload: false,
+      capabilities: [],
+      resourceId: "",
+      showModal: false,
+      linkedCapabilities: [],
     };
   }
 
   async componentDidMount() {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+    this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "capability" });
+    this.state.api.createEntity({ name: "resource" });
 
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      )
+    await this.state.api.endpoints.environment
+      .getEnvironmentByName({ name: this.state.environmentName })
       .then((response) =>
-        this.setState({ environmentId: response.data.environmentId })
+        this.setState({
+          environmentId: response.data.environmentId,
+        })
       )
       .catch((error) => {
-        console.log(error);
-        this.props.history.push("/404");
+        this.props.history.push("/home");
       });
 
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/resource/`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.resource
+      .getAll()
       .then((response) => {
         this.setState({ resources: response.data });
       })
       .catch((error) => {
-        console.log(error);
-        // this.props.history.push('/error')
+        toast.error("Could not Load Resources");
+      });
+    await this.state.api.endpoints.capability
+      .getAll()
+      .then((response) => {
+        response.data.forEach((capability) => {
+          capability.label = capability.capabilityName;
+          capability.value = capability.capabilityId;
+        });
+        this.setState({ capabilities: response.data });
+      })
+      .catch((error) => {
+        this.props.history.push("/error");
       });
   }
 
@@ -57,25 +66,16 @@ export default class Resource extends Component {
     );
   }
   fetchDeleteResources = async (resourceId) => {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
-    await axios
-      .delete(`${process.env.REACT_APP_API_URL}/resource/${resourceId}`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.resource
+      .delete({ id: resourceId })
       .then((response) => toast.success("Successfully Deleted Resource"))
       .catch((error) => toast.error("Could not Delete Resource"));
     //REFRESH RESOURCES
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/resource/`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.resource
+
+      .getAll()
       .then((response) => {
-        this.setState({ capabilities: response.data });
+        this.setState({ resources: response.data });
       })
       .catch((error) => {
         toast.error("Could not Find Resources");
@@ -112,6 +112,31 @@ export default class Resource extends Component {
       ),
       { duration: 50000 }
     );
+  };
+  async capabilityTable(resourceId) {
+    await this.state.api.endpoints.resource
+      .getCapabilities({ id: resourceId })
+      .then((response) => {
+        this.setState({ linkedCapabilities: response.data });
+      })
+      .catch((error) => {
+        toast.error("Could Not Find Capabilities");
+      });
+  }
+
+  handleModal() {
+    this.setState({ showModal: !this.state.showModal });
+  }
+
+  handleSubmit = (resourceId) => async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("resourceId", resourceId);
+    formData.append("capabilityId", this.state.capabilityId);
+    await this.state.api.endpoints.capability
+      .linkResource(formData)
+      .then(toast.success("Project Successfully Linked"))
+      .catch((error) => toast.error("Could not link Project"));
   };
 
   render() {
@@ -167,8 +192,8 @@ export default class Resource extends Component {
                   </button>
                   <button className='btn'>
                     <i
-                      onClick={() => this.handleItemModal()}
-                      className='bi bi-app-indicator'
+                      onClick={() => this.handleModal()}
+                      className='bi bi-chat-square'
                     ></i>
                   </button>
                 </div>
@@ -176,7 +201,65 @@ export default class Resource extends Component {
             },
           ]}
           data={this.state.resources}
+          detailPanel={(rowData) => {
+            return (
+              <div>
+                <div className='card-deck' style={{ padding: 10, margin: 5 }}>
+                  {this.state.linkedCapabilities.map((capability) => {
+                    return (
+                      <div
+                        className='card'
+                        style={{
+                          margin: 3,
+                          maxWidth: 120,
+                          maxHeight: 120,
+                        }}
+                      >
+                        <div className='strategyitem-title card-header text-center text-uppercase text-truncate'>
+                          {capability.capabilityName}
+                        </div>
+                        <div className='card-body text-center'></div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          }}
+          onRowClick={(event, rowData, togglePanel) => {
+            this.setState({ resourceId: rowData.resourceId });
+            this.capabilityTable(rowData.resourceId);
+            togglePanel();
+          }}
         />
+        <Modal show={this.state.showModal} onHide={() => this.handleModal()}>
+          <Modal.Header closeButton>
+            Link Resource {this.state.resourceId}
+          </Modal.Header>
+          <Modal.Body>
+            <form onSubmit={this.handleSubmit(this.state.resourceId)}>
+              <label htmlFor='capabilityId'>Capability</label>
+              <Select
+                options={this.state.capabilities}
+                noOptionsMessage={() => "No Capabilities"}
+                onChange={(capability) => {
+                  if (capability) {
+                    this.setState({
+                      capabilityId: capability.capabilityId,
+                    });
+                  } else {
+                    this.setState({ capabilityId: 0 });
+                  }
+                }}
+                placeholder='Optional'
+              />
+              <br></br>
+              <button className='btn btn-primary' type='sumbit'>
+                SUBMIT
+              </button>
+            </form>
+          </Modal.Body>
+        </Modal>
       </div>
     );
   }

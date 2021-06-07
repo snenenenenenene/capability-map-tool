@@ -1,6 +1,6 @@
 package com.bavostepbros.leap.domain.model;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -46,7 +46,7 @@ public class Project {
 	private Status status;
 	
 	@ManyToMany(mappedBy = "projects")
-	private List<Capability> capabilities;
+	private Set<Capability> capabilities;
 	
 	public Project(String projectName, Program program, Status status) {
 		this.projectName = projectName;
@@ -59,6 +59,22 @@ public class Project {
 		this.projectName = projectName;
 		this.program = program;
 		this.status = status;
+	}
+	
+	public void addCapability(Capability capability) {
+		capabilities.add(capability);
+		capability.getProjects().add(this);
+		return;
+	}
+	
+	public void removeCapability(Capability capability) {
+		capabilities.remove(capability);
+		capability.getProjects().remove(this);
+		return;
+	}
+	
+	public Set<Capability> getCapabilities() {
+		return capabilities;
 	}
 	
 }

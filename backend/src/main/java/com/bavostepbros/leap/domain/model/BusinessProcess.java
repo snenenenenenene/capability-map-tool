@@ -1,6 +1,6 @@
 package com.bavostepbros.leap.domain.model;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,7 +36,7 @@ public class BusinessProcess {
 	private String businessProcessDescription;
 	
 	@ManyToMany(mappedBy = "businessProcess")
-	private List<Capability> capabilities;
+	private Set<Capability> capabilities;
 
 	public BusinessProcess(@NotBlank String businessProcessName, String businessProcessDescription) {
 		this.businessProcessName = businessProcessName;
@@ -48,6 +48,22 @@ public class BusinessProcess {
 		this.businessProcessId = businessProcessId;
 		this.businessProcessName = businessProcessName;
 		this.businessProcessDescription = businessProcessDescription;
+	}
+	
+	public void addCapability(Capability capability) {
+		capabilities.add(capability);
+		capability.getBusinessProcess().add(this);
+		return;
+	}
+	
+	public void removeCapability(Capability capability) {
+		capabilities.add(capability);
+		capability.getBusinessProcess().remove(this);
+		return;
+	}
+	
+	public Set<Capability> getCapabilities() {
+		return capabilities;
 	}
 	
 }

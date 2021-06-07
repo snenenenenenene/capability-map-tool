@@ -10,5 +10,7 @@ import com.bavostepbros.leap.domain.model.Project;
 
 public interface ProjectDAL extends JpaRepository<Project, Integer> {
 	List<Project> findByProgram(Program program);
+
 	Optional<Project> findByProjectName(String projectName);
+	
 }

@@ -2,15 +2,19 @@ package com.bavostepbros.leap.domain.service.projectservice;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Program;
 import com.bavostepbros.leap.domain.model.Project;
 import com.bavostepbros.leap.domain.model.Status;
+import com.bavostepbros.leap.domain.service.capabilityservice.CapabilityService;
 import com.bavostepbros.leap.persistence.ProgramDAL;
 import com.bavostepbros.leap.persistence.ProjectDAL;
 import com.bavostepbros.leap.persistence.StatusDAL;
@@ -30,6 +34,10 @@ public class ProjectServiceImpl implements ProjectService {
 	
 	@Autowired
     private ProjectDAL projectDAL;
+	
+	@Lazy
+	@Autowired
+	private CapabilityService capabilityService;
 	
 	@Override
 	public Project save(String projectName, Integer programId, Integer statusId) {
@@ -80,6 +88,28 @@ public class ProjectServiceImpl implements ProjectService {
 		Optional<Project> project = projectDAL.findByProjectName(projectName);
 		project.orElseThrow(() -> new NullPointerException("Project does not exist."));
 		return project.get();
+	}
+
+	@Override
+	public void addCapability(Integer projectId, Integer capabilityId) {
+		Project project = get(projectId);
+		Capability capability = capabilityService.get(capabilityId);
+		project.addCapability(capability);
+		return;
+	}
+
+	@Override
+	public void deleteCapability(Integer projectId, Integer capabilityId) {
+		Project project = get(projectId);
+		Capability capability = capabilityService.get(capabilityId);
+		project.removeCapability(capability);
+		return;
+	}
+
+	@Override
+	public Set<Capability> getAllCapabilitiesByProjectId(Integer projectId) {
+		Project project = get(projectId);
+		return project.getCapabilities();
 	}
 
 }
