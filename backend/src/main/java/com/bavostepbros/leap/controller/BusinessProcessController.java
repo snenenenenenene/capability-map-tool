@@ -1,6 +1,7 @@
 package com.bavostepbros.leap.controller;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -97,7 +98,7 @@ public class BusinessProcessController {
 
 	@GetMapping(path = "get-capabilities/{businessProcessId}")
 	public List<CapabilityDto> getCapabilities(@PathVariable("businessProcessId") Integer businessProcessId) {
-		List<Capability> capabilities = businessProcessService.getAllCapabilitiesByBusinessProcessId(businessProcessId);
+		Set<Capability> capabilities = businessProcessService.getAllCapabilitiesByBusinessProcessId(businessProcessId);
 		List<CapabilityDto> capabilitiesDto = capabilities.stream().map(capability -> convertCapability(capability))
 				.collect(Collectors.toList());
 		return capabilitiesDto;

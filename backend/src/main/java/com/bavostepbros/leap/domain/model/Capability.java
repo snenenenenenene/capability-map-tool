@@ -13,6 +13,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -99,18 +100,24 @@ public class Capability {
 	private List<CapabilityInformation> capabilityInformation;
 
 	@ManyToMany(cascade = CascadeType.MERGE)
-	@JoinTable(name = "CAPABILITY_PROJECT", joinColumns = { @JoinColumn(name = "CAPABILITYID") }, inverseJoinColumns = {
-			@JoinColumn(name = "PROJECTID") })
+	@JoinTable(name = "CAPABILITY_PROJECT", 
+		joinColumns = { @JoinColumn(name = "CAPABILITYID") }, 
+		inverseJoinColumns = {@JoinColumn(name = "PROJECTID") },
+		uniqueConstraints = { @UniqueConstraint(columnNames = {"CAPABILITYID", "PROJECTID"})})
 	private List<Project> projects;
 
 	@ManyToMany(cascade = CascadeType.MERGE)
-	@JoinTable(name = "CAPABILITY_BUSINESSPROCESS", joinColumns = {
-			@JoinColumn(name = "CAPABILITYID") }, inverseJoinColumns = { @JoinColumn(name = "BUSINESSPROCESSID") })
+	@JoinTable(name = "CAPABILITY_BUSINESSPROCESS", 
+		joinColumns = { @JoinColumn(name = "CAPABILITYID") }, 
+		inverseJoinColumns = { @JoinColumn(name = "BUSINESSPROCESSID") },
+		uniqueConstraints = { @UniqueConstraint(columnNames = {"CAPABILITYID", "BUSINESSPROCESSID"})})
 	private List<BusinessProcess> businessProcess;
 
 	@ManyToMany(cascade = CascadeType.MERGE)
-	@JoinTable(name = "CAPABILITY_RESOURCE", joinColumns = {
-			@JoinColumn(name = "CAPABILITYID") }, inverseJoinColumns = { @JoinColumn(name = "RESOURCEID") })
+	@JoinTable(name = "CAPABILITY_RESOURCE", 
+		joinColumns = { @JoinColumn(name = "CAPABILITYID") }, 
+		inverseJoinColumns = { @JoinColumn(name = "RESOURCEID") },
+		uniqueConstraints = { @UniqueConstraint(columnNames = {"CAPABILITYID", "RESOURCEID"})})
 	private List<Resource> resources;
 
 	public Capability(Environment environment, Status status, Integer parentCapabilityId, String capabilityName,

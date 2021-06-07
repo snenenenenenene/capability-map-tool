@@ -2,6 +2,7 @@ package com.bavostepbros.leap.domain.service.projectservice;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -104,7 +105,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public List<Capability> getAllCapabilitiesByProjectId(Integer projectId) {
+	public Set<Capability> getAllCapabilitiesByProjectId(Integer projectId) {
 		Project project = get(projectId);
 		return project.getCapabilities();
 	}

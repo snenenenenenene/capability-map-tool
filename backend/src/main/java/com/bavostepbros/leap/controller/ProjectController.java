@@ -1,6 +1,7 @@
 package com.bavostepbros.leap.controller;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -103,7 +104,7 @@ public class ProjectController {
 	
 	@GetMapping(path = "get-capabilities/{projectId}")
 	public List<CapabilityDto> getCapabilities(@PathVariable("projectId") Integer projectId) {
-		List<Capability> capabilities = projectService.getAllCapabilitiesByProjectId(projectId);
+		Set<Capability> capabilities = projectService.getAllCapabilitiesByProjectId(projectId);
 		List<CapabilityDto> capabilitiesDto = capabilities.stream()
 				.map(capability -> convertCapability(capability))
 				.collect(Collectors.toList());

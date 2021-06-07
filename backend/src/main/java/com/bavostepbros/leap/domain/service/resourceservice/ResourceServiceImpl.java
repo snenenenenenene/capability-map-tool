@@ -2,6 +2,7 @@ package com.bavostepbros.leap.domain.service.resourceservice;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -80,7 +81,7 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 
 	@Override
-	public List<Capability> getAllCapabilitiesByResourceId(Integer resourceId) {
+	public Set<Capability> getAllCapabilitiesByResourceId(Integer resourceId) {
 		Resource resource = get(resourceId);
 		return resource.getCapabilities();
 	}

@@ -2,6 +2,7 @@ package com.bavostepbros.leap.domain.service.businessprocessservice;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -81,7 +82,7 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
 	}
 
 	@Override
-	public List<Capability> getAllCapabilitiesByBusinessProcessId(Integer businessProcessId) {
+	public Set<Capability> getAllCapabilitiesByBusinessProcessId(Integer businessProcessId) {
 		BusinessProcess businessProcess = get(businessProcessId);
 		return businessProcess.getCapabilities();
 	}

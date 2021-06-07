@@ -1,6 +1,7 @@
 package com.bavostepbros.leap.controller;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotBlank;
@@ -92,7 +93,7 @@ public class ResourceController {
 	
 	@GetMapping(path = "get-capabilities/{resourceId}")
 	public List<CapabilityDto> getCapabilities(@PathVariable("resourceId") Integer resourceId) {
-		List<Capability> capabilities = resourceService.getAllCapabilitiesByResourceId(resourceId);
+		Set<Capability> capabilities = resourceService.getAllCapabilitiesByResourceId(resourceId);
 		List<CapabilityDto> capabilitiesDto = capabilities.stream()
 				.map(capability -> convertCapability(capability))
 				.collect(Collectors.toList());

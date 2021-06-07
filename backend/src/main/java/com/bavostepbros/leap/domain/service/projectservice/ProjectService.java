@@ -1,6 +1,7 @@
 package com.bavostepbros.leap.domain.service.projectservice;
 
 import java.util.List;
+import java.util.Set;
 
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Project;
@@ -24,5 +25,5 @@ public interface ProjectService {
 
 	void deleteCapability(Integer projectId, Integer capabilityId);
 
-	List<Capability> getAllCapabilitiesByProjectId(Integer projectId);
+	Set<Capability> getAllCapabilitiesByProjectId(Integer projectId);
 }

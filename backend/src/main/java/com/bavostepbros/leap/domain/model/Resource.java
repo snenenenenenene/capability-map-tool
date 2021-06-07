@@ -1,6 +1,6 @@
 package com.bavostepbros.leap.domain.model;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,7 +41,7 @@ public class Resource {
 	private Double fullTimeEquivalentYearlyValue;
 	
 	@ManyToMany(mappedBy = "resources")
-	private List<Capability> capabilities;
+	private Set<Capability> capabilities;
 
 	public Resource(Integer resourceId, @NotBlank String resourceName, @NotBlank String resourceDescription,
 			Double fullTimeEquivalentYearlyValue) {
@@ -70,7 +70,7 @@ public class Resource {
 		return;
 	}
 	
-	public List<Capability> getCapabilities() {
+	public Set<Capability> getCapabilities() {
 		return capabilities;
 	}
 	
