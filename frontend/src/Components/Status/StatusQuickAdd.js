@@ -1,10 +1,12 @@
-import axios from "axios";
 import React, { Component } from "react";
 import toast from "react-hot-toast";
+import API from "../../Services/API";
 export default class StatusQuickAdd extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
+
       environments: [],
       environmentName: props.environmentName,
       validityPeriod: new Date(),
@@ -16,16 +18,11 @@ export default class StatusQuickAdd extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
+    this.state.api.createEntity({ name: "status" });
     const formData = new FormData();
     formData.append("validityPeriod", this.state.validityPeriod);
-    await axios
-      .post(`${process.env.REACT_APP_API_URL}/status/`, formData, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.status
+      .create(formData)
       .then((response) => {
         toast.success("Added Status");
         this.props.updateDate();

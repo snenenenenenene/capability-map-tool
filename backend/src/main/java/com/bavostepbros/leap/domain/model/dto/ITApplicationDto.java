@@ -31,7 +31,7 @@ public class ITApplicationDto {
 	private Integer expectedStability;
 	private String currencyType;
 	private Double costCurrency;
-	private Double currentValue;
+	private Integer currentValue;
 	private Double currentYearlyCost;
 	private Double acceptedYearlyCost;
 	private TimeValue timeValue;
@@ -41,7 +41,7 @@ public class ITApplicationDto {
 			LocalDate endOfLife, Integer currentScalability, Integer expectedScalability, Integer currentPerformance,
 			Integer expectedPerformance, Integer currentSecurityLevel, Integer expectedSecurityLevel,
 			Integer currentStability, Integer expectedStability, String currencyType, Double costCurrency,
-			Double currentValue, Double currentYearlyCost, Double acceptedYearlyCost, TimeValue timeValue) {
+			Integer currentValue, Double currentYearlyCost, Double acceptedYearlyCost, TimeValue timeValue) {
 		this.itApplicationId = itApplicationId;
 		this.status = status;
 		this.name = name;

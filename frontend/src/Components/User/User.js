@@ -2,25 +2,21 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import MaterialTable from "material-table";
-import axios from "axios";
-
+import API from "../../Services/API";
 export default class User extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
       users: [],
     };
   }
 
   async componentDidMount() {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/user/`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    this.state.api.createEntity({ name: "user" });
+    this.state.api.createEntity({ name: "role" });
+    await this.state.api.endpoints.user
+      .getAll()
       .then((response) => this.setState({ users: response.data }))
       .catch((error) => {
         toast.error("No Users Were Found");
@@ -32,23 +28,13 @@ export default class User extends Component {
   }
 
   fetchDeleteUsers = async (userId) => {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
-    await axios
-      .delete(`${process.env.REACT_APP_API_URL}/user/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.user
+      .delete({ id: userId })
       .then((response) => toast.success("Successfully Deleted User"))
       .catch((error) => toast.error("Could not Delete User"));
     //REFRESH USERS
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/user/`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.user
+      .getAll()
       .then((response) => {
         this.setState({ users: response.data });
       })

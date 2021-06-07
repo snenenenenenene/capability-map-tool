@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { Modal } from "react-bootstrap";
 import Ratings from "./Ratings";
 import StatusQuickAdd from "../Status/StatusQuickAdd";
+import API from "../../Services/API";
 
 export default class AddITApplication extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
       environments: [],
       statuses: [],
       environmentName: this.props.match.params.name,
@@ -68,12 +69,8 @@ export default class AddITApplication extends Component {
     formData.append("currentYearlyCost", this.state.currentYearlyCost);
     formData.append("acceptedYearlyCost", this.state.acceptedYearlyCost);
     formData.append("timeValue", this.state.timeValue);
-    await axios
-      .post(`${process.env.REACT_APP_API_URL}/itapplication/`, formData, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.itapplication
+      .create(formData)
       .then((response) => {
         toast.success("IT Application Added Successfully!");
         this.props.history.push(
@@ -98,32 +95,20 @@ export default class AddITApplication extends Component {
   }
 
   async updateDate() {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.status
+      .getAll()
       .then((response) => this.setState({ statuses: response.data }))
       .catch((error) => {
-        toast.error("Could not Update Statuses");
+        toast.error("Could not load Statuses");
       });
   }
 
   async componentDidMount() {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      )
+    this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "itapplication" });
+    this.state.api.createEntity({ name: "status" });
+    await this.state.api.endpoints.environment
+      .getEnvironmentByName({ name: this.state.environmentName })
       .then((response) =>
         this.setState({ environmentId: response.data.environmentId })
       )
@@ -131,12 +116,8 @@ export default class AddITApplication extends Component {
         this.props.history.push("/404");
       });
 
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.status
+      .getAll()
       .then((response) => this.setState({ statuses: response.data }))
       .catch((error) => {
         toast.error("Could not load Statuses");

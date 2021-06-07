@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import toast from "react-hot-toast";
+import API from "../../Services/API";
 
 export default class EditEnvironment extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
       environments: [],
       environmentName: "",
       oldEnvironmentName: "",
@@ -18,23 +19,12 @@ export default class EditEnvironment extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
     const formData = new FormData();
     formData.append("environmentName", this.state.environmentName);
-    await axios
-      .put(
-        `${process.env.REACT_APP_API_URL}/environment/${this.state.environmentId}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      )
+    await this.state.api.endpoints.environment
+      .update(formData, this.state.environmentId)
       .then((response) => toast.success("Updated Environment"))
       .catch((error) => {
-        console.log(error);
         toast.error("Failed to Update Environment");
       });
     this.props.history.push(`/home`);
@@ -45,17 +35,10 @@ export default class EditEnvironment extends Component {
   }
 
   async componentDidMount() {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+    this.state.api.createEntity({ name: "environment" });
 
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/${this.state.environmentId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      )
+    await this.state.api.endpoints.environment
+      .getOne({ id: this.state.environmentId })
       .then((response) => {
         this.setState({
           environmentName: response.data.environmentName,

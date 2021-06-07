@@ -44,32 +44,51 @@ import CapabilityMap from "./Components/Environment/CapabilityMap";
 import EditEnvironment from "./Components/Environment/EditEnvironment";
 import Settings from "./Components/User/Settings";
 import axios from "axios";
+import API from "./Services/API";
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
       authenticated: false,
       isOnline: window ? window.navigator.onLine : false,
       roleId: "",
+      username: "",
       user: {},
       environmentName: "",
     };
     this.logout = this.logout.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     if (localStorage.getItem("user")) {
       let user = JSON.parse(localStorage.getItem("user"));
       this.setState({ authenticated: user.authenticated });
-      this.setState({ user: user });
-    }
 
-    // axios
-    //   .post(`${process.env.REACT_APP_API_URL}/user/`, formData)
-    //   .then((response) => {
-    //     localStorage.setItem("user", JSON.stringify({}));
-    //   });
+      this.state.api.createEntity({ name: "user" });
+      await this.state.api.endpoints.user
+        .getUser()
+        .then((response) => {
+          let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              email: response.data.email,
+              userId: response.data.userId,
+              username: response.data.username,
+              roleId: response.data.roleId,
+              authenticated: true,
+              jwt: jwt,
+            })
+          );
+          this.setState({ user: JSON.parse(localStorage.getItem("user")) });
+        })
+        .catch((error) => {
+          toast.error("Could not Load User");
+        });
+    }
   }
 
   componentWillMount() {
@@ -77,7 +96,6 @@ class App extends Component {
       if (localStorage.getItem("environment")) {
         let environment = JSON.parse(localStorage.getItem("environment"));
         this.setState({ environmentName: environment.environmentName });
-        console.log(this.state.environmentName);
       }
     });
   }
@@ -258,7 +276,7 @@ class App extends Component {
               {/* ROOT */}
               <Route exact path='/home' component={NewEnvironment} />
               <Route exact path='/' component={NewEnvironment} />
-              <Route exact path='/error' component={GeneralError} />
+              <Route exact path='/error' component={NotFoundPage} />
               <Route exact path='/404' component={NotFoundPage} />
               {/* ENVIRONMENTS */}
               <Route exact path='/add' component={NewEnvironment} />
@@ -432,7 +450,7 @@ class App extends Component {
               />
               {this.adminRoutes()}
               {/* ERRORS */}
-              <Route path='/*' component={NotFound} />
+              <Route path='/*' component={NotFoundPage} />
             </Switch>
           </div>
           <nav className='shadow-lg navbar fixed-bottom navbar-dark bg-dark text-center'>

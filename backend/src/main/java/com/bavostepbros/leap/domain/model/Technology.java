@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.NotBlank;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,7 @@ public class Technology {
 	@Column(name = "TECHNOLOGYID")
 	private Integer technologyId;
 	
+	@NotBlank(message = "Technology name is required.")
 	@Column(name = "TECHNOLOGYNAME", unique = true)
 	private String technologyName;
 	

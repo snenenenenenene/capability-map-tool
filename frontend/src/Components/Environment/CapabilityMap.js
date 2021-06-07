@@ -1,16 +1,15 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import toast from "react-hot-toast";
-import Pdf from "react-to-pdf";
-import jsPDF from "jspdf";
 import { Modal, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
+import API from "../../Services/API";
 
 export default class CapabilityMap extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
       environmentName: this.props.match.params.name,
       environmentId: 1,
       capabilities: [],
@@ -70,35 +69,20 @@ export default class CapabilityMap extends Component {
   }
 
   async componentDidMount() {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      )
-      .then((response) => {
+    this.state.api.createEntity({ name: "environment" });
+    await this.state.api.endpoints.environment
+      .getEnvironmentByName({ name: this.state.environmentName })
+      .then((response) =>
         this.setState({
           environmentId: response.data.environmentId,
-        });
-      })
+        })
+      )
       .catch((error) => {
         this.props.history.push("/home");
       });
 
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/capabilitymap/${this.state.environmentId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      )
+    await this.state.api.endpoints.environment
+      .generateCapabilityMap({ id: this.state.environmentId })
       .then((response) => {
         this.setState({ capabilities: response.data.capabilities });
       })

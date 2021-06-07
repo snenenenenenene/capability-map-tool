@@ -45,7 +45,7 @@ public class ITApplicationController {
 			@ModelAttribute("currentStability") Integer currentsStability,
 			@ModelAttribute("expectedStability") Integer expectedStability,
 			@ModelAttribute("currencyType") String currencyType, @ModelAttribute("costCurrency") Double costCurrency,
-			@ModelAttribute("currentValue") Double currentValue,
+			@ModelAttribute("currentValue") Integer currentValue,
 			@ModelAttribute("currentYearlyCost") Double currentYearlyCost,
 			@ModelAttribute("acceptedYearlyCost") Double acceptedYearlyCost,
 			@ModelAttribute("timeValue") String timeValue) {
@@ -78,7 +78,7 @@ public class ITApplicationController {
 			@ModelAttribute("currentStability") Integer currentsStability,
 			@ModelAttribute("expectedStability") Integer expectedStability,
 			@ModelAttribute("currencyType") String currencyType, @ModelAttribute("costCurrency") Double costCurrency,
-			@ModelAttribute("currentValue") Double currentValue,
+			@ModelAttribute("currentValue") Integer currentValue,
 			@ModelAttribute("currentYearlyCost") Double currentYearlyCost,
 			@ModelAttribute("acceptedYearlyCost") Double acceptedYearlyCost,
 			@ModelAttribute("timeValue") String timeValue) {

@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import { Modal } from "react-bootstrap";
 import StatusQuickAdd from "../Status/StatusQuickAdd";
 import toast from "react-hot-toast";
 import Select from "react-select";
+import API from "../../Services/API";
 
 export default class AddProject extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
       statuses: [],
       programs: [],
 
@@ -29,18 +30,12 @@ export default class AddProject extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
     const formData = new FormData();
     formData.append("projectName", this.state.projectName);
     formData.append("programId", this.state.selectedProgram.programId);
     formData.append("statusId", this.state.selectedStatus.statusId);
-    await axios
-      .post(`${process.env.REACT_APP_API_URL}/project/`, formData, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.project
+      .create(formData)
       .then((response) => {
         toast.success("Project Added Successfully!");
         this.setState({ projectId: response.data.projectId });
@@ -52,31 +47,21 @@ export default class AddProject extends Component {
   };
 
   async componentDidMount() {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      )
+    this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "program" });
+    this.state.api.createEntity({ name: "status" });
+    this.state.api.createEntity({ name: "project" });
+    await this.state.api.endpoints.environment
+      .getEnvironmentByName({ name: this.state.environmentName })
       .then((response) => {
         this.setState({ environmentId: response.data.environmentId });
       })
       .catch((error) => {
-        console.log(error);
         this.props.history.push("/404");
       });
 
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/program/`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.program
+      .getAll()
       .then((response) => {
         response.data.forEach((program) => {
           program.label = program.programName;
@@ -87,12 +72,8 @@ export default class AddProject extends Component {
       .catch((error) => {
         toast.error("Could not load Programs");
       });
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/status/`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.status
+      .getAll()
       .then((response) => {
         response.data.forEach((status) => {
           status.label = status.validityPeriod;

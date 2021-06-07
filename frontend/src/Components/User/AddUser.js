@@ -1,13 +1,15 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import toast from "react-hot-toast";
 import * as sha1 from "js-sha1";
+import API from "../../Services/API";
 
 export default class AddUser extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
+
       roles: [],
       username: "",
       roleId: 1,
@@ -19,33 +21,23 @@ export default class AddUser extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
     const formData = new FormData();
     formData.append("username", this.state.username);
     formData.append("email", this.state.email);
     formData.append("password", sha1("newUser"));
     formData.append("roleId", this.state.roleId);
-    await axios
-      .post(`${process.env.REACT_APP_API_URL}/user/`, formData, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.user
+      .create(formData)
       .then((response) => toast.success("User Added Successfully!"))
       .catch((error) => toast.error("Could not Add User"));
     this.props.history.push(`/user`);
   };
 
   async componentDidMount() {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/role/`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    this.state.api.createEntity({ name: "user" });
+    this.state.api.createEntity({ name: "role" });
+    await this.state.api.endpoints.role
+      .getAll()
       .then((response) => this.setState({ roles: response.data }))
       .catch((error) => {
         toast.error("Could not Load Roles");

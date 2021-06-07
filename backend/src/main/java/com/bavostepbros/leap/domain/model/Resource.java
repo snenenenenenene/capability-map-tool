@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -27,14 +28,15 @@ public class Resource {
     @Column(name = "RESOURCEID")
 	private Integer resourceId;
 	
-	@NotBlank
+	@NotBlank(message = "Resource name is required.")
 	@Column(name = "RESOURCENAME", unique = true)
 	private String resourceName;
 	
-	@NotBlank
+	@NotBlank(message = "Resource descirption is required.")
 	@Column(name = "RESOURCEDESCRIPTION")
 	private String resourceDescription;
 	
+	@NotNull(message = "FTE yearly equivalent must not be null.")
 	@Column(name = "FULLTIMEEQUIVALENTYEARLYVALUE")
 	private Double fullTimeEquivalentYearlyValue;
 	

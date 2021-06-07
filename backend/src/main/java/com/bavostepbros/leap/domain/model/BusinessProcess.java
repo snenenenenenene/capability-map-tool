@@ -27,10 +27,11 @@ public class BusinessProcess {
     @Column(name = "BUSINESSPROCESSID")
 	private Integer businessProcessId;
 	
-	@NotBlank
+	@NotBlank(message = "Businessprocess name is required.")
 	@Column(name = "BUSINESSPROCESSNAME", unique = true)
 	private String businessProcessName;
 	
+	@NotBlank(message = "Businessprocess description is required.")
 	@Column(name = "BUSINESSPROCESSDESCRIPTION")
 	private String businessProcessDescription;
 	

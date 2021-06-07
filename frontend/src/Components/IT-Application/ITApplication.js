@@ -2,12 +2,13 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import MaterialTable from "material-table";
 import toast from "react-hot-toast";
-import axios from "axios";
+import API from "../../Services/API";
 
 export default class ITApplication extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
       environments: [],
       environmentName: this.props.match.params.name,
       environmentId: "",
@@ -16,17 +17,11 @@ export default class ITApplication extends Component {
   }
 
   async componentDidMount() {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
+    this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "itapplication" });
 
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      )
+    await this.state.api.endpoints.environment
+      .getEnvironmentByName({ name: this.state.environmentName })
       .then((response) =>
         this.setState({ environmentId: response.data.environmentId })
       )
@@ -34,12 +29,8 @@ export default class ITApplication extends Component {
         this.props.history.push("/404");
       });
 
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/itapplication/`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.itapplication
+      .getAll()
       .then((response) => {
         this.setState({ itApplications: response.data });
       })
@@ -55,26 +46,13 @@ export default class ITApplication extends Component {
   }
 
   fetchDeleteITApplications = async (itApplicationId) => {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
-    await axios
-      .delete(
-        `${process.env.REACT_APP_API_URL}/itapplication/${itApplicationId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      )
+    await this.state.api.endpoints.itapplication
+      .delete({ id: itApplicationId })
       .then((response) => toast.success("Succesfully Deleted IT Application"))
       .catch((error) => toast.error("Could not Delete IT Application"));
-    //REFRESH CAPABILITIES
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/itapplication/`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    //REFRESH ITAPPLICATIONS
+    await this.state.api.endpoints.itapplication
+      .getAll()
       .then((response) => {
         this.setState({ itApplications: [] });
         this.setState({ itApplications: response.data });
@@ -84,7 +62,7 @@ export default class ITApplication extends Component {
       });
   };
 
-  //DELETE CAPABILITY AND REMOVE ALL CHILD CAPABILITIES FROM STATE
+  //DELETE ITAPPLICATION
   delete = async (itApplicationId) => {
     toast(
       (t) => (

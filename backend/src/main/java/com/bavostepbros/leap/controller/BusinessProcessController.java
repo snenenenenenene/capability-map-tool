@@ -54,24 +54,24 @@ public class BusinessProcessController {
 				businessProcessDescription);
 		return convertBusinessProcess(businessProcess);
 	}
-	
+
 	@DeleteMapping(path = "{businessProcessId}")
 	public void deleteBusinessProcess(@Valid @PathVariable("businessProcessId") Integer businessProcessId) {
 		businessProcessService.delete(businessProcessId);
 	}
-	
+
 	@GetMapping(path = "businessProcessName/{businessProcessName}")
-	public BusinessProcessDto getBusinessProcess(@Valid @PathVariable("businessProcessName") String businessProcessName) {
+	public BusinessProcessDto getBusinessProcess(
+			@Valid @PathVariable("businessProcessName") String businessProcessName) {
 		BusinessProcess businessProcess = businessProcessService.getBusinessProcessByName(businessProcessName);
 		return convertBusinessProcess(businessProcess);
 	}
-	
+
 	@GetMapping
 	public List<BusinessProcessDto> getAllBusinessProcess() {
 		List<BusinessProcess> businessProcessList = businessProcessService.getAll();
 		List<BusinessProcessDto> businessProcessDto = businessProcessList.stream()
-				.map(businessProcess -> convertBusinessProcess(businessProcess))
-				.collect(Collectors.toList());
+				.map(businessProcess -> convertBusinessProcess(businessProcess)).collect(Collectors.toList());
 		return businessProcessDto;
 	}
 
@@ -79,4 +79,5 @@ public class BusinessProcessController {
 		return new BusinessProcessDto(businessProcess.getBusinessProcessId(), businessProcess.getBusinessProcessName(),
 				businessProcess.getBusinessProcessDescription());
 	}
+
 }

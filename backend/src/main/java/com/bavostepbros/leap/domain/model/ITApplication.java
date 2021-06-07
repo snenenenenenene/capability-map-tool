@@ -15,6 +15,11 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import com.bavostepbros.leap.domain.model.timevalue.TimeValue;
 
@@ -38,40 +43,68 @@ public class ITApplication {
     @OneToOne
     @JoinColumn
     private Status status;
-
-    @Column(name = "NAME")
+    
+    @NotBlank(message = "ItApplication name is required.")
+    @Column(name = "NAME", unique = true)
     private String name;
     
+    @NotBlank(message = "Version is required.")
     @Column(name = "VERSION")
     private String version;
     
+    @NotEmpty(message = "Purchase date is required.")
     @Column(name = "PURCHASEDATE")
     private LocalDate purchaseDate;
     
+    @NotNull(message = "End of life must not be null.")
     @Column(name = "ENDOFLIFE")
     private LocalDate endOfLife;
     
+    @NotNull(message = "Current scalability must not be null.")
+	@Min(value = 1, message = "Current scalability must be between 1 and 5, inclusive.")
+    @Max(value = 5, message = "Current scalability must be between 1 and 5, inclusive.")
     @Column(name = "CURRENTSCALABLITY")
     private Integer currentScalability;
     
+    @NotNull(message = "Expected scalability must not be null.")
+	@Min(value = 1, message = "Expected scalability must be between 1 and 5, inclusive.")
+    @Max(value = 5, message = "Expected scalability must be between 1 and 5, inclusive.")
     @Column(name = "EXPECTEDSCALABILITY")
     private Integer expectedScalability;
     
+    @NotNull(message = "Current performance must not be null.")
+	@Min(value = 1, message = "Current performance must be between 1 and 5, inclusive.")
+    @Max(value = 5, message = "Current performance must be between 1 and 5, inclusive.")
     @Column(name = "CURRENTPERFORMANCE")
     private Integer currentPerformance;
     
+    @NotNull(message = "Expected performance must not be null.")
+	@Min(value = 1, message = "Expected performance must be between 1 and 5, inclusive.")
+    @Max(value = 5, message = "Expected performance must be between 1 and 5, inclusive.")
     @Column(name = "EXPECTEDPERFORMANCE")
     private Integer expectedPerformance;
     
+    @NotNull(message = "Current security level must not be null.")
+	@Min(value = 1, message = "Current security level must be between 1 and 5, inclusive.")
+    @Max(value = 5, message = "Current security level must be between 1 and 5, inclusive.")
     @Column(name = "CURRENTSECURITYLEVEL")
     private Integer currentSecurityLevel;
     
+    @NotNull(message = "Expected security level must not be null.")
+	@Min(value = 1, message = "Expected security level must be between 1 and 5, inclusive.")
+    @Max(value = 5, message = "Expected security level must be between 1 and 5, inclusive.")
     @Column(name = "EXPECTEDSECURITYLEVEL")
     private Integer expectedSecurityLevel;
     
+    @NotNull(message = "Current stability must not be null.")
+	@Min(value = 1, message = "Current stability must be between 1 and 5, inclusive.")
+    @Max(value = 5, message = "Current stability must be between 1 and 5, inclusive.")
     @Column(name = "CURRENTSTABILITY")
     private Integer currentStability;
     
+    @NotNull(message = "Expected stability must not be null.")
+	@Min(value = 1, message = "Expected stability must be between 1 and 5, inclusive.")
+    @Max(value = 5, message = "Expected stability must be between 1 and 5, inclusive.")
     @Column(name = "EXPECTEDSTABILITY")
     private Integer expectedStability;
     
@@ -81,15 +114,21 @@ public class ITApplication {
     @Column(name = "COSTCURRENCY")
     private Double costCurrency;
     
+    @NotNull(message = "Current value must not be null.")
+	@Min(value = 1, message = "Current value must be between 1 and 5, inclusive.")
+    @Max(value = 5, message = "Current value must be between 1 and 5, inclusive.")
     @Column(name = "CURRENTVALUE")
-    private Double currentValue;
+    private Integer currentValue;
     
+    @NotNull(message = "Current yearly cost must not be null.")
     @Column(name = "CURRENTYEARLYCOST")
     private Double currentYearlyCost;
     
+    @NotNull(message = "Accepted yearly cost must not be null.")
     @Column(name = "ACCEPTEDYEARLYCOST")
     private Double acceptedYearlyCost;
     
+    @NotNull(message = "Time value must not be null.")
     @Column(name = "TIMEVALUE")
     private TimeValue timeValue;
     
@@ -105,7 +144,7 @@ public class ITApplication {
     public ITApplication(Integer itApplicationId, Status status, String name, String version, LocalDate purchaseDate,
 			LocalDate endOfLife, Integer currentScalability, Integer expectedScalability, Integer currentPerformance,
 			Integer expectedPerformance, Integer currentSecurityLevel, Integer expectedSecurityLevel,
-			Integer currentStability, Integer expectedStability, String currencyType, Double costCurrency, Double currentValue,
+			Integer currentStability, Integer expectedStability, String currencyType, Double costCurrency, Integer currentValue,
 			Double currentYearlyCost, Double acceptedYearlyCost, TimeValue timeValue) {
     	this.itApplicationId = itApplicationId;
 		this.status = status;
@@ -132,7 +171,7 @@ public class ITApplication {
 	public ITApplication(Status status, String name, String version, LocalDate purchaseDate,
 			LocalDate endOfLife, Integer currentScalability, Integer expectedScalability, Integer currentPerformance,
 			Integer expectedPerformance, Integer currentSecurityLevel, Integer expectedSecurityLevel,
-			Integer currentStability, Integer expectedStability, String currencyType, Double costCurrency, Double currentValue,
+			Integer currentStability, Integer expectedStability, String currencyType, Double costCurrency, Integer currentValue,
 			Double currentYearlyCost, Double acceptedYearlyCost, TimeValue timeValue) {
 		this.status = status;
 		this.name = name;

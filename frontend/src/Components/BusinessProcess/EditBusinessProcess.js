@@ -1,16 +1,18 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import toast from "react-hot-toast";
 import Select from "react-select";
+import API from "../../Services/API";
 
 export default class EditBusinessProcess extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      api: new API(),
       environments: [],
       environmentName: this.props.match.params.name,
       environmentId: "",
+      businessProcessId: this.props.match.params.id,
       businessProcessName: "",
       businessProcessDescription: "",
     };
@@ -19,8 +21,6 @@ export default class EditBusinessProcess extends Component {
   }
 
   handleSubmit = async (e) => {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
     e.preventDefault();
     const formData = new FormData();
     formData.append("businessProcessName", this.state.businessProcessName);
@@ -28,19 +28,15 @@ export default class EditBusinessProcess extends Component {
       "businessProcessDescription",
       this.state.businessProcessDescription
     );
-    await axios
-      .post(`${process.env.REACT_APP_API_URL}/businessprocess/`, formData, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      })
+    await this.state.api.endpoints.businessprocess
+      .update(formData, this.state.businessProcessId)
       .then((response) => {
-        toast.success("Business Process Added Successfully!");
+        toast.success("Business Process Edited Successfully!");
         this.props.history.push(
           `/environment/${this.state.environmentName}/businessprocess`
         );
       })
-      .catch((error) => toast.error("Could not Add Business Process"));
+      .catch((error) => toast.error("Could not Edit Business Process"));
   };
 
   handleChange = (selectedOption) => {
@@ -48,23 +44,27 @@ export default class EditBusinessProcess extends Component {
   };
 
   async componentDidMount() {
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
-    await axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/environment/environmentname/${this.state.environmentName}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      )
+    this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "businessprocess" });
+    await this.state.api.endpoints.environment
+      .getEnvironmentByName({ name: this.state.environmentName })
       .then((response) => {
         this.setState({ environmentId: response.data.environmentId });
       })
       .catch((error) => {
-        console.log(error);
         this.props.history.push("/404");
+      });
+
+    await this.state.api.endpoints.businessprocess
+      .getOne({ id: this.state.businessProcessId })
+      .then((response) => {
+        this.setState({
+          businessProcessName: response.data.businessProcessName,
+          businessProcessDescription: response.data.businessProcessDescription,
+        });
+      })
+      .catch((error) => {
+        toast.error("Could not load Business Process");
       });
   }
 
@@ -94,12 +94,12 @@ export default class EditBusinessProcess extends Component {
               </Link>
             </li>
             <li className='breadcrumb-item active' aria-current='page'>
-              Add Business Process
+              {this.state.businessProcessId}
             </li>
           </ol>
         </nav>
         <div className='jumbotron'>
-          <h3>Add Business Process</h3>
+          <h3>Edit Business Process</h3>
           <form onSubmit={this.handleSubmit}>
             <div className='row'>
               <div className='col-sm-6'>
