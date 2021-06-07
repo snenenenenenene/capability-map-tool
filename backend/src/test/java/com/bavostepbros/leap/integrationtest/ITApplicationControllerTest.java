@@ -80,10 +80,10 @@ public class ITApplicationControllerTest extends ApiIntegrationTest {
 		technologySecond = technologyDAL.save(new Technology(2, "c#"));
 		itApplicationFirst = itApplicationDAL.save(new ITApplication(1, statusFirst, "application 1", 
 				"1.20.1", LocalDate.of(2021, 01, 20), LocalDate.of(2025, 05, 20), 1, 2, 3, 4, 5, 
-				6, 7, 8, "EUR", 1000.0, 5, 70.0, 100.0, TimeValue.ELIMINATE));
+				4, 3, 2, "EUR", 1000.0, 5, 70.0, 100.0, TimeValue.ELIMINATE));
 		itApplicationSecond = itApplicationDAL.save(new ITApplication(2, statusSecond, "application 2", 
-				"1.20.1", LocalDate.of(2021, 01, 20), LocalDate.of(2025, 05, 20), 2, 3, 4, 5, 6, 
-				7, 8, 9, "EUR", 1000.0, 4, 70.0, 100.0, TimeValue.INVEST));
+				"1.20.1", LocalDate.of(2021, 01, 20), LocalDate.of(2025, 05, 20), 2, 3, 4, 5, 4, 
+				3, 2, 1, "EUR", 1000.0, 4, 70.0, 100.0, TimeValue.INVEST));
 	}
 	
 	@AfterEach

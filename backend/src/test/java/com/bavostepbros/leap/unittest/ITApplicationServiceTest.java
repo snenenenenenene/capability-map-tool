@@ -1,7 +1,6 @@
 package com.bavostepbros.leap.unittest;
 
 import com.bavostepbros.leap.domain.model.ITApplication;
-import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.service.itapplicationservice.ITApplicationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,17 +9,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
-
 import static org.junit.jupiter.api.Assertions.*;
-
-// ... superklasse
-// extends itapplication service?
 
 @AutoConfigureMockMvc
 @SpringBootTest
 class ITApplicationServiceTest {
 	
+	@SuppressWarnings("unused")
 	@Autowired
     private MockMvc mockMvc;
 
