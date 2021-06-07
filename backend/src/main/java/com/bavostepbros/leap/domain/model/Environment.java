@@ -1,5 +1,6 @@
 package com.bavostepbros.leap.domain.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -42,10 +43,14 @@ public class Environment {
 
     public Environment(String environmentName) {
         this.environmentName = environmentName;
+        this.capabilities = new ArrayList<>();
+        this.strategies = new ArrayList<>();
     }
 
     public Environment(Integer environmentId, String environmentName) {
 		this.environmentId = environmentId;
 		this.environmentName = environmentName;
+		this.capabilities = new ArrayList<>();
+		this.strategies = new ArrayList<>();
 	}
 }

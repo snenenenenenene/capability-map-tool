@@ -6,9 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -42,7 +40,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CapabilityItemControllerTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class CapabilityItemControllerTest extends ApiIntegrationTest {
 	
 	@Autowired
     private MockMvc mockMvc;
@@ -85,7 +84,10 @@ public class CapabilityItemControllerTest {
 	private CapabilityItem capabilityItemSecond;
 	
 	static final String PATH = "/api/capabilityitem/";
-	
+
+	@BeforeAll
+	public void authenticate() throws Exception { super.authenticate(); }
+
 	@BeforeEach
 	public void init() {
 		statusFirst = statusDAL.save(new Status(1, LocalDate.of(2021, 05, 15)));
@@ -160,7 +162,7 @@ public class CapabilityItemControllerTest {
 		Integer itemId = strategyItemSecond.getItemId();
 		String strategicImportance = "LOW";
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(PATH)
+		MvcResult mvcResult = mockMvc.perform(post(PATH)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("capabilityId", capabilityId.toString())
 				.param("itemId", itemId.toString())
@@ -183,7 +185,7 @@ public class CapabilityItemControllerTest {
 		Integer capabilityId = capabilityItemFirst.getCapability().getCapabilityId();
 		Integer itemId = capabilityItemFirst.getStrategyItem().getItemId();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + capabilityId + "/" + itemId))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + capabilityId + "/" + itemId))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
@@ -200,7 +202,7 @@ public class CapabilityItemControllerTest {
 		Integer itemId = strategyItemFirst.getItemId();
 		String strategicImportance = "HIGH";
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH + capabilityId + "/" + itemId)
+		MvcResult mvcResult = mockMvc.perform(put(PATH + capabilityId + "/" + itemId)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("strategicImportance", strategicImportance)
 				.accept(MediaType.APPLICATION_JSON))
@@ -221,7 +223,7 @@ public class CapabilityItemControllerTest {
 		Integer capabilityId = capabilityItemFirst.getCapability().getCapabilityId();
 		Integer itemId = capabilityItemFirst.getStrategyItem().getItemId();
 		
-		mockMvc.perform(MockMvcRequestBuilders.delete(PATH + capabilityId + "/" + itemId))
+		mockMvc.perform(delete(PATH + capabilityId + "/" + itemId))
 		.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
@@ -229,7 +231,7 @@ public class CapabilityItemControllerTest {
 	public void should_getCapabilityItems_whenGetCapabilityItemsByStrategyItemid() throws Exception {
 		Integer itemId = strategyItemSecond.getItemId();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + "all-capabilityitems-by-strategyitemid/" + itemId))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + "all-capabilityitems-by-strategyitemid/" + itemId))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
@@ -245,7 +247,7 @@ public class CapabilityItemControllerTest {
 	public void should_getCapabilityItems_whenGetCapabilityItemsByCapabilityid() throws Exception {
 		Integer capabilityId = capabilityItemSecond.getCapability().getCapabilityId();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + "all-capabilityitems-by-capabilityid/" + capabilityId))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + "all-capabilityitems-by-capabilityid/" + capabilityId))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		

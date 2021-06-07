@@ -6,9 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,7 +38,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CapabilityApplicationControllerTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class CapabilityApplicationControllerTest extends ApiIntegrationTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -78,7 +77,10 @@ public class CapabilityApplicationControllerTest {
 	private ITApplication itApplicationSecond;
 	private CapabilityApplication capabilityApplicationFirst;
 	private CapabilityApplication capabilityApplicationSecond;
-	private CapabilityApplication capabilityApplicationThirth;
+	private CapabilityApplication capabilityApplicationThird;
+
+	@BeforeAll
+	public void authenticate() throws Exception { super.authenticate(); }
 
 	@BeforeEach
 	public void init() {
@@ -101,7 +103,7 @@ public class CapabilityApplicationControllerTest {
 				.save(new CapabilityApplication(capabilityFirst, itApplicationFirst, 0, 1, 2, 3, 4, 5, 4, 3));
 		capabilityApplicationSecond = capabilityApplicationDAL
 				.save(new CapabilityApplication(capabilitySecond, itApplicationFirst, 0, 2, 3, 4, 5, 4, 3, 2));
-		capabilityApplicationThirth = capabilityApplicationDAL
+		capabilityApplicationThird = capabilityApplicationDAL
 				.save(new CapabilityApplication(capabilitySecond, itApplicationSecond, 0, 5, 4, 3, 2, 1, 2, 3));
 	}
 
@@ -117,7 +119,7 @@ public class CapabilityApplicationControllerTest {
 		itApplicationDAL.delete(itApplicationSecond);
 		capabilityApplicationDAL.delete(capabilityApplicationFirst);
 		capabilityApplicationDAL.delete(capabilityApplicationSecond);
-		capabilityApplicationDAL.delete(capabilityApplicationThirth);
+		capabilityApplicationDAL.delete(capabilityApplicationThird);
 	}
 
 	@Test
@@ -138,7 +140,7 @@ public class CapabilityApplicationControllerTest {
 		assertNotNull(itApplicationSecond);
 		assertNotNull(capabilityApplicationFirst);
 		assertNotNull(capabilityApplicationSecond);
-		assertNotNull(capabilityApplicationThirth);
+		assertNotNull(capabilityApplicationThird);
 	}
 
 	@Test
@@ -153,7 +155,7 @@ public class CapabilityApplicationControllerTest {
 		Integer correctnessInformationFit = capabilityApplicationFirst.getCorrectnessInformationFit();
 		Integer availability = capabilityApplicationFirst.getAvailability();
 
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(PATH + capabilityId + "/" + applicationId)
+		MvcResult mvcResult = mockMvc.perform(post(PATH + capabilityId + "/" + applicationId)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("efficiencySupport", efficiencySupport.toString())
 				.param("functionalCoverage", functionalCoverage.toString())
@@ -177,7 +179,7 @@ public class CapabilityApplicationControllerTest {
 		Integer capabilityId = capabilityApplicationFirst.getCapability().getCapabilityId();
 		Integer applicationId = capabilityApplicationFirst.getApplication().getItApplicationId();
 
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + capabilityId + "/" + applicationId))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + capabilityId + "/" + applicationId))
 				.andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 
 		CapabilityApplicationDto capabilityApplicationDto = objectMapper
@@ -199,7 +201,7 @@ public class CapabilityApplicationControllerTest {
 		Integer correctnessInformationFit = capabilityApplicationFirst.getCorrectnessInformationFit();
 		Integer availability = capabilityApplicationFirst.getAvailability();
 
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH + capabilityId + "/" + applicationId)
+		MvcResult mvcResult = mockMvc.perform(put(PATH + capabilityId + "/" + applicationId)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("efficiencySupport", efficiencySupport.toString())
 				.param("functionalCoverage", functionalCoverage.toString())
@@ -223,7 +225,7 @@ public class CapabilityApplicationControllerTest {
 		Integer capabilityId = capabilityApplicationFirst.getCapability().getCapabilityId();
 		Integer applicationId = capabilityApplicationFirst.getApplication().getItApplicationId();
 
-		mockMvc.perform(MockMvcRequestBuilders.delete(PATH + capabilityId + "/" + applicationId))
+		mockMvc.perform(delete(PATH + capabilityId + "/" + applicationId))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -233,7 +235,7 @@ public class CapabilityApplicationControllerTest {
 
 		MvcResult mvcResult = mockMvc
 				.perform(
-						MockMvcRequestBuilders.get(PATH + "all-capabilityApplications-by-capabilityid/" + capabilityId))
+						get(PATH + "all-capabilityApplications-by-capabilityid/" + capabilityId))
 				.andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 
 		List<CapabilityApplicationDto> capabilityApplicationDto = objectMapper.readValue(
@@ -243,7 +245,7 @@ public class CapabilityApplicationControllerTest {
 		assertNotNull(capabilityApplicationDto);
 		assertEquals(2, capabilityApplicationDto.size());
 		testCapabilityApplication(capabilityApplicationSecond, capabilityApplicationDto.get(0));
-		testCapabilityApplication(capabilityApplicationThirth, capabilityApplicationDto.get(1));
+		testCapabilityApplication(capabilityApplicationThird, capabilityApplicationDto.get(1));
 	}
 
 	@Test

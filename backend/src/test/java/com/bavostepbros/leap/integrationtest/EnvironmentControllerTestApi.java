@@ -5,9 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 // import org.slf4j.Logger;
 // import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +28,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
-public class EnvironmentControllerTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class EnvironmentControllerTestApi extends ApiIntegrationTest {
 
 	@Autowired
     private MockMvc mockMvc;
@@ -50,7 +49,10 @@ public class EnvironmentControllerTest {
 	static final String PATH = "/api/environment/";
 	
 	// private static final Logger logger = LoggerFactory.getLogger(EnvironmentControllerIntegrationTest.class);
-	
+
+	@BeforeAll
+	public void authenticate() throws Exception { super.authenticate(); }
+
 	@BeforeEach
 	public void init() {
 		environmentFirst = environmentDAL.save(new Environment(1, "Test 1"));
@@ -73,7 +75,7 @@ public class EnvironmentControllerTest {
 	
 	@Test
 	public void should_postEnvironment_whenSaveEnvironment() throws Exception {		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(PATH)
+		MvcResult mvcResult = mockMvc.perform(post(PATH)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("environmentName", "Senne")
 				.accept(MediaType.APPLICATION_JSON))
@@ -93,7 +95,7 @@ public class EnvironmentControllerTest {
 	public void should_getEnvironment_whenGetEnvironmentById() throws Exception {
 		Integer environmentId = environmentFirst.getEnvironmentId();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + environmentId))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + environmentId))
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andReturn();
 		
@@ -108,7 +110,7 @@ public class EnvironmentControllerTest {
 	public void should_getEnvironment_whenGetEnvironmentByEnvironmentName() throws Exception {
 		String environmentName = environmentFirst.getEnvironmentName();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + "environmentname/" + environmentName))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + "environmentname/" + environmentName))
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andReturn();
 		
@@ -123,7 +125,7 @@ public class EnvironmentControllerTest {
 	public void should_getBoolean_whenEnvironmentExistsById() throws Exception {
 		Integer environmentId = environmentFirst.getEnvironmentId();
 		
-		mockMvc.perform(MockMvcRequestBuilders.get(PATH + "exists-by-id/" + environmentId))
+		mockMvc.perform(get(PATH + "exists-by-id/" + environmentId))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().string("true"));		
 	}
@@ -132,14 +134,14 @@ public class EnvironmentControllerTest {
 	public void should_getBoolean_whenEnvironmentNameExists() throws Exception {
 		String environmentName = environmentFirst.getEnvironmentName();
 		
-		mockMvc.perform(MockMvcRequestBuilders.get(PATH + "exists-by-environmentname/" + environmentName))
+		mockMvc.perform(get(PATH + "exists-by-environmentname/" + environmentName))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().string("true"));		
 	}
 	
 	@Test
 	public void should_getAllEnvironments_whenGetAllEnvironments() throws Exception {
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH))
+		MvcResult mvcResult = mockMvc.perform(get(PATH))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
@@ -157,7 +159,7 @@ public class EnvironmentControllerTest {
 		Integer environmentId = environmentFirst.getEnvironmentId();
 		String newName = "Senne";
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH + environmentId)
+		MvcResult mvcResult = mockMvc.perform(put(PATH + environmentId)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("environmentName", newName)
 				.accept(MediaType.APPLICATION_JSON))
@@ -177,7 +179,7 @@ public class EnvironmentControllerTest {
 	public void should_deleteEnvironment_whenDeleteEnvironment() throws Exception {
 		Integer environmentId = environmentFirst.getEnvironmentId();
 		
-		mockMvc.perform(MockMvcRequestBuilders.delete(PATH + environmentId))
+		mockMvc.perform(delete(PATH + environmentId))
 				.andExpect(MockMvcResultMatchers.status().isOk());	
 	}
 	
