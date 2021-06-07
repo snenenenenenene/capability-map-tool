@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.bavostepbros.leap.domain.model.dto.EnvironmentDto;
+import com.bavostepbros.leap.domain.model.dto.ProgramDto;
+import com.bavostepbros.leap.domain.model.dto.ProjectDto;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bavostepbros.leap.domain.model.Capability;
+import com.bavostepbros.leap.domain.model.Project;
 import com.bavostepbros.leap.domain.model.dto.CapabilityDto;
 import com.bavostepbros.leap.domain.model.dto.StatusDto;
 import com.bavostepbros.leap.domain.service.capabilityservice.CapabilityService;
@@ -146,16 +150,25 @@ public class CapabilityController {
 	
 	// TODO add test
 	@PutMapping(path = "link-project/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public void linkTechnology(@ModelAttribute("capabilityId") Integer capabilityId,
+	public void linkProject(@ModelAttribute("capabilityId") Integer capabilityId,
 			@ModelAttribute("projectId") Integer projectId) {
 		capabilityService.addProject(capabilityId, projectId);
 	}
 	
 	// TODO add test
 	@DeleteMapping(path = "unlink-project/{capabilityId}/{projectId}")
-	public void unlinkTechnology(@PathVariable("capabilityId") Integer capabilityId,
+	public void unlinkProject(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("projectId") Integer projectId) {
 		capabilityService.deleteProject(capabilityId, projectId);
+	}
+	
+	@GetMapping(path = "get-projects/{capabilityId}")
+	public List<ProjectDto> getCapabilities(@PathVariable("capabilityId") Integer capabilityId) {
+		List<Project> projects = capabilityService.getAllProjectsByCapabilityId(capabilityId);
+		List<ProjectDto> projectsDto = projects.stream()
+				.map(project -> convertProject(project))
+				.collect(Collectors.toList());
+		return projectsDto;
 	}
 	
 	@PutMapping(path = "link-businessprocess/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -192,5 +205,11 @@ public class CapabilityController {
 				capability.getParentCapabilityId(), capability.getCapabilityName(), capability.getLevel(),
 				capability.getPaceOfChange(), capability.getTargetOperatingModel(), capability.getResourceQuality(),
 				capability.getInformationQuality(), capability.getApplicationFit());
+	}
+	
+	private ProjectDto convertProject(Project project) {
+		ProgramDto program = new ProgramDto(project.getProgram().getProgramId(), project.getProgram().getProgramName());
+		StatusDto status = new StatusDto(project.getStatus().getStatusId(), project.getStatus().getValidityPeriod());
+		return new ProjectDto(project.getProjectId(), project.getProjectName(), program, status);
 	}
 }

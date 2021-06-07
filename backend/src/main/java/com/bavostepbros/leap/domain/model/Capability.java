@@ -144,11 +144,13 @@ public class Capability {
     
     public void addProject(Project project) {
     	projects.add(project);
+    	project.getCapabilities().add(this);
     	return;
     }
     
     public void removeProject(Project project) {
     	projects.remove(project);
+    	project.getCapabilities().remove(this);
     }
     
     public List<Project> getProjects() {

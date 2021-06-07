@@ -61,4 +61,19 @@ public class Project {
 		this.status = status;
 	}
 	
+	public void addCapability(Capability capability) {
+		capabilities.add(capability);
+		capability.getProjects().add(this);
+		return;
+	}
+	
+	public void removeCapability(Capability capability) {
+		capabilities.remove(capability);
+		capability.getProjects().remove(this);
+	}
+	
+	public List<Capability> getCapabilities() {
+		return capabilities;
+	}
+	
 }
