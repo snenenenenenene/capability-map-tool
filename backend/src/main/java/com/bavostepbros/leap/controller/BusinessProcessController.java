@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -41,22 +43,22 @@ public class BusinessProcessController {
 	}
 
 	@GetMapping(path = "{businessProcessId}")
-	public BusinessProcessDto getBusinessProcess(@Valid @PathVariable("businessProcessId") Integer businessProcessId) {
+	public BusinessProcessDto getBusinessProcess(@PathVariable("businessProcessId") @Positive Integer businessProcessId) {
 		BusinessProcess businessProcess = businessProcessService.get(businessProcessId);
 		return convertBusinessProcess(businessProcess);
 	}
 
 	@PutMapping(path = "{businessProcessId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public BusinessProcessDto updateBusinessProcess(@Valid @PathVariable("businessProcessId") Integer businessProcessId,
-			@Valid @ModelAttribute("businessProcessName") String businessProcessName,
-			@Valid @ModelAttribute("businessProcessDescription") String businessProcessDescription) {
+	public BusinessProcessDto updateBusinessProcess(@PathVariable("businessProcessId") @Positive Integer businessProcessId,
+			@ModelAttribute("businessProcessName") @NotBlank String businessProcessName,
+			@ModelAttribute("businessProcessDescription") @NotBlank String businessProcessDescription) {
 		BusinessProcess businessProcess = businessProcessService.update(businessProcessId, businessProcessName,
 				businessProcessDescription);
 		return convertBusinessProcess(businessProcess);
 	}
 
 	@DeleteMapping(path = "{businessProcessId}")
-	public void deleteBusinessProcess(@Valid @PathVariable("businessProcessId") Integer businessProcessId) {
+	public void deleteBusinessProcess(@PathVariable("businessProcessId") @Positive Integer businessProcessId) {
 		businessProcessService.delete(businessProcessId);
 	}
 

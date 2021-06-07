@@ -27,7 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Transactional
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 public class BusinessProcessControllerTest {
 
 	@Autowired
@@ -68,6 +68,32 @@ public class BusinessProcessControllerTest {
 	}
 	
 	@Test
+	public void should_throwInvalidInput_whenSaveBusinessProcessInvalidName() throws Exception {
+		String newBusinessProcessName = "";
+		String newBusinessProcessDescription = businessProcessFirst.getBusinessProcessDescription();
+		
+		mockMvc.perform(MockMvcRequestBuilders.post(PATH)
+				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+				.param("businessProcessName", newBusinessProcessName)
+				.param("businessProcessDescription", newBusinessProcessDescription)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest());
+	}
+	
+	@Test
+	public void should_throwInvalidInput_whenSaveBusinessProcessInvalidDescription() throws Exception {
+		String newBusinessProcessName = "Very unique name";
+		String newBusinessProcessDescription = "";
+		
+		mockMvc.perform(MockMvcRequestBuilders.post(PATH)
+				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+				.param("businessProcessName", newBusinessProcessName)
+				.param("businessProcessDescription", newBusinessProcessDescription)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest());
+	}
+	
+	@Test
 	public void should_postBusinessProcess_whenSaveBusinessProcess() throws Exception {
 		String newBusinessProcessName = "Post test";
 		String newBusinessProcessDescription = businessProcessFirst.getBusinessProcessDescription();
@@ -90,6 +116,14 @@ public class BusinessProcessControllerTest {
 	}
 	
 	@Test
+	public void should_throwInvalidInput_whenGetBusinessProcessInvalidId() throws Exception {
+		Integer businessProcessId = 0;
+		
+		mockMvc.perform(MockMvcRequestBuilders.get(PATH + businessProcessId))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest());
+	}
+	
+	@Test
 	public void should_getBusinessProcess_whenGetBusinessProcess() throws Exception {
 		Integer businessProcessId = businessProcessFirst.getBusinessProcessId();
 		
@@ -102,6 +136,48 @@ public class BusinessProcessControllerTest {
 		
 		assertNotNull(businessProcessDto);
 		testBusinessProcess(businessProcessFirst, businessProcessDto);
+	}
+	
+	@Test
+	public void should_throwInvalidInput_whenUpdateBusinessProcessInvalidId() throws Exception {
+		Integer businessProcessId = 0;
+		String newBusinessProcessName = "Update test";
+		String businessProcessDescription = businessProcessFirst.getBusinessProcessDescription();
+		
+		mockMvc.perform(MockMvcRequestBuilders.put(PATH + businessProcessId)
+				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+				.param("businessProcessName", newBusinessProcessName)
+				.param("businessProcessDescription", businessProcessDescription)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest());
+	}
+	
+	@Test
+	public void should_throwInvalidInput_whenUpdateBusinessProcessInvalidName() throws Exception {
+		Integer businessProcessId = businessProcessFirst.getBusinessProcessId();
+		String newBusinessProcessName = "";
+		String businessProcessDescription = businessProcessFirst.getBusinessProcessDescription();
+		
+		mockMvc.perform(MockMvcRequestBuilders.put(PATH + businessProcessId)
+				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+				.param("businessProcessName", newBusinessProcessName)
+				.param("businessProcessDescription", businessProcessDescription)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest());
+	}
+	
+	@Test
+	public void should_throwInvalidInput_whenUpdateBusinessProcessInvalidDescription() throws Exception {
+		Integer businessProcessId = businessProcessFirst.getBusinessProcessId();
+		String newBusinessProcessName = "Update test";
+		String businessProcessDescription = "";
+		
+		mockMvc.perform(MockMvcRequestBuilders.put(PATH + businessProcessId)
+				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+				.param("businessProcessName", newBusinessProcessName)
+				.param("businessProcessDescription", businessProcessDescription)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 	
 	@Test
@@ -128,11 +204,27 @@ public class BusinessProcessControllerTest {
 	}
 	
 	@Test
+	public void should_throwInvalidInput_whenDeleteBusinessProcessInvalidId() throws Exception {
+		Integer businessProcessId = 0;
+		
+		mockMvc.perform(MockMvcRequestBuilders.delete(PATH + businessProcessId))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest());
+	}
+	
+	@Test
 	public void should_deleteBusinessProcess_whenDeleteBusinessProcess() throws Exception {
 		Integer businessProcessId = businessProcessFirst.getBusinessProcessId();
 		
 		mockMvc.perform(MockMvcRequestBuilders.delete(PATH + businessProcessId))
 				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+	
+	@Test
+	public void should_throwInvalidInput_whenGetBusinessProcessByNameInvalidName() throws Exception {
+		String businessProcessName = "";
+		
+		mockMvc.perform(MockMvcRequestBuilders.get(PATH + "businessProcessName/" + businessProcessName))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 	
 	@Test
