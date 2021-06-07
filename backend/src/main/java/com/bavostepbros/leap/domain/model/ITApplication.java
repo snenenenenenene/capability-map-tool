@@ -51,7 +51,7 @@ public class ITApplication {
     @Column(name = "VERSION")
     private String version;
     
-    @NotNull(message = "Purchase date is required.")
+    @NotNull(message = "Purchase date must not be null.")
     @Column(name = "PURCHASEDATE")
     private LocalDate purchaseDate;
     
@@ -200,10 +200,6 @@ public class ITApplication {
 	
 	public void removeTechnology(Technology technology) {
 		technologies.remove(technology);
-	}
-	
-	public boolean hasTechnology(Technology technology) {
-		return technologies.contains(technology);
 	}
 
 	@Override

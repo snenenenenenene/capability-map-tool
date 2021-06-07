@@ -46,6 +46,7 @@ import com.bavostepbros.leap.persistence.StrategyDAL;
 @SpringBootTest
 public class StrategyServiceTest {
 	
+	@SuppressWarnings("unused")
 	@Autowired
     private MockMvc mockMvc;
 

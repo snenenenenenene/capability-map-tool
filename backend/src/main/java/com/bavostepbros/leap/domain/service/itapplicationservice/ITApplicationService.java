@@ -38,5 +38,4 @@ public interface ITApplicationService {
 	
 	void deleteTechnology(Integer itApplicationId, Integer technologyId);
 	
-	boolean doesItApplicationHasTechnology(Integer itApplicationId, Integer technologyId);
 }

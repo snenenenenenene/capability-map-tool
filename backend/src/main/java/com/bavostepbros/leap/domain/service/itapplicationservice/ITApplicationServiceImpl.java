@@ -1,10 +1,5 @@
 package com.bavostepbros.leap.domain.service.itapplicationservice;
 
-import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
-import com.bavostepbros.leap.domain.customexceptions.ForeignKeyException;
-import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
-import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
-import com.bavostepbros.leap.domain.customexceptions.RelationshipException;
 import com.bavostepbros.leap.domain.model.ITApplication;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.Technology;
@@ -44,15 +39,6 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 			Integer expectedPerformance, Integer currentSecurityLevel, Integer expectedSecurityLevel,
 			Integer currentStability, Integer expectedStability, String currencyType, Double costCurrency,
 			Integer currentValue, Double currentYearlyCost, Double acceptedYearlyCost, String timeValue) {
-		if (name == null || name.isBlank() || name.isEmpty()) {
-			throw new InvalidInputException("IT-application name is invalid.");
-		}
-		if (statusId == null || statusId.equals(0)) {
-			throw new ForeignKeyException("Status ID is invalid.");
-		}
-		if (!statusService.existsById(statusId)) {
-			throw new ForeignKeyException("Status ID does not exists.");
-		}
 
 		Status status = statusService.get(statusId);
 		TimeValue timeValueConverted = TimeValue.valueOf(timeValue);
@@ -64,13 +50,6 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 	}
 
 	public ITApplication get(Integer itapplicationID) {
-		if (itapplicationID == null || itapplicationID.equals(0)) {
-			throw new InvalidInputException("IT-application ID is not valid.");
-		}
-		if (!existsById(itapplicationID)) {
-			throw new IndexDoesNotExistException("IT-application ID does not exists.");
-		}
-
 		return itApplicationDAL.findById(itapplicationID).get();
 	}
 
@@ -80,22 +59,6 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 			Integer expectedPerformance, Integer currentSecurityLevel, Integer expectedSecurityLevel,
 			Integer currentStability, Integer expectedStability, String currencyType, Double costCurrency,
 			Integer currentValue, Double currentYearlyCost, Double acceptedYearlyCost, String timeValue) {
-		if (id == null || id.equals(0)) {
-			throw new InvalidInputException("IT-application ID is invalid.");
-		}
-		if (name == null || name.isBlank() || name.isEmpty()) {
-			throw new InvalidInputException("IT-application name is invalid.");
-		}
-		if (statusId == null || statusId.equals(0)) {
-			throw new ForeignKeyException("Status ID is invalid.");
-		}
-		ITApplication oldItApplication = itApplicationDAL.findById(id).get();
-		if (name != oldItApplication.getName() && existsByName(name)) {
-			throw new DuplicateValueException("IT-application name already exists.");
-		}
-		if (!statusService.existsById(statusId)) {
-			throw new ForeignKeyException("Status ID does not exists.");
-		}
 
 		Status status = statusService.get(statusId);
 		TimeValue timeValueConverted = TimeValue.valueOf(timeValue);
@@ -108,9 +71,6 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 
 	@Override
 	public void delete(Integer id) {
-		if (id == null || id.equals(0)) {
-			throw new InvalidInputException("IT-application ID is invalid.");
-		}
 		itApplicationDAL.deleteById(id);
 	}
 
@@ -124,10 +84,6 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 
 	@Override
 	public ITApplication getItApplicationByName(String name) {
-		if (name == null || name.isBlank() || name.isEmpty()) {
-			throw new InvalidInputException("IT-application name is not valid.");
-		}
-
 		Optional<ITApplication> itApplication = itApplicationDAL.findByName(name);
 		itApplication.orElseThrow(() -> new NullPointerException("IT-application does not exist."));
 		return itApplication.get();
@@ -153,16 +109,6 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 
 	@Override
 	public void addTechnology(Integer itApplicationId, Integer technologyId) {
-		if (itApplicationId == null || itApplicationId.equals(0)) {
-			throw new InvalidInputException("IT-application ID is invalid.");
-		}
-		if (technologyId == null || technologyId.equals(0)) {
-			throw new InvalidInputException("IT-application ID is invalid.");
-		}
-		if (doesItApplicationHasTechnology(itApplicationId, technologyId)) {
-			throw new RelationshipException("Relationship already exsists.");
-		}
-		
 		ITApplication itApplication = get(itApplicationId);
 		Technology technology = technologyService.get(technologyId);
 		itApplication.addTechnology(technology);
@@ -171,33 +117,9 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 
 	@Override
 	public void deleteTechnology(Integer itApplicationId, Integer technologyId) {
-		if (itApplicationId == null || itApplicationId.equals(0)) {
-			throw new InvalidInputException("IT-application ID is invalid.");
-		}
-		if (technologyId == null || technologyId.equals(0)) {
-			throw new InvalidInputException("IT-application ID is invalid.");
-		}
-		if (!doesItApplicationHasTechnology(itApplicationId, technologyId)) {
-			throw new RelationshipException("Relationship does not exsist.");
-		}
-		
 		ITApplication itApplication = get(itApplicationId);
 		Technology technology = technologyService.get(technologyId);
 		itApplication.removeTechnology(technology);
-	}
-
-	@Override
-	public boolean doesItApplicationHasTechnology(Integer itApplicationId, Integer technologyId) {
-		if (itApplicationId == null || itApplicationId.equals(0)) {
-			throw new InvalidInputException("IT-application ID is invalid.");
-		}
-		if (technologyId == null || technologyId.equals(0)) {
-			throw new InvalidInputException("IT-application ID is invalid.");
-		}
-		
-		ITApplication itApplication = get(itApplicationId);
-		Technology technology = technologyService.get(technologyId);
-		return itApplication.hasTechnology(technology);
 	}
 
 }
