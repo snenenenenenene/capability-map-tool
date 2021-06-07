@@ -16,9 +16,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.web.servlet.MockMvc;
 
 import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
 import com.bavostepbros.leap.domain.customexceptions.ForeignKeyException;
@@ -40,8 +42,12 @@ import com.bavostepbros.leap.persistence.StrategyDAL;
  * @author Bavo Van Meel
  *
  */
+@AutoConfigureMockMvc
 @SpringBootTest
 public class StrategyServiceTest {
+	
+	@Autowired
+    private MockMvc mockMvc;
 
 	@Autowired
 	private StrategyService strategyService;
