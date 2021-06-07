@@ -88,6 +88,7 @@ public class CapabilityInformationController {
 						capabilityInformation.getCapability().getStatus().getValidityPeriod()),
 				capabilityInformation.getCapability().getParentCapabilityId(),
 				capabilityInformation.getCapability().getCapabilityName(),
+				capabilityInformation.getCapability().getCapabilityDescription(),
 				capabilityInformation.getCapability().getLevel(),
 				capabilityInformation.getCapability().getPaceOfChange(),
 				capabilityInformation.getCapability().getTargetOperatingModel(),

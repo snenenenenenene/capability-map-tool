@@ -7,15 +7,16 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +30,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
-public class StatusControllerTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class StatusControllerTest extends ApiIntegrationTest {
 	
 	@Autowired
     private MockMvc mockMvc;
@@ -47,7 +49,10 @@ public class StatusControllerTest {
 	private Status statusSecond;
 	
 	static final String PATH = "/api/status/";
-	
+
+	@BeforeAll
+	public void authenticate() throws Exception { super.authenticate(); }
+
 	@BeforeEach
 	public void init() {
 		statusFirst = statusDAL.save(new Status(1, LocalDate.of(2021, 05, 15)));
@@ -72,7 +77,7 @@ public class StatusControllerTest {
 	public void should_postStatus_whenSaveStatus() throws Exception {
 		LocalDate validityPeriod = LocalDate.of(2021, 05, 27);
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(PATH)
+		MvcResult mvcResult = mockMvc.perform(post(PATH)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("validityPeriod", validityPeriod.toString())
 				.accept(MediaType.APPLICATION_JSON))
@@ -92,7 +97,7 @@ public class StatusControllerTest {
 	public void should_getStatus_whenGetStatusById() throws Exception {
 		Integer statusId = statusFirst.getStatusId();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + statusId))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + statusId))
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andReturn();
 		
@@ -107,7 +112,7 @@ public class StatusControllerTest {
 	public void should_getStatus_whenGetStatusByValidityPeriod() throws Exception {
 		LocalDate validityPeriod = statusFirst.getValidityPeriod();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + "validityperiod/" + validityPeriod))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + "validityperiod/" + validityPeriod))
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andReturn();
 		
@@ -120,7 +125,7 @@ public class StatusControllerTest {
 	
 	@Test
 	public void should_getAllStatus_whenGetAllStatus() throws Exception {		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH))
+		MvcResult mvcResult = mockMvc.perform(get(PATH))
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andReturn();
 		
@@ -137,7 +142,7 @@ public class StatusControllerTest {
 	public void should_getBoolean_whenStatusIdExists() throws Exception {
 		Integer statusId = statusFirst.getStatusId();
 		
-		mockMvc.perform(MockMvcRequestBuilders.get(PATH + "exists-by-id/" + statusId))
+		mockMvc.perform(get(PATH + "exists-by-id/" + statusId))
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(MockMvcResultMatchers.content().string("true"));	
 	}
@@ -146,7 +151,7 @@ public class StatusControllerTest {
 	public void should_getBoolean_whenValidityPeriodExists() throws Exception {
 		LocalDate validityPeriod = statusFirst.getValidityPeriod();
 		
-		mockMvc.perform(MockMvcRequestBuilders.get(PATH + "exists-by-validityperiod/" + validityPeriod))
+		mockMvc.perform(get(PATH + "exists-by-validityperiod/" + validityPeriod))
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(MockMvcResultMatchers.content().string("true"));	
 	}
@@ -156,7 +161,7 @@ public class StatusControllerTest {
 		Integer statusId = statusFirst.getStatusId();
 		LocalDate validityPeriod = LocalDate.of(2021, 12, 13);
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH + statusId)
+		MvcResult mvcResult = mockMvc.perform(put(PATH + statusId)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("validityPeriod", validityPeriod.toString())
 				.accept(MediaType.APPLICATION_JSON))
@@ -176,7 +181,7 @@ public class StatusControllerTest {
 	public void should_deleteStatus_whenDeleteStatus() throws Exception {
 		Integer statusId = statusFirst.getStatusId();
 		
-		mockMvc.perform(MockMvcRequestBuilders.delete(PATH + statusId))
+		mockMvc.perform(delete(PATH + statusId))
 			.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	

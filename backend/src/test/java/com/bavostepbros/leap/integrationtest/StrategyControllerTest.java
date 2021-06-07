@@ -7,15 +7,16 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +34,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
-public class StrategyControllerTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class StrategyControllerTest extends ApiIntegrationTest {
 	
 	@Autowired
     private MockMvc mockMvc;
@@ -52,7 +54,7 @@ public class StrategyControllerTest {
 	
 	@Autowired
 	private StrategyService strategyService;
-	
+
 	private Status statusFirst;
 	private Status statusSecond;
 	private Environment environmentFirst;
@@ -61,7 +63,10 @@ public class StrategyControllerTest {
 	private Strategy strategySecond;
 	
 	static final String PATH = "/api/strategy/";
-	
+
+	@BeforeAll
+	public void authenticate() throws Exception { super.authenticate(); }
+
 	@BeforeEach
 	public void init() {
 		statusFirst = statusDAL.save(new Status(1, LocalDate.of(2021, 05, 15)));
@@ -108,7 +113,7 @@ public class StrategyControllerTest {
 		LocalDate timeFrameEnd = strategyFirst.getTimeFrameEnd();
 		Integer environmentId = strategyFirst.getEnvironment().getEnvironmentId();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(PATH)
+		MvcResult mvcResult = mockMvc.perform(post(PATH)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("statusId", statusId.toString())
 				.param("strategyName", strategyName)
@@ -132,7 +137,7 @@ public class StrategyControllerTest {
 	public void should_getStrategy_whenGetStrategyById() throws Exception {
 		Integer strategyId = strategyFirst.getStrategyId();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + strategyId))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + strategyId))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
@@ -147,7 +152,7 @@ public class StrategyControllerTest {
 	public void should_getStrategy_whenGetStrategyByStrategyname() throws Exception {
 		String strategyName = strategyFirst.getStrategyName();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + "strategyname/" + strategyName))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + "strategyname/" + strategyName))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
@@ -162,7 +167,7 @@ public class StrategyControllerTest {
 	public void should_getStrategies_whenGetStrategiesByEnvironmentid() throws Exception {
 		Integer environmentId = strategyFirst.getEnvironment().getEnvironmentId();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + "all-strategies-by-environmentid/" + environmentId))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + "all-strategies-by-environmentid/" + environmentId))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
@@ -176,7 +181,7 @@ public class StrategyControllerTest {
 	
 	@Test
 	public void should_getStrategies_whenGetAllStrategies() throws Exception {
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH))
+		MvcResult mvcResult = mockMvc.perform(get(PATH))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
@@ -193,7 +198,7 @@ public class StrategyControllerTest {
 	public void should_getBoolean_whenStrategyIdExists() throws Exception {
 		Integer strategyId = strategyFirst.getStrategyId();
 		
-		mockMvc.perform(MockMvcRequestBuilders.get(PATH + "exists-by-id/" + strategyId))
+		mockMvc.perform(get(PATH + "exists-by-id/" + strategyId))
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(MockMvcResultMatchers.content().string("true"));	
 	}
@@ -202,7 +207,7 @@ public class StrategyControllerTest {
 	public void should_getBoolean_whenStrategyNameExists() throws Exception {
 		String strategyName = strategyFirst.getStrategyName();
 		
-		mockMvc.perform(MockMvcRequestBuilders.get(PATH + "exists-by-strategyname/" + strategyName))
+		mockMvc.perform(get(PATH + "exists-by-strategyname/" + strategyName))
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(MockMvcResultMatchers.content().string("true"));	
 	}
@@ -216,7 +221,7 @@ public class StrategyControllerTest {
 		LocalDate timeFrameEnd = strategyFirst.getTimeFrameEnd();
 		Integer environmentId = strategyFirst.getEnvironment().getEnvironmentId();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH + strategyId)
+		MvcResult mvcResult = mockMvc.perform(put(PATH + strategyId)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("statusId", statusId.toString())
 				.param("strategyName", strategyName)
@@ -240,7 +245,7 @@ public class StrategyControllerTest {
 	public void should_deleteStrategy_whenDeleteStrategy() throws Exception {
 		Integer strategyId = strategyFirst.getStrategyId();
 		
-		mockMvc.perform(MockMvcRequestBuilders.delete(PATH + strategyId))
+		mockMvc.perform(delete(PATH + strategyId))
 			.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	

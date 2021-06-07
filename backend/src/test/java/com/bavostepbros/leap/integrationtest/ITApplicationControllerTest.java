@@ -10,15 +10,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +39,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ITApplicationControllerTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class ITApplicationControllerTest extends ApiIntegrationTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -66,7 +68,10 @@ public class ITApplicationControllerTest {
 	private Technology technologySecond;
 	private ITApplication itApplicationFirst;
 	private ITApplication itApplicationSecond;
-	
+
+	@BeforeAll
+	public void authenticate() throws Exception { super.authenticate(); }
+
 	@BeforeEach
 	public void init() {
 		statusFirst = statusDAL.save(new Status(1, LocalDate.of(2021, 05, 15)));
@@ -127,7 +132,7 @@ public class ITApplicationControllerTest {
 		Double acceptedYearlyCost = itApplicationFirst.getAcceptedYearlyCost();
 		TimeValue timeValue = itApplicationFirst.getTimeValue();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(PATH)
+		MvcResult mvcResult = mockMvc.perform(post(PATH)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("statusId", statusId.toString())
 				.param("name", name)
@@ -165,7 +170,7 @@ public class ITApplicationControllerTest {
 	public void should_getItApplication_whenGetItApplication() throws Exception {
 		Integer itApplicationId = itApplicationFirst.getItApplicationId();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + itApplicationId))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + itApplicationId))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
@@ -199,7 +204,7 @@ public class ITApplicationControllerTest {
 		Double acceptedYearlyCost = itApplicationFirst.getAcceptedYearlyCost();
 		TimeValue timeValue = itApplicationFirst.getTimeValue();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH + itApplicationId)
+		MvcResult mvcResult = mockMvc.perform(put(PATH + itApplicationId)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("statusId", statusId.toString())
 				.param("name", name)
@@ -237,7 +242,7 @@ public class ITApplicationControllerTest {
 	public void should_deleteItApplication_whenDeleteItApplication() throws Exception {
 		Integer itApplicationId = itApplicationFirst.getItApplicationId();
 		
-		mockMvc.perform(MockMvcRequestBuilders.delete(PATH + itApplicationId))
+		mockMvc.perform(delete(PATH + itApplicationId))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
@@ -245,7 +250,7 @@ public class ITApplicationControllerTest {
 	public void should_getTrue_whenItApplicationExistsById() throws Exception {
 		Integer itApplicationId = itApplicationFirst.getItApplicationId();
 		
-		mockMvc.perform(MockMvcRequestBuilders.get(PATH + "exists-by-id/" + itApplicationId))
+		mockMvc.perform(get(PATH + "exists-by-id/" + itApplicationId))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().string("true"));
 	}
@@ -254,7 +259,7 @@ public class ITApplicationControllerTest {
 	public void should_getTrue_whenItApplicationExistsByName() throws Exception {
 		String itApplicationName = itApplicationFirst.getName();
 		
-		mockMvc.perform(MockMvcRequestBuilders.get(PATH + "exists-by-name/" + itApplicationName))
+		mockMvc.perform(get(PATH + "exists-by-name/" + itApplicationName))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().string("true"));
 	}
@@ -263,7 +268,7 @@ public class ITApplicationControllerTest {
 	public void should_getItApplication_whenGetItApplicationByName() throws Exception {
 		String itApplicationName = itApplicationFirst.getName();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + "itapplicationname/" + itApplicationName))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + "itapplicationname/" + itApplicationName))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
@@ -276,7 +281,7 @@ public class ITApplicationControllerTest {
 	
 	@Test
 	public void should_getAllItApplications_whenGetAllItApplication() throws Exception {
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH))
+		MvcResult mvcResult = mockMvc.perform(get(PATH))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
@@ -290,7 +295,7 @@ public class ITApplicationControllerTest {
 	
 	@Test
 	public void should_getAllCurrencies_whenGetAllCurrencies() throws Exception {
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + "all-currencies"))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + "all-currencies"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
@@ -307,7 +312,7 @@ public class ITApplicationControllerTest {
 	
 	@Test
 	public void should_getAllTimeValues_whenGetAllTimeValues() throws Exception {
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + "all-timevalues"))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + "all-timevalues"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
@@ -325,7 +330,7 @@ public class ITApplicationControllerTest {
 		Integer itApplicationId = itApplicationFirst.getItApplicationId();
 		Integer technologyId = technologyFirst.getTechnologyId();
 		
-		mockMvc.perform(MockMvcRequestBuilders.put(
+		mockMvc.perform(put(
 				PATH + "link-technology/" + itApplicationId + "/" + technologyId))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 		
@@ -342,7 +347,7 @@ public class ITApplicationControllerTest {
 		Integer technologyId = technologySecond.getTechnologyId();		
 		itApplicationService.addTechnology(itApplicationId, technologyId);
 		
-		mockMvc.perform(MockMvcRequestBuilders.delete(
+		mockMvc.perform(delete(
 				PATH + "unlink-technology/" + itApplicationId + "/" + technologyId))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 		
@@ -358,7 +363,7 @@ public class ITApplicationControllerTest {
 		Integer technologyId = technologySecond.getTechnologyId();		
 		itApplicationService.addTechnology(itApplicationId, technologyId);
 		
-		mockMvc.perform(MockMvcRequestBuilders.get(
+		mockMvc.perform(get(
 				PATH + "has-technology/" + itApplicationId + "/" + technologyId))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}

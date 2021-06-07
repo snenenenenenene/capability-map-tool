@@ -6,15 +6,17 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.bavostepbros.leap.integrationtest.testconfiguration.RequestFactory;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,30 +37,26 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class CapabilityControllerTest {
-	
+public class CapabilityControllerTest extends ApiIntegrationTest {
+
 	@Autowired
-    private MockMvc mockMvc;
-	
+	private MockMvc mockMvc;
+
 	@Autowired
 	private ObjectMapper objectMapper;
-	
+
 	@Autowired
 	private StatusDAL statusDAL;
-	
+
 	@Autowired
 	private EnvironmentDAL environmentDAL;
-	
+
 	@Autowired
 	private CapabilityDAL capabilityDAL;
-	
+
 	@Autowired
 	private CapabilityService capabilityService;
 
-	@Autowired
-	private RequestFactory requestFactory;
-
-	private String jwt;
 	private Status statusFirst;
 	private Status statusSecond;
 	private Environment environmentFirst;
@@ -66,19 +64,13 @@ public class CapabilityControllerTest {
 	private Capability capabilityFirst;
 	private Capability capabilitySecond;
 	private Capability capabilityThird;
-	
+
 	static final String PATH = "/api/capability/";
 
 	@BeforeAll
 	public void authenticate() throws Exception {
-		jwt = mockMvc.perform(MockMvcRequestBuilders.post("/api/user/authenticate")
-				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-				.param("email", "super_admin")
-				.param("password", "super_admin"))
-				.andReturn()
-				.getResponse().getContentAsString();
+		super.authenticate();
 	}
-
 
 	@BeforeEach
 	public void init() {
@@ -86,18 +78,19 @@ public class CapabilityControllerTest {
 		statusSecond = statusDAL.save(new Status(2, LocalDate.of(2021, 5, 20)));
 		environmentFirst = environmentDAL.save(new Environment(1, "Test 1"));
 		environmentSecond = environmentDAL.save(new Environment(2, "Test 2"));
-		capabilityFirst = capabilityDAL.save(new Capability(1, environmentFirst,
-				statusFirst, 0, "Capability 1", PaceOfChange.DIFFERENTIATION,
-				TargetOperatingModel.COORDINATION, 1, 1, 1));
-		capabilitySecond = capabilityDAL.save(new Capability(2, environmentFirst,
-				statusFirst, capabilityFirst.getCapabilityId(), "Capability 2",
-				PaceOfChange.INNOVATIVE, TargetOperatingModel.DIVERSIFICATION, 
-				1, 1, 1));
-		capabilityThird = capabilityDAL.save(new Capability(3, environmentSecond,
-				statusSecond, capabilityFirst.getCapabilityId(), "Capability 3", 
-				PaceOfChange.STANDARD, TargetOperatingModel.REPLICATION, 1, 1, 1));
+		capabilityFirst = capabilityDAL.save(new Capability(1, environmentFirst, statusFirst, 0, "Capability 1",
+				"Description 1", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 1, 1, 1));
+		capabilityService.updateLevel(capabilityFirst);
+		capabilitySecond = capabilityDAL.save(
+				new Capability(2, environmentFirst, statusFirst, capabilityFirst.getCapabilityId(), "Capability 2",
+						"Description 2", PaceOfChange.INNOVATIVE, TargetOperatingModel.DIVERSIFICATION, 1, 1, 1));
+		capabilityService.updateLevel(capabilitySecond);
+		capabilityThird = capabilityDAL
+				.save(new Capability(3, environmentSecond, statusSecond, capabilityFirst.getCapabilityId(),
+						"Capability 3", "Description 3", PaceOfChange.STANDARD, TargetOperatingModel.REPLICATION, 1, 1, 1));
+		capabilityService.updateLevel(capabilityThird);
 	}
-	
+
 	@AfterEach
 	public void close() {
 		statusDAL.delete(statusFirst);
@@ -108,7 +101,7 @@ public class CapabilityControllerTest {
 		capabilityDAL.delete(capabilitySecond);
 		capabilityDAL.delete(capabilityThird);
 	}
-	
+
 	@Test
 	void should_notBeNull() {
 		assertNotNull(statusDAL);
@@ -122,7 +115,7 @@ public class CapabilityControllerTest {
 		assertNotNull(capabilityFirst);
 		assertNotNull(capabilitySecond);
 	}
-	
+
 	@Test
 	public void should_postCapability_whenSaveCapability() throws Exception {
 		Integer environmentId = environmentFirst.getEnvironmentId();
@@ -134,163 +127,156 @@ public class CapabilityControllerTest {
 		Integer resourceQuality = 1;
 		Integer informationQuality = 1;
 		Integer applicationFit = 1;
-		
-		MvcResult mvcResult = mockMvc.perform(requestFactory.buildRequest(PATH, jwt)
-				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-				.param("environmentId", environmentId.toString())
-				.param("statusId", statusId.toString())
-				.param("parentCapabilityId", parentCapabilityId.toString())
-				.param("capabilityName", capabilityName)
-				.param("paceOfChange", paceOfChange)
-				.param("targetOperatingModel", targetOperatingModel)
+
+		MvcResult mvcResult = mockMvc.perform(post(PATH).contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+				.param("environmentId", environmentId.toString()).param("statusId", statusId.toString())
+				.param("parentCapabilityId", parentCapabilityId.toString()).param("capabilityName", capabilityName)
+				.param("paceOfChange", paceOfChange).param("targetOperatingModel", targetOperatingModel)
 				.param("resourceQuality", resourceQuality.toString())
 				.param("informationQuality", informationQuality.toString())
-				.param("applicationFit", applicationFit.toString())
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andReturn();
-		
-		CapabilityDto resultCapability = objectMapper.readValue(
-				mvcResult.getResponse().getContentAsString(), CapabilityDto.class);
-		
+				.param("applicationFit", applicationFit.toString()).accept(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+
+		CapabilityDto resultCapability = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+				CapabilityDto.class);
+
 		Capability capability = capabilityService.getCapabilityByCapabilityName(capabilityName);
-		
+
 		assertNotNull(resultCapability);
 		testCapability(capability, resultCapability);
 	}
-	
+
 	@Test
 	public void should_getCapability_whenGetCapabilityById() throws Exception {
 		Integer capabilityId = capabilityFirst.getCapabilityId();
-		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + capabilityId))
-				.andExpect(MockMvcResultMatchers.status().isOk())
+
+		MvcResult mvcResult = mockMvc.perform(get(PATH + capabilityId)).andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
-		
-		CapabilityDto resultCapability = objectMapper.readValue(
-				mvcResult.getResponse().getContentAsString(), CapabilityDto.class);
-		
+
+		CapabilityDto resultCapability = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+				CapabilityDto.class);
+
 		assertNotNull(resultCapability);
 		testCapability(capabilityFirst, resultCapability);
 	}
-	
+
 	@Test
 	public void should_getCapability_whenGetCapabilityByCapabilityName() throws Exception {
 		String capabilityName = capabilityFirst.getCapabilityName();
-		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + "capabilityname/" + capabilityName))
-				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andReturn();
-		
-		CapabilityDto resultCapability = objectMapper.readValue(
-				mvcResult.getResponse().getContentAsString(), CapabilityDto.class);
-		
+
+		MvcResult mvcResult = mockMvc.perform(get(PATH + "capabilityname/" + capabilityName))
+				.andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+
+		CapabilityDto resultCapability = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+				CapabilityDto.class);
+
 		assertNotNull(resultCapability);
 		testCapability(capabilityFirst, resultCapability);
 	}
-	
+
 	@Test
 	public void should_getCapabilities_whenGetCapabilitiesByEnvironmentid() throws Exception {
 		Integer environmentId = capabilityFirst.getEnvironment().getEnvironmentId();
-		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + "all-capabilities-by-environmentid/" + environmentId))
-				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andReturn();
-		
-		List<CapabilityDto> resultCapabilities = objectMapper.readValue(
-				mvcResult.getResponse().getContentAsString(), new TypeReference<List<CapabilityDto>>() {});
-		
+
+		MvcResult mvcResult = mockMvc.perform(get(PATH + "all-capabilities-by-environmentid/" + environmentId))
+				.andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+
+		List<CapabilityDto> resultCapabilities = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+				new TypeReference<List<CapabilityDto>>() {
+				});
+
 		assertNotNull(resultCapabilities);
 		assertEquals(2, resultCapabilities.size());
 		testCapability(capabilityFirst, resultCapabilities.get(0));
 		testCapability(capabilitySecond, resultCapabilities.get(1));
 	}
-	
+
 	@Test
 	public void should_getCapabilities_whenGetCapabilitiesByLevel() throws Exception {
 		String level = capabilityFirst.getLevel().toString();
-		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + "all-capabilities-by-level/" + level))
-				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andReturn();
-		
-		List<CapabilityDto> resultCapabilities = objectMapper.readValue(
-				mvcResult.getResponse().getContentAsString(), new TypeReference<List<CapabilityDto>>() {});
-		
+
+		MvcResult mvcResult = mockMvc.perform(get(PATH + "all-capabilities-by-level/" + level))
+				.andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+
+		List<CapabilityDto> resultCapabilities = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+				new TypeReference<List<CapabilityDto>>() {
+				});
+
 		assertNotNull(resultCapabilities);
 		assertEquals(1, resultCapabilities.size());
 		testCapability(capabilityFirst, resultCapabilities.get(0));
 	}
-	
+
 	@Test
 	public void should_getCapabilities_whenGetCapabilitiesByParentcapabilityid() throws Exception {
 		Integer parentCapabilityId = capabilitySecond.getParentCapabilityId();
-		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + "all-capabilities-by-parentcapabilityid/" + parentCapabilityId))
-				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andReturn();
-		
-		List<CapabilityDto> resultCapabilities = objectMapper.readValue(
-				mvcResult.getResponse().getContentAsString(), new TypeReference<List<CapabilityDto>>() {});
-		
+
+		MvcResult mvcResult = mockMvc
+				.perform(get(PATH + "all-capabilities-by-parentcapabilityid/" + parentCapabilityId))
+				.andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+
+		List<CapabilityDto> resultCapabilities = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+				new TypeReference<List<CapabilityDto>>() {
+				});
+
 		assertNotNull(resultCapabilities);
 		assertEquals(2, resultCapabilities.size());
 		testCapability(capabilitySecond, resultCapabilities.get(0));
 		testCapability(capabilityThird, resultCapabilities.get(1));
 	}
-	
+
 	@Test
 	public void should_getCapabilities_whenGetCapabilitiesByParentcapabilityidAndLevel() throws Exception {
 		String level = capabilitySecond.getLevel().toString();
 		Integer parentCapabilityId = capabilitySecond.getParentCapabilityId();
-		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + "all-capabilities-by-parentcapabilityid-and-level/" + parentCapabilityId + "/" + level))
-				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andReturn();
-		
-		List<CapabilityDto> resultCapabilities = objectMapper.readValue(
-				mvcResult.getResponse().getContentAsString(), new TypeReference<List<CapabilityDto>>() {});
-		
+
+		MvcResult mvcResult = mockMvc
+				.perform(get(
+						PATH + "all-capabilities-by-parentcapabilityid-and-level/" + parentCapabilityId + "/" + level))
+				.andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+
+		List<CapabilityDto> resultCapabilities = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+				new TypeReference<List<CapabilityDto>>() {
+				});
+
 		assertNotNull(resultCapabilities);
 		assertEquals(2, resultCapabilities.size());
 		testCapability(capabilitySecond, resultCapabilities.get(0));
 		testCapability(capabilityThird, resultCapabilities.get(1));
 	}
-	
+
 	@Test
 	public void should_getCapabilities_whenGetAllCapabilities() throws Exception {
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH))
-				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andReturn();
-		
-		List<CapabilityDto> resultCapabilities = objectMapper.readValue(
-				mvcResult.getResponse().getContentAsString(), new TypeReference<List<CapabilityDto>>() {});
-		
+		MvcResult mvcResult = mockMvc.perform(get(PATH)).andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+
+		List<CapabilityDto> resultCapabilities = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+				new TypeReference<List<CapabilityDto>>() {
+				});
+
 		assertNotNull(resultCapabilities);
 		assertEquals(3, resultCapabilities.size());
 		testCapability(capabilityFirst, resultCapabilities.get(0));
 		testCapability(capabilitySecond, resultCapabilities.get(1));
 		testCapability(capabilityThird, resultCapabilities.get(2));
 	}
-	
+
 	@Test
 	public void should_getBoolean_whenCapabilityIdExists() throws Exception {
 		Integer capabilityId = capabilityFirst.getCapabilityId();
-		
-		mockMvc.perform(MockMvcRequestBuilders.get(PATH + "exists-by-id/" + capabilityId))
-			.andExpect(MockMvcResultMatchers.status().isOk())
-			.andExpect(MockMvcResultMatchers.content().string("true"));	
+
+		mockMvc.perform(get(PATH + "exists-by-id/" + capabilityId)).andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.content().string("true"));
 	}
-	
+
 	@Test
 	public void should_getBoolean_whenCapabilityNameExists() throws Exception {
 		String capabilityName = capabilityFirst.getCapabilityName();
-		
-		mockMvc.perform(MockMvcRequestBuilders.get(PATH + "exists-by-capabilityname/" + capabilityName))
-			.andExpect(MockMvcResultMatchers.status().isOk())
-			.andExpect(MockMvcResultMatchers.content().string("true"));	
+
+		mockMvc.perform(get(PATH + "exists-by-capabilityname/" + capabilityName))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.content().string("true"));
 	}
-	
+
 	@Test
 	public void should_putCapability_whenUpdateCapability() throws Exception {
 		Integer capabilityId = capabilityFirst.getCapabilityId();
@@ -304,45 +290,41 @@ public class CapabilityControllerTest {
 		Integer resourceQuality = 1;
 		Integer informationQuality = 1;
 		Integer applicationFit = 1;
-		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH + capabilityId)
-				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-				.param("environmentId", environmentId.toString())
-				.param("statusId", statusId.toString())
-				.param("parentCapabilityId", parentCapabilityId.toString())
-				.param("capabilityName", capabilityName)
-				.param("level", level)
-				.param("paceOfChange", paceOfChange)
-				.param("targetOperatingModel", targetOperatingModel)
-				.param("resourceQuality", resourceQuality.toString())
-				.param("informationQuality", informationQuality.toString())
-				.param("applicationFit", applicationFit.toString())
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andReturn();
-		
-		CapabilityDto resultCapability = objectMapper.readValue(
-				mvcResult.getResponse().getContentAsString(), CapabilityDto.class);
-		
+
+		MvcResult mvcResult = mockMvc
+				.perform(put(PATH + capabilityId).contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+						.param("environmentId", environmentId.toString()).param("statusId", statusId.toString())
+						.param("parentCapabilityId", parentCapabilityId.toString())
+						.param("capabilityName", capabilityName).param("level", level)
+						.param("paceOfChange", paceOfChange).param("targetOperatingModel", targetOperatingModel)
+						.param("resourceQuality", resourceQuality.toString())
+						.param("informationQuality", informationQuality.toString())
+						.param("applicationFit", applicationFit.toString()).accept(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+
+		CapabilityDto resultCapability = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+				CapabilityDto.class);
+
 		Capability capability = capabilityService.getCapabilityByCapabilityName(capabilityName);
-		
+
 		assertNotNull(resultCapability);
 		testCapability(capability, resultCapability);
 	}
-	
+
 	@Test
 	public void should_deleteCapability_whenDeleteCapability() throws Exception {
 		Integer capabilityId = capabilityFirst.getCapabilityId();
-		
-		mockMvc.perform(MockMvcRequestBuilders.delete(PATH + capabilityId))
-			.andExpect(MockMvcResultMatchers.status().isOk());
+
+		mockMvc.perform(delete(PATH + capabilityId)).andExpect(MockMvcResultMatchers.status().isOk());
 	}
-	
+
 	@Test
 	private void testCapability(Capability expectedObject, CapabilityDto actualObject) {
 		assertEquals(expectedObject.getCapabilityId(), actualObject.getCapabilityId());
-		assertEquals(expectedObject.getEnvironment().getEnvironmentId(), actualObject.getEnvironment().getEnvironmentId());
-		assertEquals(expectedObject.getEnvironment().getEnvironmentName(), actualObject.getEnvironment().getEnvironmentName());
+		assertEquals(expectedObject.getEnvironment().getEnvironmentId(),
+				actualObject.getEnvironment().getEnvironmentId());
+		assertEquals(expectedObject.getEnvironment().getEnvironmentName(),
+				actualObject.getEnvironment().getEnvironmentName());
 		assertEquals(expectedObject.getStatus().getStatusId(), actualObject.getStatus().getStatusId());
 		assertEquals(expectedObject.getStatus().getValidityPeriod(), actualObject.getStatus().getValidityPeriod());
 		assertEquals(expectedObject.getParentCapabilityId(), actualObject.getParentCapabilityId());

@@ -6,16 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +37,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CapabilityApplicationControllerTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class CapabilityApplicationControllerTest extends ApiIntegrationTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -78,7 +76,12 @@ public class CapabilityApplicationControllerTest {
 	private ITApplication itApplicationSecond;
 	private CapabilityApplication capabilityApplicationFirst;
 	private CapabilityApplication capabilityApplicationSecond;
-	private CapabilityApplication capabilityApplicationThirth;
+	private CapabilityApplication capabilityApplicationThird;
+
+	@BeforeAll
+	public void authenticate() throws Exception {
+		super.authenticate();
+	}
 
 	@BeforeEach
 	public void init() {
@@ -87,21 +90,21 @@ public class CapabilityApplicationControllerTest {
 		environmentFirst = environmentDAL.save(new Environment(1, "Test 1"));
 		environmentSecond = environmentDAL.save(new Environment(2, "Test 2"));
 		capabilityFirst = capabilityDAL.save(new Capability(1, environmentFirst, statusFirst, 1, "Capability 1",
-				PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 1, 1, 1));
-		capabilitySecond = capabilityDAL
-				.save(new Capability(2, environmentFirst, statusFirst, capabilityFirst.getCapabilityId(),
-						"Capability 2", PaceOfChange.INNOVATIVE, TargetOperatingModel.DIVERSIFICATION, 1, 1, 1));
+				"Description 1", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 1, 1, 1));
+		capabilitySecond = capabilityDAL.save(
+				new Capability(2, environmentFirst, statusFirst, capabilityFirst.getCapabilityId(), "Capability 2",
+						"Description 2", PaceOfChange.INNOVATIVE, TargetOperatingModel.DIVERSIFICATION, 1, 1, 1));
 		itApplicationFirst = itApplicationDAL.save(new ITApplication(1, statusFirst, "application 1", "1.20.1",
-				LocalDate.of(2021, 01, 20), LocalDate.of(2025, 05, 20), 1, 2, 3, 4, 5, 6, 7, 8, "EUR", 1000.0, 5,
-				70.0, 100.0, TimeValue.MIGRATE));
+				LocalDate.of(2021, 01, 20), LocalDate.of(2025, 05, 20), 1, 2, 3, 4, 5, 6, 7, 8, "EUR", 1000.0, 5, 70.0,
+				100.0, TimeValue.MIGRATE));
 		itApplicationSecond = itApplicationDAL.save(new ITApplication(2, statusSecond, "application 2", "1.20.1",
-				LocalDate.of(2021, 01, 20), LocalDate.of(2025, 05, 20), 2, 3, 4, 5, 6, 7, 8, 9, "EUR", 1000.0, 4,
-				70.0, 100.0, TimeValue.TOLERATE));
+				LocalDate.of(2021, 01, 20), LocalDate.of(2025, 05, 20), 2, 3, 4, 5, 6, 7, 8, 9, "EUR", 1000.0, 4, 70.0,
+				100.0, TimeValue.TOLERATE));
 		capabilityApplicationFirst = capabilityApplicationDAL
 				.save(new CapabilityApplication(capabilityFirst, itApplicationFirst, 0, 1, 2, 3, 4, 5, 4, 3));
 		capabilityApplicationSecond = capabilityApplicationDAL
 				.save(new CapabilityApplication(capabilitySecond, itApplicationFirst, 0, 2, 3, 4, 5, 4, 3, 2));
-		capabilityApplicationThirth = capabilityApplicationDAL
+		capabilityApplicationThird = capabilityApplicationDAL
 				.save(new CapabilityApplication(capabilitySecond, itApplicationSecond, 0, 5, 4, 3, 2, 1, 2, 3));
 	}
 
@@ -117,7 +120,7 @@ public class CapabilityApplicationControllerTest {
 		itApplicationDAL.delete(itApplicationSecond);
 		capabilityApplicationDAL.delete(capabilityApplicationFirst);
 		capabilityApplicationDAL.delete(capabilityApplicationSecond);
-		capabilityApplicationDAL.delete(capabilityApplicationThirth);
+		capabilityApplicationDAL.delete(capabilityApplicationThird);
 	}
 
 	@Test
@@ -138,7 +141,7 @@ public class CapabilityApplicationControllerTest {
 		assertNotNull(itApplicationSecond);
 		assertNotNull(capabilityApplicationFirst);
 		assertNotNull(capabilityApplicationSecond);
-		assertNotNull(capabilityApplicationThirth);
+		assertNotNull(capabilityApplicationThird);
 	}
 
 	@Test
@@ -153,14 +156,16 @@ public class CapabilityApplicationControllerTest {
 		Integer correctnessInformationFit = capabilityApplicationFirst.getCorrectnessInformationFit();
 		Integer availability = capabilityApplicationFirst.getAvailability();
 
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(PATH + capabilityId + "/" + applicationId)
-				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-				.param("efficiencySupport", efficiencySupport.toString())
-				.param("functionalCoverage", functionalCoverage.toString())
-				.param("correctnessBusinessFit", correctnessBusinessFit.toString())
-				.param("futurePotential", futurePotential.toString()).param("completeness", completeness.toString())
-				.param("correctnessInformationFit", correctnessInformationFit.toString())
-				.param("availability", availability.toString()).accept(MediaType.APPLICATION_JSON))
+		MvcResult mvcResult = mockMvc
+				.perform(
+						post(PATH + capabilityId + "/" + applicationId).contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+								.param("efficiencySupport", efficiencySupport.toString())
+								.param("functionalCoverage", functionalCoverage.toString())
+								.param("correctnessBusinessFit", correctnessBusinessFit.toString())
+								.param("futurePotential", futurePotential.toString())
+								.param("completeness", completeness.toString())
+								.param("correctnessInformationFit", correctnessInformationFit.toString())
+								.param("availability", availability.toString()).accept(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 
 		CapabilityApplicationDto capabilityApplicationDto = objectMapper
@@ -177,7 +182,7 @@ public class CapabilityApplicationControllerTest {
 		Integer capabilityId = capabilityApplicationFirst.getCapability().getCapabilityId();
 		Integer applicationId = capabilityApplicationFirst.getApplication().getItApplicationId();
 
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + capabilityId + "/" + applicationId))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + capabilityId + "/" + applicationId))
 				.andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 
 		CapabilityApplicationDto capabilityApplicationDto = objectMapper
@@ -199,14 +204,15 @@ public class CapabilityApplicationControllerTest {
 		Integer correctnessInformationFit = capabilityApplicationFirst.getCorrectnessInformationFit();
 		Integer availability = capabilityApplicationFirst.getAvailability();
 
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH + capabilityId + "/" + applicationId)
-				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-				.param("efficiencySupport", efficiencySupport.toString())
-				.param("functionalCoverage", functionalCoverage.toString())
-				.param("correctnessBusinessFit", correctnessBusinessFit.toString())
-				.param("futurePotential", futurePotential.toString()).param("completeness", completeness.toString())
-				.param("correctnessInformationFit", correctnessInformationFit.toString())
-				.param("availability", availability.toString()).accept(MediaType.APPLICATION_JSON))
+		MvcResult mvcResult = mockMvc
+				.perform(put(PATH + capabilityId + "/" + applicationId).contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+						.param("efficiencySupport", efficiencySupport.toString())
+						.param("functionalCoverage", functionalCoverage.toString())
+						.param("correctnessBusinessFit", correctnessBusinessFit.toString())
+						.param("futurePotential", futurePotential.toString())
+						.param("completeness", completeness.toString())
+						.param("correctnessInformationFit", correctnessInformationFit.toString())
+						.param("availability", availability.toString()).accept(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 
 		CapabilityApplicationDto capabilityApplicationDto = objectMapper
@@ -223,7 +229,7 @@ public class CapabilityApplicationControllerTest {
 		Integer capabilityId = capabilityApplicationFirst.getCapability().getCapabilityId();
 		Integer applicationId = capabilityApplicationFirst.getApplication().getItApplicationId();
 
-		mockMvc.perform(MockMvcRequestBuilders.delete(PATH + capabilityId + "/" + applicationId))
+		mockMvc.perform(delete(PATH + capabilityId + "/" + applicationId))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -231,9 +237,7 @@ public class CapabilityApplicationControllerTest {
 	public void should_getCapabilityApplications_whenGetlAllByCapabilityIdCapabilityApplication() throws Exception {
 		Integer capabilityId = capabilityApplicationSecond.getCapability().getCapabilityId();
 
-		MvcResult mvcResult = mockMvc
-				.perform(
-						MockMvcRequestBuilders.get(PATH + "all-capabilityApplications-by-capabilityid/" + capabilityId))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + "all-capabilityApplications-by-capabilityid/" + capabilityId))
 				.andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 
 		List<CapabilityApplicationDto> capabilityApplicationDto = objectMapper.readValue(
@@ -243,7 +247,7 @@ public class CapabilityApplicationControllerTest {
 		assertNotNull(capabilityApplicationDto);
 		assertEquals(2, capabilityApplicationDto.size());
 		testCapabilityApplication(capabilityApplicationSecond, capabilityApplicationDto.get(0));
-		testCapabilityApplication(capabilityApplicationThirth, capabilityApplicationDto.get(1));
+		testCapabilityApplication(capabilityApplicationThird, capabilityApplicationDto.get(1));
 	}
 
 	@Test

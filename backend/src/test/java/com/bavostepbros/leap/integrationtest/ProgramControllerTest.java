@@ -6,15 +6,16 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +29,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProgramControllerTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class ProgramControllerTest extends ApiIntegrationTest {
 	
 	@Autowired
     private MockMvc mockMvc;
@@ -46,7 +48,10 @@ public class ProgramControllerTest {
 	private Program programSecond;
 	
 	static final String PATH = "/api/program/";
-	
+
+	@BeforeAll
+	public void authenticate() throws Exception { super.authenticate(); }
+
 	@BeforeEach
 	public void init() {
 		programFirst = programDAL.save(new Program(1, "Program 1"));
@@ -87,7 +92,7 @@ public class ProgramControllerTest {
 	public void should_postProgram_whenSaveProgram() throws Exception {	
 		String programName = "abc";
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(PATH)
+		MvcResult mvcResult = mockMvc.perform(post(PATH)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("programName", programName)
 				.accept(MediaType.APPLICATION_JSON))
@@ -107,7 +112,7 @@ public class ProgramControllerTest {
 	public void should_getProgram_whenGetProgramById() throws Exception {	
 		Integer programId = programFirst.getProgramId();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + programId))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + programId))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
@@ -123,7 +128,7 @@ public class ProgramControllerTest {
 		Integer programId = programFirst.getProgramId();
 		String programName = "abc";
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(PATH + programId)
+		MvcResult mvcResult = mockMvc.perform(put(PATH + programId)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("programName", programName)
 				.accept(MediaType.APPLICATION_JSON))
@@ -143,13 +148,13 @@ public class ProgramControllerTest {
 	public void should_deleteProgram_whenDeleteProgram() throws Exception {	
 		Integer programId = programFirst.getProgramId();
 		
-		mockMvc.perform(MockMvcRequestBuilders.delete(PATH + programId))
+		mockMvc.perform(delete(PATH + programId))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
 	@Test
 	public void should_getPrograms_whenGetAllProgram() throws Exception {			
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH))
+		MvcResult mvcResult = mockMvc.perform(get(PATH))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
@@ -166,7 +171,7 @@ public class ProgramControllerTest {
 	public void should_getProgram_whenGetProgramByName() throws Exception {	
 		String programName = programFirst.getProgramName();
 		
-		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(PATH + "programname/" + programName))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + "programname/" + programName))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		

@@ -1,6 +1,7 @@
 package com.bavostepbros.leap.controller;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -17,7 +18,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Project;
+import com.bavostepbros.leap.domain.model.dto.CapabilityDto;
+import com.bavostepbros.leap.domain.model.dto.EnvironmentDto;
 import com.bavostepbros.leap.domain.model.dto.ProgramDto;
 import com.bavostepbros.leap.domain.model.dto.ProjectDto;
 import com.bavostepbros.leap.domain.model.dto.StatusDto;
@@ -86,9 +90,43 @@ public class ProjectController {
 		return convertProject(project);
 	}
 	
+	@PutMapping(path = "link-capability/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public void linkCapability(@ModelAttribute("projectId") Integer projectId, 
+			@ModelAttribute("capabilityId") Integer capabilityId) {
+		projectService.addCapability(projectId, capabilityId);
+	}
+	
+	@DeleteMapping(path = "unlink-capability/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public void unlinkCapability(@ModelAttribute("projectId") Integer projectId, 
+			@ModelAttribute("capabilityId") Integer capabilityId) {
+		projectService.deleteCapability(projectId, capabilityId);
+	}
+	
+	@GetMapping(path = "get-capabilities/{projectId}")
+	public List<CapabilityDto> getCapabilities(@PathVariable("projectId") Integer projectId) {
+		Set<Capability> capabilities = projectService.getAllCapabilitiesByProjectId(projectId);
+		List<CapabilityDto> capabilitiesDto = capabilities.stream()
+				.map(capability -> convertCapability(capability))
+				.collect(Collectors.toList());
+		return capabilitiesDto;
+	}
+	
 	private ProjectDto convertProject(Project project) {
 		ProgramDto program = new ProgramDto(project.getProgram().getProgramId(), project.getProgram().getProgramName());
 		StatusDto status = new StatusDto(project.getStatus().getStatusId(), project.getStatus().getValidityPeriod());
 		return new ProjectDto(project.getProjectId(), project.getProjectName(), program, status);
+	}
+	
+	private CapabilityDto convertCapability(Capability capability) {
+		EnvironmentDto environmentDto = new EnvironmentDto(capability.getEnvironment().getEnvironmentId(),
+				capability.getEnvironment().getEnvironmentName());
+		StatusDto statusDto = new StatusDto(capability.getStatus().getStatusId(),
+				capability.getStatus().getValidityPeriod());
+
+		return new CapabilityDto(capability.getCapabilityId(), environmentDto, statusDto,
+				capability.getParentCapabilityId(), capability.getCapabilityName(),
+				capability.getCapabilityDescription(), capability.getLevel(), capability.getPaceOfChange(),
+				capability.getTargetOperatingModel(), capability.getResourceQuality(),
+				capability.getInformationQuality(), capability.getApplicationFit());
 	}
 }
