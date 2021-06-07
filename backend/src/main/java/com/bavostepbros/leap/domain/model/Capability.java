@@ -63,7 +63,6 @@ public class Capability {
 	@Column(name = "CAPABILITYNAME", unique = true)
 	private String capabilityName;
 
-	@NotBlank(message = "Capability description is required.")
 	@Column(name = "CAPABILITYDESCRIPTION")
 	private String capabilityDescription;
 
