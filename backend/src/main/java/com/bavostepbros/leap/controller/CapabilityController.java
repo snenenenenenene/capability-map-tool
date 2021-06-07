@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import com.bavostepbros.leap.domain.model.dto.EnvironmentDto;
 import com.bavostepbros.leap.domain.model.dto.ProgramDto;
 import com.bavostepbros.leap.domain.model.dto.ProjectDto;
+import com.bavostepbros.leap.domain.model.dto.ResourceDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -18,8 +19,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bavostepbros.leap.domain.model.BusinessProcess;
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Project;
+import com.bavostepbros.leap.domain.model.Resource;
+import com.bavostepbros.leap.domain.model.dto.BusinessProcessDto;
 import com.bavostepbros.leap.domain.model.dto.CapabilityDto;
 import com.bavostepbros.leap.domain.model.dto.StatusDto;
 import com.bavostepbros.leap.domain.service.capabilityservice.CapabilityService;
@@ -183,6 +187,15 @@ public class CapabilityController {
 		capabilityService.deleteBusinessProcess(capabilityId, businessProcessId);
 	}
 	
+	@GetMapping(path = "get-businessprocess/{capabilityId}")
+	public List<BusinessProcessDto> getBusinessProcess(@PathVariable("capabilityId") Integer capabilityId) {
+		List<BusinessProcess> businessProcess = capabilityService.getAllBusinessProcessByCapabilityId(capabilityId);
+		List<BusinessProcessDto> businessProcessDto = businessProcess.stream()
+				.map(bp -> convertBusinessProcess(bp))
+				.collect(Collectors.toList());
+		return businessProcessDto;
+	}
+	
 	@PutMapping(path = "link-resource/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void linkResource(@ModelAttribute("capabilityId") Integer capabilityId,
 			@ModelAttribute("resourceId") Integer resourceId) {
@@ -193,6 +206,15 @@ public class CapabilityController {
 	public void unlinkResource(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("resourceId") Integer resourceId) {
 		capabilityService.deleteResource(capabilityId, resourceId);
+	}
+	
+	@GetMapping(path = "get-resources/{capabilityId}")
+	public List<ResourceDto> getResource(@PathVariable("capabilityId") Integer capabilityId) {
+		List<Resource> resources = capabilityService.getAllResourceByResourceId(capabilityId);
+		List<ResourceDto> resourcesDto = resources.stream()
+				.map(resource -> convertResource(resource))
+				.collect(Collectors.toList());
+		return resourcesDto;
 	}
 	
 	private CapabilityDto convertCapability(Capability capability) {
@@ -211,5 +233,15 @@ public class CapabilityController {
 		ProgramDto program = new ProgramDto(project.getProgram().getProgramId(), project.getProgram().getProgramName());
 		StatusDto status = new StatusDto(project.getStatus().getStatusId(), project.getStatus().getValidityPeriod());
 		return new ProjectDto(project.getProjectId(), project.getProjectName(), program, status);
+	}
+	
+	private BusinessProcessDto convertBusinessProcess(BusinessProcess businessProcess) {
+		return new BusinessProcessDto(businessProcess.getBusinessProcessId(), businessProcess.getBusinessProcessName(),
+				businessProcess.getBusinessProcessDescription());
+	}
+	
+	private ResourceDto convertResource(Resource resource) {
+		return new ResourceDto(resource.getResourceId(), resource.getResourceName(), resource.getResourceDescription(),
+				resource.getFullTimeEquivalentYearlyValue());
 	}
 }

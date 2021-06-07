@@ -2,8 +2,10 @@ package com.bavostepbros.leap.domain.service.capabilityservice;
 
 import java.util.List;
 
+import com.bavostepbros.leap.domain.model.BusinessProcess;
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Project;
+import com.bavostepbros.leap.domain.model.Resource;
 
 /**
  *
@@ -50,8 +52,12 @@ public interface CapabilityService {
 	void addBusinessProcess(Integer capabilityId, Integer businessProcessId);
 
 	void deleteBusinessProcess(Integer capabilityId, Integer businessProcessId);
+	
+	List<BusinessProcess> getAllBusinessProcessByCapabilityId(Integer capabilityId);
 
 	void addResource(Integer capabilityId, Integer resourceId);
 
 	void deleteResource(Integer capabilityId, Integer resourceId);
+	
+	List<Resource> getAllResourceByResourceId(Integer capabilityId);
 }

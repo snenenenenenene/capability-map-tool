@@ -277,6 +277,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 		Capability capability = get(capabilityId);
 		Project project = projectService.get(projectId);
 		capability.removeProject(project);
+		return;
 	}
 
 	@Override
@@ -290,6 +291,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 		Capability capability = get(capabilityId);
 		BusinessProcess businessProcess = businessProcessService.get(businessProcessId);
 		capability.addBusinessProcess(businessProcess);
+		return;
 	}
 
 	@Override
@@ -297,6 +299,13 @@ public class CapabilityServiceImpl implements CapabilityService {
 		Capability capability = get(capabilityId);
 		BusinessProcess businessProcess = businessProcessService.get(businessProcessId);
 		capability.removeBusinessProcess(businessProcess);
+		return;
+	}
+	
+	@Override
+	public List<BusinessProcess> getAllBusinessProcessByCapabilityId(Integer capabilityId) {
+		Capability capability = get(capabilityId);
+		return capability.getBusinessProcess();
 	}
 
 	@Override
@@ -304,6 +313,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 		Capability capability = get(capabilityId);
 		Resource resource = resourceService.get(resourceId);
 		capability.addResource(resource);
+		return;
 	}
 
 	@Override
@@ -311,6 +321,13 @@ public class CapabilityServiceImpl implements CapabilityService {
 		Capability capability = get(capabilityId);
 		Resource resource = resourceService.get(resourceId);
 		capability.removeResource(resource);
+		return;
+	}
+
+	@Override
+	public List<Resource> getAllResourceByResourceId(Integer capabilityId) {
+		Capability capability = get(capabilityId);
+		return capability.getResources();
 	}
 
 }

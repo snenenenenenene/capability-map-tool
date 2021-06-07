@@ -129,7 +129,6 @@ public class Capability {
     public Capability(Integer capabilityId, Environment environment, Status status, Integer parentCapabilityId,
 			String capabilityName, PaceOfChange paceOfChange, TargetOperatingModel targetOperatingModel,
 			Integer resourceQuality, Integer informationQuality, Integer applicationFit) {
-		super();
 		this.capabilityId = capabilityId;
 		this.environment = environment;
 		this.status = status;
@@ -159,22 +158,34 @@ public class Capability {
     
     public void addBusinessProcess(BusinessProcess businessProcessItem) {
     	businessProcess.add(businessProcessItem);
+    	businessProcessItem.getCapabilities().add(this);
     	return;
     }
     
     public void removeBusinessProcess(BusinessProcess businessProcessItem) {
     	businessProcess.remove(businessProcessItem);
+    	businessProcessItem.getCapabilities().remove(this);
     	return;
+    }
+    
+    public List<BusinessProcess> getBusinessProcess() {
+    	return businessProcess;
     }
     
     public void addResource(Resource resource) {
     	resources.add(resource);
+    	resource.getCapabilities().add(this);
     	return;
     }
     
     public void removeResource(Resource resource) {
     	resources.remove(resource);
+    	resource.getCapabilities().remove(this);
     	return;
+    }
+    
+    public List<Resource> getResources() {
+    	return resources;
     }
 
     @Override
