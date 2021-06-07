@@ -58,4 +58,20 @@ public class Resource {
 		this.fullTimeEquivalentYearlyValue = fullTimeEquivalentYearlyValue;
 	}
 	
+	public void addCapability(Capability capability) {
+		capabilities.add(capability);
+		capability.getResources().add(this);
+		return;
+	}
+	
+	public void removeCapability(Capability capability) {
+		capabilities.remove(capability);
+		capability.getResources().remove(this);
+		return;
+	}
+	
+	public List<Capability> getCapabilities() {
+		return capabilities;
+	}
+	
 }

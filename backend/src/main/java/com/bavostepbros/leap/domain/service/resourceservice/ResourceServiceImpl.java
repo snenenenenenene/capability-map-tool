@@ -8,7 +8,9 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Resource;
+import com.bavostepbros.leap.domain.service.capabilityservice.CapabilityService;
 import com.bavostepbros.leap.persistence.ResourceDAL;
 
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,9 @@ public class ResourceServiceImpl implements ResourceService {
 
 	@Autowired
 	private ResourceDAL resourceDAL;
+	
+	@Autowired
+	private CapabilityService capabilityService;
 
 	@Override
 	public Resource save(String resourceName, String resourceDescription, Double fullTimeEquivalentYearlyValue) {
@@ -56,6 +61,28 @@ public class ResourceServiceImpl implements ResourceService {
 	@Override
 	public List<Resource> getAll() {
 		return resourceDAL.findAll();
+	}
+
+	@Override
+	public void addCapability(Integer resourceId, Integer capabilityId) {
+		Resource resource = get(resourceId);
+		Capability capability = capabilityService.get(capabilityId);
+		resource.addCapability(capability);
+		return;
+	}
+
+	@Override
+	public void deleteCapability(Integer resourceId, Integer capabilityId) {
+		Resource resource = get(resourceId);
+		Capability capability = capabilityService.get(capabilityId);
+		resource.removeCapability(capability);
+		return;
+	}
+
+	@Override
+	public List<Capability> getAllCapabilitiesByResourceId(Integer resourceId) {
+		Resource resource = get(resourceId);
+		return resource.getCapabilities();
 	}
 
 }
