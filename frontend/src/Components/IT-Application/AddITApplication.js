@@ -46,12 +46,11 @@ export default class AddITApplication extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
 
     const formData = new FormData();
     formData.append("statusId", this.state.statusId);
     formData.append("name", this.state.itApplicationName);
-    formData.append("technology", this.state.technology);
+    // formData.append("technology", this.state.technology);
     formData.append("version", this.state.version);
     formData.append("purchaseDate", this.state.purchaseDate);
     formData.append("endOfLife", this.state.endOfLife);
@@ -63,11 +62,20 @@ export default class AddITApplication extends Component {
     formData.append("expectedSecurityLevel", this.state.expectedSecurityLevel);
     formData.append("currentStability", this.state.currentStability);
     formData.append("expectedStability", this.state.expectedStability);
-    formData.append("currencyType", this.state.currencyType);
-    formData.append("costCurrency", this.state.costCurrency);
-    formData.append("currentValue", this.state.currentYearlyCost);
-    formData.append("currentYearlyCost", this.state.currentYearlyCost);
-    formData.append("acceptedYearlyCost", this.state.acceptedYearlyCost);
+    formData.append("currentValue", this.state.currentValue);
+    formData.append("currencyType", "AAA");
+    formData.append(
+      "costCurrency",
+      parseFloat(this.state.costCurrency).toFixed(1)
+    );
+    formData.append(
+      "currentYearlyCost",
+      parseFloat(this.state.currentYearlyCost).toFixed(1)
+    );
+    formData.append(
+      "acceptedYearlyCost",
+      parseFloat(this.state.acceptedYearlyCost).toFixed(1)
+    );
     formData.append("timeValue", this.state.timeValue);
     await this.state.api.endpoints.itapplication
       .create(formData)
@@ -329,7 +337,7 @@ export default class AddITApplication extends Component {
                   <div className='form-group col-md'>
                     <label htmlFor='costCurrency'>Cost Currency</label>
                     <input
-                      type='text'
+                      type='number'
                       id='costCurrency'
                       name='costCurrency'
                       className='form-control'
@@ -345,7 +353,7 @@ export default class AddITApplication extends Component {
                       Current Total Cost Per Year
                     </label>
                     <input
-                      type='text'
+                      type='number'
                       id='currentYearlyCost'
                       name='currentYearlyCost'
                       className='form-control'
@@ -361,7 +369,7 @@ export default class AddITApplication extends Component {
                       Tolerated Total Cost Per Year
                     </label>
                     <input
-                      type='text'
+                      type='number'
                       id='acceptedYearlyCost'
                       name='acceptedYearlyCost'
                       className='form-control'

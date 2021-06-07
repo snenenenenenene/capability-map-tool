@@ -51,6 +51,7 @@ export default class AddCapability extends Component {
     formData.append("applicationFit", this.state.applicationFit);
     formData.append("resourceQuality", this.state.resourcesQuality);
     formData.append("statusId", this.state.statusId);
+    formData.append("capabilityDescription", this.state.description);
     await this.state.api.endpoints.capability
       .create(formData)
       .then((response) => {
@@ -165,7 +166,7 @@ export default class AddCapability extends Component {
             <div className='row'>
               <div className='col-sm-6'>
                 <div className='form-row'>
-                  <div className='form-group col-md-6'>
+                  <div className='form-group col-md'>
                     <label htmlFor='nameCapability'>Name Capability</label>
                     <input
                       type='text'
@@ -238,7 +239,7 @@ export default class AddCapability extends Component {
                         Select Pace of Change
                       </option>
                       <option value='STANDARD'>Standard</option>
-                      <option value='DIFFERNTIATION'>Differentiation</option>
+                      <option value='DIFFERENTIATION'>Differentiation</option>
                       <option value='INNOVATIVE'>Innovative</option>
                     </select>
                   </div>

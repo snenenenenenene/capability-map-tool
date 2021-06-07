@@ -102,6 +102,7 @@ class App extends Component {
 
   logout() {
     localStorage.removeItem("user");
+    localStorage.removeItem("environment");
     this.props.history.push("/");
     window.location.reload();
   }
@@ -129,82 +130,91 @@ class App extends Component {
     }
   }
 
+  sideBar() {
+    if (localStorage.getItem("environment")) {
+      return (
+        <nav className='nav__cont'>
+          <ul className='nav'>
+            <Link
+              onClick={() => this.environmentCheck}
+              to={`/environment/${this.state.environmentName}`}
+            >
+              <li className='nav__items '>
+                <i className='bi bi-aspect-ratio'></i>
+                <p>Environment</p>
+              </li>
+            </Link>
+            <Link
+              to={`/environment/${this.state.environmentName}/capability`}
+              onClick={() => this.environmentCheck}
+            >
+              <li className='nav__items '>
+                <i className='bi bi-chat-square'></i>
+                <p>Capability</p>
+              </li>
+            </Link>
+            <Link
+              to={`/environment/${this.state.environmentName}/status`}
+              onClick={() => this.environmentCheck}
+            >
+              <li className='nav__items '>
+                <i className='bi bi-calendar-date'></i> <p>Status</p>
+              </li>
+            </Link>
+            <Link to={`/environment/${this.state.environmentName}/strategy`}>
+              <li className='nav__items '>
+                <i className='bi bi-app'></i> <p>Strategy</p>
+              </li>
+            </Link>
+            <Link
+              to={`/environment/${this.state.environmentName}/strategyitem`}
+            >
+              <li className='nav__items '>
+                <i className='bi bi-app-indicator'></i> <p>Strategy Item</p>
+              </li>
+            </Link>
+            <Link
+              to={`/environment/${this.state.environmentName}/itapplication`}
+            >
+              <li className='nav__items '>
+                <i className='bi bi-window'></i> <p>IT Application</p>
+              </li>
+            </Link>
+            <Link to={`/environment/${this.state.environmentName}/project`}>
+              <li className='nav__items '>
+                <i className='bi bi-kanban'></i> <p>Project</p>
+              </li>
+            </Link>
+            <Link to={`/environment/${this.state.environmentName}/resource`}>
+              <li className='nav__items '>
+                <i className='bi bi-folder'></i> <p>Resource</p>
+              </li>
+            </Link>
+            <Link to={`/environment/${this.state.environmentName}/program`}>
+              <li className='nav__items '>
+                <i className='bi bi-cpu'></i> <p>Program</p>
+              </li>
+            </Link>
+            <Link
+              to={`/environment/${this.state.environmentName}/businessprocess`}
+            >
+              <li className='nav__items '>
+                <i className='bi bi-wallet2'></i> <p>Business Process</p>
+              </li>
+            </Link>
+          </ul>
+        </nav>
+      );
+    }
+    return;
+  }
+
   render() {
     if (this.state.authenticated === true) {
       return (
         <div>
           <Toaster />
-          <nav className='nav__cont'>
-            <ul className='nav'>
-              <Link
-                onClick={() => this.environmentCheck}
-                to={`/environment/${this.state.environmentName}`}
-              >
-                <li className='nav__items '>
-                  <i className='bi bi-aspect-ratio'></i>
-                  <p>Environment</p>
-                </li>
-              </Link>
-              <Link
-                to={`/environment/${this.state.environmentName}/capability`}
-                onClick={() => this.environmentCheck}
-              >
-                <li className='nav__items '>
-                  <i className='bi bi-chat-square'></i>
-                  <p>Capability</p>
-                </li>
-              </Link>
-              <Link
-                to={`/environment/${this.state.environmentName}/status`}
-                onClick={() => this.environmentCheck}
-              >
-                <li className='nav__items '>
-                  <i className='bi bi-calendar-date'></i> <p>Status</p>
-                </li>
-              </Link>
-              <Link to={`/environment/${this.state.environmentName}/strategy`}>
-                <li className='nav__items '>
-                  <i className='bi bi-app'></i> <p>Strategy</p>
-                </li>
-              </Link>
-              <Link
-                to={`/environment/${this.state.environmentName}/strategyitem`}
-              >
-                <li className='nav__items '>
-                  <i className='bi bi-app-indicator'></i> <p>Strategy Item</p>
-                </li>
-              </Link>
-              <Link
-                to={`/environment/${this.state.environmentName}/itapplication`}
-              >
-                <li className='nav__items '>
-                  <i className='bi bi-window'></i> <p>IT Application</p>
-                </li>
-              </Link>
-              <Link to={`/environment/${this.state.environmentName}/project`}>
-                <li className='nav__items '>
-                  <i className='bi bi-kanban'></i> <p>Project</p>
-                </li>
-              </Link>
-              <Link to={`/environment/${this.state.environmentName}/resource`}>
-                <li className='nav__items '>
-                  <i className='bi bi-folder'></i> <p>Resource</p>
-                </li>
-              </Link>
-              <Link to={`/environment/${this.state.environmentName}/program`}>
-                <li className='nav__items '>
-                  <i className='bi bi-cpu'></i> <p>Program</p>
-                </li>
-              </Link>
-              <Link
-                to={`/environment/${this.state.environmentName}/businessprocess`}
-              >
-                <li className='nav__items '>
-                  <i className='bi bi-wallet2'></i> <p>Business Process</p>
-                </li>
-              </Link>
-            </ul>
-          </nav>
+          {this.sideBar()}
 
           <nav
             className='navbar navbar-expand-lg navbar-dark sticky-top shadow-lg'

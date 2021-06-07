@@ -42,6 +42,14 @@ export default class API {
     //GENERAL
     endpoints.getAll = ({ query } = {}) => axios.get(`${resourceURL}/`, config);
     endpoints.getOne = ({ id }) => axios.get(`${resourceURL}/${id}`, config);
+    endpoints.getCapabilities = ({ id }) =>
+      axios.get(`${resourceURL}/get-capabilities/${id}`, config);
+    endpoints.linkProject = (toCreate) =>
+      axios.put(`${resourceURL}/link-project/`, toCreate, config);
+    endpoints.linkResource = (toCreate) =>
+      axios.put(`${resourceURL}/link-resource/`, toCreate, config);
+    endpoints.importCSV = (toCreate) =>
+      axios.post(`${resourceURL}/upload-csv-file`, toCreate, config);
     endpoints.getUser = ({ query } = {}) =>
       axios.get(`${resourceURL}/email/${this.email}`, config);
 
