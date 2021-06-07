@@ -52,7 +52,7 @@ public class ITApplication {
     @Column(name = "VERSION")
     private String version;
     
-    @NotEmpty(message = "Purchase date is required.")
+    @NotNull(message = "Purchase date is required.")
     @Column(name = "PURCHASEDATE")
     private LocalDate purchaseDate;
     
