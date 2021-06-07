@@ -56,14 +56,14 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 	@Autowired
 	private BusinessProcessService businessProcessService;
-	
+
 	@Autowired
 	private ResourceService resourceService;
 
 	@Override
 	public Capability save(Integer environmentId, Integer statusId, Integer parentCapabilityId, String capabilityName,
-			String paceOfChange, String targetOperatingModel, Integer resourceQuality, Integer informationQuality,
-			Integer applicationFit) {
+			String capabilityDescription, String paceOfChange, String targetOperatingModel, Integer resourceQuality,
+			Integer informationQuality, Integer applicationFit) {
 		if (capabilityName == null || capabilityName.isBlank() || capabilityName.isEmpty()) {
 			throw new InvalidInputException("Invalid input.");
 		}
@@ -82,13 +82,13 @@ public class CapabilityServiceImpl implements CapabilityService {
 		if (!environmentService.existsById(environmentId)) {
 			throw new ForeignKeyException("Environment ID does not exists.");
 		}
-		
+
 		PaceOfChange pace = PaceOfChange.valueOf(paceOfChange);
 		TargetOperatingModel tom = TargetOperatingModel.valueOf(targetOperatingModel);
 		Environment environment = environmentService.get(environmentId);
 		Status status = statusService.get(statusId);
-		Capability capability = new Capability(environment, status, parentCapabilityId, capabilityName, pace,
-				tom, resourceQuality, informationQuality, applicationFit);
+		Capability capability = new Capability(environment, status, parentCapabilityId, capabilityName,
+				capabilityDescription, pace, tom, resourceQuality, informationQuality, applicationFit);
 		updateLevel(capability);
 
 		Capability savedCapability = capabilityDAL.save(capability);
@@ -117,8 +117,8 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 	@Override
 	public Capability update(Integer capabilityId, Integer environmentId, Integer statusId, Integer parentCapabilityId,
-			String capabilityName, String paceOfChange, String targetOperatingModel, Integer resourceQuality,
-			Integer informationQuality, Integer applicationFit) {
+			String capabilityName, String capabilityDescription, String paceOfChange, String targetOperatingModel,
+			Integer resourceQuality, Integer informationQuality, Integer applicationFit) {
 		if (capabilityId == null || capabilityId.equals(0) || capabilityName == null || capabilityName.isBlank()
 				|| capabilityName.isEmpty()) {
 			throw new InvalidInputException("Invalid input.");
@@ -142,13 +142,13 @@ public class CapabilityServiceImpl implements CapabilityService {
 		if (!environmentService.existsById(environmentId)) {
 			throw new ForeignKeyException("Environment ID does not exists.");
 		}
-		
+
 		PaceOfChange pace = PaceOfChange.valueOf(paceOfChange);
 		TargetOperatingModel tom = TargetOperatingModel.valueOf(targetOperatingModel);
 		Environment environment = environmentService.get(environmentId);
 		Status status = statusService.get(statusId);
 		Capability capability = new Capability(capabilityId, environment, status, parentCapabilityId, capabilityName,
-				pace, tom, resourceQuality, informationQuality, applicationFit);
+				capabilityDescription, pace, tom, resourceQuality, informationQuality, applicationFit);
 		updateLevel(capability);
 		Capability updatedCapability = capabilityDAL.save(capability);
 		return updatedCapability;
@@ -301,7 +301,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 		capability.removeBusinessProcess(businessProcess);
 		return;
 	}
-	
+
 	@Override
 	public List<BusinessProcess> getAllBusinessProcessByCapabilityId(Integer capabilityId) {
 		Capability capability = get(capabilityId);

@@ -19,6 +19,7 @@ public class CapabilityDto {
 	private StatusDto status;
 	private Integer parentCapabilityId;
 	private String capabilityName;
+	private String capabilityDescription;
 	private CapabilityLevel level;
 	private PaceOfChange paceOfChange;
 	private TargetOperatingModel targetOperatingModel;

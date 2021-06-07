@@ -47,13 +47,15 @@ public class BusinessProcessController {
 	}
 
 	@GetMapping(path = "{businessProcessId}")
-	public BusinessProcessDto getBusinessProcess(@PathVariable("businessProcessId") @Positive Integer businessProcessId) {
+	public BusinessProcessDto getBusinessProcess(
+			@PathVariable("businessProcessId") @Positive Integer businessProcessId) {
 		BusinessProcess businessProcess = businessProcessService.get(businessProcessId);
 		return convertBusinessProcess(businessProcess);
 	}
 
 	@PutMapping(path = "{businessProcessId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public BusinessProcessDto updateBusinessProcess(@PathVariable("businessProcessId") @Positive Integer businessProcessId,
+	public BusinessProcessDto updateBusinessProcess(
+			@PathVariable("businessProcessId") @Positive Integer businessProcessId,
 			@ModelAttribute("businessProcessName") @NotBlank String businessProcessName,
 			@ModelAttribute("businessProcessDescription") @NotBlank String businessProcessDescription) {
 		BusinessProcess businessProcess = businessProcessService.update(businessProcessId, businessProcessName,
@@ -80,24 +82,23 @@ public class BusinessProcessController {
 				.map(businessProcess -> convertBusinessProcess(businessProcess)).collect(Collectors.toList());
 		return businessProcessDto;
 	}
-	
+
 	@PutMapping(path = "link-capability/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public void linkCapability(@ModelAttribute("businessProcessId") Integer businessProcessId, 
+	public void linkCapability(@ModelAttribute("businessProcessId") Integer businessProcessId,
 			@ModelAttribute("capabilityId") Integer capabilityId) {
 		businessProcessService.addCapability(businessProcessId, capabilityId);
 	}
-	
+
 	@DeleteMapping(path = "unlink-capability/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public void unlinkCapability(@ModelAttribute("businessProcessId") Integer businessProcessId, 
+	public void unlinkCapability(@ModelAttribute("businessProcessId") Integer businessProcessId,
 			@ModelAttribute("capabilityId") Integer capabilityId) {
 		businessProcessService.deleteCapability(businessProcessId, capabilityId);
 	}
-	
+
 	@GetMapping(path = "get-capabilities/{businessProcessId}")
 	public List<CapabilityDto> getCapabilities(@PathVariable("businessProcessId") Integer businessProcessId) {
 		List<Capability> capabilities = businessProcessService.getAllCapabilitiesByBusinessProcessId(businessProcessId);
-		List<CapabilityDto> capabilitiesDto = capabilities.stream()
-				.map(capability -> convertCapability(capability))
+		List<CapabilityDto> capabilitiesDto = capabilities.stream().map(capability -> convertCapability(capability))
 				.collect(Collectors.toList());
 		return capabilitiesDto;
 	}
@@ -106,16 +107,17 @@ public class BusinessProcessController {
 		return new BusinessProcessDto(businessProcess.getBusinessProcessId(), businessProcess.getBusinessProcessName(),
 				businessProcess.getBusinessProcessDescription());
 	}
-	
+
 	private CapabilityDto convertCapability(Capability capability) {
 		EnvironmentDto environmentDto = new EnvironmentDto(capability.getEnvironment().getEnvironmentId(),
 				capability.getEnvironment().getEnvironmentName());
 		StatusDto statusDto = new StatusDto(capability.getStatus().getStatusId(),
 				capability.getStatus().getValidityPeriod());
-		
+
 		return new CapabilityDto(capability.getCapabilityId(), environmentDto, statusDto,
-				capability.getParentCapabilityId(), capability.getCapabilityName(), capability.getLevel(),
-				capability.getPaceOfChange(), capability.getTargetOperatingModel(), capability.getResourceQuality(),
+				capability.getParentCapabilityId(), capability.getCapabilityName(),
+				capability.getCapabilityDescription(), capability.getLevel(), capability.getPaceOfChange(),
+				capability.getTargetOperatingModel(), capability.getResourceQuality(),
 				capability.getInformationQuality(), capability.getApplicationFit());
 	}
 

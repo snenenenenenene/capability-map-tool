@@ -121,10 +121,11 @@ public class ProjectController {
 				capability.getEnvironment().getEnvironmentName());
 		StatusDto statusDto = new StatusDto(capability.getStatus().getStatusId(),
 				capability.getStatus().getValidityPeriod());
-		
+
 		return new CapabilityDto(capability.getCapabilityId(), environmentDto, statusDto,
-				capability.getParentCapabilityId(), capability.getCapabilityName(), capability.getLevel(),
-				capability.getPaceOfChange(), capability.getTargetOperatingModel(), capability.getResourceQuality(),
+				capability.getParentCapabilityId(), capability.getCapabilityName(),
+				capability.getCapabilityDescription(), capability.getLevel(), capability.getPaceOfChange(),
+				capability.getTargetOperatingModel(), capability.getResourceQuality(),
 				capability.getInformationQuality(), capability.getApplicationFit());
 	}
 }

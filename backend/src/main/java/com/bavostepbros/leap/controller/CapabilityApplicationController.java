@@ -100,6 +100,7 @@ public class CapabilityApplicationController {
 						capabilityApplication.getCapability().getStatus().getValidityPeriod()),
 				capabilityApplication.getCapability().getParentCapabilityId(),
 				capabilityApplication.getCapability().getCapabilityName(),
+				capabilityApplication.getCapability().getCapabilityDescription(),
 				capabilityApplication.getCapability().getLevel(),
 				capabilityApplication.getCapability().getPaceOfChange(),
 				capabilityApplication.getCapability().getTargetOperatingModel(),
