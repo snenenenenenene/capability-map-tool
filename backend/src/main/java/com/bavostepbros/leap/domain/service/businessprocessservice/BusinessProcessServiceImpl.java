@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bavostepbros.leap.domain.model.BusinessProcess;
+import com.bavostepbros.leap.domain.model.Capability;
+import com.bavostepbros.leap.domain.service.capabilityservice.CapabilityService;
 import com.bavostepbros.leap.persistence.BusinessProcessDAL;
 
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,9 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
 
 	@Autowired
 	private BusinessProcessDAL businessProcessDAL;
+	
+	@Autowired
+	private CapabilityService capabilityService;
 
 	@Override
 	public BusinessProcess save(String businessProcessName, String businessProcessDescription) {
@@ -57,6 +62,28 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
 	@Override
 	public List<BusinessProcess> getAll() {
 		return businessProcessDAL.findAll();
+	}
+
+	@Override
+	public void addCapability(Integer businessProcessId, Integer capabilityId) {
+		BusinessProcess businessProcess = get(businessProcessId);
+		Capability capability = capabilityService.get(capabilityId);
+		businessProcess.addCapability(capability);
+		return;
+	}
+
+	@Override
+	public void deleteCapability(Integer businessProcessId, Integer capabilityId) {
+		BusinessProcess businessProcess = get(businessProcessId);
+		Capability capability = capabilityService.get(capabilityId);
+		businessProcess.addCapability(capability);
+		return;
+	}
+
+	@Override
+	public List<Capability> getAllCapabilitiesByBusinessProcessId(Integer businessProcessId) {
+		BusinessProcess businessProcess = get(businessProcessId);
+		return businessProcess.getCapabilities();
 	}
 
 }

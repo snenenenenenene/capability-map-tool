@@ -70,6 +70,7 @@ public class Project {
 	public void removeCapability(Capability capability) {
 		capabilities.remove(capability);
 		capability.getProjects().remove(this);
+		return;
 	}
 	
 	public List<Capability> getCapabilities() {

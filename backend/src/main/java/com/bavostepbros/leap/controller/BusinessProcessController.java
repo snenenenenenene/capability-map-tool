@@ -20,7 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bavostepbros.leap.domain.model.BusinessProcess;
+import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.dto.BusinessProcessDto;
+import com.bavostepbros.leap.domain.model.dto.CapabilityDto;
+import com.bavostepbros.leap.domain.model.dto.EnvironmentDto;
+import com.bavostepbros.leap.domain.model.dto.StatusDto;
 import com.bavostepbros.leap.domain.service.businessprocessservice.BusinessProcessService;
 
 import lombok.RequiredArgsConstructor;
@@ -76,10 +80,43 @@ public class BusinessProcessController {
 				.map(businessProcess -> convertBusinessProcess(businessProcess)).collect(Collectors.toList());
 		return businessProcessDto;
 	}
+	
+	@PutMapping(path = "link-capability/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public void linkCapability(@ModelAttribute("businessProcessId") Integer businessProcessId, 
+			@ModelAttribute("capabilityId") Integer capabilityId) {
+		businessProcessService.addCapability(businessProcessId, capabilityId);
+	}
+	
+	@DeleteMapping(path = "unlink-capability/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public void unlinkCapability(@ModelAttribute("businessProcessId") Integer businessProcessId, 
+			@ModelAttribute("capabilityId") Integer capabilityId) {
+		businessProcessService.deleteCapability(businessProcessId, capabilityId);
+	}
+	
+	@GetMapping(path = "get-capabilities/{businessProcessId}")
+	public List<CapabilityDto> getCapabilities(@PathVariable("businessProcessId") Integer businessProcessId) {
+		List<Capability> capabilities = businessProcessService.getAllCapabilitiesByBusinessProcessId(businessProcessId);
+		List<CapabilityDto> capabilitiesDto = capabilities.stream()
+				.map(capability -> convertCapability(capability))
+				.collect(Collectors.toList());
+		return capabilitiesDto;
+	}
 
 	private BusinessProcessDto convertBusinessProcess(BusinessProcess businessProcess) {
 		return new BusinessProcessDto(businessProcess.getBusinessProcessId(), businessProcess.getBusinessProcessName(),
 				businessProcess.getBusinessProcessDescription());
+	}
+	
+	private CapabilityDto convertCapability(Capability capability) {
+		EnvironmentDto environmentDto = new EnvironmentDto(capability.getEnvironment().getEnvironmentId(),
+				capability.getEnvironment().getEnvironmentName());
+		StatusDto statusDto = new StatusDto(capability.getStatus().getStatusId(),
+				capability.getStatus().getValidityPeriod());
+		
+		return new CapabilityDto(capability.getCapabilityId(), environmentDto, statusDto,
+				capability.getParentCapabilityId(), capability.getCapabilityName(), capability.getLevel(),
+				capability.getPaceOfChange(), capability.getTargetOperatingModel(), capability.getResourceQuality(),
+				capability.getInformationQuality(), capability.getApplicationFit());
 	}
 
 }

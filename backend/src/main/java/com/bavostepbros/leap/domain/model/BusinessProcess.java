@@ -50,4 +50,20 @@ public class BusinessProcess {
 		this.businessProcessDescription = businessProcessDescription;
 	}
 	
+	public void addCapability(Capability capability) {
+		capabilities.add(capability);
+		capability.getBusinessProcess().add(this);
+		return;
+	}
+	
+	public void removeCapability(Capability capability) {
+		capabilities.add(capability);
+		capability.getBusinessProcess().remove(this);
+		return;
+	}
+	
+	public List<Capability> getCapabilities() {
+		return capabilities;
+	}
+	
 }
