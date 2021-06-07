@@ -18,6 +18,7 @@ public interface EnvironmentService {
 	List<Environment> getAll();
 	Environment update(Integer environmentId, String evironmentName);
 	Environment addCapability(Integer id, Capability capability);
+	Environment addCapabilities(Integer id, List<Capability> capabilities);
 	Environment addStrategy(Integer id, Strategy strategy);
 	void delete(Integer id);
 	boolean existsById(Integer id);

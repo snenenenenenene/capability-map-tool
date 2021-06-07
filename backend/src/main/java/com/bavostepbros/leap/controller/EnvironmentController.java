@@ -1,5 +1,9 @@
 package com.bavostepbros.leap.controller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,16 +16,11 @@ import com.bavostepbros.leap.domain.model.CapabilityItem;
 import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapDto;
 import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapItemDto;
 
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.ITApplication;
@@ -50,6 +49,7 @@ import com.bavostepbros.leap.domain.model.dto.TechnologyDto;
 import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -118,6 +118,25 @@ public class EnvironmentController {
 			return constructMap(envService.get(environmentId));
 		} catch (Exception e) {
 			return new CapabilityMapDto();
+		}
+	}
+
+	@PostMapping(path = "upload-csv-file")
+	public void uploadCsvFile(
+			@ModelAttribute("file") MultipartFile file,
+			@ModelAttribute("environmentId") Integer environmentId) {
+		if(!file.isEmpty()) {
+			try(Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+				CsvToBean<Capability> csvToBean = new CsvToBeanBuilder<Capability>(reader)
+						.withIgnoreLeadingWhiteSpace(true)
+						.build();
+
+				List<Capability> capabilities = csvToBean.parse();
+				envService.addCapabilities(environmentId, capabilities);
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

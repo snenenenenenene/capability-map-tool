@@ -18,6 +18,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import com.opencsv.bean.CsvBindByName;
 
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 import com.bavostepbros.leap.domain.model.paceofchange.PaceOfChange;
@@ -55,10 +56,12 @@ public class Capability {
     private Status status;
     
     @PositiveOrZero(message = "The capability id must be positive.")
+    @CsvBindByName
     @Column(name = "PARENTCAPABILITYID")
     private Integer parentCapabilityId;
     
     @NotBlank(message = "Capability name is required.")
+    @CsvBindByName
     @Column(name = "CAPABILITYNAME", unique = true)
     private String capabilityName;
 
@@ -66,48 +69,53 @@ public class Capability {
     private CapabilityLevel level;
     
     @NotNull(message = "Pace of change must not be null.")
+    @CsvBindByName
     @Column(name = "PACEOFCHANGE")
     private PaceOfChange paceOfChange;
     
     @NotNull(message = "Target operating model must not be null.")
+    @CsvBindByName
     @Column(name = "TARGETOPERATINGMODEL")
     private TargetOperatingModel targetOperatingModel;
     
     @NotNull(message = "Resource quality must not be null.")
     @Min(value = 1, message = "Resource quality must be between 1 and 5, inclusive.")
     @Max(value = 5, message = "Resource quality must be between 1 and 5, inclusive.")
+    @CsvBindByName
     @Column(name = "RESOURCEQUALITY")
     private Integer resourceQuality;
-    
+
+    @CsvBindByName
     @Column(name = "INFORMATIONQUALITY")
     private Integer informationQuality;
-    
+
+    @CsvBindByName
     @Column(name = "APPLICATIONFIT")
     private Integer applicationFit;
 
     @OneToMany(mappedBy = "capability")
     private List<CapabilityItem> capabilityItems;
-    
+
     @OneToMany(mappedBy = "capability")
     private List<CapabilityApplication> capabilityApplication;
-    
+
     @OneToMany(mappedBy = "capability")
     private List<CapabilityInformation> capabilityInformation;
     
     @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(name = "CAPABILITY_PROJECT", 
+    @JoinTable(name = "CAPABILITY_PROJECT",
     	joinColumns = {@JoinColumn(name = "CAPABILITYID")}, 
     	inverseJoinColumns = {@JoinColumn(name = "PROJECTID")})
     private List<Project> projects;
     
     @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(name = "CAPABILITY_BUSINESSPROCESS", 
+    @JoinTable(name = "CAPABILITY_BUSINESSPROCESS",
     	joinColumns = {@JoinColumn(name = "CAPABILITYID")}, 
     	inverseJoinColumns = {@JoinColumn(name = "BUSINESSPROCESSID")})
     private List<BusinessProcess> businessProcess;
     
     @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(name = "CAPABILITY_RESOURCE", 
+    @JoinTable(name = "CAPABILITY_RESOURCE",
     	joinColumns = {@JoinColumn(name = "CAPABILITYID")}, 
     	inverseJoinColumns = {@JoinColumn(name = "RESOURCEID")})
     private List<Resource> resources;
@@ -144,7 +152,6 @@ public class Capability {
     
     public void addProject(Project project) {
     	projects.add(project);
-    	return;
     }
     
     public void removeProject(Project project) {
@@ -157,22 +164,18 @@ public class Capability {
     
     public void addBusinessProcess(BusinessProcess businessProcessItem) {
     	businessProcess.add(businessProcessItem);
-    	return;
     }
     
     public void removeBusinessProcess(BusinessProcess businessProcessItem) {
     	businessProcess.remove(businessProcessItem);
-    	return;
     }
     
     public void addResource(Resource resource) {
     	resources.add(resource);
-    	return;
     }
     
     public void removeResource(Resource resource) {
     	resources.remove(resource);
-    	return;
     }
 
     @Override
