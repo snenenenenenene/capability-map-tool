@@ -53,6 +53,7 @@ export default class AddStrategyItem extends Component {
     this.state.api.createEntity({ name: "environment" });
     this.state.api.createEntity({ name: "status" });
     this.state.api.createEntity({ name: "strategy" });
+    this.state.api.createEntity({ name: "strategyitem" });
 
     await this.state.api.endpoints.environment
       .getEnvironmentByName({ name: this.state.environmentName })

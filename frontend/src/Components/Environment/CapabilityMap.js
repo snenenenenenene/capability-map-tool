@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { Modal, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
 import API from "../../Services/API";
+import { clippingParents } from "@popperjs/core";
 
 export default class CapabilityMap extends Component {
   constructor(props) {
@@ -16,6 +17,8 @@ export default class CapabilityMap extends Component {
       showModal: false,
       capability: {},
       pdfExportComponent: React.createRef(),
+      capabilityPdfExportComponent: React.createRef(),
+      capabilityMapZoom: 70,
     };
   }
 
@@ -54,7 +57,7 @@ export default class CapabilityMap extends Component {
           >
             {capability.capabilityName}
           </div>
-          <div class='card-body'>
+          <div class='card-body zoomTarget'>
             {this.strategyItemExists(capability)}
             <div className='row'>
               <div className='card-deck justify-content-center mx-auto'>
@@ -91,6 +94,10 @@ export default class CapabilityMap extends Component {
       });
   }
 
+  zoomHandler(zoom) {
+    this.setState({ capabilityMapZoom: this.state.capabilityMapZoom + zoom });
+  }
+
   renderStrategyItemsinBody(capability) {
     if (capability.capabilityItems !== undefined) {
       return capability.capabilityItems.map((capabilityItem) => {
@@ -119,30 +126,29 @@ export default class CapabilityMap extends Component {
         }
         return (
           <div>
-            <OverlayTrigger
-              placement='bottom'
-              overlay={
-                <Tooltip id='button-tooltip-2'>
-                  <div>{capabilityItem.strategyItem.strategyItemName}</div>
-                  <div>{capabilityItem.strategyItem.description}</div>
-                </Tooltip>
-              }
-            >
-              <div className=''>
-                <div
-                  className='card strat-item'
-                  style={{
-                    backgroundColor: itemColour,
-                  }}
-                >
-                  <div className='card-body'></div>
-                </div>
+            <div>
+              <div
+                className='card strat-item'
+                data-toggle='tooltip'
+                data-placement='bottom'
+                title={capabilityItem.strategyItem.strategyItemName}
+                style={{
+                  backgroundColor: itemColour,
+                }}
+              >
+                <div className='card-body'></div>
               </div>
-            </OverlayTrigger>
+            </div>
+            <div id='tooltip' role='tooltip'></div>
           </div>
         );
       });
     } else return;
+  }
+  renderCapabilityInformation(capability) {
+    if (capability.capabilityInformation !== undefined) {
+      return capability.capabilityInformation.map((information) => {});
+    }
   }
 
   renderStrategyItems(capability) {
@@ -184,11 +190,11 @@ export default class CapabilityMap extends Component {
             <div
               className='card'
               style={{
-                margin: 3,
-                maxWidth: 60,
-                minWidth: 60,
-                maxHeight: 60,
-                minHeight: 60,
+                marginBottom: 4 + "%",
+                maxWidth: 20,
+                minWidth: 20,
+                maxHeight: 20,
+                minHeight: 20,
                 backgroundColor: itemColour,
               }}
             >
@@ -203,12 +209,24 @@ export default class CapabilityMap extends Component {
   handleExportWithComponent = (event) => {
     this.state.pdfExportComponent.current.save();
   };
+  handleCapabilityExportWithComponent = (event) => {
+    this.state.capabilityPdfExportComponent.current.save();
+  };
+
+  handleFileUpload = async (event) => {
+    const formData = new FormData();
+    formData.append("file", event.target.value);
+    formData.append("environmentId", this.state.environmentId);
+    await this.state.api.endpoints.environment
+      .importCSV(formData)
+      .then(async (response) => await this.componentDidMount())
+      .catch((error) => toast.error("Could not Import Map"));
+  };
 
   render() {
     const targetRef = React.createRef();
-    const capability = this.state.capability;
     return (
-      <div className='capability-map'>
+      <div className='capability-map zoomViewport'>
         <br></br>
         <nav aria-label='breadcrumb' className='container'>
           <ol className='breadcrumb'>
@@ -216,16 +234,33 @@ export default class CapabilityMap extends Component {
               <Link to={`/`}>Home</Link>
             </li>
             <li className='breadcrumb-item'>{this.state.environmentName}</li>
+            <div className='ml-auto pdf-button'>
+              {/* <span
+                className='bi bi-file-earmark-spreadsheet-fill'
+                aria-hidden='true'
+              ></span> */}
+              <label
+                for='file'
+                className='bi bi-file-earmark-spreadsheet-fill'
+              ></label>
+              <input
+                name='file'
+                type='file'
+                id='file'
+                className='inputfile'
+                onChange={this.handleFileUpload}
+              ></input>
+            </div>
             <div
-              className='ml-auto pdf-button'
+              className='pdf-button float-right'
+              style={{ marginLeft: 5 }}
               onClick={this.handleExportWithComponent}
             >
-              <i class='bi bi-file-earmark-pdf-fill'></i>
+              <i className='bi bi-file-earmark-pdf-fill'></i>
             </div>
           </ol>
         </nav>
-
-        <div className='capability-map-container'>
+        <div className='capability-map-container zoomContainer'>
           <div className='row justify-content-center' ref={targetRef}>
             <PDFExport
               ref={this.state.pdfExportComponent}
@@ -234,10 +269,33 @@ export default class CapabilityMap extends Component {
               fileName={`${this.state.environmentName} ${new Date().getDate()}`}
               author='LEAP'
             >
-              <div className='card-deck justify-content-center mx-auto'>
+              <div
+                className='card-deck justify-content-center mx-auto'
+                style={{ zoom: this.state.capabilityMapZoom + "%" }}
+              >
                 {this.capabilityMapping(this.state.capabilities)}
               </div>
             </PDFExport>
+          </div>
+        </div>
+        <div className='zoom-dock'>
+          <div>
+            <button
+              value='soep'
+              className='zoom-button'
+              onClick={() => this.zoomHandler(+10)}
+            >
+              <i class='bi bi-plus-lg'></i>
+            </button>
+          </div>
+          <div>
+            <button
+              value='soep'
+              className='zoom-button'
+              onClick={() => this.zoomHandler(-10)}
+            >
+              <i class='bi bi-dash-lg'></i>
+            </button>
           </div>
         </div>
         <div>
@@ -247,15 +305,71 @@ export default class CapabilityMap extends Component {
             onHide={() => this.handleModal()}
             centered
           >
-            <Modal.Header closeButton>
-              <Modal.Title className='text-truncate'>
-                {capability.capabilityName}
-              </Modal.Title>
+            <Modal.Header className='capability-header' closeButton>
+              <div
+                className='pdf-button'
+                onClick={this.handleCapabilityExportWithComponent}
+              >
+                <i class='bi bi-file-earmark-pdf-fill'></i>
+              </div>
             </Modal.Header>
             <Modal.Body>
-              <div className='card-deck justify-content-center mx-auto'>
-                {this.renderStrategyItems(this.state.capability)}
-              </div>
+              <PDFExport
+                ref={this.state.capabilityPdfExportComponent}
+                paperSize='auto'
+                margin={40}
+                fileName={`${this.state.capability.capabilityName} - ${
+                  this.state.environmentName
+                } - ${new Date().getDate()}`}
+                author='LEAP'
+              >
+                <div className='mx-auto justify-content-center'>
+                  <h4 className='text-truncate capability-modal-title text-uppercase'>
+                    {this.state.capability.capabilityName}
+                  </h4>
+                  <br></br>
+                  <hr></hr>
+                  {/* <pre>{JSON.stringify(this.state.capability, undefined, 2)}</pre> */}
+                  <div className='strat-items'>
+                    <th>ITEMS</th>
+                    <div className='card-deck justify-content-center'>
+                      {this.renderStrategyItems(this.state.capability)}
+                    </div>
+                  </div>
+                  <br></br>
+                  <table>
+                    <tr>
+                      <th>POC</th>
+                      <td className='map-td'>
+                        {this.state.capability.paceOfChange}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>TOM</th>
+                      <td className='map-td'>
+                        {this.state.capability.targetOperatingModel}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>AF</th>
+                      <td className='map-td'>
+                        {this.state.capability.applicationFit}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>RQ</th>
+                      <td className='map-td'>
+                        {this.state.capability.resourceQuality}
+                      </td>
+                    </tr>
+                  </table>
+                  {/* <p>{this.state.capability.projects}</p> */}
+                  {/*  <p>{this.state.capability.businessprocess.length()}</p> */}
+                  {this.renderCapabilityInformation(this.state.capability)}
+                  {/* <p>{this.state.capability.resources.length()}</p> */}
+                  {/*  <p>{this.state.capability.capabilityApplications.length()}</p> */}
+                </div>
+              </PDFExport>
             </Modal.Body>
           </Modal>
         </div>

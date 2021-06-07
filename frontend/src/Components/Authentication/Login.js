@@ -37,7 +37,8 @@ export default class Login extends Component {
     axios
       .post(`${process.env.REACT_APP_API_URL}/user/authenticate`, formData)
       .then((response) => {
-        if (response.data === "Bad Credentials") {
+        console.log(response.data);
+        if (response.data === "Bad credentials") {
           return toast.error("Bad Credentials");
         }
         toast.success(`Successful Login! \n Welcome ${this.state.username}`);

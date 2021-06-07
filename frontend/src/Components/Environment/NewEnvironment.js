@@ -67,6 +67,13 @@ export default class NewEnvironment extends Component {
             );
           })
           .catch((error) => {
+            if (error.response.status === 403) {
+              localStorage.removeItem("user");
+              localStorage.removeItem("environment");
+              this.props.history.push("/");
+              window.location.reload();
+              return;
+            }
             this.props.history.push("/404");
           });
       })
