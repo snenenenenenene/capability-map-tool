@@ -2,11 +2,9 @@ import React, { Component } from "react";
 import LeapImg from "../../img/LEAP_black.png";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import { Modal } from "react-bootstrap";
-import ConfigurePassword from "./ConfigurePassword";
 import "./Login.css";
-import * as sha1 from "js-sha1";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Link } from "react-router-dom";
 
 export default class Login extends Component {
   constructor(props) {
@@ -80,7 +78,7 @@ export default class Login extends Component {
           marginBottom: 20 + "%",
         }}
       >
-        <Toaster />
+        {/* <Toaster /> */}
         <div className='text-center'>
           <img
             alt='leap'
@@ -125,32 +123,16 @@ export default class Login extends Component {
             >
               LOGIN
             </button>
-            <p>@Bavo&amp;Stepbros</p>
+            <br></br>
+            <br></br>
+            <p style={{ fontSize: 10 + "px", color: "grey" }}>
+              @Bavo&amp;Stepbros
+            </p>
           </form>
-          {/* </div> */}
+          <Link className='bottom-text text-center' to='/forgotpassword'>
+            <p>Forgot Password</p>
+          </Link>
         </div>
-        <Modal show={this.state.showModal}>
-          <Modal.Header>Configure Password</Modal.Header>
-          <Modal.Body>
-            <ConfigurePassword
-              handleModal={this.handleModal}
-              userId={this.state.userId}
-              email={this.state.email}
-              username={this.state.username}
-              roleId={this.state.roleId}
-              fetchConfigurePassword={this.fetchConfigurePassword}
-            />
-          </Modal.Body>
-          <Modal.Footer>
-            <button
-              type='button'
-              className='btn btn-secondary'
-              onClick={() => this.handleModal()}
-            >
-              Close
-            </button>
-          </Modal.Footer>
-        </Modal>
       </div>
     );
   }

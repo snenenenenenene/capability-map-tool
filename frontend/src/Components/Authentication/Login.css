@@ -44,6 +44,28 @@
   color: orange;
 }
 
+.bottom-text {
+  margin: auto;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  color: rgb(255, 114, 79);
+}
+
+.top-text {
+  margin: auto;
+  position: absolute;
+  bottom: 90%;
+  left: 0;
+  right: 0;
+}
+
+.bottom-text:hover {
+  color: rgb(255, 0, 0);
+  text-decoration: none;
+}
+
 .login-input:focus {
   padding-bottom: 6px;
   border-width: 3px;
