@@ -7,8 +7,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Currency;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,12 +56,16 @@ class ITApplicationServiceTest {
 	@SpyBean
 	private StatusService spyStatusService;
 
+	@SpyBean
+	private ITApplicationService spyITApplicationService;
+
 	private Status statusFirst;
 	private Status statusSecond;
 	private Technology technologyFirst;
 	private Technology technologySecond;
 	private ITApplication itApplicationFirst;
 	private ITApplication itApplicationSecond;
+	private List<ITApplication> itApplications;
 	private Optional<Status> optionalStatusFirst;
 	private Optional<ITApplication> optionalITApplicationFirst;
 
@@ -95,6 +103,7 @@ class ITApplicationServiceTest {
 				LocalDate.of(2025, 05, 20), 1, 2, 3, 4, 5, 4, 3, 2, "EUR", 1000.0, 5, 70.0, 100.0, TimeValue.ELIMINATE);
 		itApplicationSecond = new ITApplication(2, statusSecond, "application 2", "1.20.1", LocalDate.of(2021, 01, 20),
 				LocalDate.of(2025, 05, 20), 2, 3, 4, 5, 4, 3, 2, 1, "EUR", 1000.0, 4, 70.0, 100.0, TimeValue.INVEST);
+		itApplications = List.of(itApplicationFirst, itApplicationSecond);
 		optionalStatusFirst = Optional.of(statusFirst);
 		optionalITApplicationFirst = Optional.of(itApplicationFirst);
 
@@ -132,6 +141,9 @@ class ITApplicationServiceTest {
 		assertNotNull(technologySecond);
 		assertNotNull(itApplicationFirst);
 		assertNotNull(itApplicationSecond);
+		assertNotNull(itApplications);
+		assertNotNull(optionalStatusFirst);
+		assertNotNull(optionalITApplicationFirst);
 	}
 
 	@Test
@@ -1356,10 +1368,10 @@ class ITApplicationServiceTest {
 	@Test
 	void should_returnTrue_whenDeleted() {
 		itApplicationService.delete(itApplicationId);
-		
+
 		Mockito.verify(applicationDAL, Mockito.times(1)).deleteById(Mockito.eq(itApplicationId));
 	}
-	
+
 	@Test
 	void should_ReturnFalse_whenStrategyDoesNotExistById() {
 		BDDMockito.given(applicationDAL.existsById(BDDMockito.anyInt())).willReturn(false);
@@ -1368,7 +1380,7 @@ class ITApplicationServiceTest {
 
 		assertFalse(result);
 	}
-	
+
 	@Test
 	void should_ReturnTrue_whenStrategyDoesExistById() {
 		BDDMockito.given(applicationDAL.existsById(BDDMockito.anyInt())).willReturn(true);
@@ -1376,6 +1388,66 @@ class ITApplicationServiceTest {
 		boolean result = itApplicationService.existsById(itApplicationId);
 
 		assertTrue(result);
+	}
+
+	@Test
+	void should_throwNoSuchElementException_whenGetByNameITApplicationNameIsNull() {
+		String applicationName = null;
+		String expected = "IT-application does not exist.";
+
+		Exception exception = assertThrows(NullPointerException.class,
+				() -> itApplicationService.getItApplicationByName(applicationName));
+
+		assertEquals(expected, exception.getMessage());
+	}
+
+	@Test
+	void should_returnITApplication_whenGetByNameITApplication() {
+		BDDMockito.given(applicationDAL.findByName(applicationName)).willReturn(optionalITApplicationFirst);
+
+		ITApplication application = itApplicationService.getItApplicationByName(applicationName);
+
+		assertNotNull(application);
+		assertTrue(application instanceof ITApplication);
+		testItApplication(itApplicationFirst, application);
+	}
+
+	@Test
+	void should_returnITApplications_whenGetAll() {
+		BDDMockito.given(applicationDAL.findAll()).willReturn(itApplications);
+
+		List<ITApplication> fetchedApplications = itApplicationService.getAll();
+
+		assertNotNull(fetchedApplications);
+		assertEquals(itApplications.size(), fetchedApplications.size());
+	}
+
+	@Test
+	void should_returnCurrencies_whenGetAllCurrencies() {
+		List<String> currencies = Currency.getAvailableCurrencies().stream()
+				.map(currency -> currency.getCurrencyCode())
+				.collect(Collectors.toList());
+
+		BDDMockito.doReturn(currencies).when(spyITApplicationService).getAllCurrencies();
+
+		List<String> fetchedCurrencies = itApplicationService.getAllCurrencies();
+
+		assertNotNull(fetchedCurrencies);
+		assertEquals(currencies.size(), fetchedCurrencies.size());
+	}
+
+	@Test
+	void should_returnTimeValues_whenGetAllCurrencies() {
+		List<String> timeValues = Arrays.stream(TimeValue.values())
+				.map(TimeValue::name)
+				.collect(Collectors.toList());
+		
+		BDDMockito.doReturn(timeValues).when(spyITApplicationService).getAllTimeValues();
+
+		List<String> fetchedTimeValues = itApplicationService.getAllTimeValues();
+
+		assertNotNull(fetchedTimeValues);
+		assertEquals(timeValues.size(), fetchedTimeValues.size());
 	}
 
 	@Test
