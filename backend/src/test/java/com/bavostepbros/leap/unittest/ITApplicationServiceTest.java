@@ -1449,14 +1449,6 @@ class ITApplicationServiceTest {
 		assertNotNull(fetchedTimeValues);
 		assertEquals(timeValues.size(), fetchedTimeValues.size());
 	}
-	
-	@Test
-	void should_addTechnology_whenAddTechnology() {
-		itApplicationService.addTechnology(itApplicationId, technologyFirst.getTechnologyId());
-
-		Mockito.verify(itApplicationService, Mockito.times(1)).addTechnology(Mockito.eq(itApplicationId), 
-				Mockito.eq(technologyFirst.getTechnologyId()));
-	}
 
 	@Test
 	private void testItApplication(ITApplication expectedObject, ITApplication actualObject) {
