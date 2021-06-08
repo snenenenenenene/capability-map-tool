@@ -16,8 +16,6 @@ import com.bavostepbros.leap.domain.model.CapabilityItem;
 import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapDto;
 import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapItemDto;
 
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
