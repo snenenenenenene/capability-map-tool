@@ -72,6 +72,11 @@ export default class EditProgram extends Component {
                 {this.state.environmentName}
               </Link>
             </li>
+            <li className='breadcrumb-item'>
+              <Link to={`/environment/${this.state.environmentName}/program`}>
+                Programs
+              </Link>
+            </li>
             <li className='breadcrumb-item active' aria-current='page'>
               {this.state.programId}
             </li>
@@ -92,34 +97,6 @@ export default class EditProgram extends Component {
                       className='form-control'
                       placeholder='Name Program'
                       value={this.state.programName}
-                      onChange={this.handleInputChange}
-                    />
-                  </div>
-                </div>
-                <div className='form-row'>
-                  <div className='form-group col-md'>
-                    <label htmlFor='technology'>Technology</label>
-                    <input
-                      type='text'
-                      id='technology'
-                      name='technology'
-                      className='form-control'
-                      placeholder='Technology'
-                      value={this.state.technology}
-                      onChange={this.handleInputChange}
-                    />
-                  </div>
-                </div>
-                <div className='form-row'>
-                  <div className='form-group col-md'>
-                    <label htmlFor='version'>Version</label>
-                    <input
-                      type='text'
-                      id='version'
-                      name='version'
-                      className='form-control'
-                      placeholder='Version'
-                      value={this.state.version}
                       onChange={this.handleInputChange}
                     />
                   </div>

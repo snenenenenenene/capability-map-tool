@@ -177,6 +177,7 @@ export default class AddCapability extends Component {
                       value={this.state.capabilityName}
                       onChange={this.handleInputChange}
                       required
+                      autofocus
                     />
                   </div>
                 </div>

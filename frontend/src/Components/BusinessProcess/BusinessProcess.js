@@ -80,7 +80,7 @@ export default class BusinessProcess extends Component {
     await this.state.api.endpoints.businessprocess
       .getAll()
       .then((response) => {
-        this.setState({ businessprocesses: response.data });
+        this.setState({ businessProcesses: response.data });
       })
       .catch((error) => {
         toast.error("Could not Find Business Processes");

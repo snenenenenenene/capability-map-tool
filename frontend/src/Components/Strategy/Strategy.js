@@ -111,11 +111,7 @@ export default class Strategy extends Component {
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className='breadcrumb-item'>
-              <Link to={`/environment/${this.state.environmentName}/strategy`}>
-                Strategy
-              </Link>
-            </li>
+            <li className='breadcrumb-item'>Strategy</li>
           </ol>
         </nav>
         <MaterialTable
