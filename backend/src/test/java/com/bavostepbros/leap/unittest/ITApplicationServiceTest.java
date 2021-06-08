@@ -1,6 +1,7 @@
 package com.bavostepbros.leap.unittest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -1246,8 +1248,8 @@ class ITApplicationServiceTest {
 		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
 
 		Exception exception = assertThrows(NoSuchElementException.class,
-				() -> itApplicationService.update(itApplicationId, statusId, applicationName, version, purchaseDate, endOfLife,
-						currentScalability, expectedScalability, currentPerformance, expectedPerformance,
+				() -> itApplicationService.update(itApplicationId, statusId, applicationName, version, purchaseDate,
+						endOfLife, currentScalability, expectedScalability, currentPerformance, expectedPerformance,
 						currentSecurityLevel, expectedSecurityLevel, currentStability, expectedStability, currencyType,
 						costCurrency, currentValue, currentYearlyCost, acceptedYearlyCost, timeValue));
 
@@ -1262,8 +1264,8 @@ class ITApplicationServiceTest {
 		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
 
 		Exception exception = assertThrows(NoSuchElementException.class,
-				() -> itApplicationService.update(itApplicationId, statusId, applicationName, version, purchaseDate, endOfLife,
-						currentScalability, expectedScalability, currentPerformance, expectedPerformance,
+				() -> itApplicationService.update(itApplicationId, statusId, applicationName, version, purchaseDate,
+						endOfLife, currentScalability, expectedScalability, currentPerformance, expectedPerformance,
 						currentSecurityLevel, expectedSecurityLevel, currentStability, expectedStability, currencyType,
 						costCurrency, currentValue, currentYearlyCost, acceptedYearlyCost, timeValue));
 
@@ -1278,8 +1280,8 @@ class ITApplicationServiceTest {
 		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
 
 		Exception exception = assertThrows(NoSuchElementException.class,
-				() -> itApplicationService.update(itApplicationId, statusId, applicationName, version, purchaseDate, endOfLife,
-						currentScalability, expectedScalability, currentPerformance, expectedPerformance,
+				() -> itApplicationService.update(itApplicationId, statusId, applicationName, version, purchaseDate,
+						endOfLife, currentScalability, expectedScalability, currentPerformance, expectedPerformance,
 						currentSecurityLevel, expectedSecurityLevel, currentStability, expectedStability, currencyType,
 						costCurrency, currentValue, currentYearlyCost, acceptedYearlyCost, timeValue));
 
@@ -1294,8 +1296,8 @@ class ITApplicationServiceTest {
 		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
 
 		Exception exception = assertThrows(NoSuchElementException.class,
-				() -> itApplicationService.update(itApplicationId, statusId, applicationName, version, purchaseDate, endOfLife,
-						currentScalability, expectedScalability, currentPerformance, expectedPerformance,
+				() -> itApplicationService.update(itApplicationId, statusId, applicationName, version, purchaseDate,
+						endOfLife, currentScalability, expectedScalability, currentPerformance, expectedPerformance,
 						currentSecurityLevel, expectedSecurityLevel, currentStability, expectedStability, currencyType,
 						costCurrency, currentValue, currentYearlyCost, acceptedYearlyCost, timeValue));
 
@@ -1310,8 +1312,8 @@ class ITApplicationServiceTest {
 		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
 
 		Exception exception = assertThrows(NoSuchElementException.class,
-				() -> itApplicationService.update(itApplicationId, statusId, applicationName, version, purchaseDate, endOfLife,
-						currentScalability, expectedScalability, currentPerformance, expectedPerformance,
+				() -> itApplicationService.update(itApplicationId, statusId, applicationName, version, purchaseDate,
+						endOfLife, currentScalability, expectedScalability, currentPerformance, expectedPerformance,
 						currentSecurityLevel, expectedSecurityLevel, currentStability, expectedStability, currencyType,
 						costCurrency, currentValue, currentYearlyCost, acceptedYearlyCost, timeValue));
 
@@ -1326,8 +1328,8 @@ class ITApplicationServiceTest {
 		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
 
 		Exception exception = assertThrows(NoSuchElementException.class,
-				() -> itApplicationService.update(itApplicationId, statusId, applicationName, version, purchaseDate, endOfLife,
-						currentScalability, expectedScalability, currentPerformance, expectedPerformance,
+				() -> itApplicationService.update(itApplicationId, statusId, applicationName, version, purchaseDate,
+						endOfLife, currentScalability, expectedScalability, currentPerformance, expectedPerformance,
 						currentSecurityLevel, expectedSecurityLevel, currentStability, expectedStability, currencyType,
 						costCurrency, currentValue, currentYearlyCost, acceptedYearlyCost, timeValue));
 
@@ -1341,14 +1343,39 @@ class ITApplicationServiceTest {
 		BDDMockito.given(statusDAL.findById(BDDMockito.anyInt())).willReturn(optionalStatusFirst);
 		BDDMockito.given(applicationDAL.save(BDDMockito.any(ITApplication.class))).willReturn(itApplicationFirst);
 
-		ITApplication application = itApplicationService.update(itApplicationId, statusId, applicationName, version, purchaseDate,
-				endOfLife, currentScalability, expectedScalability, currentPerformance, expectedPerformance,
-				currentSecurityLevel, expectedSecurityLevel, currentStability, expectedStability, currencyType,
-				costCurrency, currentValue, currentYearlyCost, acceptedYearlyCost, timeValue);
+		ITApplication application = itApplicationService.update(itApplicationId, statusId, applicationName, version,
+				purchaseDate, endOfLife, currentScalability, expectedScalability, currentPerformance,
+				expectedPerformance, currentSecurityLevel, expectedSecurityLevel, currentStability, expectedStability,
+				currencyType, costCurrency, currentValue, currentYearlyCost, acceptedYearlyCost, timeValue);
 
 		assertNotNull(application);
 		assertTrue(application instanceof ITApplication);
 		testItApplication(itApplicationFirst, application);
+	}
+
+	@Test
+	void should_returnTrue_whenDeleted() {
+		itApplicationService.delete(itApplicationId);
+		
+		Mockito.verify(applicationDAL, Mockito.times(1)).deleteById(Mockito.eq(itApplicationId));
+	}
+	
+	@Test
+	void should_ReturnFalse_whenStrategyDoesNotExistById() {
+		BDDMockito.given(applicationDAL.existsById(BDDMockito.anyInt())).willReturn(false);
+
+		boolean result = itApplicationService.existsById(itApplicationId);
+
+		assertFalse(result);
+	}
+	
+	@Test
+	void should_ReturnTrue_whenStrategyDoesExistById() {
+		BDDMockito.given(applicationDAL.existsById(BDDMockito.anyInt())).willReturn(true);
+
+		boolean result = itApplicationService.existsById(itApplicationId);
+
+		assertTrue(result);
 	}
 
 	@Test
