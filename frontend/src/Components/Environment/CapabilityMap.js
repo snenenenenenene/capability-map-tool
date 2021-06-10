@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import { Modal, OverlayTrigger, Tooltip } from "react-bootstrap";
-import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
+import { Modal } from "react-bootstrap";
+import { PDFExport } from "@progress/kendo-react-pdf";
 import API from "../../Services/API";
-import { clippingParents } from "@popperjs/core";
 
 export default class CapabilityMap extends Component {
   constructor(props) {
@@ -97,11 +96,6 @@ export default class CapabilityMap extends Component {
   zoomHandler(zoom) {
     this.setState({ capabilityMapZoom: this.state.capabilityMapZoom + zoom });
   }
-  renderCapabilityInformation(capability) {
-    if (capability.capabilityInformation !== undefined) {
-      return capability.capabilityInformation.map((information) => {});
-    }
-  }
 
   renderStrategyItems(capability) {
     if (capability.capabilityItems !== undefined) {
@@ -152,9 +146,35 @@ export default class CapabilityMap extends Component {
     if (capability.projects !== undefined) {
       return capability.projects.map((project) => {
         return (
-          <div style={{ margin: 5 }}>
-            <div className="card mx-auto">
-              <div className="card-body">{project.projectName}</div>
+          <div className="col-sm-12">
+            <div style={{ margin: 5 }}>
+              <div className="card">
+                <div className="card-body">{project.projectName}</div>
+              </div>
+            </div>
+          </div>
+        );
+      });
+    } else return;
+  }
+  renderInfo(capability) {
+    if (capability.capabilityInformation !== undefined) {
+      return capability.capabilityInformation.map((information) => {
+        return (
+          <div className="col-sm-12">
+            <div style={{ margin: 5 }}>
+              <div className="card mx-auto">
+                <div
+                  className="mx-auto text-uppercase"
+                  style={{ marginTop: 5 }}
+                >
+                  {information.information.informationName}
+                </div>
+                <div className="card-body">
+                  {information.information.informationDescription}
+                </div>
+                <div className="card-footer">{information.criticality}</div>
+              </div>
             </div>
           </div>
         );
@@ -166,9 +186,11 @@ export default class CapabilityMap extends Component {
     if (capability.resources !== undefined) {
       return capability.resources.map((resource) => {
         return (
-          <div style={{ margin: 5 }}>
-            <div className="card mx-auto">
-              <div className="card-body">{resource.resourceName}</div>
+          <div className="col-sm-12">
+            <div style={{ margin: 5 }}>
+              <div className="card mx-auto">
+                <div className="card-body">{resource.resourceName}</div>
+              </div>
             </div>
           </div>
         );
@@ -180,10 +202,30 @@ export default class CapabilityMap extends Component {
     if (capability.businessprocess !== undefined) {
       return capability.businessprocess.map((businessProcess) => {
         return (
-          <div style={{ margin: 5 }}>
-            <div className="card mx-auto">
-              <div className="card-body">
-                {businessProcess.businessProcessName}
+          <div className="col-sm-12">
+            <div style={{ margin: 5 }}>
+              <div className="card mx-auto">
+                <div className="card-body">
+                  {businessProcess.businessProcessName}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      });
+    } else return;
+  }
+
+  renderITApplication(capability) {
+    if (capability.capabilityApplications !== undefined) {
+      return capability.capabilityApplications.map((capabilityApplication) => {
+        return (
+          <div className="col-sm-12">
+            <div style={{ margin: 5 }}>
+              <div className="card mx-auto">
+                <div className="card-body">
+                  {capabilityApplication.application.name}
+                </div>
               </div>
             </div>
           </div>
@@ -286,6 +328,7 @@ export default class CapabilityMap extends Component {
         </div>
         <div>
           <Modal
+            size="lg"
             className="capability-modal"
             show={this.state.showModal}
             onHide={() => this.handleModal()}
@@ -326,37 +369,50 @@ export default class CapabilityMap extends Component {
                     </div>
                   </div>
                   <br></br>
-                  <table>
-                    <tr>
-                      <th>POC</th>
-                      <td className="map-td">
-                        {this.state.capability.paceOfChange}
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>TOM</th>
-                      <td className="map-td">
-                        {this.state.capability.targetOperatingModel}
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>AF</th>
-                      <td className="map-td">
-                        {this.state.capability.applicationFit}
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>RQ</th>
-                      <td className="map-td">
-                        {this.state.capability.resourceQuality}
-                      </td>
-                    </tr>
-                  </table>
-                  {this.renderProjects(this.state.capability)}
-                  {this.renderResources(this.state.capability)}
-                  {this.renderCapabilityInformation(this.state.capability)}
-                  {this.renderBusinessProcesses(this.state.capability)}
-                  {/*  <p>{this.state.capability.capabilityApplications.length()}</p> */}
+                  <div className="row">
+                    <div className="col-sm-6">
+                      <div className="form-row">
+                        <table>
+                          <tr>
+                            <th>POC</th>
+                            <td>{this.state.capability.paceOfChange}</td>
+                          </tr>
+                          <tr>
+                            <th>TOM</th>
+                            <td>
+                              {this.state.capability.targetOperatingModel}
+                            </td>
+                          </tr>
+                          <tr>
+                            <th>AF</th>
+                            <td>{this.state.capability.applicationFit}</td>
+                          </tr>
+                          <tr>
+                            <th>RQ</th>
+                            <td>{this.state.capability.resourceQuality}</td>
+                          </tr>
+                          <tr>
+                            <th>DESCRIPTION</th>
+                            {this.state.capability.description}
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                    <div className="col-sm-6">
+                      <div className="form-row">
+                        <th>PROJECTS</th>
+                        {this.renderProjects(this.state.capability)}
+                        <th>RESOURCES</th>
+                        {this.renderResources(this.state.capability)}
+                        <th>BP</th>
+                        {this.renderBusinessProcesses(this.state.capability)}
+                        <th>ITAPP</th>
+                        {this.renderITApplication(this.state.capability)}
+                        <th>INFO</th>
+                        {this.renderInfo(this.state.capability)}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </PDFExport>
             </Modal.Body>

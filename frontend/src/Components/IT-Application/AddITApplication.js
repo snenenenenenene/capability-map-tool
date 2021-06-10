@@ -33,7 +33,7 @@ export default class AddITApplication extends Component {
       expectedSecurityLevel: 0,
       currentStability: 0,
       expectedStability: 0,
-      currencyType: "",
+      currencyType: "EUR",
       costCurrency: "",
       currentValue: 0,
       currentYearlyCost: "",
@@ -66,7 +66,7 @@ export default class AddITApplication extends Component {
     formData.append("currentStability", this.state.currentStability);
     formData.append("expectedStability", this.state.expectedStability);
     formData.append("currentValue", this.state.currentValue);
-    formData.append("currencyType", "AAA");
+    formData.append("currencyType", this.state.currencyType);
     formData.append(
       "costCurrency",
       parseFloat(this.state.costCurrency).toFixed(1)
@@ -88,7 +88,9 @@ export default class AddITApplication extends Component {
           `/environment/${this.state.environmentName}/itapplication`
         );
       })
-      .catch((error) => toast.error("Could not Add IT Application"));
+      .catch((error) => {
+        toast.error("Could not Add IT Application");
+      });
   };
 
   statusListRows() {
@@ -149,6 +151,16 @@ export default class AddITApplication extends Component {
 
   handleModal() {
     this.setState({ showModal: !this.state.showModal });
+  }
+
+  currencyListRow() {
+    return this.state.currencies.map((currency) => {
+      return (
+        <option key={currency} value={currency}>
+          {currency}
+        </option>
+      );
+    });
   }
 
   handleStatusModal() {
@@ -393,25 +405,26 @@ export default class AddITApplication extends Component {
                 </div>
                 <div className="form-row">
                   <div className="form-group col-md">
-                    <label htmlFor="parentCapability">Parent Capability</label>
-                    <Select
-                      options={this.state.currencies}
-                      name="currencies"
-                      id="currencies"
-                      placeholder="Currency"
-                      noOptionsMessage={() => "No Currencies"}
-                      onChange={(currency) => {
-                        if (currency) {
-                          this.setState({
-                            currency: currency,
-                          });
-                        } else {
-                          this.setState({ currency: "" });
-                        }
-                      }}
-                      isClearable={true}
+                    <label htmlFor="currencyType">Currency</label>
+                    <select
+                      className="form-control"
+                      name="currencyType"
+                      id="currencyType"
+                      placeholder="Currency Type"
+                      value={this.state.currencyType}
+                      onChange={this.handleInputChange}
                       required
-                    ></Select>
+                    >
+                      <option
+                        key="-1"
+                        defaultValue="selected"
+                        hidden
+                        value="EUR"
+                      >
+                        EUR
+                      </option>
+                      {this.currencyListRow()}
+                    </select>
                   </div>
                 </div>
                 <div className="form-row">

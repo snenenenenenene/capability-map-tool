@@ -50,11 +50,11 @@ export default class API {
       axios.put(`${resourceURL}/link-project/`, toCreate, config);
     endpoints.linkCapabilityApplication = ({
       capabilityId,
-      applicationId,
+      itApplicationId,
       form,
     }) =>
       axios.put(
-        `${resourceURL}/${capabilityId}/${applicationId}`,
+        `${resourceURL}/${capabilityId}/${itApplicationId}`,
         form,
         config
       );

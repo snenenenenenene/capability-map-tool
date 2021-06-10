@@ -42,6 +42,9 @@ import CapabilityMap from "./Components/Environment/CapabilityMap";
 import EditEnvironment from "./Components/Environment/EditEnvironment";
 import Settings from "./Components/User/Settings";
 import API from "./Services/API";
+import AddInfo from "./Components/Information/AddInfo";
+import EditInfo from "./Components/Information/EditInfo";
+import Info from "./Components/Information/Info";
 
 class App extends Component {
   constructor(props) {
@@ -114,8 +117,8 @@ class App extends Component {
   adminSettings() {
     if (this.state.user.roleId === 2) {
       return (
-        <Link to='/user'>
-          <li className='dropdown-item'>User List</li>
+        <Link to="/user">
+          <li className="dropdown-item">User List</li>
         </Link>
       );
     }
@@ -126,9 +129,9 @@ class App extends Component {
     if (this.state.user.roleId === 2) {
       return (
         <Switch>
-          <Route exact path='/user' component={User} />
-          <Route exact path='/user/add' component={AddUser} />
-          <Route exact path='/user/:id' component={EditUser} />
+          <Route exact path="/user" component={User} />
+          <Route exact path="/user/add" component={AddUser} />
+          <Route exact path="/user/:id" component={EditUser} />
         </Switch>
       );
     }
@@ -137,14 +140,14 @@ class App extends Component {
   sideBar() {
     if (localStorage.getItem("environment")) {
       return (
-        <nav className='nav__cont'>
-          <ul className='nav'>
+        <nav className="nav__cont">
+          <ul className="nav">
             <Link
               onClick={() => this.environmentCheck}
               to={`/environment/${this.state.environmentName}`}
             >
-              <li className='nav__items '>
-                <i className='bi bi-aspect-ratio'></i>
+              <li className="nav__items ">
+                <i className="bi bi-aspect-ratio"></i>
                 <p>Environment</p>
               </li>
             </Link>
@@ -152,8 +155,8 @@ class App extends Component {
               to={`/environment/${this.state.environmentName}/capability`}
               onClick={() => this.environmentCheck}
             >
-              <li className='nav__items '>
-                <i className='bi bi-chat-square'></i>
+              <li className="nav__items ">
+                <i className="bi bi-chat-square"></i>
                 <p>Capability</p>
               </li>
             </Link>
@@ -161,49 +164,54 @@ class App extends Component {
               to={`/environment/${this.state.environmentName}/status`}
               onClick={() => this.environmentCheck}
             >
-              <li className='nav__items '>
-                <i className='bi bi-calendar-date'></i> <p>Status</p>
+              <li className="nav__items ">
+                <i className="bi bi-calendar-date"></i> <p>Status</p>
               </li>
             </Link>
             <Link to={`/environment/${this.state.environmentName}/strategy`}>
-              <li className='nav__items '>
-                <i className='bi bi-app'></i> <p>Strategy</p>
+              <li className="nav__items ">
+                <i className="bi bi-app"></i> <p>Strategy</p>
               </li>
             </Link>
             <Link
               to={`/environment/${this.state.environmentName}/strategyitem`}
             >
-              <li className='nav__items '>
-                <i className='bi bi-app-indicator'></i> <p>Strategy Item</p>
+              <li className="nav__items ">
+                <i className="bi bi-app-indicator"></i> <p>Strategy Item</p>
               </li>
             </Link>
             <Link
               to={`/environment/${this.state.environmentName}/itapplication`}
             >
-              <li className='nav__items '>
-                <i className='bi bi-window'></i> <p>IT Application</p>
+              <li className="nav__items ">
+                <i className="bi bi-window"></i> <p>IT Application</p>
               </li>
             </Link>
             <Link to={`/environment/${this.state.environmentName}/project`}>
-              <li className='nav__items '>
-                <i className='bi bi-kanban'></i> <p>Project</p>
+              <li className="nav__items ">
+                <i className="bi bi-kanban"></i> <p>Project</p>
               </li>
             </Link>
             <Link to={`/environment/${this.state.environmentName}/resource`}>
-              <li className='nav__items '>
-                <i className='bi bi-folder'></i> <p>Resource</p>
+              <li className="nav__items ">
+                <i className="bi bi-folder"></i> <p>Resource</p>
               </li>
             </Link>
             <Link to={`/environment/${this.state.environmentName}/program`}>
-              <li className='nav__items '>
-                <i className='bi bi-cpu'></i> <p>Program</p>
+              <li className="nav__items ">
+                <i className="bi bi-cpu"></i> <p>Program</p>
               </li>
             </Link>
             <Link
               to={`/environment/${this.state.environmentName}/businessprocess`}
             >
-              <li className='nav__items '>
-                <i className='bi bi-wallet2'></i> <p>Business Process</p>
+              <li className="nav__items ">
+                <i className="bi bi-wallet2"></i> <p>Business Process</p>
+              </li>
+            </Link>
+            <Link to={`/environment/${this.state.environmentName}/info`}>
+              <li className="nav__items ">
+                <i className="bi bi-info-square"></i> <p>Info</p>
               </li>
             </Link>
           </ul>
@@ -221,59 +229,59 @@ class App extends Component {
           {this.sideBar()}
 
           <nav
-            className='navbar navbar-expand-lg navbar-dark sticky-top shadow-lg'
+            className="navbar navbar-expand-lg navbar-dark sticky-top shadow-lg"
             style={{ backgroundColor: "#ff754f" }}
           >
             <button
-              className='navbar-toggler'
-              type='button'
-              data-toggle='collapse'
-              data-target='#navbarTogglerDemo01'
-              aria-controls='navbarTogglerDemo01'
-              aria-expanded='false'
-              aria-label='Toggle navigation'
+              className="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target="#navbarTogglerDemo01"
+              aria-controls="navbarTogglerDemo01"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
             >
-              <span className='navbar-toggler-icon'></span>
+              <span className="navbar-toggler-icon"></span>
             </button>
-            <div className='collapse navbar-collapse' id='navbarTogglerDemo01'>
-              <Link to={"/home"} className='navbar-brand'>
-                <img alt='leap' src={LeapImg} width='80' height='22' />
+            <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
+              <Link to={"/home"} className="navbar-brand">
+                <img alt="leap" src={LeapImg} width="80" height="22" />
               </Link>
-              <ul className='navbar-nav mr-auto mt-2 mt-lg-0'></ul>
-              <form className='form-inline my-2 my-lg-0'>
+              <ul className="navbar-nav mr-auto mt-2 mt-lg-0"></ul>
+              <form className="form-inline my-2 my-lg-0">
                 <div
-                  className='collapse navbar-collapse'
-                  id='navbarNavDarkDropdown'
+                  className="collapse navbar-collapse"
+                  id="navbarNavDarkDropdown"
                 >
-                  <ul className='navbar-nav'>
-                    <li className='nav-item dropdown'>
+                  <ul className="navbar-nav">
+                    <li className="nav-item dropdown">
                       <li
                         style={{ color: "#fff" }}
-                        href='#'
-                        id='navbarDarkDropdownMenuLink'
-                        role='button'
-                        data-bs-toggle='dropdown'
-                        aria-expanded='false'
+                        href="#"
+                        id="navbarDarkDropdownMenuLink"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
                       >
                         <i
-                          className='bi bi-person-circle'
+                          className="bi bi-person-circle"
                           style={{ fontSize: 30 }}
                         ></i>
                       </li>
                       <ul
-                        className='dropdown-menu dropdown-menu-right dropdown-menu-dark text-center'
-                        aria-labelledby='navbarDarkDropdownMenuLink'
+                        className="dropdown-menu dropdown-menu-right dropdown-menu-dark text-center"
+                        aria-labelledby="navbarDarkDropdownMenuLink"
                       >
-                        <Link to='/settings'>
-                          <li className='dropdown-item'>Settings</li>
+                        <Link to="/settings">
+                          <li className="dropdown-item">Settings</li>
                         </Link>
                         {this.adminSettings()}
                         <Link to={""} onClick={this.logout}>
-                          <li className='dropdown-item'>Logout</li>
+                          <li className="dropdown-item">Logout</li>
                         </Link>
                         <hr></hr>
                         <li
-                          classname='dropdown-item my-auto'
+                          classname="dropdown-item my-auto"
                           style={{ marginBottom: 5 }}
                         >
                           {this.state.user.username}
@@ -288,189 +296,201 @@ class App extends Component {
           <div>
             <Switch>
               {/* ROOT */}
-              <Route exact path='/home' component={NewEnvironment} />
-              <Route exact path='/' component={NewEnvironment} />
-              <Route exact path='/error' component={NotFoundPage} />
-              <Route exact path='/404' component={NotFoundPage} />
+              <Route exact path="/home" component={NewEnvironment} />
+              <Route exact path="/" component={NewEnvironment} />
+              <Route exact path="/error" component={NotFoundPage} />
+              <Route exact path="/404" component={NotFoundPage} />
               {/* ENVIRONMENTS */}
-              <Route exact path='/add' component={NewEnvironment} />
+              <Route exact path="/add" component={NewEnvironment} />
               <Route
                 exact
-                path='/environment/:name'
+                path="/environment/:name"
                 component={CapabilityMap}
               />
               <Route
                 exact
-                path='/environment/:id/edit'
+                path="/environment/:id/edit"
                 component={EditEnvironment}
               />
               {/* CAPABILITIES */}
               <Route
                 exact
-                path='/environment/:name/capability/add'
+                path="/environment/:name/capability/add"
                 component={AddCapability}
               />
               <Route
                 exact
-                path='/environment/:name/capability/:id'
+                path="/environment/:name/capability/:id"
                 component={EditCapability}
               />
               <Route
                 exact
-                path='/environment/:name/capability'
+                path="/environment/:name/capability"
                 component={Capability}
               />
+              {/* INFOS */}
+              <Route
+                exact
+                path="/environment/:name/info/add"
+                component={AddInfo}
+              />
+              <Route
+                exact
+                path="/environment/:name/info/:id"
+                component={EditInfo}
+              />
+              <Route exact path="/environment/:name/info" component={Info} />
               {/* STRATEGIES */}
               <Route
                 exact
-                path='/environment/:name/strategy/add'
+                path="/environment/:name/strategy/add"
                 component={AddStrategy}
               />
               <Route
                 exact
-                path='/environment/:name/strategy/:id'
+                path="/environment/:name/strategy/:id"
                 component={EditStrategy}
               />
               <Route
                 exact
-                path='/environment/:name/strategy'
+                path="/environment/:name/strategy"
                 component={Strategy}
               />
 
               {/* RESOURCES */}
               <Route
                 exact
-                path='/environment/:name/resource/add'
+                path="/environment/:name/resource/add"
                 component={AddResource}
               />
               <Route
                 exact
-                path='/environment/:name/resource/:id'
+                path="/environment/:name/resource/:id"
                 component={EditResource}
               />
               <Route
                 exact
-                path='/environment/:name/resource'
+                path="/environment/:name/resource"
                 component={Resource}
               />
 
               {/* ITAPPLICATIONS */}
               <Route
                 exact
-                path='/environment/:name/itapplication/add'
+                path="/environment/:name/itapplication/add"
                 component={AddITApplication}
               />
               <Route
                 exact
-                path='/environment/:name/itapplication/:id'
+                path="/environment/:name/itapplication/:id"
                 component={EditITApplication}
               />
               <Route
                 exact
-                path='/environment/:name/itapplication'
+                path="/environment/:name/itapplication"
                 component={ITApplication}
               />
               {/* BUSSINESSPROCESSES */}
               <Route
                 exact
-                path='/environment/:name/businessprocess/add'
+                path="/environment/:name/businessprocess/add"
                 component={AddBusinessProcess}
               />
               <Route
                 exact
-                path='/environment/:name/businessprocess/:id'
+                path="/environment/:name/businessprocess/:id"
                 component={EditBusinessProcess}
               />
               <Route
                 exact
-                path='/environment/:name/businessprocess'
+                path="/environment/:name/businessprocess"
                 component={BusinessProcess}
               />
               {/* STATUSES */}
               <Route
                 exact
-                path='/environment/:name/status/add'
+                path="/environment/:name/status/add"
                 component={AddStatus}
               />
               <Route
                 exact
-                path='/environment/:name/status/:id'
+                path="/environment/:name/status/:id"
                 component={EditStatus}
               />
               <Route
                 exact
-                path='/environment/:name/status'
+                path="/environment/:name/status"
                 component={Status}
               />
               {/* PROJECTS */}
               <Route
                 exact
-                path='/environment/:name/project/add'
+                path="/environment/:name/project/add"
                 component={AddProject}
               />
               <Route
                 exact
-                path='/environment/:name/project/:id'
+                path="/environment/:name/project/:id"
                 component={EditProject}
               />
               <Route
                 exact
-                path='/environment/:name/project'
+                path="/environment/:name/project"
                 component={Project}
               />
               {/* STRATEGYITEMS */}
               <Route
                 exact
-                path='/environment/:name/strategyitem/add'
+                path="/environment/:name/strategyitem/add"
                 component={AddStrategyItem}
               />
               <Route
                 exact
-                path='/environment/:name/strategyitem/:id'
+                path="/environment/:name/strategyitem/:id"
                 component={EditStrategyItem}
               />
               <Route
                 exact
-                path='/environment/:name/strategyitem'
+                path="/environment/:name/strategyitem"
                 component={StrategyItem}
               />
 
               {/* PROGRAMS */}
               <Route
                 exact
-                path='/environment/:name/program/add'
+                path="/environment/:name/program/add"
                 component={AddProgram}
               />
               <Route
                 exact
-                path='/environment/:name/program/:id'
+                path="/environment/:name/program/:id"
                 component={EditProgram}
               />
               <Route
                 exact
-                path='/environment/:name/program'
+                path="/environment/:name/program"
                 component={Program}
               />
-              <Route exact path='/login'>
-                <Redirect to='/home' />
+              <Route exact path="/login">
+                <Redirect to="/home" />
               </Route>
 
               {/* USERS */}
-              <Route exact path='/settings' component={Settings} />
+              <Route exact path="/settings" component={Settings} />
               {this.adminRoutes()}
               {/* ERRORS */}
-              <Route path='/*' component={NotFoundPage} />
+              <Route path="/*" component={NotFoundPage} />
             </Switch>
           </div>
-          <nav className='shadow-lg navbar fixed-bottom navbar-dark bg-dark text-center'>
-            <div className='container-fluid'>
+          <nav className="shadow-lg navbar fixed-bottom navbar-dark bg-dark text-center">
+            <div className="container-fluid">
               <a
-                href='https://gitlab.apstudent.be/2ti_project_informatica_2020_2021/groep-5/leap-groep-5'
-                className='me-4 text-center'
+                href="https://gitlab.apstudent.be/2ti_project_informatica_2020_2021/groep-5/leap-groep-5"
+                className="me-4 text-center"
               >
-                <i className='bi bi-github text-white'></i>
+                <i className="bi bi-github text-white"></i>
               </a>
-              <div className='text-center text-white'>
+              <div className="text-center text-white">
                 Bavo&amp;Stepbros© 2021 Copyright
               </div>
             </div>
@@ -480,10 +500,10 @@ class App extends Component {
     } else {
       return (
         <Switch>
-          <Route exact path='/login' component={Signup} />
-          <Route exact path='/forgotpassword' component={ForgotPassword} />
-          <Route path='/'>
-            <Redirect to='/login' />
+          <Route exact path="/login" component={Signup} />
+          <Route exact path="/forgotpassword" component={ForgotPassword} />
+          <Route exact path="/">
+            <Redirect to="/login" />
           </Route>
         </Switch>
       );

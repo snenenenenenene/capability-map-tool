@@ -40,9 +40,9 @@ export default class ITApplication extends Component {
     this.setState({ [event.target.name]: event.target.value });
   }
 
-  async capabilityTable(applicationId) {
+  async capabilityTable(itApplicationId) {
     await this.state.api.endpoints.itapplication
-      .getCapabilities({ id: applicationId })
+      .getCapabilities({ id: itApplicationId })
       .then((response) => {
         this.setState({ linkedCapabilities: response.data });
       })
@@ -71,7 +71,7 @@ export default class ITApplication extends Component {
     await this.state.api.endpoints.capabilityapplication
       .linkCapabilityApplication({
         capabilityId: this.state.capabilityId,
-        applicationId: this.state.applicationId,
+        itApplicationId: this.state.itApplicationId,
         form: formData,
       })
       .then(toast.success("Application Successfully Linked"))
@@ -123,10 +123,6 @@ export default class ITApplication extends Component {
       .catch((error) => {
         toast.error("No IT Applications Found");
       });
-  }
-
-  onRatingChange(name, value) {
-    this.setState({ [name]: value });
   }
 
   edit(itApplicationId) {
@@ -277,17 +273,17 @@ export default class ITApplication extends Component {
             );
           }}
           onRowClick={(event, rowData, togglePanel) => {
-            this.setState({ applicationId: rowData.applicationId });
-            this.capabilityTable(rowData.applicationId);
+            this.setState({ itApplicationId: rowData.itApplicationId });
+            this.capabilityTable(rowData.itApplicationId);
             togglePanel();
           }}
         />
         <Modal show={this.state.showModal} onHide={() => this.handleModal()}>
           <Modal.Header closeButton>
-            Link Project {this.state.applicationId}
+            Link Project {this.state.itApplicationId}
           </Modal.Header>
           <Modal.Body>
-            <form onSubmit={this.handleSubmit(this.state.applicationId)}>
+            <form onSubmit={this.handleSubmit(this.state.itApplicationId)}>
               <label htmlFor="capabilityId">Capability</label>
               <Select
                 options={this.state.capabilities}
@@ -314,10 +310,6 @@ export default class ITApplication extends Component {
                           count={5}
                           onChange={(newValue) => {
                             this.setState({ availability: newValue });
-                            this.props.transferRatings(
-                              "availability",
-                              newValue
-                            );
                           }}
                           size={24}
                           half={false}
@@ -338,10 +330,6 @@ export default class ITApplication extends Component {
                           count={5}
                           onChange={(newValue) => {
                             this.setState({ efficiencySupport: newValue });
-                            this.props.transferRatings(
-                              "efficiencySupport",
-                              newValue
-                            );
                           }}
                           size={24}
                           half={false}
@@ -361,10 +349,6 @@ export default class ITApplication extends Component {
                           count={5}
                           onChange={(newValue) => {
                             this.setState({ functionalCoverage: newValue });
-                            this.props.transferRatings(
-                              "functionalCoverage",
-                              newValue
-                            );
                           }}
                           size={24}
                           half={false}
@@ -384,10 +368,6 @@ export default class ITApplication extends Component {
                           count={5}
                           onChange={(newValue) => {
                             this.setState({ correctnessBusinessFit: newValue });
-                            this.props.transferRatings(
-                              "correctnessBusinessFit",
-                              newValue
-                            );
                           }}
                           size={24}
                           half={false}
@@ -405,10 +385,6 @@ export default class ITApplication extends Component {
                           count={5}
                           onChange={(newValue) => {
                             this.setState({ futurePotential: newValue });
-                            this.props.transferRatings(
-                              "futurePotential",
-                              newValue
-                            );
                           }}
                           size={24}
                           half={false}
@@ -426,10 +402,6 @@ export default class ITApplication extends Component {
                           count={5}
                           onChange={(newValue) => {
                             this.setState({ completeness: newValue });
-                            this.props.transferRatings(
-                              "completeness",
-                              newValue
-                            );
                           }}
                           size={24}
                           half={false}
@@ -451,10 +423,6 @@ export default class ITApplication extends Component {
                             this.setState({
                               correctnessInformationFit: newValue,
                             });
-                            this.props.transferRatings(
-                              "correctnessInformationFit",
-                              newValue
-                            );
                           }}
                           size={24}
                           half={false}
