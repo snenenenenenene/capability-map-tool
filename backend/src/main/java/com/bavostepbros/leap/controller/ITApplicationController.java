@@ -1,11 +1,10 @@
 package com.bavostepbros.leap.controller;
 
-import com.bavostepbros.leap.domain.model.ITApplication;
-import com.bavostepbros.leap.domain.model.dto.ITApplicationDto;
-import com.bavostepbros.leap.domain.model.dto.StatusDto;
-import com.bavostepbros.leap.domain.model.dto.TechnologyDto;
-import com.bavostepbros.leap.domain.service.itapplicationservice.ITApplicationService;
-import lombok.RequiredArgsConstructor;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
@@ -18,10 +17,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.bavostepbros.leap.domain.model.ITApplication;
+import com.bavostepbros.leap.domain.model.dto.ITApplicationDto;
+import com.bavostepbros.leap.domain.model.dto.StatusDto;
+import com.bavostepbros.leap.domain.model.dto.TechnologyDto;
+import com.bavostepbros.leap.domain.service.itapplicationservice.ITApplicationService;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
@@ -164,4 +166,5 @@ public class ITApplicationController {
 				itApplication.getCurrentYearlyCost(), itApplication.getAcceptedYearlyCost(),
 				itApplication.getTimeValue(), technologies);
 	}
+	
 }

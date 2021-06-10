@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface ITApplicationDAL extends JpaRepository<ITApplication, Integer> {
     Optional<ITApplication> findByName(String name);
+    
 }

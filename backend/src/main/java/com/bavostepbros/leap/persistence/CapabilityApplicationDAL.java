@@ -16,4 +16,7 @@ public interface CapabilityApplicationDAL extends JpaRepository<CapabilityApplic
 	List<CapabilityApplication> findByCapability(Capability capability);
 
 	void deleteByCapabilityAndApplication(Capability capability, ITApplication itApplication);
+	
+	List<CapabilityApplication> findByApplication(ITApplication itApplication);
+	
 }

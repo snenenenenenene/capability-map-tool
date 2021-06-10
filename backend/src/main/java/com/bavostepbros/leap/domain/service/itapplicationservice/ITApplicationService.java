@@ -1,9 +1,9 @@
 package com.bavostepbros.leap.domain.service.itapplicationservice;
 
-import com.bavostepbros.leap.domain.model.ITApplication;
-
 import java.time.LocalDate;
 import java.util.List;
+
+import com.bavostepbros.leap.domain.model.ITApplication;
 
 public interface ITApplicationService {
 	ITApplication save(Integer statusID, String name, String version, LocalDate purchaseDate, LocalDate endOfLife,
