@@ -16,8 +16,10 @@ export default class BusinessProcess extends Component {
       environmentName: this.props.match.params.name,
       environmentId: "",
       capabilityId: "",
+      businessProcessId: "",
       businessProcesses: [],
-      showItemModal: false,
+      linkedCapabilities: [],
+      showModal: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -94,21 +96,32 @@ export default class BusinessProcess extends Component {
     formData.append("businessProcessId", businessProcessId);
     formData.append("capabilityId", this.state.capabilityId);
     await this.state.api.endpoints.capability
-      .update(formData)
+      .linkBusinessProcess(formData)
       .then(toast.success("Business Process Successfully Linked"))
       .catch((error) => toast.error("Could not Link Business Process"));
   };
+
+  async capabilityTable(businessProcessId) {
+    await this.state.api.endpoints.businessprocess
+      .getCapabilities({ id: businessProcessId })
+      .then((response) => {
+        this.setState({ linkedCapabilities: response.data });
+      })
+      .catch((error) => {
+        toast.error("Could Not Find Capabilities");
+      });
+  }
 
   delete = async (businessProcessId) => {
     toast(
       (t) => (
         <span>
-          <p className='text-center'>
+          <p className="text-center">
             Are you sure you want to remove this Business Process?
           </p>
-          <div className='text-center'>
+          <div className="text-center">
             <button
-              className='btn btn-primary btn-sm m-3'
+              className="btn btn-primary btn-sm m-3"
               stlye={{ width: 50, height: 30 }}
               onClick={() => {
                 toast.dismiss(t.id);
@@ -118,7 +131,7 @@ export default class BusinessProcess extends Component {
               Yes!
             </button>
             <button
-              className='btn btn-secondary btn-sm m-3'
+              className="btn btn-secondary btn-sm m-3"
               stlye={{ width: 50, height: 30 }}
               onClick={() => toast.dismiss(t.id)}
             >
@@ -136,23 +149,23 @@ export default class BusinessProcess extends Component {
 
   render() {
     return (
-      <div className='container'>
+      <div className="container">
         <br></br>
-        <nav aria-label='breadcrumb'>
-          <ol className='breadcrumb'>
-            <li className='breadcrumb-item'>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
               <Link to={`/`}>Home</Link>
             </li>
-            <li className='breadcrumb-item'>
+            <li className="breadcrumb-item">
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className='breadcrumb-item'>Business Processes</li>
+            <li className="breadcrumb-item">Business Processes</li>
           </ol>
         </nav>
         <MaterialTable
-          title='Business Processes'
+          title="Business Processes"
           actions={[
             {
               icon: "add",
@@ -173,25 +186,25 @@ export default class BusinessProcess extends Component {
               name: "actions",
               render: (rowData) => (
                 <div>
-                  <button className='btn'>
+                  <button className="btn">
                     <i
                       onClick={this.delete.bind(
                         this,
                         rowData.businessProcessId
                       )}
-                      className='bi bi-trash'
+                      className="bi bi-trash"
                     ></i>
                   </button>
-                  <button className='btn'>
+                  <button className="btn">
                     <i
                       onClick={this.edit.bind(this, rowData.businessProcessId)}
-                      className='bi bi-pencil'
+                      className="bi bi-pencil"
                     ></i>
                   </button>
-                  <button className='btn'>
+                  <button className="btn">
                     <i
                       onClick={() => this.handleModal()}
-                      className='bi bi-chat-square'
+                      className="bi bi-chat-square"
                     ></i>
                   </button>
                 </div>
@@ -202,55 +215,73 @@ export default class BusinessProcess extends Component {
           detailPanel={(rowData) => {
             return (
               <div>
-                <Modal
-                  show={this.state.showModal}
-                  onHide={() => this.handleModal()}
-                >
-                  <Modal.Header closeButton>
-                    <Modal.Title>Add Capability</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    <form
-                      onSubmit={this.handleSubmit(rowData.businessProcessId)}
-                    >
-                      <label htmlFor='capabilityId'>Capability</label>
-                      <Select
-                        options={this.state.capabilities}
-                        noOptionsMessage={() => "No Capabilities"}
-                        onChange={(capability) => {
-                          if (capability) {
-                            this.setState({
-                              capabilityId: capability.capabilityId,
-                            });
-                          } else {
-                            this.setState({ capabilityId: 0 });
-                          }
+                <div className="card-deck" style={{ padding: 10, margin: 5 }}>
+                  {this.state.linkedCapabilities.map((capability) => {
+                    return (
+                      <div
+                        className="card"
+                        style={{
+                          margin: 3,
+                          maxWidth: 120,
+                          maxHeight: 120,
                         }}
-                        placeholder='Optional'
-                      />
-                      <br></br>
-                      <button className='btn btn-primary' type='sumbit'>
-                        SUBMIT
-                      </button>
-                    </form>
-                  </Modal.Body>
-                  <Modal.Footer>
-                    <button
-                      type='button'
-                      className='btn btn-secondary'
-                      onClick={() => this.handleModal()}
-                    >
-                      Close Modal
-                    </button>
-                  </Modal.Footer>
-                </Modal>
+                      >
+                        <div className="strategyitem-title card-header text-center text-uppercase text-truncate">
+                          {capability.capabilityName}
+                        </div>
+                        <div className="card-body text-center"></div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             );
           }}
           onRowClick={(event, rowData, togglePanel) => {
+            this.setState({ businessProcessId: rowData.businessProcessId });
+            this.capabilityTable(rowData.businessProcessId);
             togglePanel();
           }}
         />
+        <Modal show={this.state.showModal} onHide={() => this.handleModal()}>
+          <Modal.Header closeButton>
+            <Modal.Title>
+              {this.state.businessProcessId}. Add Capability
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <form onSubmit={this.handleSubmit(this.state.businessProcessId)}>
+              <label htmlFor="capabilityId">Capability</label>
+              <Select
+                options={this.state.capabilities}
+                noOptionsMessage={() => "No Capabilities"}
+                onChange={(capability) => {
+                  if (capability) {
+                    this.setState({
+                      capabilityId: capability.capabilityId,
+                    });
+                  } else {
+                    this.setState({ capabilityId: 0 });
+                  }
+                }}
+                placeholder="Optional"
+              />
+              <br></br>
+              <button className="btn btn-primary" type="sumbit">
+                SUBMIT
+              </button>
+            </form>
+          </Modal.Body>
+          <Modal.Footer>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => this.handleModal()}
+            >
+              Close Modal
+            </button>
+          </Modal.Footer>
+        </Modal>
       </div>
     );
   }

@@ -41,13 +41,29 @@ export default class API {
 
     //GENERAL
     endpoints.getAll = ({ query } = {}) => axios.get(`${resourceURL}/`, config);
+    endpoints.getCurrencies = ({ query } = {}) =>
+      axios.get(`${resourceURL}/all-currencies`, config);
     endpoints.getOne = ({ id }) => axios.get(`${resourceURL}/${id}`, config);
     endpoints.getCapabilities = ({ id }) =>
       axios.get(`${resourceURL}/get-capabilities/${id}`, config);
     endpoints.linkProject = (toCreate) =>
       axios.put(`${resourceURL}/link-project/`, toCreate, config);
+    endpoints.linkCapabilityApplication = ({
+      capabilityId,
+      applicationId,
+      form,
+    }) =>
+      axios.put(
+        `${resourceURL}/${capabilityId}/${applicationId}`,
+        form,
+        config
+      );
     endpoints.linkResource = (toCreate) =>
       axios.put(`${resourceURL}/link-resource/`, toCreate, config);
+
+    endpoints.linkBusinessProcess = (toCreate) =>
+      axios.put(`${resourceURL}/link-businessprocess/`, toCreate, config);
+
     endpoints.importCSV = (toCreate) =>
       axios.post(`${resourceURL}/upload-csv-file`, toCreate, config);
     endpoints.getUser = ({ query } = {}) =>
@@ -73,6 +89,11 @@ export default class API {
     endpoints.getAllCapabilityItemsByCapabilityId = ({ id }) =>
       axios.get(
         `${resourceURL}/all-capabilityitems-by-capabilityid/${id}`,
+        config
+      );
+    endpoints.getAllApplicationsByApplicationId = ({ id }) =>
+      axios.get(
+        `${resourceURL}/all-capabilityApplications-by-capabilityid/${id}`,
         config
       );
     endpoints.getAllCapabilityItemsByItemId = ({ id }) =>

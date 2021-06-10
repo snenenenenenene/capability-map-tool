@@ -353,7 +353,7 @@ nav .breadcrumb {
   /* color: #ff754fbb; */
   color: black;
   font-weight: 100;
-  font-size: 1.5em;
+  font-size: 1em;
 }
 .nav__items a:after {
   content: "";
@@ -381,7 +381,7 @@ nav .breadcrumb {
   opacity: 1;
 }
 .nav__items i {
-  margin-left: 30px;
+  margin-left: 25px;
   top: 20px;
   font-size: 25px;
   min-width: 50px;

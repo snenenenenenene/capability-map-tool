@@ -98,11 +98,11 @@ export default class NewEnvironment extends Component {
 
   render() {
     return (
-      <div className='container'>
+      <div className="container">
         <br></br>
-        <nav aria-label='breadcrumb'>
-          <ol className='breadcrumb'>
-            <li className='breadcrumb-item'>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
               <Link to={`/home`}>Home</Link>
             </li>
           </ol>
@@ -117,21 +117,21 @@ export default class NewEnvironment extends Component {
                 toast(
                   (t) => (
                     <span>
-                      <p className='text-center'>New Environment</p>
-                      <form className=' ml-auto' onSubmit={this.handleSubmit}>
+                      <p className="text-center">New Environment</p>
+                      <form className=" ml-auto" onSubmit={this.handleSubmit}>
                         <input
-                          type='text'
-                          id='environmentName'
-                          name='environmentName'
-                          className='form-control'
-                          placeholder='Name Environment'
+                          type="text"
+                          id="environmentName"
+                          name="environmentName"
+                          className="form-control"
+                          placeholder="Name Environment"
                           onChange={this.handleInputChange}
                           required
                           autoFocus
                         />
-                        <div className='text-center'>
+                        <div className="text-center">
                           <button
-                            className='btn btn-primary btn-sm m-3'
+                            className="btn btn-primary btn-sm m-3"
                             stlye={{ width: 50, height: 30 }}
                             onClick={(e) => {
                               toast.dismiss(t.id);
@@ -141,7 +141,7 @@ export default class NewEnvironment extends Component {
                             Yes!
                           </button>
                           <button
-                            className='btn btn-secondary btn-sm m-3'
+                            className="btn btn-secondary btn-sm m-3"
                             stlye={{ width: 50, height: 30 }}
                             onClick={() => toast.dismiss(t.id)}
                           >
@@ -160,24 +160,24 @@ export default class NewEnvironment extends Component {
             { title: "ID", field: "environmentId" },
             { title: "Name", field: "environmentName" },
             {
-              title: "",
+              title: "Actios",
               name: "actions",
               render: (rowData) => (
                 <div>
-                  <button className='btn btn'>
+                  <button className="btn btn">
                     <i
-                      className='bi bi-trash'
+                      className="bi bi-trash"
                       onClick={(e) => {
                         toast(
                           (t) => (
                             <span>
-                              <p className='text-center'>
+                              <p className="text-center">
                                 Are you sure you want to remove this
                                 environment?
                               </p>
-                              <div className='text-center'>
+                              <div className="text-center">
                                 <button
-                                  className='btn btn-primary btn-sm m-3'
+                                  className="btn btn-primary btn-sm m-3"
                                   stlye={{ width: 50, height: 30 }}
                                   onClick={() => {
                                     toast.dismiss(t.id);
@@ -189,7 +189,7 @@ export default class NewEnvironment extends Component {
                                   Yes!
                                 </button>
                                 <button
-                                  className='btn btn-secondary btn-sm m-3'
+                                  className="btn btn-secondary btn-sm m-3"
                                   stlye={{ width: 50, height: 30 }}
                                   onClick={() => toast.dismiss(t.id)}
                                 >
@@ -205,7 +205,7 @@ export default class NewEnvironment extends Component {
                     ></i>
                   </button>
                   <button
-                    className='btn btn'
+                    className="btn btn"
                     onClick={(e) => {
                       this.props.history.push(
                         `/environment/${rowData.environmentId}/edit`
@@ -213,7 +213,7 @@ export default class NewEnvironment extends Component {
                       e.stopPropagation();
                     }}
                   >
-                    <i className='bi bi-pencil'></i>
+                    <i className="bi bi-pencil"></i>
                   </button>
                 </div>
               ),
@@ -229,7 +229,7 @@ export default class NewEnvironment extends Component {
             );
             this.props.history.push(`/environment/${rowData.environmentName}`);
           }}
-          title='Dashboard'
+          title="Dashboard"
         />
       </div>
     );
