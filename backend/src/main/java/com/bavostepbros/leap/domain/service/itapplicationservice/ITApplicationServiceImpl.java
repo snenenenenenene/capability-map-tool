@@ -1,5 +1,17 @@
 package com.bavostepbros.leap.domain.service.itapplicationservice;
 
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Currency;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.bavostepbros.leap.domain.model.ITApplication;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.Technology;
@@ -7,17 +19,8 @@ import com.bavostepbros.leap.domain.model.timevalue.TimeValue;
 import com.bavostepbros.leap.domain.service.statusservice.StatusService;
 import com.bavostepbros.leap.domain.service.technologyservice.TechnologyService;
 import com.bavostepbros.leap.persistence.ITApplicationDAL;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Currency;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @Transactional

@@ -70,10 +70,21 @@ public class CapabilityInformationController {
 	}
 
 	@GetMapping(path = "all-capabilityinformation-by-capabilityid/{capabilityId}")
-	public List<CapabilityInformationDto> getCapabilityInformation(
+	public List<CapabilityInformationDto> getCapabilityInformationByCapability(
 			@Valid @PathVariable("capabilityId") Integer capabilityId) {
 		List<CapabilityInformation> capabilityInformationList = capabilityInformationService
 				.getCapabilityInformationByCapability(capabilityId);
+		List<CapabilityInformationDto> capabilityInformationDto = capabilityInformationList.stream()
+				.map(capabilityInformation -> convertCapabilityInformation(capabilityInformation))
+				.collect(Collectors.toList());
+		return capabilityInformationDto;
+	}
+	
+	@GetMapping(path = "all-capabilityinformation-by-informationid/{informationId}")
+	public List<CapabilityInformationDto> getCapabilityInformationByInformation(
+			@Valid @PathVariable("informationId") Integer informationId) {
+		List<CapabilityInformation> capabilityInformationList = capabilityInformationService
+				.getCapabilityInformationByInformation(informationId);
 		List<CapabilityInformationDto> capabilityInformationDto = capabilityInformationList.stream()
 				.map(capabilityInformation -> convertCapabilityInformation(capabilityInformation))
 				.collect(Collectors.toList());

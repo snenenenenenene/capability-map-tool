@@ -69,4 +69,10 @@ public class CapabilityInformationServiceImpl implements CapabilityInformationSe
 		return capabilityInformationDAL.findByCapability(capability);
 	}
 
+	@Override
+	public List<CapabilityInformation> getCapabilityInformationByInformation(Integer informationId) {
+		Information information = informationService.get(informationId);
+		return capabilityInformationDAL.findByInformation(information);
+	}
+
 }

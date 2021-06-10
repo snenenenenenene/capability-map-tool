@@ -82,9 +82,19 @@ public class CapabilityApplicationController {
 	}
 
 	@GetMapping(path = "all-capabilityApplications-by-capabilityid/{capabilityId}")
-	public List<CapabilityApplicationDto> getCapabilityApplication(@PathVariable("capabilityId") Integer capabilityId) {
+	public List<CapabilityApplicationDto> getCapabilityApplicationByCapabilityId(@PathVariable("capabilityId") Integer capabilityId) {
 		List<CapabilityApplication> capabilityApplications = capabilityApplicationService
 				.getCapabilityApplicationsByCapability(capabilityId);
+		List<CapabilityApplicationDto> capabilityApplicationsDto = capabilityApplications.stream()
+				.map(capabilityApplication -> convertCapabilityApplication(capabilityApplication))
+				.collect(Collectors.toList());
+		return capabilityApplicationsDto;
+	}
+	
+	@GetMapping(path = "all-capabilityApplications-by-applicationid/{applicationId}")
+	public List<CapabilityApplicationDto> getCapabilityApplicationByApplicationId(@PathVariable("applicationId") Integer applicationId) {
+		List<CapabilityApplication> capabilityApplications = capabilityApplicationService
+				.getCapabilityApplicationsByApplication(applicationId);
 		List<CapabilityApplicationDto> capabilityApplicationsDto = capabilityApplications.stream()
 				.map(capabilityApplication -> convertCapabilityApplication(capabilityApplication))
 				.collect(Collectors.toList());
