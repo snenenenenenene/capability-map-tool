@@ -14,4 +14,7 @@ public interface CapabilityInformationService {
 	void delete(Integer capabilityId, Integer informationId);
 	
 	List<CapabilityInformation> getCapabilityInformationByCapability(Integer capabilityId);
+	
+	List<CapabilityInformation> getCapabilityInformationByInformation(Integer informationId);
+	
 }
