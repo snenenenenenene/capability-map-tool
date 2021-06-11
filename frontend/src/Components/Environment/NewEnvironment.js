@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import MaterialTable from "material-table";
 import API from "../../Services/API";
+import { Modal } from "react-bootstrap";
+import TemplateImage from "../../img/industry_template1.png";
 
 export default class NewEnvironment extends Component {
   constructor(props) {
@@ -33,6 +35,33 @@ export default class NewEnvironment extends Component {
       .catch((error) => toast.error("Could not Delete Environment"));
     //REFRESH ENVIRONMENTS
   };
+
+  generateTemplate() {
+    const formData = new FormData();
+    formData.append("environmentName", this.state.environmentName);
+    this.state.api.endpoints.environment
+      .create(formData)
+      .then((response) => {
+        toast.success("Environment Successfully Created!");
+        localStorage.setItem(
+          "environment",
+          JSON.stringify({
+            environmentName: this.state.environmentName,
+          })
+        );
+        this.props.history.push(`environment/${this.state.environmentName}`);
+      })
+      .catch((error) => {
+        if (error.response.status === 403) {
+          localStorage.removeItem("user");
+          localStorage.removeItem("environment");
+          this.props.history.push("/");
+          window.location.reload();
+          return;
+        }
+        this.props.history.push("/404");
+      });
+  }
 
   handleSubmit = async (e) => {
     e.preventDefault();
@@ -94,6 +123,10 @@ export default class NewEnvironment extends Component {
       .catch((error) => {
         toast.error("Could not Load Environments");
       });
+  }
+
+  handleModal() {
+    this.setState({ showModal: !this.state.showModal });
   }
 
   render() {
@@ -231,6 +264,34 @@ export default class NewEnvironment extends Component {
           }}
           title="Dashboard"
         />
+        <button
+          className="btn btn-primary"
+          style={{ marginTop: 5 }}
+          onClick={() => this.handleModal()}
+        >
+          Template
+        </button>
+        <Modal show={this.state.showModal} onHide={() => this.handleModal()}>
+          <Modal.Header closeButton>
+            <Modal.Title>Select Template</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <br></br>
+            <div
+              className="imageContainer"
+              onClick={() => this.generateTemplate()}
+            >
+              <img
+                className="templateImage"
+                src={TemplateImage}
+                style={{ maxWidth: 100 + "%", maxHeight: 100 + "%" }}
+              ></img>
+              <div class="imageButton">
+                <div class="text">Template 1</div>
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
       </div>
     );
   }

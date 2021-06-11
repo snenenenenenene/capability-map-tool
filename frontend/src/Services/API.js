@@ -61,6 +61,18 @@ export default class API {
     endpoints.linkResource = (toCreate) =>
       axios.put(`${resourceURL}/link-resource/`, toCreate, config);
 
+    endpoints.getAllCapabilitiesByApplicationId = ({ id }) =>
+      axios.get(
+        `${resourceURL}/all-capabilityApplications-by-applicationid/${id}`,
+        config
+      );
+
+    endpoints.getAllCapabilitiesByInformationId = ({ id }) =>
+      axios.get(
+        `${resourceURL}/all-capabilityinformation-by-informationid/${id}`,
+        config
+      );
+
     endpoints.linkBusinessProcess = (toCreate) =>
       axios.put(`${resourceURL}/link-businessprocess/`, toCreate, config);
 
@@ -79,6 +91,23 @@ export default class API {
     endpoints.update = (toUpdate, id) =>
       axios.put(`${resourceURL}/${id}`, toUpdate, config);
     endpoints.delete = ({ id }) => axios.delete(`${resourceURL}/${id}`, config);
+    endpoints.unlink = ({ capabilityId, id }) =>
+      axios.delete(`${resourceURL}/${capabilityId}/${id}`, config);
+    endpoints.unlinkProject = ({ capabilityId, id }) =>
+      axios.delete(
+        `${resourceURL}/unlink-project/${capabilityId}/${id}`,
+        config
+      );
+    endpoints.unlinkResource = ({ capabilityId, id }) =>
+      axios.delete(
+        `${resourceURL}/unlink-resource/${capabilityId}/${id}`,
+        config
+      );
+    endpoints.unlinkBusinessProcess = ({ capabilityId, id }) =>
+      axios.delete(
+        `${resourceURL}/unlink-businessprocess/${capabilityId}/${id}`,
+        config
+      );
     endpoints.generateCapabilityMap = ({ id }) =>
       axios.get(`${resourceURL}/capabilitymap/${id}`, config);
     endpoints.getAllCapabilitiesByEnvironmentId = ({ id }) =>
@@ -86,14 +115,10 @@ export default class API {
         `${resourceURL}/all-capabilities-by-environmentid/${id}`,
         config
       );
+
     endpoints.getAllCapabilityItemsByCapabilityId = ({ id }) =>
       axios.get(
         `${resourceURL}/all-capabilityitems-by-capabilityid/${id}`,
-        config
-      );
-    endpoints.getAllApplicationsByApplicationId = ({ id }) =>
-      axios.get(
-        `${resourceURL}/all-capabilityApplications-by-capabilityid/${id}`,
         config
       );
     endpoints.getAllCapabilityItemsByItemId = ({ id }) =>

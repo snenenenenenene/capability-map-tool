@@ -43,6 +43,77 @@ export default class CapabilityMap extends Component {
     }
   }
 
+  projectExists = (capability) => {
+    if (
+      typeof capability.projects !== "undefined" &&
+      capability.projects.length > 0
+    ) {
+      return (
+        <div className="col-md-12">
+          <th>PROJECTS</th>
+          <div class="card-deck">{this.renderProjects(capability)}</div>
+        </div>
+      );
+    }
+  };
+  resourceExists = (capability) => {
+    if (
+      typeof capability.resources !== "undefined" &&
+      capability.resources.length > 0
+    ) {
+      return (
+        <div className="col-md-12">
+          <th>RESOURCES</th>
+          <div class="card-deck">{this.renderResources(capability)}</div>
+        </div>
+      );
+    }
+  };
+
+  itApplicationExists = (capability) => {
+    if (
+      typeof capability.capabilityApplications !== "undefined" &&
+      capability.capabilityApplications.length > 0
+    ) {
+      return (
+        <div className="col-md-12">
+          <th>ITAPP</th>
+          <div class="card-deck">{this.renderITApplication(capability)}</div>
+        </div>
+      );
+    }
+  };
+  itApplicationExists;
+
+  businessProcessExists = (capability) => {
+    if (
+      typeof capability.businessprocess !== "undefined" &&
+      capability.businessprocess.length > 0
+    ) {
+      return (
+        <div className="col-md-12">
+          <th>BP</th>
+          <div class="card-deck">
+            {this.renderBusinessProcesses(capability)}
+          </div>
+        </div>
+      );
+    }
+  };
+  informationExists = (capability) => {
+    if (
+      typeof capability.capabilityInformation !== "undefined" &&
+      capability.capabilityInformation.length > 0
+    ) {
+      return (
+        <div className="col-md-12">
+          <th>INFO</th>
+          <div class="card-deck">{this.renderInfo(capability)}</div>
+        </div>
+      );
+    }
+  };
+
   capabilityMapping(capabilities) {
     return capabilities.map((capability, i) => {
       return (
@@ -143,59 +214,50 @@ export default class CapabilityMap extends Component {
   }
 
   renderProjects(capability) {
-    if (capability.projects !== undefined) {
-      return capability.projects.map((project) => {
-        return (
-          <div className="col-sm-12">
-            <div style={{ margin: 5 }}>
-              <div className="card">
-                <div className="card-body">{project.projectName}</div>
-              </div>
+    return capability.projects.map((project) => {
+      return (
+        <div className="col-sm-12">
+          <div style={{ margin: 5 }}>
+            <div className="card">
+              <div className="card-body">{project.projectName}</div>
             </div>
           </div>
-        );
-      });
-    } else return;
+        </div>
+      );
+    });
   }
   renderInfo(capability) {
-    if (capability.capabilityInformation !== undefined) {
-      return capability.capabilityInformation.map((information) => {
-        return (
-          <div className="col-sm-12">
-            <div style={{ margin: 5 }}>
-              <div className="card mx-auto">
-                <div
-                  className="mx-auto text-uppercase"
-                  style={{ marginTop: 5 }}
-                >
-                  {information.information.informationName}
-                </div>
-                <div className="card-body">
-                  {information.information.informationDescription}
-                </div>
-                <div className="card-footer">{information.criticality}</div>
+    return capability.capabilityInformation.map((information) => {
+      return (
+        <div className="col-sm-12">
+          <div style={{ margin: 5 }}>
+            <div className="card mx-auto">
+              <div className="mx-auto text-uppercase" style={{ marginTop: 5 }}>
+                {information.information.informationName}
               </div>
+              <div className="card-body">
+                {information.information.informationDescription}
+              </div>
+              <div className="card-footer">{information.criticality}</div>
             </div>
           </div>
-        );
-      });
-    } else return;
+        </div>
+      );
+    });
   }
 
   renderResources(capability) {
-    if (capability.resources !== undefined) {
-      return capability.resources.map((resource) => {
-        return (
-          <div className="col-sm-12">
-            <div style={{ margin: 5 }}>
-              <div className="card mx-auto">
-                <div className="card-body">{resource.resourceName}</div>
-              </div>
+    return capability.resources.map((resource) => {
+      return (
+        <div className="col-sm-12">
+          <div style={{ margin: 5 }}>
+            <div className="card mx-auto">
+              <div className="card-body">{resource.resourceName}</div>
             </div>
           </div>
-        );
-      });
-    } else return;
+        </div>
+      );
+    });
   }
 
   renderBusinessProcesses(capability) {
@@ -225,6 +287,36 @@ export default class CapabilityMap extends Component {
               <div className="card mx-auto">
                 <div className="card-body">
                   {capabilityApplication.application.name}
+                  <table>
+                    <tr>
+                      <th>Availability</th>
+                      <td>{capabilityApplication.availability}</td>
+                    </tr>
+                    <tr>
+                      <th>Efficiency Support</th>
+                      <td>{capabilityApplication.efficiencySupport}</td>
+                    </tr>
+                    <tr>
+                      <th>Functional Coverage</th>
+                      <td>{capabilityApplication.functionalCoverage}</td>
+                    </tr>
+                    <tr>
+                      <th>Correctness Business Fit</th>
+                      <td>{capabilityApplication.correctnessBusinessFit}</td>
+                    </tr>
+                    <tr>
+                      <th>Future Potential</th>
+                      {capabilityApplication.futurePotential}
+                    </tr>
+                    <tr>
+                      <th>Completeness</th>
+                      {capabilityApplication.completeness}
+                    </tr>
+                    <tr>
+                      <th>Correctness Information Fit</th>
+                      {capabilityApplication.correctnessInformationFit}
+                    </tr>
+                  </table>
                 </div>
               </div>
             </div>
@@ -400,16 +492,11 @@ export default class CapabilityMap extends Component {
                     </div>
                     <div className="col-sm-6">
                       <div className="form-row">
-                        <th>PROJECTS</th>
-                        {this.renderProjects(this.state.capability)}
-                        <th>RESOURCES</th>
-                        {this.renderResources(this.state.capability)}
-                        <th>BP</th>
-                        {this.renderBusinessProcesses(this.state.capability)}
-                        <th>ITAPP</th>
-                        {this.renderITApplication(this.state.capability)}
-                        <th>INFO</th>
-                        {this.renderInfo(this.state.capability)}
+                        {this.projectExists(this.state.capability)}
+                        {this.resourceExists(this.state.capability)}
+                        {this.itApplicationExists(this.state.capability)}
+                        {this.businessProcessExists(this.state.capability)}
+                        {this.informationExists(this.state.capability)}
                       </div>
                     </div>
                   </div>

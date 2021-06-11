@@ -99,7 +99,28 @@ export default class BusinessProcess extends Component {
       .linkBusinessProcess(formData)
       .then(toast.success("Business Process Successfully Linked"))
       .catch((error) => toast.error("Could not Link Business Process"));
+
+    await this.state.api.endpoints.businessprocess
+      .getCapabilities({ id: businessProcessId })
+      .then((response) => {
+        this.setState({ linkedCapabilities: response.data });
+      })
+      .catch((error) => {
+        toast.error("Could Not Find Capabilities");
+      });
   };
+
+  async unlinkCapability(capabilityId) {
+    await this.state.api.endpoints.capability
+      .unlinkBusinessProcess({
+        capabilityId: capabilityId,
+        id: this.state.businessProcessId,
+      })
+      .then(toast.success("Link Successfully Deleted"))
+      .catch((error) => toast.error("Could not Unlink"));
+
+    this.capabilityTable(this.state.businessProcessId);
+  }
 
   async capabilityTable(businessProcessId) {
     await this.state.api.endpoints.businessprocess
@@ -229,7 +250,19 @@ export default class BusinessProcess extends Component {
                         <div className="strategyitem-title card-header text-center text-uppercase text-truncate">
                           {capability.capabilityName}
                         </div>
-                        <div className="card-body text-center"></div>
+                        <div
+                          className="card-body text-center"
+                          style={{ padding: 5 }}
+                        >
+                          <button
+                            className="btn btn-danger"
+                            onClick={() =>
+                              this.unlinkCapability(capability.capabilityId)
+                            }
+                          >
+                            UNLINK
+                          </button>
+                        </div>
                       </div>
                     );
                   })}

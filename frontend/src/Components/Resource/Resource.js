@@ -113,6 +113,15 @@ export default class Resource extends Component {
       { duration: 50000 }
     );
   };
+
+  async unlinkCapability(capabilityId) {
+    await this.state.api.endpoints.capability
+      .unlinkResource({ capabilityId: capabilityId, id: this.state.resourceId })
+      .then(toast.success("Link Successfully Deleted"))
+      .catch((error) => toast.error("Could not Unlink"));
+
+    this.capabilityTable(this.state.resourceId);
+  }
   async capabilityTable(resourceId) {
     await this.state.api.endpoints.resource
       .getCapabilities({ id: resourceId })
@@ -218,7 +227,19 @@ export default class Resource extends Component {
                         <div className="strategyitem-title card-header text-center text-uppercase text-truncate">
                           {capability.capabilityName}
                         </div>
-                        <div className="card-body text-center"></div>
+                        <div
+                          className="card-body text-center"
+                          style={{ padding: 5 }}
+                        >
+                          <button
+                            className="btn btn-danger"
+                            onClick={() =>
+                              this.unlinkCapability(capability.capabilityId)
+                            }
+                          >
+                            UNLINK
+                          </button>
+                        </div>
                       </div>
                     );
                   })}

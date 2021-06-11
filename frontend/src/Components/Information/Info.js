@@ -75,6 +75,8 @@ export default class Info extends Component {
       .create(formData)
       .then(toast.success("Info Successfully Linked"))
       .catch((error) => toast.error("Could not link Info"));
+
+    this.capabilityTable(informationId);
   };
 
   handleInputChange(event) {
@@ -86,6 +88,16 @@ export default class Info extends Component {
       `/environment/${this.state.environmentName}/info/${informationId}`
     );
   }
+
+  async unlinkCapability(capabilityId) {
+    await this.state.api.endpoints.capabilityinformation
+      .unlink({ capabilityId: capabilityId, id: this.state.informationId })
+      .then(toast.success("Link Successfully Deleted"))
+      .catch((error) => toast.error("Could not Unlink"));
+
+    this.capabilityTable(this.state.informationId);
+  }
+
   //DELETE info
   delete = async (infoId) => {
     toast(
@@ -121,7 +133,7 @@ export default class Info extends Component {
 
   async capabilityTable(informationId) {
     await this.state.api.endpoints.capabilityinformation
-      .getCapabilities({ id: informationId })
+      .getAllCapabilitiesByInformationId({ id: informationId })
       .then((response) => {
         this.setState({ linkedCapabilities: response.data });
       })
@@ -224,9 +236,23 @@ export default class Info extends Component {
                         }}
                       >
                         <div className="strategyitem-title card-header text-center text-uppercase text-truncate">
-                          {capability.capabilityName}
+                          {capability.capability.capabilityName}
                         </div>
-                        <div className="card-body text-center"></div>
+                        <div
+                          className="card-body text-center"
+                          style={{ padding: 5 }}
+                        >
+                          <button
+                            className="btn btn-danger"
+                            onClick={() =>
+                              this.unlinkCapability(
+                                capability.capability.capabilityId
+                              )
+                            }
+                          >
+                            UNLINK
+                          </button>
+                        </div>
                       </div>
                     );
                   })}

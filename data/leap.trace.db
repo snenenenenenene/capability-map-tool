@@ -944,3 +944,15 @@ Caused by: java.lang.IllegalStateException: The file is locked: nio:C:/Users/sne
 	at org.h2.mvstore.FileStore.open(FileStore.java:172)
 	at org.h2.mvstore.MVStore.<init>(MVStore.java:381)
 	... 63 more
+2021-06-11 08:55:11 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "INFORMATIONDESCRIPTION VARCHAR(255)": "STRINGDECODE('heck if an array is empty or exists\nAsked 8 years, 10 months ago\nActive 2 months ago\nViewed 1.2m times\n\n426\n... (1735)"; SQL statement:
+insert into information (informationid, informationdescription, informationname) values (null, ?, ?) [22001-200]
+2021-06-11 08:55:15 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "INFORMATIONDESCRIPTION VARCHAR(255)": "STRINGDECODE('heck if an array is empty or exists\nAsked 8 years, 10 months ago\nActive 2 months ago\nViewed 1.2m times\n\n426\n... (1570)"; SQL statement:
+insert into information (informationid, informationdescription, informationname) values (null, ?, ?) [22001-200]
+2021-06-11 08:55:21 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "INFORMATIONDESCRIPTION VARCHAR(255)": "STRINGDECODE('hen the page is loading for the first time, I need to check if there is an image in image_array and load the last ... (592)"; SQL statement:
+insert into information (informationid, informationdescription, informationname) values (null, ?, ?) [22001-200]
+2021-06-11 08:55:24 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "INFORMATIONDESCRIPTION VARCHAR(255)": "STRINGDECODE('hen the page is loading for the first time, I need to check if there is an image in image_array and load the last ... (527)"; SQL statement:
+insert into information (informationid, informationdescription, informationname) values (null, ?, ?) [22001-200]

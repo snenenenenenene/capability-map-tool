@@ -15,7 +15,7 @@ export default class ITApplication extends Component {
       environments: [],
       environmentName: this.props.match.params.name,
       environmentId: "",
-      applicationId: "",
+      itApplicationId: "",
       capabilityId: "",
       itApplications: [],
       capabilities: [],
@@ -24,13 +24,13 @@ export default class ITApplication extends Component {
       showModal: false,
 
       // RATINGS
-      availability: 0,
-      efficiencySupport: 0,
-      functionalCoverage: 0,
-      correctnessBusinessFit: 0,
-      futurePotential: 0,
-      completeness: 0,
-      correctnessInformationFit: 0,
+      availability: 2,
+      efficiencySupport: 2,
+      functionalCoverage: 2,
+      correctnessBusinessFit: 2,
+      futurePotential: 2,
+      completeness: 2,
+      correctnessInformationFit: 2,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -40,9 +40,18 @@ export default class ITApplication extends Component {
     this.setState({ [event.target.name]: event.target.value });
   }
 
+  async unlinkCapability(capabilityId) {
+    await this.state.api.endpoints.capabilityapplication
+      .unlink({ capabilityId: capabilityId, id: this.state.itApplicationId })
+      .then(toast.success("Link Successfully Deleted"))
+      .catch((error) => toast.error("Could not Unlink"));
+
+    this.capabilityTable(this.state.itApplicationId);
+  }
+
   async capabilityTable(itApplicationId) {
-    await this.state.api.endpoints.itapplication
-      .getCapabilities({ id: itApplicationId })
+    await this.state.api.endpoints.capabilityapplication
+      .getAllCapabilitiesByApplicationId({ id: itApplicationId })
       .then((response) => {
         this.setState({ linkedCapabilities: response.data });
       })
@@ -51,7 +60,7 @@ export default class ITApplication extends Component {
       });
   }
 
-  handleSubmit = (capabilityId) => async (e) => {
+  handleSubmit = (itApplicationId) => async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("efficiencySupport", this.state.efficiencySupport);
@@ -78,9 +87,9 @@ export default class ITApplication extends Component {
       .catch((error) => toast.error("Could not Link Application"));
 
     await this.state.api.endpoints.capabilityapplication
-      .getAllApplicationsByApplicationId({ id: capabilityId })
+      .getAllCapabilitiesByApplicationId({ id: itApplicationId })
       .then((response) => {
-        this.setState({ capabilities: response.data });
+        this.setState({ linkedCapabilities: response.data });
       })
       .catch((error) => {
         toast.error("Could Not Find Capability");
@@ -262,9 +271,23 @@ export default class ITApplication extends Component {
                         }}
                       >
                         <div className="strategyitem-title card-header text-center text-uppercase text-truncate">
-                          {capability.capabilityName}
+                          {capability.capability.capabilityName}
                         </div>
-                        <div className="card-body text-center"></div>
+                        <div
+                          className="card-body text-center"
+                          style={{ padding: 5 }}
+                        >
+                          <button
+                            className="btn btn-danger"
+                            onClick={() =>
+                              this.unlinkCapability(
+                                capability.capability.capabilityId
+                              )
+                            }
+                          >
+                            UNLINK
+                          </button>
+                        </div>
                       </div>
                     );
                   })}
