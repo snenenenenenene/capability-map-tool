@@ -167,8 +167,6 @@ class ITApplicationServiceTest {
 		String applicationName = itApplicationFirst.getName();
 		String expected = "No value present";
 
-		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
-
 		Exception exception = assertThrows(NoSuchElementException.class,
 				() -> itApplicationService.save(statusId, applicationName, version, purchaseDate, endOfLife,
 						currentScalability, expectedScalability, currentPerformance, expectedPerformance,
@@ -1366,7 +1364,7 @@ class ITApplicationServiceTest {
 	}
 
 	@Test
-	void should_returnTrue_whenDeleted() {
+	void should_verifyDeleted_whenDeleted() {
 		itApplicationService.delete(itApplicationId);
 
 		Mockito.verify(applicationDAL, Mockito.times(1)).deleteById(Mockito.eq(itApplicationId));

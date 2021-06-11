@@ -64,7 +64,7 @@ public class EnvironmentServiceImpl implements EnvironmentService {
 
     @Override
     public Environment addCapability(Integer id, Capability capability) {
-        Environment environment = environmentDAL.findById(id).get();
+        Environment environment = this.get(id);
         environment.getCapabilities().add(capability);
         return environmentDAL.save(environment);
     }
@@ -78,7 +78,7 @@ public class EnvironmentServiceImpl implements EnvironmentService {
 
     @Override
     public Environment addStrategy(Integer id, Strategy strategy) {
-        Environment environment = environmentDAL.findById(id).get();
+        Environment environment = this.get(id);
         environment.getStrategies().add(strategy);
         return environmentDAL.save(environment);
     }
