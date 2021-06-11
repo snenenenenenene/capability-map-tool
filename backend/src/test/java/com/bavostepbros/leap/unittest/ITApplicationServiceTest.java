@@ -146,7 +146,7 @@ class ITApplicationServiceTest {
 		assertNotNull(optionalITApplicationFirst);
 	}
 
-	@Test //1
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputNameIsInvalid() {
 		String applicationName = "";
 		String expected = "No value present";
@@ -162,12 +162,10 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //2
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputNameIsDuplicate() {
 		String applicationName = itApplicationFirst.getName();
 		String expected = "No value present";
-
-		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
 
 		Exception exception = assertThrows(NoSuchElementException.class,
 				() -> itApplicationService.save(statusId, applicationName, version, purchaseDate, endOfLife,
@@ -178,7 +176,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //3
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputVersionIsInvalid() {
 		String version = "";
 		String expected = "No value present";
@@ -194,7 +192,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //4
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputPurchaseDateIsInvalid() {
 		LocalDate purchaseDate = null;
 		String expected = "No value present";
@@ -210,7 +208,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //5
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputEndOfLifeIsInvalid() {
 		LocalDate endOfLife = null;
 		String expected = "No value present";
@@ -226,7 +224,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //6
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputCurrentScalabilityIsNull() {
 		Integer currentScalability = null;
 		String expected = "No value present";
@@ -242,7 +240,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //7
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputCurrentScalabilityIsSmallerThan1() {
 		Integer currentScalability = 0;
 		String expected = "No value present";
@@ -258,7 +256,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //8
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputCurrentScalabilityIsGreaterThan5() {
 		Integer currentScalability = 6;
 		String expected = "No value present";
@@ -274,7 +272,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //9
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputExpectedScalabilityIsNull() {
 		Integer expectedScalability = null;
 		String expected = "No value present";
@@ -290,7 +288,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //10
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputExpectedScalabilityIsSmallerThan1() {
 		Integer expectedScalability = 0;
 		String expected = "No value present";
@@ -306,7 +304,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //11
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputExpectedScalabilityIsSmallerGreaterThan5() {
 		Integer expectedScalability = 6;
 		String expected = "No value present";
@@ -322,7 +320,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //12
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputCurrentPerformanceIsNull() {
 		Integer currentPerformance = null;
 		String expected = "No value present";
@@ -338,7 +336,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //13
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputCurrentPerformanceIsSmallerThan1() {
 		Integer currentPerformance = 1;
 		String expected = "No value present";
@@ -354,7 +352,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //14
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputCurrentPerformanceIsGreaterThan5() {
 		Integer currentPerformance = 6;
 		String expected = "No value present";
@@ -370,7 +368,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //15
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputExpectederformanceIsNull() {
 		Integer expectedPerformance = null;
 		String expected = "No value present";
@@ -386,7 +384,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //16
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputExpectederformanceIsSmallerThan1() {
 		Integer expectedPerformance = 0;
 		String expected = "No value present";
@@ -402,7 +400,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //17
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputExpectederformanceIsGreaterThan5() {
 		Integer expectedPerformance = 6;
 		String expected = "No value present";
@@ -418,7 +416,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //18
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputCurrentSecurityLevelIsNull() {
 		Integer currentSecurityLevel = null;
 		String expected = "No value present";
@@ -434,7 +432,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //19
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputCurrentSecurityLevelIsSmallerThan1() {
 		Integer currentSecurityLevel = 0;
 		String expected = "No value present";
@@ -450,7 +448,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //20
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputCurrentSecurityLevelIsGreaterThan5() {
 		Integer currentSecurityLevel = 6;
 		String expected = "No value present";
@@ -466,7 +464,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //21
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputExpectedSecurityLevelIsNull() {
 		Integer expectedSecurityLevel = null;
 		String expected = "No value present";
@@ -482,7 +480,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //22
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputExpectedSecurityLevelIsSmallerThan1() {
 		Integer expectedSecurityLevel = 0;
 		String expected = "No value present";
@@ -498,7 +496,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //23
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputExpectedSecurityLevelIsGreaterThan5() {
 		Integer expectedSecurityLevel = 6;
 		String expected = "No value present";
@@ -514,7 +512,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //24
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputCurrentStabilityIsNull() {
 		Integer currentStability = null;
 		String expected = "No value present";
@@ -530,7 +528,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //25
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputCurrentStabilityIsSmallerThan1() {
 		Integer currentStability = 0;
 		String expected = "No value present";
@@ -546,7 +544,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //26
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputCurrentStabilityIsGreaterThan5() {
 		Integer currentStability = 6;
 		String expected = "No value present";
@@ -562,7 +560,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //27
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputExpectedStabilityIsNull() {
 		Integer expectedStability = null;
 		String expected = "No value present";
@@ -578,7 +576,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //28
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputExpectedStabilityIsSmallerThan1() {
 		Integer expectedStability = 0;
 		String expected = "No value present";
@@ -594,7 +592,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //29
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputExpectedStabilityIsGreaterThan5() {
 		Integer expectedStability = 6;
 		String expected = "No value present";
@@ -610,7 +608,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //30
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputCurrentValueIsNull() {
 		Integer currentValue = null;
 		String expected = "No value present";
@@ -626,7 +624,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //31
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputCurrentValueIsSmallerThan1() {
 		Integer currentValue = 0;
 		String expected = "No value present";
@@ -642,7 +640,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //32
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputCurrentValueIsGreaterThan5() {
 		Integer currentValue = 6;
 		String expected = "No value present";
@@ -658,7 +656,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //33
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputCurrentYearlyCostIsNull() {
 		Double currentYearlyCost = null;
 		String expected = "No value present";
@@ -674,7 +672,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //34
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputAcceptedYearlyCostIsNull() {
 		Double acceptedYearlyCost = null;
 		String expected = "No value present";
@@ -690,7 +688,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //35
+	@Test
 	void should_throwNoSuchElementException_whenSavedInputTimeValueIsNull() {
 		String timeValue = null;
 		String expected = "No value present";
@@ -706,7 +704,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //36
+	@Test
 	void should_returnITApplication_whenSaved() {
 		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
 
@@ -723,7 +721,7 @@ class ITApplicationServiceTest {
 		testItApplication(itApplicationFirst, application);
 	}
 
-	@Test //37
+	@Test
 	void should_throwNoSuchElementException_whenGetITApplicationIdIsNull() {
 		Integer itApplicationId = null;
 		String expected = "No value present";
@@ -734,7 +732,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //38
+	@Test
 	void should_throwNoSuchElementException_whenGetITApplicationIdIsInvalid() {
 		Integer itApplicationId = 0;
 		String expected = "No value present";
@@ -745,7 +743,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //39
+	@Test
 	void should_returnITApplication_whenGetITApplication() {
 		BDDMockito.given(applicationDAL.findById(itApplicationId)).willReturn(optionalITApplicationFirst);
 
@@ -756,7 +754,7 @@ class ITApplicationServiceTest {
 		testItApplication(itApplicationFirst, application);
 	}
 
-	@Test //40
+	@Test
 	void should_throwNoSuchElementException_whenUpdatedInputIdIsNull() {
 		Integer itApplicationId = null;
 		String expected = "No value present";
@@ -772,7 +770,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //41
+	@Test
 	void should_throwNoSuchElementException_whenUpdatedInputIdIsInvalid() {
 		Integer itApplicationId = 0;
 		String expected = "No value present";
@@ -788,7 +786,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //42
+	@Test
 	void should_throwNoSuchElementException_whenUpdatedInputNameIsInvalid() {
 		String applicationName = "";
 		String expected = "No value present";
@@ -804,7 +802,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //43
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputNameIsDuplicate() {
 		String applicationName = itApplicationFirst.getName();
 		String expected = "No value present";
@@ -820,7 +818,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //44
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputVersionIsInvalid() {
 		String version = "";
 		String expected = "No value present";
@@ -836,7 +834,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //45
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputPurchaseDateIsInvalid() {
 		LocalDate purchaseDate = null;
 		String expected = "No value present";
@@ -852,7 +850,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //46
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputEndOfLifeIsInvalid() {
 		LocalDate endOfLife = null;
 		String expected = "No value present";
@@ -868,7 +866,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //47
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputCurrentScalabilityIsNull() {
 		Integer currentScalability = null;
 		String expected = "No value present";
@@ -884,7 +882,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //48
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputCurrentScalabilityIsSmallerThan1() {
 		Integer currentScalability = 0;
 		String expected = "No value present";
@@ -900,7 +898,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //49
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputCurrentScalabilityIsGreaterThan5() {
 		Integer currentScalability = 6;
 		String expected = "No value present";
@@ -916,7 +914,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //50
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputExpectedScalabilityIsNull() {
 		Integer expectedScalability = null;
 		String expected = "No value present";
@@ -932,7 +930,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //51
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputExpectedScalabilityIsSmallerThan1() {
 		Integer expectedScalability = 0;
 		String expected = "No value present";
@@ -948,7 +946,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //52
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputExpectedScalabilityIsSmallerGreaterThan5() {
 		Integer expectedScalability = 6;
 		String expected = "No value present";
@@ -964,7 +962,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //53
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputCurrentPerformanceIsNull() {
 		Integer currentPerformance = null;
 		String expected = "No value present";
@@ -980,7 +978,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //54
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputCurrentPerformanceIsSmallerThan1() {
 		Integer currentPerformance = 1;
 		String expected = "No value present";
@@ -996,7 +994,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //55
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputCurrentPerformanceIsGreaterThan5() {
 		Integer currentPerformance = 6;
 		String expected = "No value present";
@@ -1012,7 +1010,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //56
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputExpectederformanceIsNull() {
 		Integer expectedPerformance = null;
 		String expected = "No value present";
@@ -1028,7 +1026,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //57
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputExpectederformanceIsSmallerThan1() {
 		Integer expectedPerformance = 0;
 		String expected = "No value present";
@@ -1044,7 +1042,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //58
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputExpectederformanceIsGreaterThan5() {
 		Integer expectedPerformance = 6;
 		String expected = "No value present";
@@ -1060,7 +1058,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //59
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputCurrentSecurityLevelIsNull() {
 		Integer currentSecurityLevel = null;
 		String expected = "No value present";
@@ -1076,7 +1074,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //60
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputCurrentSecurityLevelIsSmallerThan1() {
 		Integer currentSecurityLevel = 0;
 		String expected = "No value present";
@@ -1092,7 +1090,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //61
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputCurrentSecurityLevelIsGreaterThan5() {
 		Integer currentSecurityLevel = 6;
 		String expected = "No value present";
@@ -1108,7 +1106,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //62
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputExpectedSecurityLevelIsNull() {
 		Integer expectedSecurityLevel = null;
 		String expected = "No value present";
@@ -1124,7 +1122,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //63
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputExpectedSecurityLevelIsSmallerThan1() {
 		Integer expectedSecurityLevel = 0;
 		String expected = "No value present";
@@ -1140,7 +1138,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //64
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputExpectedSecurityLevelIsGreaterThan5() {
 		Integer expectedSecurityLevel = 6;
 		String expected = "No value present";
@@ -1156,7 +1154,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //65
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputCurrentStabilityIsNull() {
 		Integer currentStability = null;
 		String expected = "No value present";
@@ -1172,7 +1170,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //66
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputCurrentStabilityIsSmallerThan1() {
 		Integer currentStability = 0;
 		String expected = "No value present";
@@ -1188,7 +1186,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //67
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputCurrentStabilityIsGreaterThan5() {
 		Integer currentStability = 6;
 		String expected = "No value present";
@@ -1204,7 +1202,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //68
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputExpectedStabilityIsNull() {
 		Integer expectedStability = null;
 		String expected = "No value present";
@@ -1220,7 +1218,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //69
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputExpectedStabilityIsSmallerThan1() {
 		Integer expectedStability = 0;
 		String expected = "No value present";
@@ -1236,7 +1234,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //70
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputExpectedStabilityIsGreaterThan5() {
 		Integer expectedStability = 6;
 		String expected = "No value present";
@@ -1252,7 +1250,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //71
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputCurrentValueIsNull() {
 		Integer currentValue = null;
 		String expected = "No value present";
@@ -1268,7 +1266,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //72
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputCurrentValueIsSmallerThan1() {
 		Integer currentValue = 0;
 		String expected = "No value present";
@@ -1284,7 +1282,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //73
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputCurrentValueIsGreaterThan5() {
 		Integer currentValue = 6;
 		String expected = "No value present";
@@ -1300,7 +1298,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //74
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputCurrentYearlyCostIsNull() {
 		Double currentYearlyCost = null;
 		String expected = "No value present";
@@ -1316,7 +1314,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //75
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputAcceptedYearlyCostIsNull() {
 		Double acceptedYearlyCost = null;
 		String expected = "No value present";
@@ -1332,7 +1330,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //76
+	@Test
 	void should_throwNoSuchElementException_whenUpdateInputTimeValueIsNull() {
 		String timeValue = null;
 		String expected = "No value present";
@@ -1348,7 +1346,7 @@ class ITApplicationServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //77
+	@Test
 	void should_returnITApplication_whenUpdated() {
 		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
 
@@ -1365,14 +1363,14 @@ class ITApplicationServiceTest {
 		testItApplication(itApplicationFirst, application);
 	}
 
-	@Test //78
-	void should_returnTrue_whenDeleted() {
+	@Test
+	void should_verifyDeleted_whenDeleted() {
 		itApplicationService.delete(itApplicationId);
 
 		Mockito.verify(applicationDAL, Mockito.times(1)).deleteById(Mockito.eq(itApplicationId));
 	}
 
-	@Test //79
+	@Test
 	void should_ReturnFalse_whenStrategyDoesNotExistById() {
 		BDDMockito.given(applicationDAL.existsById(BDDMockito.anyInt())).willReturn(false);
 
@@ -1380,8 +1378,8 @@ class ITApplicationServiceTest {
 
 		assertFalse(result);
 	}
-	
-	@Test //80
+
+	@Test
 	void should_ReturnTrue_whenStrategyDoesExistById() {
 		BDDMockito.given(applicationDAL.existsById(BDDMockito.anyInt())).willReturn(true);
 
@@ -1441,7 +1439,7 @@ class ITApplicationServiceTest {
 		List<String> timeValues = Arrays.stream(TimeValue.values())
 				.map(TimeValue::name)
 				.collect(Collectors.toList());
-
+		
 		BDDMockito.doReturn(timeValues).when(spyITApplicationService).getAllTimeValues();
 
 		List<String> fetchedTimeValues = itApplicationService.getAllTimeValues();

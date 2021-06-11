@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import javax.validation.ConstraintViolationException;
@@ -17,7 +17,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.BDDMockito;
-import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,11 +25,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
-import com.bavostepbros.leap.domain.customexceptions.EnvironmentException;
-import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
-import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
+import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Environment;
+import com.bavostepbros.leap.domain.model.Status;
+import com.bavostepbros.leap.domain.model.Strategy;
+import com.bavostepbros.leap.domain.model.paceofchange.PaceOfChange;
+import com.bavostepbros.leap.domain.model.targetoperatingmodel.TargetOperatingModel;
 import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
 import com.bavostepbros.leap.persistence.EnvironmentDAL;
 
@@ -43,6 +43,7 @@ import com.bavostepbros.leap.persistence.EnvironmentDAL;
 @SpringBootTest
 public class EnvironmentServiceTest {
 	
+	@SuppressWarnings("unused")
 	@Autowired
     private MockMvc mockMvc;
 
@@ -56,7 +57,12 @@ public class EnvironmentServiceTest {
 	private EnvironmentService spyEnvironmentService;
 
 	private Environment environment;
+	private Status status;
+	private Capability capabilityFirst;
+	private Capability capabilitySecond;
+	private Strategy strategy;
 	private List<Environment> environments;
+	private List<Capability> capabilities;
 	private Optional<Environment> optionalEnvironment;
 
 	@Rule
@@ -65,7 +71,15 @@ public class EnvironmentServiceTest {
 	@BeforeEach
 	public void init() {
 		environment = new Environment(1, "Environment test");
+		status = new Status(1, LocalDate.of(2021, 5, 9));
+		capabilityFirst = new Capability(1, environment, status, 0, "Capability 1", "Description 1",
+				PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 9, 8);
+		capabilitySecond = new Capability(1, environment, status, capabilityFirst.getCapabilityId(), "Capability 1",
+				"Description 1", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 9, 8);
+		strategy = new Strategy(1, status, "Strategy name", LocalDate.of(2021, 8, 10), LocalDate.of(2021, 8, 10),
+				environment);
 		environments = List.of(new Environment(1, "Test 1"), new Environment(2, "Test 2"));
+		capabilities = List.of(capabilityFirst, capabilitySecond);
 		optionalEnvironment = Optional.of(environment);
 	}
 
@@ -74,7 +88,12 @@ public class EnvironmentServiceTest {
 		assertNotNull(environmentService);
 		assertNotNull(environmentDAL);
 		assertNotNull(environment);
+		assertNotNull(status);
+		assertNotNull(capabilityFirst);
+		assertNotNull(capabilitySecond);
+		assertNotNull(strategy);
 		assertNotNull(environments);
+		assertNotNull(capabilities);
 		assertNotNull(optionalEnvironment);
 	}
 
@@ -143,7 +162,7 @@ public class EnvironmentServiceTest {
 	void should_throwConstraintViolationException_whenGetEnvironmentByNameIsEmpty() {
 		String falseEnvironmentName = "";
 
-		Exception exception = assertThrows(ConstraintViolationException.class,
+		assertThrows(ConstraintViolationException.class,
 				() -> environmentService.getByEnvironmentName(falseEnvironmentName));
 	}
 
@@ -187,7 +206,7 @@ public class EnvironmentServiceTest {
 		String falseEnvironmentName = "";
 		Integer id = environment.getEnvironmentId();
 
-		Exception exception = assertThrows(ConstraintViolationException.class,
+		assertThrows(ConstraintViolationException.class,
 				() -> environmentService.update(id, falseEnvironmentName));
 	}
 
@@ -200,6 +219,51 @@ public class EnvironmentServiceTest {
 		BDDMockito.given(environmentDAL.findById(BDDMockito.anyInt())).willReturn(optionalEnvironment);
 		Environment fetchedEnvironment = environmentService.update(id, falseEnvironmentName);
 
+		assertNotNull(fetchedEnvironment);
+		assertTrue(fetchedEnvironment instanceof Environment);
+		assertEquals(environment.getEnvironmentId(), fetchedEnvironment.getEnvironmentId());
+		assertEquals(environment.getEnvironmentName(), fetchedEnvironment.getEnvironmentName());
+	}
+	
+	@Test
+	void should_addCapabilityToEnvironment_whenAddCapability() {
+		Integer id = environment.getEnvironmentId();
+		
+		BDDMockito.doReturn(environment).when(spyEnvironmentService).get(id);
+		BDDMockito.given(environmentDAL.save(environment)).willReturn(environment);
+		
+		Environment fetchedEnvironment = environmentService.addCapability(id, capabilityFirst);
+		
+		assertNotNull(fetchedEnvironment);
+		assertTrue(fetchedEnvironment instanceof Environment);
+		assertEquals(environment.getEnvironmentId(), fetchedEnvironment.getEnvironmentId());
+		assertEquals(environment.getEnvironmentName(), fetchedEnvironment.getEnvironmentName());
+	}
+	
+	@Test
+	void should_addCapabilitiesToEnvironment_whenAddCapabilities() {
+		Integer id = environment.getEnvironmentId();
+		
+		BDDMockito.doReturn(environment).when(spyEnvironmentService).get(id);
+		BDDMockito.given(environmentDAL.save(environment)).willReturn(environment);
+		
+		Environment fetchedEnvironment = environmentService.addCapabilities(id, capabilities);
+		
+		assertNotNull(fetchedEnvironment);
+		assertTrue(fetchedEnvironment instanceof Environment);
+		assertEquals(environment.getEnvironmentId(), fetchedEnvironment.getEnvironmentId());
+		assertEquals(environment.getEnvironmentName(), fetchedEnvironment.getEnvironmentName());
+	}
+	
+	@Test
+	void should_addStrategyToEnvironment_whenAddStrategy() {
+		Integer id = environment.getEnvironmentId();
+		
+		BDDMockito.doReturn(environment).when(spyEnvironmentService).get(id);
+		BDDMockito.given(environmentDAL.save(environment)).willReturn(environment);
+		
+		Environment fetchedEnvironment = environmentService.addStrategy(id, strategy);
+		
 		assertNotNull(fetchedEnvironment);
 		assertTrue(fetchedEnvironment instanceof Environment);
 		assertEquals(environment.getEnvironmentId(), fetchedEnvironment.getEnvironmentId());
