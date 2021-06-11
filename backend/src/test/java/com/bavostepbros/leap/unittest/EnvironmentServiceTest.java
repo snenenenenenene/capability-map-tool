@@ -74,7 +74,7 @@ public class EnvironmentServiceTest {
 		assertNotNull(optionalEnvironment);
 	}
 
-	@Test
+	@Test //1
 	void should_throwInvalidInputException_whenSavedInputIsInvalid() {
 		String falseEnvironmentName = "";
 		String expected = "Invalid input.";
@@ -85,7 +85,7 @@ public class EnvironmentServiceTest {
 		assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test
+	@Test //1
 	void should_throwDuplicateValueException_whenSavedEnvironmentNameExists() {
 		String environmentName = environment.getEnvironmentName();
 		String expected = "Environment name already exists.";
@@ -97,7 +97,7 @@ public class EnvironmentServiceTest {
 		assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test
+	@Test //3
 	void should_saveEnvironment_whenEnvironmentIsSaved() {
 		String environmentName = environment.getEnvironmentName();
 
@@ -111,7 +111,7 @@ public class EnvironmentServiceTest {
 		assertEquals(environment.getEnvironmentName(), result.getEnvironmentName());
 	}
 
-	@Test
+	@Test //4
 	void should_throwInvalidInputException_whenGetEnvironmentIdNotValidWithId() {
 		Integer invalidId = 0;
 		String expected = "Environment ID is not valid.";
@@ -122,7 +122,7 @@ public class EnvironmentServiceTest {
 		assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test
+	@Test //5
 	void should_throwIndexDoesNotExistException_whenGetEnvironmentIdDoesNotExist() {
 		Integer id = environment.getEnvironmentId();
 		String expected = "Environment ID does not exists.";
@@ -133,7 +133,7 @@ public class EnvironmentServiceTest {
 		assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test
+	@Test //6
 	void should_retrieveValidEnvironment_whenIdIsValidAndIdExists() {
 		Integer id = environment.getEnvironmentId();
 
@@ -147,7 +147,7 @@ public class EnvironmentServiceTest {
 		assertEquals(environment.getEnvironmentName(), fetchedEnvironment.getEnvironmentName());
 	}
 
-	@Test
+	@Test //7
 	void should_throwInvalidInputException_whenGetByEnvironmentNameHasInvalidInput() {
 		String falseEnvironmentName = "";
 		String expected = "Environment name is not valid.";
@@ -158,7 +158,7 @@ public class EnvironmentServiceTest {
 		assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test
+	@Test //8
 	void should_throwEnvironmentException_whenEnvironmentNameExists() {
 		String environmentName = environment.getEnvironmentName();
 		String expected = "Environment name does not exists.";
@@ -170,7 +170,7 @@ public class EnvironmentServiceTest {
 		assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test
+	@Test //9
 	void should_RetrieveValidEnvironment_whenEnvironmentNameIsValid() {
 		String falseEnvironmentName = environment.getEnvironmentName();
 		environmentService.save(falseEnvironmentName);
@@ -187,7 +187,7 @@ public class EnvironmentServiceTest {
 		assertEquals(environment.getEnvironmentName(), fetchedEnvironment.getEnvironmentName());
 	}
 
-	@Test
+	@Test //10
 	void should_retrieveEnvironmentList_whenGetAllIsCalled() {
 		BDDMockito.given(environmentDAL.findAll()).willReturn(environments);
 		List<Environment> fetchedEnvironments = environmentService.getAll();
@@ -196,7 +196,7 @@ public class EnvironmentServiceTest {
 		assertEquals(environments.size(), fetchedEnvironments.size());
 	}
 
-	@Test
+	@Test //11
 	void should_throwInvalidInputException_whenUpdatedInputIsInvalid() {
 		String falseEnvironmentName = "";
 		Integer id = environment.getEnvironmentId();
@@ -208,7 +208,7 @@ public class EnvironmentServiceTest {
 		assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test
+	@Test //12
 	void should_throwIndexDoesNotExistException_whenUpdateEnvironmentIdDoesNotExist() {
 		String falseEnvironmentName = "Environment test 2";
 		Integer id = environment.getEnvironmentId();
@@ -221,7 +221,7 @@ public class EnvironmentServiceTest {
 		assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test
+	@Test //13
 	void should_throwEnvironmentException_whenUpdateEnvironmentNameExists() {
 		String environmentName = "xyz";
 		Integer id = environment.getEnvironmentId();
@@ -238,7 +238,7 @@ public class EnvironmentServiceTest {
 		assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test
+	@Test //14
 	void should_retrieveValidEnvironment_whenEnvironmentIsUpdated() {
 		String falseEnvironmentName = environment.getEnvironmentName();
 		Integer id = environment.getEnvironmentId();
@@ -257,7 +257,7 @@ public class EnvironmentServiceTest {
 		assertEquals(environment.getEnvironmentName(), fetchedEnvironment.getEnvironmentName());
 	}
 
-	@Test
+	@Test //15
 	void should_throwInvalidInputException_whenDeleteInputIsInvalid() {
 		Integer id = 0;
 		String expected = "Environment ID is not valid.";
@@ -268,7 +268,7 @@ public class EnvironmentServiceTest {
 		assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test
+	@Test //16
 	void should_throwIndexDoesNotExistException_whenDeleteInputDoesNotExists() {
 		Integer id = environment.getEnvironmentId();
 		String expected = "Environment ID does not exists.";
@@ -281,7 +281,7 @@ public class EnvironmentServiceTest {
 		assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test
+	@Test //17
 	void should_ReturnFalse_whenEnvironmentDoesNotExistById() {
 		BDDMockito.given(environmentDAL.existsById(BDDMockito.anyInt())).willReturn(false);
 
@@ -290,7 +290,7 @@ public class EnvironmentServiceTest {
 		assertFalse(result);
 	}
 
-	@Test
+	@Test //18
 	void should_ReturnTrue_whenEnvironmentDoesExistById() {
 		BDDMockito.given(environmentDAL.existsById(BDDMockito.anyInt())).willReturn(true);
 
@@ -298,8 +298,8 @@ public class EnvironmentServiceTest {
 
 		assertTrue(result);
 	}
-	
-	@Test
+
+	@Test //19
 	void should_ReturnTrue_whenEnvironmentDoesExistByEnvironmentName() {
 		BDDMockito.given(environmentDAL.findByEnvironmentName(BDDMockito.any(String.class)))
 			.willReturn(optionalEnvironment);
@@ -309,7 +309,7 @@ public class EnvironmentServiceTest {
 		assertTrue(result);
 	}
 	
-	@Test
+	@Test //20
 	void should_ReturnFalse_whenEnvironmentDoesNotExistByEnvironmentName() {
 		BDDMockito.given(environmentDAL.findByEnvironmentName(BDDMockito.any(String.class)))
 			.willReturn(Optional.empty());
