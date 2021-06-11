@@ -7,13 +7,17 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+
+import javax.validation.ConstraintViolationException;
 
 import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.BDDMockito;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -49,7 +53,7 @@ public class EnvironmentServiceTest {
 	private EnvironmentDAL environmentDAL;
 
 	@SpyBean
-	private EnvironmentService spyService;
+	private EnvironmentService spyEnvironmentService;
 
 	private Environment environment;
 	private List<Environment> environments;
@@ -75,33 +79,33 @@ public class EnvironmentServiceTest {
 	}
 
 	@Test
-	void should_throwInvalidInputException_whenSavedInputIsInvalid() {
-		String falseEnvironmentName = "";
-		String expected = "Invalid input.";
+	void should_throwConstraintViolationException_whenSavedInputNameIsInvalid() {
+		String falseEnvironmentName = null;
+		// String expected = "Environment name is required.";
 
-		Exception exception = assertThrows(InvalidInputException.class,
+		assertThrows(ConstraintViolationException.class,
 				() -> environmentService.save(falseEnvironmentName));
 
-		assertEquals(exception.getMessage(), expected);
+		// assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test
-	void should_throwDuplicateValueException_whenSavedEnvironmentNameExists() {
-		String environmentName = environment.getEnvironmentName();
-		String expected = "Environment name already exists.";
-		BDDMockito.doReturn(true).when(spyService).existsByEnvironmentName(environmentName);
-
-		Exception exception = assertThrows(DuplicateValueException.class,
-				() -> environmentService.save(environmentName));
-
-		assertEquals(exception.getMessage(), expected);
-	}
+//	@Test
+//	void should_throwConstraintViolationException_whenSavedEnvironmentNameExists() {
+//		String environmentName = environment.getEnvironmentName();
+//		String expected = "No value present";
+//		
+//		BDDMockito.given(environmentDAL.save(BDDMockito.any(Environment.class))).willThrow(ConstraintViolationException.class);
+//		
+//		Exception exception = assertThrows(ConstraintViolationException.class,
+//				() -> environmentService.save(environmentName));
+//
+//		assertEquals(expected, exception.getMessage());
+//	}
 
 	@Test
 	void should_saveEnvironment_whenEnvironmentIsSaved() {
 		String environmentName = environment.getEnvironmentName();
 
-		Mockito.doReturn(false).when(spyService).existsByEnvironmentName(environmentName);
 		BDDMockito.given(environmentDAL.save(BDDMockito.any(Environment.class))).willReturn(environment);
 		Environment result = environmentService.save(environmentName);
 
@@ -112,32 +116,20 @@ public class EnvironmentServiceTest {
 	}
 
 	@Test
-	void should_throwInvalidInputException_whenGetEnvironmentIdNotValidWithId() {
+	void should_throwNullPointerException_whenGetEnvironmentByIdInvalidId() {
 		Integer invalidId = 0;
-		String expected = "Environment ID is not valid.";
+		String expected = "Environment does not exist.";
 
-		Exception exception = assertThrows(InvalidInputException.class, 
+		Exception exception = assertThrows(NullPointerException.class, 
 				() -> environmentService.get(invalidId));
 
 		assertEquals(exception.getMessage(), expected);
 	}
 
 	@Test
-	void should_throwIndexDoesNotExistException_whenGetEnvironmentIdDoesNotExist() {
-		Integer id = environment.getEnvironmentId();
-		String expected = "Environment ID does not exists.";
-
-		Exception exception = assertThrows(IndexDoesNotExistException.class, 
-				() -> environmentService.get(id));
-
-		assertEquals(exception.getMessage(), expected);
-	}
-
-	@Test
-	void should_retrieveValidEnvironment_whenIdIsValidAndIdExists() {
+	void should_retrieveValidEnvironment_whenGetEnvironmentById() {
 		Integer id = environment.getEnvironmentId();
 
-		Mockito.doReturn(true).when(spyService).existsById(id);
 		BDDMockito.given(environmentDAL.findById(id)).willReturn(Optional.of(environment));
 		Environment fetchedEnvironment = environmentService.get(id);
 
@@ -148,34 +140,28 @@ public class EnvironmentServiceTest {
 	}
 
 	@Test
-	void should_throwInvalidInputException_whenGetByEnvironmentNameHasInvalidInput() {
+	void should_throwConstraintViolationException_whenGetEnvironmentByNameIsEmpty() {
 		String falseEnvironmentName = "";
-		String expected = "Environment name is not valid.";
 
-		Exception exception = assertThrows(InvalidInputException.class,
+		Exception exception = assertThrows(ConstraintViolationException.class,
+				() -> environmentService.getByEnvironmentName(falseEnvironmentName));
+	}
+	
+	@Test
+	void should_throwNullPointerException_whenGetEnvironmentByNameInvalidName() {
+		String falseEnvironmentName = "very special and weird name";
+		String expected = "Environment does not exist.";
+
+		Exception exception = assertThrows(NullPointerException.class,
 				() -> environmentService.getByEnvironmentName(falseEnvironmentName));
 
 		assertEquals(exception.getMessage(), expected);
 	}
 
 	@Test
-	void should_throwEnvironmentException_whenEnvironmentNameExists() {
-		String environmentName = environment.getEnvironmentName();
-		String expected = "Environment name does not exists.";
-		BDDMockito.doReturn(false).when(spyService).existsByEnvironmentName(environmentName);
-
-		Exception exception = assertThrows(EnvironmentException.class,
-				() -> environmentService.getByEnvironmentName(environmentName));
-
-		assertEquals(exception.getMessage(), expected);
-	}
-
-	@Test
-	void should_RetrieveValidEnvironment_whenEnvironmentNameIsValid() {
+	void should_retrieveValidEnvironment_whenGetEnvironmentByNameIsValid() {
 		String falseEnvironmentName = environment.getEnvironmentName();
-		environmentService.save(falseEnvironmentName);
 
-		Mockito.doReturn(true).when(spyService).existsByEnvironmentName(falseEnvironmentName);
 		BDDMockito.given(environmentDAL.findByEnvironmentName(BDDMockito.any(String.class)))
 				.willReturn(Optional.of(environment));
 		Environment fetchedEnvironment = environmentService.getByEnvironmentName(falseEnvironmentName);
@@ -197,55 +183,18 @@ public class EnvironmentServiceTest {
 	}
 
 	@Test
-	void should_throwInvalidInputException_whenUpdatedInputIsInvalid() {
+	void should_throwInvalidInputException_whenUpdateNameIsInvalid() {
 		String falseEnvironmentName = "";
 		Integer id = environment.getEnvironmentId();
-		String expected = "Invalid input.";
 
-		Exception exception = assertThrows(InvalidInputException.class,
+		Exception exception = assertThrows(ConstraintViolationException.class,
 				() -> environmentService.update(id, falseEnvironmentName));
-
-		assertEquals(exception.getMessage(), expected);
-	}
-
-	@Test
-	void should_throwIndexDoesNotExistException_whenUpdateEnvironmentIdDoesNotExist() {
-		String falseEnvironmentName = "Environment test 2";
-		Integer id = environment.getEnvironmentId();
-		String expected = "Can not update environment if it does not exist.";
-		BDDMockito.doReturn(false).when(spyService).existsById(id);
-
-		Exception exception = assertThrows(IndexDoesNotExistException.class,
-				() -> environmentService.update(id, falseEnvironmentName));
-
-		assertEquals(exception.getMessage(), expected);
-	}
-
-	@Test
-	void should_throwEnvironmentException_whenUpdateEnvironmentNameExists() {
-		String environmentName = "xyz";
-		Integer id = environment.getEnvironmentId();
-		String expected = "Environment name already exists.";
-		
-		BDDMockito.doReturn(true).when(spyService).existsById(id);
-		BDDMockito.doReturn(true).when(spyService).existsByEnvironmentName(environmentName);
-		
-		BDDMockito.given(environmentDAL.findById(BDDMockito.anyInt())).willReturn(optionalEnvironment);
-
-		Exception exception = assertThrows(EnvironmentException.class,
-				() -> environmentService.update(id, environmentName));
-
-		assertEquals(exception.getMessage(), expected);
 	}
 
 	@Test
 	void should_retrieveValidEnvironment_whenEnvironmentIsUpdated() {
 		String falseEnvironmentName = environment.getEnvironmentName();
 		Integer id = environment.getEnvironmentId();
-		environmentService.save(falseEnvironmentName);
-
-		Mockito.doReturn(true).when(spyService).existsById(id);
-		Mockito.doReturn(false).when(spyService).existsByEnvironmentName(falseEnvironmentName);
 
 		BDDMockito.given(environmentDAL.save(environment)).willReturn(environment);
 		BDDMockito.given(environmentDAL.findById(BDDMockito.anyInt())).willReturn(optionalEnvironment);
@@ -258,27 +207,11 @@ public class EnvironmentServiceTest {
 	}
 
 	@Test
-	void should_throwInvalidInputException_whenDeleteInputIsInvalid() {
-		Integer id = 0;
-		String expected = "Environment ID is not valid.";
-
-		Exception exception = assertThrows(InvalidInputException.class, 
-				() -> environmentService.delete(id));
-
-		assertEquals(exception.getMessage(), expected);
-	}
-
-	@Test
-	void should_throwIndexDoesNotExistException_whenDeleteInputDoesNotExists() {
+	void should_verifyDeleted_whenDeleted() {
 		Integer id = environment.getEnvironmentId();
-		String expected = "Environment ID does not exists.";
-
-		environmentDAL.deleteById(id);
-
-		Exception exception = assertThrows(IndexDoesNotExistException.class, 
-				() -> environmentService.get(id));
-
-		assertEquals(exception.getMessage(), expected);
+		environmentService.delete(id);
+		
+		Mockito.verify(environmentDAL, Mockito.times(1)).deleteById(Mockito.eq(id));
 	}
 
 	@Test

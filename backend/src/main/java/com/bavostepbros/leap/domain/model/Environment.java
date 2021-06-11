@@ -43,13 +43,13 @@ public class Environment {
     @OneToMany(mappedBy = "environment")
     private List<Strategy> strategies;
 
-    public Environment(String environmentName) {
+    public Environment(@NotBlank String environmentName) {
         this.environmentName = environmentName;
         this.capabilities = new ArrayList<>();
         this.strategies = new ArrayList<>();
     }
 
-    public Environment(Integer environmentId, String environmentName) {
+    public Environment(Integer environmentId, @NotBlank String environmentName) {
 		this.environmentId = environmentId;
 		this.environmentName = environmentName;
 		this.capabilities = new ArrayList<>();

@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import com.bavostepbros.leap.domain.model.BusinessProcess;
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.CapabilityApplication;
@@ -20,6 +22,7 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import com.bavostepbros.leap.domain.model.Environment;
@@ -58,6 +61,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @RestController
 @RequiredArgsConstructor
+@Validated
 @RequestMapping("/api/environment/")
 public class EnvironmentController {
 
@@ -65,7 +69,7 @@ public class EnvironmentController {
 	private EnvironmentService envService;
 
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public EnvironmentDto addEnvironment(@ModelAttribute("environmentName") String environmentName) {
+	public EnvironmentDto addEnvironment(@ModelAttribute("environmentName") @Valid String environmentName) {
 		Environment environment = envService.save(environmentName);
 		return convertEnvironment(environment);
 	}
