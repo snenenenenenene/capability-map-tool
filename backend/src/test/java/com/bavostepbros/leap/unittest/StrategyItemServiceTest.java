@@ -126,18 +126,18 @@ public class StrategyItemServiceTest {
 		assertNotNull(strategyItemSecond);
 	}
 	
-//	@Test
-//	void should_throwNoSuchElementException_whenSavedStrategyItemIsNull() {
-//		Integer strategyId = null;
-//		String expected = "No value present";
-//		
-//		BDDMockito.given(strategyService.get(strategyId)).willReturn(strategyFirst);
-//		
-//		Exception exception = assertThrows(NoSuchElementException.class,
-//				() -> strategyItemService.save(strategyId, strategyItemName, description));
-//		
-//		assertEquals(expected, exception.getMessage());
-//	}
+	@Test
+	void should_throwNoSuchElementException_whenSavedInpuStrategyIdIsNull() {
+		Integer strategyId = null;
+		String expected = "No value present";
+		
+		BDDMockito.given(strategyService.get(strategyId)).willReturn(strategyFirst);
+		
+		Exception exception = assertThrows(NoSuchElementException.class,
+				() -> strategyItemService.save(strategyId, strategyItemName, description));
+		
+		assertEquals(expected, exception.getMessage());
+	}
 //	
 //	@Test
 //	void should_throwNoSuchElementException_whenSavedStrategyItemNameIsBlank() {

@@ -1465,7 +1465,6 @@ class ITApplicationServiceTest {
 		assertEquals(timeValues.size(), fetchedTimeValues.size());
 	}
 
-	@Test
 	private void testItApplication(ITApplication expectedObject, ITApplication actualObject) {
 		assertEquals(expectedObject.getItApplicationId(), actualObject.getItApplicationId());
 		assertEquals(expectedObject.getStatus().getStatusId(), actualObject.getStatus().getStatusId());
