@@ -213,8 +213,6 @@ class ITApplicationServiceTest {
 		LocalDate endOfLife = null;
 		String expected = "No value present";
 
-		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
-
 		Exception exception = assertThrows(NoSuchElementException.class,
 				() -> itApplicationService.save(statusId, applicationName, version, purchaseDate, endOfLife,
 						currentScalability, expectedScalability, currentPerformance, expectedPerformance,
