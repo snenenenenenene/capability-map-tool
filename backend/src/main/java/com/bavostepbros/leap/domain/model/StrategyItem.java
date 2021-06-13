@@ -68,14 +68,4 @@ public class StrategyItem {
 		this.description = description;
 	}
 
-    @Override
-    public String toString() {
-        return "{" +
-            " itemId='" + getItemId() + "'" +
-            ", strategy='" + getStrategy() + "'" +
-            ", strategyItemName='" + getStrategyItemName() + "'" +
-            ", description='" + getDescription() + "'" +
-            "}";
-    }
-
 }

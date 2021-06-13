@@ -201,19 +201,5 @@ public class ITApplication {
 	public void removeTechnology(Technology technology) {
 		technologies.remove(technology);
 	}
-
-	@Override
-	public String toString() {
-		return "ITApplication [itApplicationId=" + itApplicationId + ", status=" + status + ", name=" + name
-				+ ", version=" + version + ", purchaseDate=" + purchaseDate + ", endOfLife=" + endOfLife
-				+ ", currentScalability=" + currentScalability + ", expectedScalability=" + expectedScalability
-				+ ", currentPerformance=" + currentPerformance + ", expectedPerformance=" + expectedPerformance
-				+ ", currentSecurityLevel=" + currentSecurityLevel + ", expectedSecurityLevel=" + expectedSecurityLevel
-				+ ", currentStability=" + currentStability + ", expectedStability=" + expectedStability
-				+ ", currencyType=" + currencyType + ", costCurrency=" + costCurrency + ", currentValue=" + currentValue
-				+ ", currentYearlyCost=" + currentYearlyCost + ", acceptedYearlyCost=" + acceptedYearlyCost
-				+ ", timeValue=" + timeValue + "]";
-	}
-
     
 }

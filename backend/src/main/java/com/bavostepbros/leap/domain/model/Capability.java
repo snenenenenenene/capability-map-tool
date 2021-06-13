@@ -208,14 +208,4 @@ public class Capability {
 		return resources;
 	}
 
-	@Override
-	public String toString() {
-		return "{" + " capabilityId='" + getCapabilityId() + "'" + ", environment='" + getEnvironment() + "'"
-				+ ", status='" + getStatus() + "'" + ", parentCapabilityId='" + getParentCapabilityId() + "'"
-				+ ", name='" + getCapabilityName() + "'" + ", level='" + getLevel() + "'" + ", paceOfChange='"
-				+ getPaceOfChange() + "'" + ", targetOperatingModel='" + getTargetOperatingModel() + "'"
-				+ ", resourceQuality='" + getResourceQuality() + "'" + ", informationQuality='"
-				+ getInformationQuality() + "'" + ", applicationFit='" + getApplicationFit() + "'" + "}";
-	}
-
 }
