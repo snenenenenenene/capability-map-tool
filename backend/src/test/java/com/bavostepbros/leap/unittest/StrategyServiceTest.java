@@ -420,7 +420,7 @@ public class StrategyServiceTest {
 
 	@Test 
 	void should_throwNullPointerException_whenGetByNameStrategyNameDoesNotExists() {
-		String strategyName = "";
+		String strategyName = "Very strange query search";
 		String expected = "Strategy does not exist";
 
 		Exception exception = assertThrows(NullPointerException.class, 
@@ -431,9 +431,8 @@ public class StrategyServiceTest {
 
 	@Test 
 	void should_retrieveValidStrategy_whenGetByNameIsValidAndExists() {
-		String strategyName = "";
-
 		BDDMockito.given(strategyDAL.findByStrategyName(strategyName)).willReturn(optionalStrategy);
+		
 		Strategy fetchedStrategy = strategyService.getStrategyByStrategyname(strategyName);
 
 		assertNotNull(fetchedStrategy);

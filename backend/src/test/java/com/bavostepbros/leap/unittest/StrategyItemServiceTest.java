@@ -1,10 +1,13 @@
 package com.bavostepbros.leap.unittest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -13,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -79,7 +83,9 @@ public class StrategyItemServiceTest {
 	private Strategy strategySecond;
 	private StrategyItem strategyItemFirst;
 	private StrategyItem strategyItemSecond;
+	private List<StrategyItem> strategyItems;
 	private Optional<Strategy> optionalStrategyFirst;
+	private Optional<StrategyItem> optionalStrategyItemFirst;
 	
 	private Integer itemId;
 	private Integer strategyId;
@@ -98,7 +104,9 @@ public class StrategyItemServiceTest {
 				LocalDate.of(2021, 05, 20), environmentSecond);
 		strategyItemFirst = new StrategyItem(1, strategyFirst, "StrategyItem 1", "Description 1");
 		strategyItemSecond = new StrategyItem(2, strategySecond, "StrategyItem 2", "Description 2");
+		strategyItems = List.of(strategyItemFirst, strategyItemSecond);
 		optionalStrategyFirst = Optional.of(strategyFirst);
+		optionalStrategyItemFirst = Optional.of(strategyItemFirst);
 		
 		itemId = strategyItemFirst.getItemId();
 		strategyId = strategyItemFirst.getStrategy().getStrategyId();
@@ -131,24 +139,293 @@ public class StrategyItemServiceTest {
 		Integer strategyId = null;
 		String expected = "No value present";
 		
-		BDDMockito.given(strategyService.get(strategyId)).willReturn(strategyFirst);
+		Exception exception = assertThrows(NoSuchElementException.class,
+				() -> strategyItemService.save(strategyId, strategyItemName, description));
+		
+		assertEquals(expected, exception.getMessage());
+	}
+	
+	@Test
+	void should_throwNoSuchElementException_whenSavedInpuStrategyIdDoesNotExist() {
+		Integer strategyId = strategyItemFirst.getStrategy().getStrategyId() + 10;
+		String expected = "No value present";
 		
 		Exception exception = assertThrows(NoSuchElementException.class,
 				() -> strategyItemService.save(strategyId, strategyItemName, description));
 		
 		assertEquals(expected, exception.getMessage());
 	}
-//	
-//	@Test
-//	void should_throwNoSuchElementException_whenSavedStrategyItemNameIsBlank() {
-//		String strategyItemName = "";
-//		String expected = "No value present";
-//		
-//		BDDMockito.given(strategyService.get(strategyId)).willReturn(strategyFirst);
-//		
-//		Exception exception = assertThrows(NoSuchElementException.class,
-//				() -> strategyItemService.save(strategyId, strategyItemName, description));
-//		
-//		assertEquals(expected, exception.getMessage());
-//	}
+	
+	@Test
+	void should_throwNoSuchElementException_whenSavedStrategyItemNameIsBlank() {
+		String strategyItemName = "";
+		String expected = "No value present";
+		
+		Exception exception = assertThrows(NoSuchElementException.class,
+				() -> strategyItemService.save(strategyId, strategyItemName, description));
+		
+		assertEquals(expected, exception.getMessage());
+	}
+	
+	@Test
+	void should_throwNoSuchElementException_whenSavedStrategyItemNameIsDuplicate() {
+		String strategyItemName = strategyItemFirst.getStrategyItemName();
+		String expected = "No value present";
+		
+		Exception exception = assertThrows(NoSuchElementException.class,
+				() -> strategyItemService.save(strategyId, strategyItemName, description));
+		
+		assertEquals(expected, exception.getMessage());
+	}
+	
+	@Test
+	void should_throwNoSuchElementException_whenSavedStrategyItemDescriptionIsBlank() {
+		String description = "";
+		String expected = "No value present";
+		
+		Exception exception = assertThrows(NoSuchElementException.class,
+				() -> strategyItemService.save(strategyId, strategyItemName, description));
+		
+		assertEquals(expected, exception.getMessage());
+	}
+	
+	@Test
+	void should_retrieveStrategyItem_whenSavedStrategyItem() {
+		BDDMockito.given(strategyDAL.findById(BDDMockito.anyInt())).willReturn(optionalStrategyFirst);
+		BDDMockito.given(strategyItemDAL.save(BDDMockito.any(StrategyItem.class))).willReturn(strategyItemFirst);
+		
+		StrategyItem strategyItem = strategyItemService.save(strategyId, strategyItemName, description);
+		
+		assertNotNull(strategyItem);
+		assertTrue(strategyItem instanceof StrategyItem);
+		testStrategyItem(strategyItemFirst, strategyItem);
+	}
+	
+	@Test 
+	void should_throwNoSuchElementException_whenGetStrategyItemIdNotValid() {
+		Integer itemId = 0;
+		String expected = "No value present";
+
+		Exception exception = assertThrows(NoSuchElementException.class, 
+				() -> strategyItemService.get(itemId));
+
+		assertEquals(expected, exception.getMessage());
+	}
+	
+	@Test 
+	void should_throwNoSuchElementException_whenGetStrategyItemIdDoesNotExists() {
+		Integer itemId = strategyItemFirst.getItemId();
+		String expected = "No value present";
+
+		Exception exception = assertThrows(NoSuchElementException.class, 
+				() -> strategyItemService.get(itemId));
+
+		assertEquals(expected, exception.getMessage());
+	}
+	
+	@Test 
+	void should_retrieveValidStrategy_whenIdIsValidAndIdExists() {
+		Integer itemId = strategyFirst.getStrategyId();
+
+		BDDMockito.given(strategyItemDAL.findById(itemId)).willReturn(optionalStrategyItemFirst);
+		StrategyItem fetchedStrategyItem = strategyItemService.get(itemId);
+
+		assertNotNull(fetchedStrategyItem);
+		assertTrue(fetchedStrategyItem instanceof StrategyItem);
+		testStrategyItem(strategyItemFirst, fetchedStrategyItem);
+	}
+	
+	@Test
+	void should_throwNoSuchElementException_whenUpdateInpuStrategyIdIsNull() {
+		Integer strategyId = null;
+		String expected = "No value present";
+		
+		Exception exception = assertThrows(NoSuchElementException.class,
+				() -> strategyItemService.update(itemId, strategyId, strategyItemName, description));
+		
+		assertEquals(expected, exception.getMessage());
+	}
+	
+	@Test
+	void should_throwNoSuchElementException_whenUpdateInpuStrategyIdDoesNotExist() {
+		Integer strategyId = strategyItemFirst.getStrategy().getStrategyId() + 10;
+		String expected = "No value present";
+		
+		Exception exception = assertThrows(NoSuchElementException.class,
+				() -> strategyItemService.update(itemId, strategyId, strategyItemName, description));
+		
+		assertEquals(expected, exception.getMessage());
+	}
+	
+	@Test
+	void should_throwNoSuchElementException_whenUpdateStrategyItemNameIsBlank() {
+		String strategyItemName = "";
+		String expected = "No value present";
+		
+		Exception exception = assertThrows(NoSuchElementException.class,
+				() -> strategyItemService.update(itemId, strategyId, strategyItemName, description));
+		
+		assertEquals(expected, exception.getMessage());
+	}
+	
+	@Test
+	void should_throwNoSuchElementException_whenUpdateStrategyItemDescriptionIsBlank() {
+		String description = "";
+		String expected = "No value present";
+		
+		Exception exception = assertThrows(NoSuchElementException.class,
+				() -> strategyItemService.update(itemId, strategyId, strategyItemName, description));
+		
+		assertEquals(expected, exception.getMessage());
+	}
+	
+	@Test
+	void should_retrieveStrategyItem_whenUpdateStrategyItem() {
+		BDDMockito.given(strategyDAL.findById(BDDMockito.anyInt())).willReturn(optionalStrategyFirst);
+		BDDMockito.given(strategyItemDAL.save(BDDMockito.any(StrategyItem.class))).willReturn(strategyItemFirst);
+		
+		StrategyItem strategyItem = strategyItemService.update(itemId, strategyId, strategyItemName, description);
+		
+		assertNotNull(strategyItem);
+		assertTrue(strategyItem instanceof StrategyItem);
+		testStrategyItem(strategyItemFirst, strategyItem);
+	}
+	
+	@Test 
+	void should_throwIndexDoesNotExistException_whenDeleteInputDoesNotExists() {
+		strategyItemService.delete(itemId);
+
+		Mockito.verify(strategyItemDAL, Mockito.times(1)).deleteById(Mockito.eq(itemId));
+	}
+	
+	@Test 
+	void should_retrieveStrategyItemList_whenGetAllIsCalled() {
+		BDDMockito.given(strategyItemDAL.findAll()).willReturn(strategyItems);
+		List<StrategyItem> fetchedStrategyItems = strategyItemService.getAll();
+
+		assertNotNull(fetchedStrategyItems);
+		assertEquals(strategyItems.size(), fetchedStrategyItems.size());
+		testStrategyItem(strategyItemFirst, fetchedStrategyItems.get(0));
+		testStrategyItem(strategyItemSecond, fetchedStrategyItems.get(1));
+	}
+	
+	@Test 
+	void should_ReturnFalse_whenStrategyItemDoesNotExistById() {
+		BDDMockito.given(strategyItemDAL.existsById(BDDMockito.anyInt())).willReturn(false);
+
+		boolean result = strategyItemService.existsById(strategyItemFirst.getItemId());
+
+		assertFalse(result);
+	}
+
+	@Test
+	void should_ReturnTrue_whenStrategyItemDoesExistById() {
+		BDDMockito.given(strategyItemDAL.existsById(BDDMockito.anyInt())).willReturn(true);
+
+		boolean result = strategyItemService.existsById(strategyItemFirst.getItemId());
+
+		assertTrue(result);
+	}
+	
+	@Test 
+	void should_ReturnFalse_whenStrategyItemDoesNotExistByName() {
+		BDDMockito.given(strategyItemDAL.findByStrategyItemName(BDDMockito.any(String.class))).willReturn(Optional.empty());
+
+		boolean result = strategyItemService.existsByStrategyItemName(strategyItemFirst.getStrategyItemName());
+
+		assertFalse(result);
+	}
+
+	@Test
+	void should_ReturnTrue_whenStrategyItemDoesExistByName() {
+		BDDMockito.given(strategyItemDAL.findByStrategyItemName(BDDMockito.any(String.class))).willReturn(optionalStrategyItemFirst);
+
+		boolean result = strategyItemService.existsByStrategyItemName(strategyItemFirst.getStrategyItemName());
+
+		assertTrue(result);
+	}
+	
+	@Test 
+	void should_throwNullPointerException_whenGetByStrategyItemNameNotValid() {
+		String strategyItemName = "";
+		String expected = "StrategyItem does not exist";
+
+		Exception exception = assertThrows(NullPointerException.class, 
+				() -> strategyItemService.getStrategyItemByStrategyItemName(strategyItemName));
+
+		assertEquals(expected, exception.getMessage());
+	}
+	
+	@Test 
+	void should_throwNullPointerException_whenGetByStrategyItemNameDoesNotExists() {
+		String strategyItemName = "A search that does not exist";
+		String expected = "StrategyItem does not exist";
+
+		Exception exception = assertThrows(NullPointerException.class, 
+				() -> strategyItemService.getStrategyItemByStrategyItemName(strategyItemName));
+
+		assertEquals(expected, exception.getMessage());
+	}
+	
+	@Test 
+	void should_retrieveValidStrategyItem_whenGetByStrategyItemName() {
+		BDDMockito.given(strategyItemDAL.findByStrategyItemName(BDDMockito.any(String.class))).willReturn(optionalStrategyItemFirst);
+
+		StrategyItem strategyItem = strategyItemService.getStrategyItemByStrategyItemName(strategyItemName);
+
+		assertNotNull(strategyItem);
+		assertTrue(strategyItem instanceof StrategyItem);
+		testStrategyItem(strategyItemFirst, strategyItem);
+	}
+	
+	@Test 
+	void should_throwNoSuchElementException_whenGetStrategyItemsIdNotValid() {
+		Integer strategyId = 0;
+		String expected = "No value present";
+
+		Exception exception = assertThrows(NoSuchElementException.class, 
+				() -> strategyItemService.getStrategyItemsByStrategy(strategyId));
+
+		assertEquals(expected, exception.getMessage());
+	}
+	
+	@Test 
+	void should_throwNoSuchElementException_whenGetStrategyItemsByStrategyIdDoesNotExists() {
+		Integer strategyId = strategyItemFirst.getItemId() + 10;
+		String expected = "No value present";
+
+		Exception exception = assertThrows(NoSuchElementException.class, 
+				() -> strategyItemService.getStrategyItemsByStrategy(strategyId));
+
+		assertEquals(expected, exception.getMessage());
+	}
+	
+	@Test 
+	void should_retrieveValidStrategyItems_whenGetStrategyItemsByStrategy() {
+		Integer strategyId = strategyItemFirst.getItemId();
+
+		BDDMockito.given(strategyDAL.findById(strategyId)).willReturn(optionalStrategyFirst);
+		BDDMockito.given(strategyItemDAL.findByStrategy(strategyFirst)).willReturn(strategyItems);
+		
+		List<StrategyItem> fetchedStrategyItems = strategyItemService.getStrategyItemsByStrategy(strategyId);
+
+		assertNotNull(fetchedStrategyItems);
+		assertEquals(strategyItems.size(), fetchedStrategyItems.size());
+		testStrategyItem(strategyItemFirst, fetchedStrategyItems.get(0));
+		testStrategyItem(strategyItemSecond, fetchedStrategyItems.get(1));
+	}
+	
+	private void testStrategyItem(StrategyItem expectedObject, StrategyItem actualObject) {
+		assertEquals(expectedObject.getItemId(), actualObject.getItemId());
+		assertEquals(expectedObject.getStrategy().getStrategyId(), actualObject.getStrategy().getStrategyId());
+		assertEquals(expectedObject.getStrategy().getStrategyName(), actualObject.getStrategy().getStrategyName());
+		assertEquals(expectedObject.getStrategy().getStatus().getStatusId(), actualObject.getStrategy().getStatus().getStatusId());
+		assertEquals(expectedObject.getStrategy().getStatus().getValidityPeriod(), actualObject.getStrategy().getStatus().getValidityPeriod());
+		assertEquals(expectedObject.getStrategy().getTimeFrameStart(), actualObject.getStrategy().getTimeFrameStart());
+		assertEquals(expectedObject.getStrategy().getTimeFrameEnd(), actualObject.getStrategy().getTimeFrameEnd());
+		assertEquals(expectedObject.getStrategy().getEnvironment().getEnvironmentId(), actualObject.getStrategy().getEnvironment().getEnvironmentId());
+		assertEquals(expectedObject.getStrategy().getEnvironment().getEnvironmentName(), actualObject.getStrategy().getEnvironment().getEnvironmentName());
+		assertEquals(expectedObject.getStrategyItemName(), actualObject.getStrategyItemName());
+		assertEquals(expectedObject.getDescription(), actualObject.getDescription());
+	}
 }

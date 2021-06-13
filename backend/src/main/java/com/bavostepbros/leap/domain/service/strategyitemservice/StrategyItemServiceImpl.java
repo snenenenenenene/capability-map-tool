@@ -1,6 +1,7 @@
 package com.bavostepbros.leap.domain.service.strategyitemservice;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -67,12 +68,14 @@ public class StrategyItemServiceImpl implements StrategyItemService {
 
 	@Override
 	public StrategyItem getStrategyItemByStrategyItemName(String strategyItemName) {
-		return strategyItemDAL.findByStrategyItemName(strategyItemName).get();
+		Optional<StrategyItem> strategyItem = strategyItemDAL.findByStrategyItemName(strategyItemName);
+		strategyItem.orElseThrow(() -> new NullPointerException("StrategyItem does not exist"));
+		return strategyItem.get();
 	}
 
 	@Override
 	public List<StrategyItem> getStrategyItemsByStrategy(Integer strategyId) {
-		Strategy strategy =strategyService.get(strategyId);
+		Strategy strategy = strategyService.get(strategyId);
 		return strategyItemDAL.findByStrategy(strategy);
 	}
 
