@@ -8,4 +8,5 @@ import com.bavostepbros.leap.domain.model.BusinessProcess;
 
 public interface BusinessProcessDAL extends JpaRepository<BusinessProcess, Integer> {
 	Optional<BusinessProcess> findByBusinessProcessName(String businessProcessName);
+	
 }
