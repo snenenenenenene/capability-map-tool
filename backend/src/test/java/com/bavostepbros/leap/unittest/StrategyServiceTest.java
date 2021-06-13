@@ -121,7 +121,7 @@ public class StrategyServiceTest {
 		assertNotNull(optionalEnvironment);
 	}
 
-	@Test
+	@Test //1
 	void should_throwInvalidInputException_whenSavedInputIsInvalid() {
 		String falseStrategyName = "";
 		LocalDate timeFrameStart = strategy.getTimeFrameStart();
@@ -136,7 +136,7 @@ public class StrategyServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //2
 	void should_throwForeignKeyException_whenSavedStatusIdIsInvalid() {
 		String falseStrategyName = strategy.getStrategyName();
 		LocalDate timeFrameStart = strategy.getTimeFrameStart();
@@ -151,7 +151,7 @@ public class StrategyServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //3
 	void should_throwForeignKeyException_whenSavedEnvironmentIdIsInvalid() {
 		String falseStrategyName = strategy.getStrategyName();
 		LocalDate timeFrameStart = strategy.getTimeFrameStart();
@@ -166,7 +166,7 @@ public class StrategyServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //4
 	void should_throwDuplicateValueException_whenSavedStrategyNameExists() {
 		String falseStrategyName = strategy.getStrategyName();
 		LocalDate timeFrameStart = strategy.getTimeFrameStart();
@@ -183,7 +183,7 @@ public class StrategyServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //5
 	void should_throwForeignKeyException_whenSavedStatusDoesNotExists() {
 		String falseStrategyName = strategy.getStrategyName();
 		LocalDate timeFrameStart = strategy.getTimeFrameStart();
@@ -200,7 +200,7 @@ public class StrategyServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //6
 	void should_throwForeignKeyException_whenSavedEnvironmentDoesNotExists() {
 		String falseStrategyName = strategy.getStrategyName();
 		LocalDate timeFrameStart = strategy.getTimeFrameStart();
@@ -218,7 +218,7 @@ public class StrategyServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //7
 	void should_saveEnvironment_whenEnvironmentIsSaved() {
 		String falseStrategyName = strategy.getStrategyName();
 		LocalDate timeFrameStart = strategy.getTimeFrameStart();
@@ -249,7 +249,7 @@ public class StrategyServiceTest {
 		assertEquals(strategy.getEnvironment().getEnvironmentName(), result.getEnvironment().getEnvironmentName());
 	}
 
-	@Test
+	@Test //8
 	void should_throwInvalidInputException_whenGetStrategyIdNotValid() {
 		Integer strategyId = 0;
 		String expected = "Strategy ID is not valid.";
@@ -260,7 +260,7 @@ public class StrategyServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //9
 	void should_throwIndexDoesNotExistException_whenGetStrategyIdDoesNotExists() {
 		Integer strategyId = strategy.getStrategyId();
 		String expected = "Strategy ID does not exists.";
@@ -271,7 +271,7 @@ public class StrategyServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //10
 	void should_retrieveValidStrategy_whenIdIsValidAndIdExists() {
 		Integer strategyId = strategy.getStrategyId();
 
@@ -291,7 +291,7 @@ public class StrategyServiceTest {
 		assertEquals(strategy.getEnvironment().getEnvironmentName(), fetchedStrategy.getEnvironment().getEnvironmentName());
 	}
 
-	@Test
+	@Test //11
 	void should_retrieveEnvironmentList_whenGetAllIsCalled() {
 		BDDMockito.given(strategyDAL.findAll()).willReturn(strategies);
 		List<Strategy> fetchedStrategies = strategyService.getAll();
@@ -300,7 +300,7 @@ public class StrategyServiceTest {
 		assertEquals(strategies.size(), fetchedStrategies.size());
 	}
 
-	@Test
+	@Test //12
 	void should_throwInvalidInputException_whenUpdatedInputIsInvalid() {
 		Integer strategyId = strategy.getStrategyId();
 		String falseStrategyName = "";
@@ -317,7 +317,7 @@ public class StrategyServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //13
 	void should_throwStrategyException_whenUpdateStrategyIdDoesNotExist() {
 		Integer strategyId = strategy.getStrategyId();
 		String falseStrategyName = strategy.getStrategyName();
@@ -335,7 +335,7 @@ public class StrategyServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //14
 	void should_throwDuplicateValueException_whenUpdateStrategyNameExist() {
 		Integer strategyId = strategy.getStrategyId();
 		String falseStrategyName = "xyz";
@@ -356,7 +356,7 @@ public class StrategyServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //15
 	void should_throwIndexDoesNotExistException_whenUpdateStatusDoesNotExist() {
 		Integer strategyId = strategy.getStrategyId();
 		String falseStrategyName = strategy.getStrategyName();
@@ -378,7 +378,7 @@ public class StrategyServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //16
 	void should_throwIndexDoesNotExistException_whenUpdateEnvironmentDoesNotExist() {
 		Integer strategyId = strategy.getStrategyId();
 		String falseStrategyName = strategy.getStrategyName();
@@ -401,7 +401,7 @@ public class StrategyServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //17
 	void should_retrieveValidStrategy_whenStrategyIsUpdated() {
 		Integer strategyId = strategy.getStrategyId();
 		String falseStrategyName = strategy.getStrategyName();
@@ -436,7 +436,7 @@ public class StrategyServiceTest {
 		assertEquals(strategy.getEnvironment().getEnvironmentName(), fetchedStrategy.getEnvironment().getEnvironmentName());
 	}
 
-	@Test
+	@Test //18
 	void should_throwInvalidInputException_whenDeleteInputIsInvalid() {
 		Integer strategyId = 0;
 		String expected = "Strategy ID is not valid.";
@@ -447,7 +447,7 @@ public class StrategyServiceTest {
 		assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test
+	@Test //19
 	void should_throwIndexDoesNotExistException_whenDeleteStrategyIdDoesNotExist() {
 		Integer id = strategy.getStrategyId();
 		String expected = "Strategy ID does not exists.";
@@ -459,7 +459,7 @@ public class StrategyServiceTest {
 		assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test
+	@Test //20
 	void should_throwIndexDoesNotExistException_whenDeleteInputDoesNotExists() {
 		Integer strategyId = strategy.getStrategyId();
 		String expected = "Strategy ID does not exists.";
@@ -472,7 +472,7 @@ public class StrategyServiceTest {
 		assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test
+	@Test //21
 	void should_ReturnFalse_whenStrategyDoesNotExistById() {
 		BDDMockito.given(strategyDAL.existsById(BDDMockito.anyInt())).willReturn(false);
 
@@ -481,7 +481,7 @@ public class StrategyServiceTest {
 		assertFalse(result);
 	}
 
-	@Test
+	@Test //22
 	void should_ReturnTrue_whenStrategyDoesExistById() {
 		BDDMockito.given(strategyDAL.existsById(BDDMockito.anyInt())).willReturn(true);
 
@@ -490,7 +490,7 @@ public class StrategyServiceTest {
 		assertTrue(result);
 	}
 
-	@Test
+	@Test //23
 	void should_ReturnTrue_whenStrategyDoesExistByStrategyName() {
 		BDDMockito.given(strategyDAL.findByStrategyName(BDDMockito.any(String.class))).willReturn(optionalStrategy);
 
@@ -499,7 +499,7 @@ public class StrategyServiceTest {
 		assertTrue(result);
 	}
 
-	@Test
+	@Test //24
 	void should_ReturnFalse_whenStrategyDoesNotExistByStrategyName() {
 		BDDMockito.given(strategyDAL.findByStrategyName(BDDMockito.any(String.class))).willReturn(Optional.empty());
 
@@ -508,7 +508,7 @@ public class StrategyServiceTest {
 		assertFalse(result);
 	}
 
-	@Test
+	@Test //25
 	void should_throwInvalidInputException_whenGetStrategiesByEnvironmentInputIsInvalid() {
 		Integer environmentId = 0;
 		String expected = "Environment ID is not valid.";
@@ -519,7 +519,7 @@ public class StrategyServiceTest {
 		assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test
+	@Test //26
 	void should_throwIndexDoesNotExistException_whenGetStrategiesByEnvironmentIdDoesNotExist() {
 		Integer environmentId = strategy.getEnvironment().getEnvironmentId();
 		String expected = "Environment ID does not exists.";
@@ -532,7 +532,7 @@ public class StrategyServiceTest {
 		assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test
+	@Test //27
 	void should_retrieveValidEnvironment_whenGetStrategiesByEnvironmentIdDoesExistAndIsValid() {
 		Integer environmentId = strategy.getEnvironment().getEnvironmentId();
 
@@ -546,7 +546,7 @@ public class StrategyServiceTest {
 		assertEquals(strategy.getEnvironment().getEnvironmentName(), fetchedEnvironment.getEnvironmentName());
 	}
 
-	@Test
+	@Test //28
 	void should_retrieveValidStrategies_whenGetStrategiesByEnvironmentIdDoesExistAndIsValid() {
 		Integer environmentId = strategy.getEnvironment().getEnvironmentId();
 

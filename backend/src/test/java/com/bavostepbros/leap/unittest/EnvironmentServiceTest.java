@@ -98,9 +98,9 @@ public class EnvironmentServiceTest {
 	}
 
 	@Test
-	void should_throwConstraintViolationException_whenSavedInputNameIsInvalid() {
-		String falseEnvironmentName = null;
-		// String expected = "Environment name is required.";
+	void should_throwInvalidInputException_whenSavedInputIsInvalid() {
+		String falseEnvironmentName = "";
+		String expected = "Invalid input.";
 
 		assertThrows(ConstraintViolationException.class,
 				() -> environmentService.save(falseEnvironmentName));
@@ -112,16 +112,16 @@ public class EnvironmentServiceTest {
 //	void should_throwConstraintViolationException_whenSavedEnvironmentNameExists() {
 //		String environmentName = environment.getEnvironmentName();
 //		String expected = "No value present";
-//		
+//
 //		BDDMockito.given(environmentDAL.save(BDDMockito.any(Environment.class))).willThrow(ConstraintViolationException.class);
-//		
+//
 //		Exception exception = assertThrows(ConstraintViolationException.class,
 //				() -> environmentService.save(environmentName));
 //
 //		assertEquals(expected, exception.getMessage());
 //	}
 
-	@Test
+	@Test //3
 	void should_saveEnvironment_whenEnvironmentIsSaved() {
 		String environmentName = environment.getEnvironmentName();
 
@@ -139,7 +139,7 @@ public class EnvironmentServiceTest {
 		Integer invalidId = 0;
 		String expected = "Environment does not exist.";
 
-		Exception exception = assertThrows(NullPointerException.class, 
+		Exception exception = assertThrows(NullPointerException.class,
 				() -> environmentService.get(invalidId));
 
 		assertEquals(exception.getMessage(), expected);
@@ -165,7 +165,7 @@ public class EnvironmentServiceTest {
 		assertThrows(ConstraintViolationException.class,
 				() -> environmentService.getByEnvironmentName(falseEnvironmentName));
 	}
-	
+
 	@Test
 	void should_throwNullPointerException_whenGetEnvironmentByNameInvalidName() {
 		String falseEnvironmentName = "very special and weird name";
@@ -192,7 +192,7 @@ public class EnvironmentServiceTest {
 		assertEquals(environment.getEnvironmentName(), fetchedEnvironment.getEnvironmentName());
 	}
 
-	@Test
+	@Test //10
 	void should_retrieveEnvironmentList_whenGetAllIsCalled() {
 		BDDMockito.given(environmentDAL.findAll()).willReturn(environments);
 		List<Environment> fetchedEnvironments = environmentService.getAll();
@@ -210,7 +210,7 @@ public class EnvironmentServiceTest {
 				() -> environmentService.update(id, falseEnvironmentName));
 	}
 
-	@Test
+	@Test //14
 	void should_retrieveValidEnvironment_whenEnvironmentIsUpdated() {
 		String falseEnvironmentName = environment.getEnvironmentName();
 		Integer id = environment.getEnvironmentId();
@@ -274,11 +274,11 @@ public class EnvironmentServiceTest {
 	void should_verifyDeleted_whenDeleted() {
 		Integer id = environment.getEnvironmentId();
 		environmentService.delete(id);
-		
+
 		Mockito.verify(environmentDAL, Mockito.times(1)).deleteById(Mockito.eq(id));
 	}
 
-	@Test
+	@Test //17
 	void should_ReturnFalse_whenEnvironmentDoesNotExistById() {
 		BDDMockito.given(environmentDAL.existsById(BDDMockito.anyInt())).willReturn(false);
 
@@ -287,7 +287,7 @@ public class EnvironmentServiceTest {
 		assertFalse(result);
 	}
 
-	@Test
+	@Test //18
 	void should_ReturnTrue_whenEnvironmentDoesExistById() {
 		BDDMockito.given(environmentDAL.existsById(BDDMockito.anyInt())).willReturn(true);
 
@@ -295,8 +295,8 @@ public class EnvironmentServiceTest {
 
 		assertTrue(result);
 	}
-	
-	@Test
+
+	@Test //19
 	void should_ReturnTrue_whenEnvironmentDoesExistByEnvironmentName() {
 		BDDMockito.given(environmentDAL.findByEnvironmentName(BDDMockito.any(String.class)))
 			.willReturn(optionalEnvironment);
@@ -306,7 +306,7 @@ public class EnvironmentServiceTest {
 		assertTrue(result);
 	}
 	
-	@Test
+	@Test //20
 	void should_ReturnFalse_whenEnvironmentDoesNotExistByEnvironmentName() {
 		BDDMockito.given(environmentDAL.findByEnvironmentName(BDDMockito.any(String.class)))
 			.willReturn(Optional.empty());
