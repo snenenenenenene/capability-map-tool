@@ -1387,6 +1387,24 @@ class ITApplicationServiceTest {
 
 		assertTrue(result);
 	}
+	
+	@Test
+	void should_ReturnFalse_whenStrategyDoesNotExistByName() {
+		BDDMockito.given(applicationDAL.findByName(BDDMockito.anyString())).willReturn(Optional.empty());
+
+		boolean result = itApplicationService.existsByName(applicationName);
+
+		assertFalse(result);
+	}
+
+	@Test
+	void should_ReturnTrue_whenStrategyDoesExistByName() {
+		BDDMockito.given(applicationDAL.findByName(BDDMockito.anyString())).willReturn(optionalITApplicationFirst);
+
+		boolean result = itApplicationService.existsByName(applicationName);
+
+		assertTrue(result);
+	}
 
 	@Test
 	void should_throwNoSuchElementException_whenGetByNameITApplicationNameIsNull() {
@@ -1398,6 +1416,7 @@ class ITApplicationServiceTest {
 
 		assertEquals(expected, exception.getMessage());
 	}
+
 
 	@Test
 	void should_returnITApplication_whenGetByNameITApplication() {
