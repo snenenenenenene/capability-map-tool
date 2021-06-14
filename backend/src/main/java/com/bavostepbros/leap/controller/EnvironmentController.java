@@ -1,9 +1,5 @@
 package com.bavostepbros.leap.controller;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,8 +14,6 @@ import com.bavostepbros.leap.domain.model.CapabilityItem;
 import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapDto;
 import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapItemDto;
 
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -52,7 +46,6 @@ import com.bavostepbros.leap.domain.model.dto.TechnologyDto;
 import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -65,6 +58,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/environment/")
 public class EnvironmentController {
 
+	//TODO fix constructor injection
 	@Autowired
 	private EnvironmentService envService;
 
@@ -116,31 +110,14 @@ public class EnvironmentController {
 		envService.delete(environmentId);
 	}
 
+
+	// TODO fix exception catch
 	@GetMapping(path = "capabilitymap/{environmentId}")
 	public CapabilityMapDto getCapabilityMap(@PathVariable("environmentId") Integer environmentId) {
 		try {
 			return constructMap(envService.get(environmentId));
 		} catch (Exception e) {
 			return new CapabilityMapDto();
-		}
-	}
-
-	@PostMapping(path = "upload-csv-file")
-	public void uploadCsvFile(
-			@ModelAttribute("file") MultipartFile file,
-			@ModelAttribute("environmentId") Integer environmentId) {
-		if(!file.isEmpty()) {
-			try(Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
-				CsvToBean<Capability> csvToBean = new CsvToBeanBuilder<Capability>(reader)
-						.withIgnoreLeadingWhiteSpace(true)
-						.build();
-
-				List<Capability> capabilities = csvToBean.parse();
-				envService.addCapabilities(environmentId, capabilities);
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 
@@ -156,8 +133,10 @@ public class EnvironmentController {
 		}
 
 		return new CapabilityMapDto(environment.getEnvironmentId(), environment.getEnvironmentName(),
-				environment.getCapabilities().stream().filter(i -> i.getParentCapabilityId().equals(0))
-						.map(i -> constructGraph(i, environment.getCapabilities())).collect(Collectors.toList()),
+				environment.getCapabilities().stream()
+						.filter(i -> i.getParentCapabilityId().equals(0))
+						.map(i -> constructCapabilityTree(i, environment.getCapabilities()))
+						.collect(Collectors.toList()),
 				strategiesDto);
 	}
 
@@ -250,7 +229,7 @@ public class EnvironmentController {
 				capabilityApplication.getCorrectnessInformationFit(), capabilityApplication.getAvailability());
 	}
 
-	private CapabilityMapItemDto constructGraph(Capability capability, List<Capability> pool) {
+	private CapabilityMapItemDto constructCapabilityTree(Capability capability, List<Capability> pool) {
 		List<CapabilityItemDto> capabilityItemsDto = new ArrayList<CapabilityItemDto>();
 		if (capability.getCapabilityItems() != null) {
 			capabilityItemsDto = capability.getCapabilityItems().stream()
@@ -298,7 +277,7 @@ public class EnvironmentController {
 				capability.getResourceQuality(), capability.getInformationQuality(), capability.getApplicationFit(),
 				convertBasicStatus(capability.getStatus()),
 				pool.stream().filter(i -> i.getParentCapabilityId().equals(capability.getCapabilityId()))
-						.map(i -> constructGraph(i, pool)).collect(Collectors.toList()),
+						.map(i -> constructCapabilityTree(i, pool)).collect(Collectors.toList()),
 				capabilityItemsDto, projectsDto, businessProcessDto, capabilityInformationDto, resourceDto,
 				capabilityApplicationDto);
 	}

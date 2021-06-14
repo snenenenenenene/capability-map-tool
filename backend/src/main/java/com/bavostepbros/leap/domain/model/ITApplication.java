@@ -214,6 +214,4 @@ public class ITApplication {
 				+ ", currentYearlyCost=" + currentYearlyCost + ", acceptedYearlyCost=" + acceptedYearlyCost
 				+ ", timeValue=" + timeValue + "]";
 	}
-
-    
 }

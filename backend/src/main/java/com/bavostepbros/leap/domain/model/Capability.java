@@ -19,7 +19,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
-import com.opencsv.bean.CsvBindByName;
 
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 import com.bavostepbros.leap.domain.model.paceofchange.PaceOfChange;
@@ -57,12 +56,10 @@ public class Capability {
 	private Status status;
 
 	@PositiveOrZero(message = "The capability id must be positive.")
-	@CsvBindByName
 	@Column(name = "PARENTCAPABILITYID")
 	private Integer parentCapabilityId;
 
 	@NotBlank(message = "Capability name is required.")
-	@CsvBindByName
 	@Column(name = "CAPABILITYNAME", unique = true)
 	private String capabilityName;
 
@@ -73,27 +70,22 @@ public class Capability {
 	private CapabilityLevel level;
 
 	@NotNull(message = "Pace of change must not be null.")
-	@CsvBindByName
 	@Column(name = "PACEOFCHANGE")
 	private PaceOfChange paceOfChange;
 
 	@NotNull(message = "Target operating model must not be null.")
-	@CsvBindByName
 	@Column(name = "TARGETOPERATINGMODEL")
 	private TargetOperatingModel targetOperatingModel;
 
 	@NotNull(message = "Resource quality must not be null.")
 	@Min(value = 1, message = "Resource quality must be between 1 and 5, inclusive.")
 	@Max(value = 5, message = "Resource quality must be between 1 and 5, inclusive.")
-	@CsvBindByName
 	@Column(name = "RESOURCEQUALITY")
 	private Integer resourceQuality;
 
-	@CsvBindByName
 	@Column(name = "INFORMATIONQUALITY")
 	private Integer informationQuality;
 
-	@CsvBindByName
 	@Column(name = "APPLICATIONFIT")
 	private Integer applicationFit;
 
@@ -159,10 +151,20 @@ public class Capability {
 		this.applicationFit = applicationFit;
 	}
 
+	public Capability(Integer capabilityId, Environment environment, Status status, Integer parentCapabilityId) {
+		this.capabilityId = capabilityId;
+		this.environment = environment;
+		this.status = status;
+		this.parentCapabilityId = parentCapabilityId;
+		this.capabilityName = "Default " + capabilityId;
+		this.paceOfChange = PaceOfChange.STANDARD;
+		this.targetOperatingModel = TargetOperatingModel.COORDINATION;
+		this.resourceQuality = 1;
+	}
+
 	public void addProject(Project project) {
 		projects.add(project);
 		project.getCapabilities().add(this);
-		return;
 	}
 
 	public void removeProject(Project project) {
@@ -177,13 +179,11 @@ public class Capability {
 	public void addBusinessProcess(BusinessProcess businessProcessItem) {
 		businessProcess.add(businessProcessItem);
 		businessProcessItem.getCapabilities().add(this);
-		return;
 	}
 
 	public void removeBusinessProcess(BusinessProcess businessProcessItem) {
 		businessProcess.remove(businessProcessItem);
 		businessProcessItem.getCapabilities().remove(this);
-		return;
 	}
 
 	public List<BusinessProcess> getBusinessProcess() {
@@ -193,13 +193,11 @@ public class Capability {
 	public void addResource(Resource resource) {
 		resources.add(resource);
 		resource.getCapabilities().add(this);
-		return;
 	}
 
 	public void removeResource(Resource resource) {
 		resources.remove(resource);
 		resource.getCapabilities().remove(this);
-		return;
 	}
 
 	public List<Resource> getResources() {
@@ -215,5 +213,4 @@ public class Capability {
 				+ ", resourceQuality='" + getResourceQuality() + "'" + ", informationQuality='"
 				+ getInformationQuality() + "'" + ", applicationFit='" + getApplicationFit() + "'" + "}";
 	}
-
 }

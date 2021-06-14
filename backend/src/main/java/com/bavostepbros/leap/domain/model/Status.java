@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import javax.validation.constraints.NotNull;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -32,7 +31,6 @@ public class Status {
     @Column(name = "STATUSID")
     private Integer statusId;
     
-    @NotNull(message = "Validity period must not be null.")
     @Column(name = "VALIDITYPERIOD")
     private LocalDate validityPeriod;
     	

@@ -1,5 +1,6 @@
 package com.bavostepbros.leap.domain.service.environmentservice;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
@@ -7,6 +8,8 @@ import javax.validation.constraints.NotBlank;
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.Strategy;
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
 
 /**
 *

@@ -32,9 +32,6 @@ public class StatusServiceImpl implements StatusService {
 
     @Override
     public Status save(LocalDate validityPeriod) {
-    	if (validityPeriod == null) {
-			throw new InvalidInputException("Invalid input.");
-		}
 		if (existsByValidityPeriod(validityPeriod)) {
 			throw new DuplicateValueException("Validity period already exists.");
 		}

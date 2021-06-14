@@ -111,10 +111,9 @@ public class CapabilityController {
 
 	@GetMapping
 	public List<CapabilityDto> getAllCapabilities() {
-		List<Capability> capabilities = capabilityService.getAll();
-		List<CapabilityDto> capabilitiesDto = capabilities.stream().map(capability -> convertCapability(capability))
+		return capabilityService.getAll().stream()
+				.map(capability -> convertCapability(capability))
 				.collect(Collectors.toList());
-		return capabilitiesDto;
 	}
 
 	@GetMapping(path = "exists-by-id/{capabilityid}")

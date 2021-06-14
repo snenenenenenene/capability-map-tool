@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import com.bavostepbros.leap.domain.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +15,6 @@ import com.bavostepbros.leap.domain.customexceptions.EnumException;
 import com.bavostepbros.leap.domain.customexceptions.ForeignKeyException;
 import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
 import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
-import com.bavostepbros.leap.domain.model.BusinessProcess;
-import com.bavostepbros.leap.domain.model.Capability;
-import com.bavostepbros.leap.domain.model.Environment;
-import com.bavostepbros.leap.domain.model.Project;
-import com.bavostepbros.leap.domain.model.Resource;
-import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 import com.bavostepbros.leap.domain.model.paceofchange.PaceOfChange;
 import com.bavostepbros.leap.domain.model.targetoperatingmodel.TargetOperatingModel;
@@ -97,6 +92,13 @@ public class CapabilityServiceImpl implements CapabilityService {
 	}
 
 	@Override
+	public Capability save (Capability capability) {
+		Capability savedCapability = capabilityDAL.save(capability);
+		environmentService.addCapability(capability.getEnvironment().getEnvironmentId(), savedCapability);
+		return savedCapability;
+	}
+
+	@Override
 	public Capability get(Integer id) {
 		if (id == null || id.equals(0)) {
 			throw new InvalidInputException("Capability ID is not valid.");
@@ -106,7 +108,6 @@ public class CapabilityServiceImpl implements CapabilityService {
 		}
 
 		Capability capability = capabilityDAL.findById(id).get();
-		;
 		return capability;
 	}
 
