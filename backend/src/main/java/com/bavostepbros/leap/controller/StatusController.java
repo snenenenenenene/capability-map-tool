@@ -4,9 +4,12 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -30,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 // @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
+@Validated
 @RequestMapping("/api/status/")
 public class StatusController {
 	
@@ -38,7 +42,7 @@ public class StatusController {
 	
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public StatusDto addStatus(
-			@ModelAttribute("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityPeriod) {		
+			@Valid @ModelAttribute("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityPeriod) {		
 		Status status = statusService.save(validityPeriod);
 		return new StatusDto(status.getStatusId(), status.getValidityPeriod());
 	}
@@ -51,7 +55,7 @@ public class StatusController {
 	
 	@GetMapping(path = "validityperiod/{validityPeriod}")
     public StatusDto getStatusByValidityPeriod(
-    		@PathVariable("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityPeriod) {		
+    		@Valid @PathVariable("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityPeriod) {		
 		Status status = statusService.getByValidityPeriod(validityPeriod);
         return new StatusDto(status.getStatusId(), status.getValidityPeriod());
     }
@@ -72,14 +76,14 @@ public class StatusController {
 	
 	@GetMapping(path = "exists-by-validityperiod/{validityperiod}")
 	public boolean doesValidityPeriodExists(
-			@PathVariable("validityperiod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityPeriod) {		
+			@Valid @PathVariable("validityperiod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityPeriod) {		
 		return statusService.existsByValidityPeriod(validityPeriod);
 	}
 	
 	@PutMapping(path = "{statusId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public StatusDto updateStatus(
 			@PathVariable("statusId") Integer statusId,
-			@ModelAttribute("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityPeriod) {		
+			@Valid @ModelAttribute("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityPeriod) {		
 		Status status = statusService.update(statusId, validityPeriod);
 		return new StatusDto(status.getStatusId(), status.getValidityPeriod());
 	}

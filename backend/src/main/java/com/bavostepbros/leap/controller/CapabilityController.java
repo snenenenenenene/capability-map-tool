@@ -1,6 +1,7 @@
 package com.bavostepbros.leap.controller;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.bavostepbros.leap.domain.model.dto.EnvironmentDto;
@@ -185,7 +186,7 @@ public class CapabilityController {
 
 	@GetMapping(path = "get-businessprocess/{capabilityId}")
 	public List<BusinessProcessDto> getBusinessProcess(@PathVariable("capabilityId") Integer capabilityId) {
-		List<BusinessProcess> businessProcess = capabilityService.getAllBusinessProcessByCapabilityId(capabilityId);
+		Set<BusinessProcess> businessProcess = capabilityService.getAllBusinessProcessByCapabilityId(capabilityId);
 		List<BusinessProcessDto> businessProcessDto = businessProcess.stream().map(bp -> convertBusinessProcess(bp))
 				.collect(Collectors.toList());
 		return businessProcessDto;

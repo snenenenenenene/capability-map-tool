@@ -1,6 +1,8 @@
 package com.bavostepbros.leap.domain.model;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -98,21 +100,21 @@ public class Capability {
 	@OneToMany(mappedBy = "capability")
 	private List<CapabilityInformation> capabilityInformation;
 
-	@ManyToMany(cascade = CascadeType.MERGE)
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "CAPABILITY_PROJECT",
 		joinColumns = { @JoinColumn(name = "CAPABILITYID") },
 		inverseJoinColumns = {@JoinColumn(name = "PROJECTID") },
 		uniqueConstraints = { @UniqueConstraint(columnNames = {"CAPABILITYID", "PROJECTID"})})
 	private List<Project> projects;
 
-	@ManyToMany(cascade = CascadeType.MERGE)
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "CAPABILITY_BUSINESSPROCESS",
 		joinColumns = { @JoinColumn(name = "CAPABILITYID") },
 		inverseJoinColumns = { @JoinColumn(name = "BUSINESSPROCESSID") },
 		uniqueConstraints = { @UniqueConstraint(columnNames = {"CAPABILITYID", "BUSINESSPROCESSID"})})
-	private List<BusinessProcess> businessProcess;
+	private Set<BusinessProcess> businessProcess = new HashSet<>();
 
-	@ManyToMany(cascade = CascadeType.MERGE)
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "CAPABILITY_RESOURCE",
 		joinColumns = { @JoinColumn(name = "CAPABILITYID") },
 		inverseJoinColumns = { @JoinColumn(name = "RESOURCEID") },
@@ -186,7 +188,7 @@ public class Capability {
 		businessProcessItem.getCapabilities().remove(this);
 	}
 
-	public List<BusinessProcess> getBusinessProcess() {
+	public Set<BusinessProcess> getBusinessProcess() {
 		return businessProcess;
 	}
 
@@ -204,13 +206,4 @@ public class Capability {
 		return resources;
 	}
 
-	@Override
-	public String toString() {
-		return "{" + " capabilityId='" + getCapabilityId() + "'" + ", environment='" + getEnvironment() + "'"
-				+ ", status='" + getStatus() + "'" + ", parentCapabilityId='" + getParentCapabilityId() + "'"
-				+ ", name='" + getCapabilityName() + "'" + ", level='" + getLevel() + "'" + ", paceOfChange='"
-				+ getPaceOfChange() + "'" + ", targetOperatingModel='" + getTargetOperatingModel() + "'"
-				+ ", resourceQuality='" + getResourceQuality() + "'" + ", informationQuality='"
-				+ getInformationQuality() + "'" + ", applicationFit='" + getApplicationFit() + "'" + "}";
-	}
 }

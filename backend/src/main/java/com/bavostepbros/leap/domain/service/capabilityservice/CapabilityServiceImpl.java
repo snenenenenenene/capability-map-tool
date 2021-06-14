@@ -2,6 +2,7 @@ package com.bavostepbros.leap.domain.service.capabilityservice;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -304,7 +305,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 	}
 
 	@Override
-	public List<BusinessProcess> getAllBusinessProcessByCapabilityId(Integer capabilityId) {
+	public Set<BusinessProcess> getAllBusinessProcessByCapabilityId(Integer capabilityId) {
 		Capability capability = get(capabilityId);
 		return capability.getBusinessProcess();
 	}
