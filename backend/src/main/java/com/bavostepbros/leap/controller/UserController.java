@@ -141,7 +141,7 @@ public class UserController {
 			String username = user.getUsername();
 			userService.update(userId, roleId, username, password, email);
 			emailService.sendForgotPassword(email, password);
-			result = "Email sended.";
+			result = "Email sent.";
 		}
 		return result;
 	}

@@ -55,7 +55,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 				.cors().and()
 				.csrf().disable()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-				.authorizeRequests().antMatchers("/api/user/authenticate").permitAll()
+				.authorizeRequests().antMatchers("/api/user/authenticate", "/api/user/forgotPassword").permitAll()
 				.anyRequest().authenticated().and()
 				.apply(new JwtConfigurer(jwtUtility));
 	}
