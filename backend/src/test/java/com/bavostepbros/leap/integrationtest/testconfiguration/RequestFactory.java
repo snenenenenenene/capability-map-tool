@@ -13,26 +13,55 @@ public class RequestFactory {
     @Autowired
     private MockMvc mockMvc;
 
+    
+    /** 
+     * @param url
+     * @param jwt
+     * @return MockHttpServletRequestBuilder
+     */
     public MockHttpServletRequestBuilder get(String url, String jwt) {
         return MockMvcRequestBuilders.get(url)
                 .header("Authorization", "Bearer " + jwt);
     }
 
+    
+    /** 
+     * @param url
+     * @param jwt
+     * @return MockHttpServletRequestBuilder
+     */
     public MockHttpServletRequestBuilder post(String url, String jwt) {
         return MockMvcRequestBuilders.post(url)
                 .header("Authorization", "Bearer " + jwt);
     }
 
+    
+    /** 
+     * @param url
+     * @param jwt
+     * @return MockHttpServletRequestBuilder
+     */
     public MockHttpServletRequestBuilder put(String url, String jwt) {
         return MockMvcRequestBuilders.put(url)
                 .header("Authorization", "Bearer " + jwt);
     }
 
+    
+    /** 
+     * @param url
+     * @param jwt
+     * @return MockHttpServletRequestBuilder
+     */
     public MockHttpServletRequestBuilder delete(String url, String jwt) {
         return MockMvcRequestBuilders.delete(url)
                 .header("Authorization", "Bearer " + jwt);
     }
 
+    
+    /** 
+     * @return String
+     * @throws Exception
+     */
     public String authenticate() throws Exception {
         return mockMvc.perform(MockMvcRequestBuilders.post("/api/user/authenticate")
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)

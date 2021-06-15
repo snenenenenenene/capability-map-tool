@@ -13,6 +13,10 @@ public class JwtConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilt
 		this.jwtUtility = jwtUtility;
 	}
 
+	
+	/** 
+	 * @param http
+	 */
 	@Override
 	public void configure(HttpSecurity http) {
 		http.addFilterBefore(new JwtFilter(jwtUtility), UsernamePasswordAuthenticationFilter.class);

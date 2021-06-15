@@ -8,6 +8,11 @@ import javax.persistence.Converter;
 @Converter(autoApply = true)
 public class StrategicImportanceConverter implements AttributeConverter<StrategicImportance, Integer> {
 
+	
+	/** 
+	 * @param attribute
+	 * @return Integer
+	 */
 	@Override
 	public Integer convertToDatabaseColumn(StrategicImportance attribute) {
 		if (attribute == null) {
@@ -16,6 +21,11 @@ public class StrategicImportanceConverter implements AttributeConverter<Strategi
 		return attribute.getImportance();
 	}
 
+	
+	/** 
+	 * @param dbData
+	 * @return StrategicImportance
+	 */
 	@Override
 	public StrategicImportance convertToEntityAttribute(Integer dbData) {
 		if (dbData == null) {

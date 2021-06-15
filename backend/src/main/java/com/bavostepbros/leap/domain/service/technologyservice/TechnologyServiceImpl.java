@@ -25,6 +25,11 @@ public class TechnologyServiceImpl implements TechnologyService {
 	@Autowired
 	private TechnologyDAL technologyDAL;
 	
+	
+	/** 
+	 * @param technologyName
+	 * @return Technology
+	 */
 	@Override
 	public Technology save(String technologyName) {	
 		if (technologyName == null || technologyName.isBlank() || technologyName.isEmpty()) {
@@ -38,6 +43,11 @@ public class TechnologyServiceImpl implements TechnologyService {
 		return technologyDAL.save(technology);
 	}
 
+	
+	/** 
+	 * @param technologyId
+	 * @return Technology
+	 */
 	@Override
 	public Technology get(Integer technologyId) {
 		if (technologyId == null || technologyId.equals(0)) {
@@ -51,6 +61,12 @@ public class TechnologyServiceImpl implements TechnologyService {
 		return technology;
 	}
 
+	
+	/** 
+	 * @param technologyId
+	 * @param technologyName
+	 * @return Technology
+	 */
 	@Override
 	public Technology update(Integer technologyId, String technologyName) {
 		if (technologyId == null || technologyId.equals(0)) {
@@ -71,11 +87,20 @@ public class TechnologyServiceImpl implements TechnologyService {
 		return technologyDAL.save(technology);
 	}
 
+	
+	/** 
+	 * @param technologyId
+	 */
 	@Override
 	public void delete(Integer technologyId) {
 		technologyDAL.deleteById(technologyId);
 	}
 	
+	
+	/** 
+	 * @param technologyName
+	 * @return Technology
+	 */
 	// Currently no mapping of this method because there is no need for it (yet)
 	@Override
 	public Technology getByTechnologyName(String technologyName) {
@@ -88,16 +113,30 @@ public class TechnologyServiceImpl implements TechnologyService {
 		return technology.get();
 	}
 
+	
+	/** 
+	 * @return List<Technology>
+	 */
 	@Override
 	public List<Technology> getAll() {
 		return technologyDAL.findAll();
 	}
 
+	
+	/** 
+	 * @param technologyId
+	 * @return boolean
+	 */
 	@Override
 	public boolean existsById(Integer technologyId) {
 		return technologyDAL.existsById(technologyId);
 	}
 
+	
+	/** 
+	 * @param technologyName
+	 * @return boolean
+	 */
 	@Override
 	public boolean existsByTechnologyName(String technologyName) {
 		return !technologyDAL.findByTechnologyName(technologyName).isEmpty();

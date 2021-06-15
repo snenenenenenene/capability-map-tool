@@ -32,6 +32,11 @@ public class StrategyItemController {
 	@Autowired
 	private StrategyItemService strategyItemService;
 
+	
+	/** 
+	 * @param @ModelAttribute("strategyId"
+	 * @return StrategyItemDto
+	 */
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public StrategyItemDto addStrategyItem(@ModelAttribute("strategyId") Integer strategyId,
 			@ModelAttribute("strategyItemName") String strategyItemName,
@@ -41,6 +46,11 @@ public class StrategyItemController {
 		return convertStrategyItem(strategyItem);
 	}
 
+	
+	/** 
+	 * @param itemId
+	 * @return StrategyItemDto
+	 */
 	@GetMapping("{itemId}")
 	public StrategyItemDto getStrategyItemByItemid(@PathVariable("itemId") Integer itemId) {
 
@@ -48,6 +58,11 @@ public class StrategyItemController {
 		return convertStrategyItem(strategyItem);
 	}
 
+	
+	/** 
+	 * @param @PathVariable("itemId"
+	 * @return StrategyItemDto
+	 */
 	@PutMapping(path = "{itemId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public StrategyItemDto updateStrategyItem(@PathVariable("itemId") Integer itemId,
 			@ModelAttribute("strategyId") Integer strategyId,
@@ -58,11 +73,19 @@ public class StrategyItemController {
 		return convertStrategyItem(strategyItem);
 	}
 
+	
+	/** 
+	 * @param itemId
+	 */
 	@DeleteMapping(path = "{itemId}")
 	public void deleteStrategyItem(@PathVariable("itemId") Integer itemId) {
 		strategyItemService.delete(itemId);
 	}
 
+	
+	/** 
+	 * @return List<StrategyItemDto>
+	 */
 	@GetMapping
 	public List<StrategyItemDto> getAllStrategyItems() {
 		List<StrategyItem> strategyItems = strategyItemService.getAll();
@@ -71,22 +94,42 @@ public class StrategyItemController {
 		return strategyItemsDto;
 	}
 
+	
+	/** 
+	 * @param itemId
+	 * @return boolean
+	 */
 	@GetMapping(path = "exists-by-id/{itemId}")
 	public boolean doesStrategyItemExistsById(@PathVariable("itemId") Integer itemId) {
 		return strategyItemService.existsById(itemId);
 	}
 
+	
+	/** 
+	 * @param strategyItemName
+	 * @return boolean
+	 */
 	@GetMapping(path = "exists-by-strategyitemname/{strategyItemName}")
 	public boolean doesStrategyItemExistsByStrategyitemname(@PathVariable("strategyItemName") String strategyItemName) {
 		return strategyItemService.existsByStrategyItemName(strategyItemName);
 	}
 
+	
+	/** 
+	 * @param strategyItemName
+	 * @return StrategyItemDto
+	 */
 	@GetMapping(path = "strategyitemname/{strategyItemName}")
 	public StrategyItemDto getStrategyByStrategyName(@ModelAttribute("strategyItemName") String strategyItemName) {
 		StrategyItem strategyItem = strategyItemService.getStrategyItemByStrategyItemName(strategyItemName);
 		return convertStrategyItem(strategyItem);
 	}
 
+	
+	/** 
+	 * @param strategyId
+	 * @return List<StrategyItemDto>
+	 */
 	@GetMapping(path = "all-strategyitems-by-strategyid/{strategyId}")
 	public List<StrategyItemDto> getAllStrategyItemsByStrategyid(@PathVariable("strategyId") Integer strategyId) {
 		List<StrategyItem> strategyItems = strategyItemService.getStrategyItemsByStrategy(strategyId);
@@ -95,6 +138,11 @@ public class StrategyItemController {
 		return strategyItemsDto;
 	}
 
+	
+	/** 
+	 * @param strategyItem
+	 * @return StrategyItemDto
+	 */
 	private StrategyItemDto convertStrategyItem(StrategyItem strategyItem) {
 		StrategyDto strategy = new StrategyDto(strategyItem.getStrategy().getStrategyId(),
 				new StatusDto(strategyItem.getStrategy().getStatus().getStatusId(),

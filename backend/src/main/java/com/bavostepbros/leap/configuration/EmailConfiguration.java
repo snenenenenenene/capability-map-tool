@@ -32,6 +32,10 @@ public class EmailConfiguration {
     @Value("${spring.mail.templates.path}")
     private String mailTemplatesPath;
     
+    
+    /** 
+     * @return JavaMailSender
+     */
     @Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -51,6 +55,10 @@ public class EmailConfiguration {
         return mailSender;
     }
     
+    
+    /** 
+     * @return SimpleMailMessage
+     */
     @Bean
     public SimpleMailMessage templateSimpleMessage() {
         SimpleMailMessage message = new SimpleMailMessage();
@@ -58,6 +66,10 @@ public class EmailConfiguration {
         return message;
     }
     
+
+/** 
+ * @return ResourceBundleMessageSource
+ */
 /*    @Bean
     public SpringTemplateEngine thymeleafTemplateEngine(ITemplateResolver templateResolver) {
         SpringTemplateEngine templateEngine = new SpringTemplateEngine();

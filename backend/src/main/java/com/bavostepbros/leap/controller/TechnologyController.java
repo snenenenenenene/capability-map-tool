@@ -31,18 +31,33 @@ public class TechnologyController {
 	@Autowired
 	private TechnologyService technologyService;
 
+	
+	/** 
+	 * @param technologyName
+	 * @return TechnologyDto
+	 */
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public TechnologyDto addTechnology(@ModelAttribute("technologyName") String technologyName) {
 		Technology technology = technologyService.save(technologyName);
 		return convertTechnology(technology);
 	}
 
+	
+	/** 
+	 * @param technologyId
+	 * @return TechnologyDto
+	 */
 	@GetMapping(path = "{technologyId}")
 	public TechnologyDto getTechnology(@PathVariable("technologyId") Integer technologyId) {
 		Technology technology = technologyService.get(technologyId);
 		return convertTechnology(technology);
 	}
 
+	
+	/** 
+	 * @param @PathVariable("technologyId"
+	 * @return TechnologyDto
+	 */
 	@PutMapping(path = "{technologyId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public TechnologyDto updateTechnology(@PathVariable("technologyId") Integer technologyId,
 			@ModelAttribute("technologyName") String technologyName) {
@@ -50,11 +65,19 @@ public class TechnologyController {
 		return convertTechnology(technology);
 	}
 
+	
+	/** 
+	 * @param technologyId
+	 */
 	@DeleteMapping(path = "{technologyId}")
 	public void deleteEnvironment(@PathVariable("technologyId") Integer technologyId) {
 		technologyService.delete(technologyId);
 	}
 
+	
+	/** 
+	 * @return List<TechnologyDto>
+	 */
 	@GetMapping
 	public List<TechnologyDto> getAllTechnologies() {
 		List<Technology> technologies = technologyService.getAll();
@@ -64,6 +87,11 @@ public class TechnologyController {
 		return technologiesDto;
 	}
 
+	
+	/** 
+	 * @param technology
+	 * @return TechnologyDto
+	 */
 	private TechnologyDto convertTechnology(Technology technology) {
 		List<ITApplicationDto> itApplicationsDto = new ArrayList<ITApplicationDto>();
 		if (technology.getItApplications() != null) {

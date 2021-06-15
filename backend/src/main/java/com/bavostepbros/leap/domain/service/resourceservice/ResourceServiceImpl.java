@@ -29,12 +29,24 @@ public class ResourceServiceImpl implements ResourceService {
 	@Autowired
 	private CapabilityService capabilityService;
 
+	
+	/** 
+	 * @param resourceName
+	 * @param resourceDescription
+	 * @param fullTimeEquivalentYearlyValue
+	 * @return Resource
+	 */
 	@Override
 	public Resource save(String resourceName, String resourceDescription, Double fullTimeEquivalentYearlyValue) {
 		Resource resource = new Resource(resourceName, resourceDescription, fullTimeEquivalentYearlyValue);
 		return resourceDAL.save(resource);
 	}
 
+	
+	/** 
+	 * @param resourceId
+	 * @return Resource
+	 */
 	@Override
 	public Resource get(Integer resourceId) {
 		Optional<Resource> resource = resourceDAL.findById(resourceId);
@@ -42,6 +54,14 @@ public class ResourceServiceImpl implements ResourceService {
 		return resource.get();
 	}
 
+	
+	/** 
+	 * @param resourceId
+	 * @param resourceName
+	 * @param resourceDescription
+	 * @param fullTimeEquivalentYearlyValue
+	 * @return Resource
+	 */
 	@Override
 	public Resource update(Integer resourceId, String resourceName, String resourceDescription,
 			Double fullTimeEquivalentYearlyValue) {
@@ -49,11 +69,20 @@ public class ResourceServiceImpl implements ResourceService {
 		return resourceDAL.save(resource);
 	}
 
+	
+	/** 
+	 * @param resourceId
+	 */
 	@Override
 	public void delete(Integer resourceId) {
 		resourceDAL.deleteById(resourceId);
 	}
 
+	
+	/** 
+	 * @param resourceName
+	 * @return Resource
+	 */
 	@Override
 	public Resource getResourceByName(String resourceName) {
 		Optional<Resource> resource = resourceDAL.findByResourceName(resourceName);
@@ -61,11 +90,20 @@ public class ResourceServiceImpl implements ResourceService {
 		return resource.get();
 	}
 
+	
+	/** 
+	 * @return List<Resource>
+	 */
 	@Override
 	public List<Resource> getAll() {
 		return resourceDAL.findAll();
 	}
 
+	
+	/** 
+	 * @param resourceId
+	 * @param capabilityId
+	 */
 	@Override
 	public void addCapability(Integer resourceId, Integer capabilityId) {
 		Resource resource = get(resourceId);
@@ -74,6 +112,11 @@ public class ResourceServiceImpl implements ResourceService {
 		return;
 	}
 
+	
+	/** 
+	 * @param resourceId
+	 * @param capabilityId
+	 */
 	@Override
 	public void deleteCapability(Integer resourceId, Integer capabilityId) {
 		Resource resource = get(resourceId);
@@ -82,6 +125,11 @@ public class ResourceServiceImpl implements ResourceService {
 		return;
 	}
 
+	
+	/** 
+	 * @param resourceId
+	 * @return Set<Capability>
+	 */
 	@Override
 	public Set<Capability> getAllCapabilitiesByResourceId(Integer resourceId) {
 		Resource resource = get(resourceId);

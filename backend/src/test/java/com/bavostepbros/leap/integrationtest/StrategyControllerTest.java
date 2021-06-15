@@ -64,6 +64,11 @@ public class StrategyControllerTest extends ApiIntegrationTest {
 	
 	static final String PATH = "/api/strategy/";
 
+	
+	/** 
+	 * @param init(
+	 * @throws Exceptionpublic void init()
+	 */
 	@BeforeAll
 	public void authenticate() throws Exception { super.authenticate(); }
 
@@ -105,6 +110,10 @@ public class StrategyControllerTest extends ApiIntegrationTest {
 		assertNotNull(strategySecond);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_postStrategy_whenSaveStrategy() throws Exception {
 		Integer statusId = strategyFirst.getStatus().getStatusId();
@@ -133,6 +142,10 @@ public class StrategyControllerTest extends ApiIntegrationTest {
 		testStrategy(strategy, resultStrategy);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getStrategy_whenGetStrategyById() throws Exception {
 		Integer strategyId = strategyFirst.getStrategyId();
@@ -148,6 +161,10 @@ public class StrategyControllerTest extends ApiIntegrationTest {
 		testStrategy(strategyFirst, resultStrategy);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getStrategy_whenGetStrategyByStrategyname() throws Exception {
 		String strategyName = strategyFirst.getStrategyName();
@@ -163,6 +180,10 @@ public class StrategyControllerTest extends ApiIntegrationTest {
 		testStrategy(strategyFirst, resultStrategy);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getStrategies_whenGetStrategiesByEnvironmentid() throws Exception {
 		Integer environmentId = strategyFirst.getEnvironment().getEnvironmentId();
@@ -179,6 +200,10 @@ public class StrategyControllerTest extends ApiIntegrationTest {
 		testStrategy(strategyFirst, resultStrategies.get(0));
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getStrategies_whenGetAllStrategies() throws Exception {
 		MvcResult mvcResult = mockMvc.perform(get(PATH))
@@ -194,6 +219,10 @@ public class StrategyControllerTest extends ApiIntegrationTest {
 		testStrategy(strategySecond, resultStrategies.get(1));
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getBoolean_whenStrategyIdExists() throws Exception {
 		Integer strategyId = strategyFirst.getStrategyId();
@@ -203,6 +232,10 @@ public class StrategyControllerTest extends ApiIntegrationTest {
 			.andExpect(MockMvcResultMatchers.content().string("true"));	
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getBoolean_whenStrategyNameExists() throws Exception {
 		String strategyName = strategyFirst.getStrategyName();
@@ -212,6 +245,10 @@ public class StrategyControllerTest extends ApiIntegrationTest {
 			.andExpect(MockMvcResultMatchers.content().string("true"));	
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_putStrategy_whenUpdateStrategy() throws Exception {
 		Integer strategyId = strategyFirst.getStrategyId();
@@ -241,6 +278,10 @@ public class StrategyControllerTest extends ApiIntegrationTest {
 		testStrategy(strategy, resultStrategy);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_deleteStrategy_whenDeleteStrategy() throws Exception {
 		Integer strategyId = strategyFirst.getStrategyId();
@@ -249,6 +290,11 @@ public class StrategyControllerTest extends ApiIntegrationTest {
 			.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
+	
+	/** 
+	 * @param expectedObject
+	 * @param actualObject
+	 */
 	@Test
 	private void testStrategy(Strategy expectedObject, StrategyDto actualObject) {
 		assertEquals(expectedObject.getStrategyId(), actualObject.getStrategyId());

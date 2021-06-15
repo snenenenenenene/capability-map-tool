@@ -31,6 +31,13 @@ public class CapabilityInformationServiceImpl implements CapabilityInformationSe
 	@Autowired
 	private InformationService informationService;
 	
+	
+	/** 
+	 * @param capabilityId
+	 * @param informationId
+	 * @param criticality
+	 * @return CapabilityInformation
+	 */
 	@Override
 	public CapabilityInformation save(Integer capabilityId, Integer informationId, String criticality) {
 		StrategicImportance importance = StrategicImportance.valueOf(criticality);
@@ -40,6 +47,12 @@ public class CapabilityInformationServiceImpl implements CapabilityInformationSe
 		return capabilityInformationDAL.save(capabilityInformation);
 	}
 
+	
+	/** 
+	 * @param capabilityId
+	 * @param informationId
+	 * @return CapabilityInformation
+	 */
 	@Override
 	public CapabilityInformation get(Integer capabilityId, Integer informationId) {
 		Capability capability = capabilityService.get(capabilityId);
@@ -47,6 +60,13 @@ public class CapabilityInformationServiceImpl implements CapabilityInformationSe
 		return capabilityInformationDAL.findByCapabilityAndInformation(capability, information).get();
 	}
 
+	
+	/** 
+	 * @param capabilityId
+	 * @param informationId
+	 * @param criticality
+	 * @return CapabilityInformation
+	 */
 	@Override
 	public CapabilityInformation update(Integer capabilityId, Integer informationId, String criticality) {
 		StrategicImportance importance = StrategicImportance.valueOf(criticality);
@@ -56,6 +76,11 @@ public class CapabilityInformationServiceImpl implements CapabilityInformationSe
 		return capabilityInformationDAL.save(capabilityInformation);
 	}
 
+	
+	/** 
+	 * @param capabilityId
+	 * @param informationId
+	 */
 	@Override
 	public void delete(Integer capabilityId, Integer informationId) {
 		Capability capability = capabilityService.get(capabilityId);
@@ -63,12 +88,22 @@ public class CapabilityInformationServiceImpl implements CapabilityInformationSe
 		capabilityInformationDAL.deleteByCapabilityAndInformation(capability, information);
 	}
 
+	
+	/** 
+	 * @param capabilityId
+	 * @return List<CapabilityInformation>
+	 */
 	@Override
 	public List<CapabilityInformation> getCapabilityInformationByCapability(Integer capabilityId) {
 		Capability capability = capabilityService.get(capabilityId);
 		return capabilityInformationDAL.findByCapability(capability);
 	}
 
+	
+	/** 
+	 * @param informationId
+	 * @return List<CapabilityInformation>
+	 */
 	@Override
 	public List<CapabilityInformation> getCapabilityInformationByInformation(Integer informationId) {
 		Information information = informationService.get(informationId);

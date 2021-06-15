@@ -27,44 +27,83 @@ public class StatusServiceImpl implements StatusService {
 	@Autowired
     private StatusDAL statusDAL;
 
+    
+    /** 
+     * @param validityPeriod
+     * @return Status
+     */
     @Override
     public Status save(LocalDate validityPeriod) {
         Status status = new Status(validityPeriod);
         return statusDAL.save(status);
     }
 
+    
+    /** 
+     * @param id
+     * @return Status
+     */
     @Override
     public Status get(Integer id) {
         Status status = statusDAL.findById(id).get();
         return status;
     }
 
+    
+    /** 
+     * @return List<Status>
+     */
     @Override
     public List<Status> getAll() {
         return statusDAL.findAll();
     }
 
+    
+    /** 
+     * @param statusId
+     * @param validityPeriod
+     * @return Status
+     */
     @Override
     public Status update(Integer statusId, @NotNull LocalDate validityPeriod) {
     	Status status = new Status(statusId, validityPeriod);
         return statusDAL.save(status);
     }
 
+    
+    /** 
+     * @param id
+     */
     @Override
     public void delete(Integer id) {
         statusDAL.deleteById(id);
     }
 
+    
+    /** 
+     * @param id
+     * @return boolean
+     */
     @Override
     public boolean existsById(Integer id) {    	
         return statusDAL.existsById(id);
     }
 
+    
+    /** 
+     * @param validityPeriod
+     * @return boolean
+     */
     @Override
     public boolean existsByValidityPeriod(@NotNull LocalDate validityPeriod) {
         return !statusDAL.findByValidityPeriod(validityPeriod).isEmpty();
     }
     
+    
+    /** 
+     * @param validityPeriod
+     * @return Status
+     */
     @Override
     public Status getByValidityPeriod(@NotNull LocalDate validityPeriod) {
         return statusDAL.findByValidityPeriod(validityPeriod).get();

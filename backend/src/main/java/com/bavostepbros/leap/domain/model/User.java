@@ -12,10 +12,42 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 @Entity
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return String
+ */
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return int
+ */
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
     @Id

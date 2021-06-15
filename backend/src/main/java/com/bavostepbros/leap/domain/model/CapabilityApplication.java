@@ -15,9 +15,65 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+
+/** 
+ * @return CapabilityApplicationId
+ */
+
+/** 
+ * @return Capability
+ */
+
+/** 
+ * @return ITApplication
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
 @Getter
 @Setter
 @NoArgsConstructor
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return int
+ */
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class CapabilityApplication {
 	

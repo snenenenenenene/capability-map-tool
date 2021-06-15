@@ -8,6 +8,11 @@ import javax.persistence.Converter;
 @Converter(autoApply = true)
 public class TimeValueConverter implements AttributeConverter<TimeValue, Integer> {
 
+	
+	/** 
+	 * @param attribute
+	 * @return Integer
+	 */
 	@Override
 	public Integer convertToDatabaseColumn(TimeValue attribute) {
 		if (attribute == null) {
@@ -16,6 +21,11 @@ public class TimeValueConverter implements AttributeConverter<TimeValue, Integer
 		return attribute.getValue();
 	}
 
+	
+	/** 
+	 * @param dbData
+	 * @return TimeValue
+	 */
 	@Override
 	public TimeValue convertToEntityAttribute(Integer dbData) {
 		if (dbData == null) {

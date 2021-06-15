@@ -31,12 +31,22 @@ public class EnvironmentServiceImpl implements EnvironmentService {
 	@Autowired
     private EnvironmentDAL environmentDAL;
 
+    
+    /** 
+     * @param environmentName
+     * @return Environment
+     */
     @Override
     public Environment save(@NotBlank String environmentName) {
     	Environment environment = new Environment(environmentName);
         return environmentDAL.save(environment);
     }
 
+    
+    /** 
+     * @param id
+     * @return Environment
+     */
     @Override
     public Environment get(Integer id) {
         Optional<Environment> environment = environmentDAL.findById(id);
@@ -44,6 +54,11 @@ public class EnvironmentServiceImpl implements EnvironmentService {
         return environment.get();
     }
 
+    
+    /** 
+     * @param environmentName
+     * @return Environment
+     */
     @Override
     public Environment getByEnvironmentName(@NotBlank String environmentName) {
         Optional<Environment> environment = environmentDAL.findByEnvironmentName(environmentName);
@@ -51,17 +66,33 @@ public class EnvironmentServiceImpl implements EnvironmentService {
         return environment.get();
     }
 
+    
+    /** 
+     * @return List<Environment>
+     */
     @Override
     public List<Environment> getAll() {
         return environmentDAL.findAll();
     }
 
+    
+    /** 
+     * @param environmentId
+     * @param environmentName
+     * @return Environment
+     */
     @Override
     public Environment update(Integer environmentId, @NotBlank String environmentName) {
     	Environment environment = new Environment(environmentId, environmentName);
         return environmentDAL.save(environment);
     }
 
+    
+    /** 
+     * @param id
+     * @param capability
+     * @return Environment
+     */
     @Override
     public Environment addCapability(Integer id, Capability capability) {
         Environment environment = this.get(id);
@@ -69,6 +100,12 @@ public class EnvironmentServiceImpl implements EnvironmentService {
         return environmentDAL.save(environment);
     }
 
+    
+    /** 
+     * @param id
+     * @param capabilities
+     * @return Environment
+     */
     @Override
     public Environment addCapabilities(Integer id, List<Capability> capabilities) {
         Environment environment = this.get(id);
@@ -76,6 +113,12 @@ public class EnvironmentServiceImpl implements EnvironmentService {
         return environmentDAL.save(environment);
     }
 
+    
+    /** 
+     * @param id
+     * @param strategy
+     * @return Environment
+     */
     @Override
     public Environment addStrategy(Integer id, Strategy strategy) {
         Environment environment = this.get(id);
@@ -83,16 +126,30 @@ public class EnvironmentServiceImpl implements EnvironmentService {
         return environmentDAL.save(environment);
     }
 
+    
+    /** 
+     * @param id
+     */
     @Override
     public void delete(Integer id) {
         environmentDAL.deleteById(id);
     }
 
+    
+    /** 
+     * @param id
+     * @return boolean
+     */
     @Override
     public boolean existsById(Integer id) {
     	return environmentDAL.existsById(id);
     }
 
+    
+    /** 
+     * @param environmentName
+     * @return boolean
+     */
     @Override
     public boolean existsByEnvironmentName(String environmentName) {
         return !environmentDAL.findByEnvironmentName(environmentName).isEmpty();        

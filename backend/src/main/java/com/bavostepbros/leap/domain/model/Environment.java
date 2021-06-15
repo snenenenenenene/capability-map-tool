@@ -21,9 +21,37 @@ import lombok.Setter;
 *
 */
 @Entity
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return List<Capability>
+ */
+
+/** 
+ * @return List<Strategy>
+ */
 @Getter
 @Setter
 @NoArgsConstructor
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return int
+ */
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Environment {
 

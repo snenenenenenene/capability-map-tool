@@ -33,22 +33,41 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		this.jwtUtility = jwtUtility;
 	}
 
+	
+	/** 
+	 * @return PasswordEncoder
+	 */
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
+	
+	/** 
+	 * @return AuthenticationManager
+	 * @throws Exception
+	 */
 	@Bean
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
 
+	
+	/** 
+	 * @param auth
+	 * @throws Exception
+	 */
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService);
 	}
 
+	
+	/** 
+	 * @param http
+	 * @throws Exception
+	 */
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
@@ -61,6 +80,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 
+
+/** 
+ * @return CorsConfigurationSource
+ */
 //	@Bean
 //	CorsConfigurationSource corsConfigurationSource() {
 //		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

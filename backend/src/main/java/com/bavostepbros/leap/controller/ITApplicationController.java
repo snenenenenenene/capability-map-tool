@@ -35,6 +35,11 @@ public class ITApplicationController {
 	@Autowired
 	private ITApplicationService itApplicationService;
 
+	
+	/** 
+	 * @param @ModelAttribute("statusId"
+	 * @return ITApplicationDto
+	 */
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ITApplicationDto addITApplication(@ModelAttribute("statusId") Integer statusID,
 			@ModelAttribute("name") String name, @ModelAttribute("version") String version,
@@ -61,12 +66,22 @@ public class ITApplicationController {
 		return convertItApplication(itApplication);
 	}
 
+	
+	/** 
+	 * @param itApplicationId
+	 * @return ITApplicationDto
+	 */
 	@GetMapping(path = "{itApplicationId}")
 	public ITApplicationDto getITApplicationById(@PathVariable("itApplicationId") Integer itApplicationId) {
 		ITApplication itApplication = itApplicationService.get(itApplicationId);
 		return convertItApplication(itApplication);
 	}
 
+	
+	/** 
+	 * @param @PathVariable("itApplicationId"
+	 * @return ITApplicationDto
+	 */
 	@PutMapping(path = "{itApplicationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ITApplicationDto updateITApplication(@PathVariable("itApplicationId") Integer itApplicationId,
 			@ModelAttribute("statusId") Integer statusID, @ModelAttribute("name") String name,
@@ -94,27 +109,50 @@ public class ITApplicationController {
 		return convertItApplication(itApplication);
 	}
 
+	
+	/** 
+	 * @param itApplicationId
+	 */
 	@DeleteMapping(path = "{itApplicationId}")
 	public void deleteItApplication(@PathVariable("itApplicationId") Integer itApplicationId) {
 		itApplicationService.delete(itApplicationId);
 	}
 
+	
+	/** 
+	 * @param itApplicationId
+	 * @return boolean
+	 */
 	@GetMapping(path = "exists-by-id/{itApplicationId}")
 	public boolean doesItApplicationExistsById(@PathVariable("itApplicationId") Integer itApplicationId) {
 		return itApplicationService.existsById(itApplicationId);
 	}
 
+	
+	/** 
+	 * @param itApplicationName
+	 * @return boolean
+	 */
 	@GetMapping(path = "exists-by-name/{itApplicationName}")
 	public boolean doesItApplicationExistsById(@PathVariable("itApplicationName") String itApplicationName) {
 		return itApplicationService.existsByName(itApplicationName);
 	}
 
+	
+	/** 
+	 * @param itApplicationName
+	 * @return ITApplicationDto
+	 */
 	@GetMapping(path = "itapplicationname/{itApplicationName}")
 	public ITApplicationDto getITApplicationByName(@PathVariable("itApplicationName") String itApplicationName) {
 		ITApplication itApplication = itApplicationService.getItApplicationByName(itApplicationName);
 		return convertItApplication(itApplication);
 	}
 
+	
+	/** 
+	 * @return List<ITApplicationDto>
+	 */
 	@GetMapping
 	public List<ITApplicationDto> getAllITApplications() {
 		List<ITApplication> itApplications = itApplicationService.getAll();
@@ -123,16 +161,28 @@ public class ITApplicationController {
 		return itApplicationsDto;
 	}
 
+	
+	/** 
+	 * @return List<String>
+	 */
 	@GetMapping(path = "all-currencies")
 	public List<String> getAllCurrencies() {
 		return itApplicationService.getAllCurrencies();
 	}
 
+	
+	/** 
+	 * @return List<String>
+	 */
 	@GetMapping(path = "all-timevalues")
 	public List<String> getAllTimeValues() {
 		return itApplicationService.getAllTimeValues();
 	}
 
+	
+	/** 
+	 * @param @PathVariable("itApplicationId"
+	 */
 	@PutMapping(path = "link-technology/{itApplicationId}/{technologyId}")
 	public void linkTechnology(@PathVariable("itApplicationId") Integer itApplicationId,
 			@PathVariable("technologyId") Integer technologyId) {
@@ -140,6 +190,10 @@ public class ITApplicationController {
 		return;
 	}
 
+	
+	/** 
+	 * @param @PathVariable("itApplicationId"
+	 */
 	@DeleteMapping(path = "unlink-technology/{itApplicationId}/{technologyId}")
 	public void deleteTechnology(@PathVariable("itApplicationId") Integer itApplicationId,
 			@PathVariable("technologyId") Integer technologyId) {
@@ -147,6 +201,11 @@ public class ITApplicationController {
 		return;
 	}
 
+	
+	/** 
+	 * @param itApplication
+	 * @return ITApplicationDto
+	 */
 	private ITApplicationDto convertItApplication(ITApplication itApplication) {
 		StatusDto status = new StatusDto(itApplication.getStatus().getStatusId(),
 				itApplication.getStatus().getValidityPeriod());

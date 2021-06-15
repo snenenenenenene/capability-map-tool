@@ -30,6 +30,11 @@ public class StrategyController {
 	@Autowired
 	private StrategyService strategyService;
 
+	
+	/** 
+	 * @param @ModelAttribute("statusId"
+	 * @return StrategyDto
+	 */
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public StrategyDto addStrategy(@ModelAttribute("statusId") Integer statusId,
 			@ModelAttribute("strategyName") String strategyName,
@@ -41,18 +46,33 @@ public class StrategyController {
 		return convertStrategy(strategy);
 	}
 
+	
+	/** 
+	 * @param id
+	 * @return StrategyDto
+	 */
 	@GetMapping(path = "{strategyid}")
 	public StrategyDto getStrategyById(@PathVariable("strategyid") Integer id) {
 		Strategy strategy = strategyService.get(id);
 		return convertStrategy(strategy);
 	}
 
+	
+	/** 
+	 * @param strategyName
+	 * @return StrategyDto
+	 */
 	@GetMapping(path = "strategyname/{strategyname}")
 	public StrategyDto getStrategyByStrategyname(@PathVariable("strategyname") String strategyName) {
 		Strategy strategy = strategyService.getStrategyByStrategyname(strategyName);
 		return convertStrategy(strategy);
 	}
 
+	
+	/** 
+	 * @param id
+	 * @return List<StrategyDto>
+	 */
 	@GetMapping(path = "all-strategies-by-environmentid/{environmentid}")
 	public List<StrategyDto> getAllCapabilitiesByEnvironment(@PathVariable("environmentid") Integer id) {
 		List<Strategy> strategies = strategyService.getStrategiesByEnvironment(id);
@@ -62,6 +82,10 @@ public class StrategyController {
 		return strategiesDto;
 	}
 
+	
+	/** 
+	 * @return List<StrategyDto>
+	 */
 	@GetMapping
 	public List<StrategyDto> getAllStrategies() {
 		List<Strategy> strategies = strategyService.getAll();
@@ -71,16 +95,31 @@ public class StrategyController {
 		return strategiesDto;
 	}
 
+	
+	/** 
+	 * @param id
+	 * @return boolean
+	 */
 	@GetMapping(path = "exists-by-id/{strategyid}")
 	public boolean doesStrategyExistsById(@PathVariable("strategyid") Integer id) {
 		return strategyService.existsById(id);
 	}
 
+	
+	/** 
+	 * @param strategyName
+	 * @return boolean
+	 */
 	@GetMapping(path = "exists-by-strategyname/{strategyname}")
 	public boolean doesStrategyNameExists(@PathVariable("strategyname") String strategyName) {
 		return strategyService.existsByStrategyName(strategyName);
 	}
 
+	
+	/** 
+	 * @param @PathVariable("strategyId"
+	 * @return StrategyDto
+	 */
 	@PutMapping(path = "{strategyId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public StrategyDto updateStrategy(@PathVariable("strategyId") Integer strategyId,
 			@ModelAttribute("statusId") Integer statusId, @ModelAttribute("strategyName") String strategyName,
@@ -93,11 +132,20 @@ public class StrategyController {
 		return convertStrategy(strategy);
 	}
 
+	
+	/** 
+	 * @param id
+	 */
 	@DeleteMapping(path = "{strategyid}")
 	public void deleteStrategy(@PathVariable("strategyid") Integer id) {
 		strategyService.delete(id);
 	}
 
+	
+	/** 
+	 * @param strategy
+	 * @return StrategyDto
+	 */
 	private StrategyDto convertStrategy(Strategy strategy) {
 		StatusDto status = new StatusDto(strategy.getStatus().getStatusId(), strategy.getStatus().getValidityPeriod());
 		EnvironmentDto environment = new EnvironmentDto(strategy.getEnvironment().getEnvironmentId(),

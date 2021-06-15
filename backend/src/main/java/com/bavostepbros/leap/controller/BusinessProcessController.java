@@ -39,6 +39,11 @@ public class BusinessProcessController {
 	@Autowired
 	private BusinessProcessService businessProcessService;
 
+	
+	/** 
+	 * @param addBusinessProcess(
+	 * @return BusinessProcessDto
+	 */
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public BusinessProcessDto addBusinessProcess(
 			@Valid @ModelAttribute("businessProcessName") String businessProcessName,
@@ -47,6 +52,11 @@ public class BusinessProcessController {
 		return convertBusinessProcess(businessProcess);
 	}
 
+	
+	/** 
+	 * @param getBusinessProcess(
+	 * @return BusinessProcessDto
+	 */
 	@GetMapping(path = "{businessProcessId}")
 	public BusinessProcessDto getBusinessProcess(
 			@PathVariable("businessProcessId") @Positive Integer businessProcessId) {
@@ -54,6 +64,11 @@ public class BusinessProcessController {
 		return convertBusinessProcess(businessProcess);
 	}
 
+	
+	/** 
+	 * @param updateBusinessProcess(
+	 * @return BusinessProcessDto
+	 */
 	@PutMapping(path = "{businessProcessId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public BusinessProcessDto updateBusinessProcess(
 			@PathVariable("businessProcessId") @Positive Integer businessProcessId,
@@ -64,11 +79,20 @@ public class BusinessProcessController {
 		return convertBusinessProcess(businessProcess);
 	}
 
+	
+	/** 
+	 * @param businessProcessId
+	 */
 	@DeleteMapping(path = "{businessProcessId}")
 	public void deleteBusinessProcess(@PathVariable("businessProcessId") @Positive Integer businessProcessId) {
 		businessProcessService.delete(businessProcessId);
 	}
 
+	
+	/** 
+	 * @param getBusinessProcess(
+	 * @return BusinessProcessDto
+	 */
 	@GetMapping(path = "businessProcessName/{businessProcessName}")
 	public BusinessProcessDto getBusinessProcess(
 			@Valid @PathVariable("businessProcessName") String businessProcessName) {
@@ -76,6 +100,10 @@ public class BusinessProcessController {
 		return convertBusinessProcess(businessProcess);
 	}
 
+	
+	/** 
+	 * @return List<BusinessProcessDto>
+	 */
 	@GetMapping
 	public List<BusinessProcessDto> getAllBusinessProcess() {
 		List<BusinessProcess> businessProcessList = businessProcessService.getAll();
@@ -84,18 +112,31 @@ public class BusinessProcessController {
 		return businessProcessDto;
 	}
 
+	
+	/** 
+	 * @param @ModelAttribute("businessProcessId"
+	 */
 	@PutMapping(path = "link-capability/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void linkCapability(@ModelAttribute("businessProcessId") Integer businessProcessId,
 			@ModelAttribute("capabilityId") Integer capabilityId) {
 		businessProcessService.addCapability(businessProcessId, capabilityId);
 	}
 
+	
+	/** 
+	 * @param @ModelAttribute("businessProcessId"
+	 */
 	@DeleteMapping(path = "unlink-capability/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void unlinkCapability(@ModelAttribute("businessProcessId") Integer businessProcessId,
 			@ModelAttribute("capabilityId") Integer capabilityId) {
 		businessProcessService.deleteCapability(businessProcessId, capabilityId);
 	}
 
+	
+	/** 
+	 * @param businessProcessId
+	 * @return List<CapabilityDto>
+	 */
 	@GetMapping(path = "get-capabilities/{businessProcessId}")
 	public List<CapabilityDto> getCapabilities(@PathVariable("businessProcessId") Integer businessProcessId) {
 		Set<Capability> capabilities = businessProcessService.getAllCapabilitiesByBusinessProcessId(businessProcessId);
@@ -104,11 +145,21 @@ public class BusinessProcessController {
 		return capabilitiesDto;
 	}
 
+	
+	/** 
+	 * @param businessProcess
+	 * @return BusinessProcessDto
+	 */
 	private BusinessProcessDto convertBusinessProcess(BusinessProcess businessProcess) {
 		return new BusinessProcessDto(businessProcess.getBusinessProcessId(), businessProcess.getBusinessProcessName(),
 				businessProcess.getBusinessProcessDescription());
 	}
 
+	
+	/** 
+	 * @param capability
+	 * @return CapabilityDto
+	 */
 	private CapabilityDto convertCapability(Capability capability) {
 		EnvironmentDto environmentDto = new EnvironmentDto(capability.getEnvironment().getEnvironmentId(),
 				capability.getEnvironment().getEnvironmentName());

@@ -440,6 +440,11 @@ public class StrategyServiceTest {
 		testStrategy(strategyFirst, fetchedStrategy);
 	}
 	
+	
+	/** 
+	 * @param expectedObject
+	 * @param actualObject
+	 */
 	private void testStrategy(Strategy expectedObject, Strategy actualObject) {
 		assertEquals(expectedObject.getStrategyId(), actualObject.getStrategyId());
 		assertEquals(expectedObject.getStrategyName(), actualObject.getStrategyName());

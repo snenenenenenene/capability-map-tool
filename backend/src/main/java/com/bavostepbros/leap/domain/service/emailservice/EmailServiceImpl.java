@@ -32,6 +32,12 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private JavaMailSender emailSender;
 
+
+/** 
+ * @param to
+ * @param subject
+ * @param text
+ */
 /*    @Autowired
     private SimpleMailMessage template;
     
@@ -58,6 +64,11 @@ public class EmailServiceImpl implements EmailService {
         }
     }
 
+    
+    /** 
+     * @param to
+     * @param password
+     */
     public void sendNewUserMessage(String to, String password) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
@@ -72,6 +83,11 @@ public class EmailServiceImpl implements EmailService {
         }
     }
 
+    
+    /** 
+     * @param to
+     * @param password
+     */
     public void sendForgotPassword(String to, String password) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();

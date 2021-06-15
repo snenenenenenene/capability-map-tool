@@ -16,12 +16,20 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class LeapController {
+    
+    /** 
+     * @return String
+     */
     @GetMapping("/")
     public String index(){
         return  "redirect:/authorize";
     }
 
 
+    
+    /** 
+     * @return String
+     */
     @GetMapping("/authorize")
     public String AuthorizationPage(){
         return "authorize";

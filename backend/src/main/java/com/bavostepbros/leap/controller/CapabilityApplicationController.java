@@ -34,6 +34,11 @@ public class CapabilityApplicationController {
 	@Autowired
 	private CapabilityApplicationService capabilityApplicationService;
 
+	
+	/** 
+	 * @param @PathVariable("capabilityId"
+	 * @return CapabilityApplicationDto
+	 */
 	@PostMapping(path = "{capabilityId}/{applicationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public CapabilityApplicationDto addCapabilityApplication(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("applicationId") Integer applicationId,
@@ -51,6 +56,11 @@ public class CapabilityApplicationController {
 		return convertCapabilityApplication(capabilityApplication);
 	}
 
+	
+	/** 
+	 * @param @PathVariable("capabilityId"
+	 * @return CapabilityApplicationDto
+	 */
 	@GetMapping(path = "{capabilityId}/{applicationId}")
 	public CapabilityApplicationDto getCapabilityApplication(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("applicationId") Integer applicationId) {
@@ -58,6 +68,11 @@ public class CapabilityApplicationController {
 		return convertCapabilityApplication(capabilityApplication);
 	}
 
+	
+	/** 
+	 * @param @PathVariable("capabilityId"
+	 * @return CapabilityApplicationDto
+	 */
 	@PutMapping(path = "{capabilityId}/{applicationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public CapabilityApplicationDto updateCapabilityApplication(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("applicationId") Integer applicationId,
@@ -75,12 +90,21 @@ public class CapabilityApplicationController {
 		return convertCapabilityApplication(capabilityApplication);
 	}
 
+	
+	/** 
+	 * @param @PathVariable("capabilityId"
+	 */
 	@DeleteMapping(path = "{capabilityId}/{applicationId}")
 	public void deleteCapabilityApplication(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("applicationId") Integer applicationId) {
 		capabilityApplicationService.delete(capabilityId, applicationId);
 	}
 
+	
+	/** 
+	 * @param capabilityId
+	 * @return List<CapabilityApplicationDto>
+	 */
 	@GetMapping(path = "all-capabilityApplications-by-capabilityid/{capabilityId}")
 	public List<CapabilityApplicationDto> getCapabilityApplicationByCapabilityId(@PathVariable("capabilityId") Integer capabilityId) {
 		List<CapabilityApplication> capabilityApplications = capabilityApplicationService
@@ -91,6 +115,11 @@ public class CapabilityApplicationController {
 		return capabilityApplicationsDto;
 	}
 	
+	
+	/** 
+	 * @param applicationId
+	 * @return List<CapabilityApplicationDto>
+	 */
 	@GetMapping(path = "all-capabilityApplications-by-applicationid/{applicationId}")
 	public List<CapabilityApplicationDto> getCapabilityApplicationByApplicationId(@PathVariable("applicationId") Integer applicationId) {
 		List<CapabilityApplication> capabilityApplications = capabilityApplicationService
@@ -101,6 +130,11 @@ public class CapabilityApplicationController {
 		return capabilityApplicationsDto;
 	}
 
+	
+	/** 
+	 * @param capabilityApplication
+	 * @return CapabilityApplicationDto
+	 */
 	private CapabilityApplicationDto convertCapabilityApplication(CapabilityApplication capabilityApplication) {
 
 		CapabilityDto capabilityDto = new CapabilityDto(capabilityApplication.getCapability().getCapabilityId(),

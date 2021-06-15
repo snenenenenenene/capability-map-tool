@@ -32,6 +32,11 @@ public class InformationController {
 	@Autowired
 	private InformationService informationService;
 
+	
+	/** 
+	 * @param @ModelAttribute("informationName"
+	 * @return InformationDto
+	 */
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public InformationDto addInformation(@Valid @ModelAttribute("informationName") String informationName,
 			@Valid @ModelAttribute("informationDescription") String informationDescription) {
@@ -39,12 +44,22 @@ public class InformationController {
 		return convertInformation(information);
 	}
 
+	
+	/** 
+	 * @param informationId
+	 * @return InformationDto
+	 */
 	@GetMapping(path = "{informationId}")
 	public InformationDto getInformation(@Valid @PathVariable("informationId") Integer informationId) {
 		Information information = informationService.get(informationId);
 		return convertInformation(information);
 	}
 	
+	
+	/** 
+	 * @param @PathVariable("informationId"
+	 * @return InformationDto
+	 */
 	@PutMapping(path = "{informationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public InformationDto addInformation(@Valid @PathVariable("informationId") Integer informationId, 
 			@Valid @ModelAttribute("informationName") String informationName,
@@ -53,17 +68,30 @@ public class InformationController {
 		return convertInformation(information);
 	}
 	
+	
+	/** 
+	 * @param informationId
+	 */
 	@DeleteMapping(path = "{informationId}")
 	public void deleteInformation(@Valid @PathVariable("informationId") Integer informationId) {
 		informationService.delete(informationId);
 	}
 	
+	
+	/** 
+	 * @param informationName
+	 * @return InformationDto
+	 */
 	@GetMapping(path = "informationName/{informationName}")
 	public InformationDto getInformation(@Valid @PathVariable("informationName") String informationName) {
 		Information information = informationService.getInformationByName(informationName);
 		return convertInformation(information);
 	}
 	
+	
+	/** 
+	 * @return List<InformationDto>
+	 */
 	@GetMapping
 	public List<InformationDto> getAllInformation() {
 		List<Information> informationList = informationService.getAll();
@@ -73,6 +101,11 @@ public class InformationController {
 		return informationDto;
 	}
 
+	
+	/** 
+	 * @param information
+	 * @return InformationDto
+	 */
 	private InformationDto convertInformation(Information information) {
 		return new InformationDto(information.getInformationId(), information.getInformationName(),
 				information.getInformationDescription());

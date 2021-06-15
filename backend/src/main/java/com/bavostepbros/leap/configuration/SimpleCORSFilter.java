@@ -22,6 +22,14 @@ public class SimpleCORSFilter implements Filter {
         log.info("SimpleCORSFilter init");
     }
 
+    
+    /** 
+     * @param req
+     * @param res
+     * @param chain
+     * @throws IOException
+     * @throws ServletException
+     */
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
@@ -37,6 +45,10 @@ public class SimpleCORSFilter implements Filter {
         chain.doFilter(req, res);
     }
 
+    
+    /** 
+     * @param filterConfig
+     */
     @Override
     public void init(FilterConfig filterConfig) {
     }

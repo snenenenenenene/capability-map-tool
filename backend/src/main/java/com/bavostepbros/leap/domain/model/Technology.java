@@ -15,6 +15,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return List<ITApplication>
+ */
 @Getter
 @Setter
 @NoArgsConstructor

@@ -18,6 +18,74 @@ import lombok.Setter;
 
 import java.util.List;
 
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return CapabilityLevel
+ */
+
+/** 
+ * @return PaceOfChange
+ */
+
+/** 
+ * @return TargetOperatingModel
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return StatusDto
+ */
+
+/** 
+ * @return List<CapabilityMapItemDto>
+ */
+
+/** 
+ * @return List<CapabilityItemDto>
+ */
+
+/** 
+ * @return List<ProjectDto>
+ */
+
+/** 
+ * @return List<BusinessProcessDto>
+ */
+
+/** 
+ * @return List<CapabilityInformationDto>
+ */
+
+/** 
+ * @return List<ResourceDto>
+ */
+
+/** 
+ * @return List<CapabilityApplicationDto>
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,6 +93,7 @@ import java.util.List;
 public class CapabilityMapItemDto {
 	private Integer capabilityId;
     private String capabilityName;
+    private String description;
     private CapabilityLevel level;
     private PaceOfChange paceOfChange;
     private TargetOperatingModel targetOperatingModel;
@@ -39,4 +108,5 @@ public class CapabilityMapItemDto {
     private List<CapabilityInformationDto> capabilityInformation;
     private List<ResourceDto> resources;
     private List<CapabilityApplicationDto> capabilityApplications;
+
 }

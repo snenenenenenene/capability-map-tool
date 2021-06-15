@@ -36,6 +36,11 @@ public class CapabilityInformationController {
 	@Autowired
 	private CapabilityInformationService capabilityInformationService;
 
+	
+	/** 
+	 * @param addCapabilityInformation(
+	 * @return CapabilityInformationDto
+	 */
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public CapabilityInformationDto addCapabilityInformation(
 			@Valid @ModelAttribute("capabilityId") Integer capabilityId,
@@ -46,6 +51,11 @@ public class CapabilityInformationController {
 		return convertCapabilityInformation(capabilityInformation);
 	}
 
+	
+	/** 
+	 * @param @PathVariable("capabilityId"
+	 * @return CapabilityInformationDto
+	 */
 	@GetMapping(path = "{capabilityId}/{informationId}")
 	public CapabilityInformationDto getCapabilityInformation(@Valid @PathVariable("capabilityId") Integer capabilityId,
 			@Valid @PathVariable("informationId") Integer informationId) {
@@ -53,6 +63,11 @@ public class CapabilityInformationController {
 		return convertCapabilityInformation(capabilityInformation);
 	}
 
+	
+	/** 
+	 * @param updateCapabilityInformation(
+	 * @return CapabilityInformationDto
+	 */
 	@PutMapping(path = "{capabilityId}/{informationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public CapabilityInformationDto updateCapabilityInformation(
 			@Valid @PathVariable("capabilityId") Integer capabilityId,
@@ -63,12 +78,21 @@ public class CapabilityInformationController {
 		return convertCapabilityInformation(capabilityInformation);
 	}
 
+	
+	/** 
+	 * @param @PathVariable("capabilityId"
+	 */
 	@DeleteMapping(path = "{capabilityId}/{informationId}")
 	public void deleteCapabilityInformation(@Valid @PathVariable("capabilityId") Integer capabilityId,
 			@Valid @PathVariable("informationId") Integer informationId) {
 		capabilityInformationService.delete(capabilityId, informationId);
 	}
 
+	
+	/** 
+	 * @param getCapabilityInformationByCapability(
+	 * @return List<CapabilityInformationDto>
+	 */
 	@GetMapping(path = "all-capabilityinformation-by-capabilityid/{capabilityId}")
 	public List<CapabilityInformationDto> getCapabilityInformationByCapability(
 			@Valid @PathVariable("capabilityId") Integer capabilityId) {
@@ -80,6 +104,11 @@ public class CapabilityInformationController {
 		return capabilityInformationDto;
 	}
 	
+	
+	/** 
+	 * @param getCapabilityInformationByInformation(
+	 * @return List<CapabilityInformationDto>
+	 */
 	@GetMapping(path = "all-capabilityinformation-by-informationid/{informationId}")
 	public List<CapabilityInformationDto> getCapabilityInformationByInformation(
 			@Valid @PathVariable("informationId") Integer informationId) {
@@ -91,6 +120,11 @@ public class CapabilityInformationController {
 		return capabilityInformationDto;
 	}
 
+	
+	/** 
+	 * @param capabilityInformation
+	 * @return CapabilityInformationDto
+	 */
 	private CapabilityInformationDto convertCapabilityInformation(CapabilityInformation capabilityInformation) {
 		CapabilityDto capabilityDto = new CapabilityDto(capabilityInformation.getCapability().getCapabilityId(),
 				new EnvironmentDto(capabilityInformation.getCapability().getEnvironment().getEnvironmentId(),

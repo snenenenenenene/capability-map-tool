@@ -74,9 +74,81 @@ public class Capability {
 	@Column(name = "LEVEL")
 	private CapabilityLevel level;
 
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Environment
+ */
+
+/** 
+ * @return Status
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return CapabilityLevel
+ */
+
+/** 
+ * @return PaceOfChange
+ */
+
+/** 
+ * @return TargetOperatingModel
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return List<CapabilityItem>
+ */
+
+/** 
+ * @return List<CapabilityApplication>
+ */
+
+/** 
+ * @return List<CapabilityInformation>
+ */
 	@NotNull(message = "Pace of change must not be null.")
 	@CsvBindByName
 	@Column(name = "PACEOFCHANGE")
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return int
+ */
 	private PaceOfChange paceOfChange;
 
 	@NotNull(message = "Target operating model must not be null.")
@@ -161,49 +233,85 @@ public class Capability {
 		this.applicationFit = applicationFit;
 	}
 
+	
+	/** 
+	 * @param project
+	 */
 	public void addProject(Project project) {
 		projects.add(project);
 		project.getCapabilities().add(this);
 		return;
 	}
 
+	
+	/** 
+	 * @param project
+	 */
 	public void removeProject(Project project) {
 		projects.remove(project);
 		project.getCapabilities().remove(this);
 	}
 
+	
+	/** 
+	 * @return List<Project>
+	 */
 	public List<Project> getProjects() {
 		return projects;
 	}
 
+	
+	/** 
+	 * @param businessProcessItem
+	 */
 	public void addBusinessProcess(BusinessProcess businessProcessItem) {
 		businessProcess.add(businessProcessItem);
 		businessProcessItem.getCapabilities().add(this);
 		return;
 	}
 
+	
+	/** 
+	 * @param businessProcessItem
+	 */
 	public void removeBusinessProcess(BusinessProcess businessProcessItem) {
 		businessProcess.remove(businessProcessItem);
 		businessProcessItem.getCapabilities().remove(this);
 		return;
 	}
 
+	
+	/** 
+	 * @return Set<BusinessProcess>
+	 */
 	public Set<BusinessProcess> getBusinessProcess() {
 		return businessProcess;
 	}
 
+	
+	/** 
+	 * @param resource
+	 */
 	public void addResource(Resource resource) {
 		resources.add(resource);
 		resource.getCapabilities().add(this);
 		return;
 	}
 
+	
+	/** 
+	 * @param resource
+	 */
 	public void removeResource(Resource resource) {
 		resources.remove(resource);
 		resource.getCapabilities().remove(this);
 		return;
 	}
 
+	
+	/** 
+	 * @return List<Resource>
+	 */
 	public List<Resource> getResources() {
 		return resources;
 	}

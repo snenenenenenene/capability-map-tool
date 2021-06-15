@@ -43,6 +43,14 @@ public class UserServiceImpl implements UserService {
 		save(2, "super_admin", "super_admin", "super_admin");
 	}
 
+	
+	/** 
+	 * @param roleId
+	 * @param username
+	 * @param password
+	 * @param email
+	 * @return User
+	 */
 	@Override
 	public User save(Integer roleId, String username, String password, String email) {
 		if (username == null 
@@ -68,6 +76,11 @@ public class UserServiceImpl implements UserService {
     	return userDAL.save(new User(username, roleId, passwordEncoder.encode(password), email));
 	}
 
+	
+	/** 
+	 * @param id
+	 * @return User
+	 */
 	@Override
 	public User get(Integer id) {
 		if (id == null || id.equals(0)){
@@ -80,6 +93,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	
+	
+	/** 
+	 * @param email
+	 * @return User
+	 */
 	@Override
 	public User getByEmail(String email) {
 		if (email == null || email.isBlank() || email.isEmpty() || !existsByEmail(email)) {
@@ -91,11 +109,24 @@ public class UserServiceImpl implements UserService {
 		return userDAL.findByEmail(email);
 	}
 	
+	
+	/** 
+	 * @return List<User>
+	 */
 	@Override
 	public List<User> getAll() {
 		return userDAL.findAll();
 	}
 	
+	
+	/** 
+	 * @param userId
+	 * @param roleId
+	 * @param username
+	 * @param password
+	 * @param email
+	 * @return User
+	 */
 	@Override
 	public User update(Integer userId, Integer roleId, String username, String password, String email) {
 		if (userId == null ||
@@ -121,6 +152,10 @@ public class UserServiceImpl implements UserService {
 		return userDAL.save(new User(userId, roleId, username, passwordEncoder.encode(password), email));
 	}
 
+	
+	/** 
+	 * @param id
+	 */
 	@Override
 	public void delete(Integer id) {
 		if (id == null || id.equals(0)) {
@@ -133,27 +168,53 @@ public class UserServiceImpl implements UserService {
 		userDAL.deleteById(id);
 	}	
 
+	
+	/** 
+	 * @param email
+	 * @param password
+	 * @return Authentication
+	 * @throws AuthenticationException
+	 */
 	//TODO fix exception handling here or in controller?
 	@Override
 	public Authentication authenticate(String email, String password) throws AuthenticationException {
 		return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
 	}
 
+	
+	/** 
+	 * @param id
+	 * @return boolean
+	 */
 	@Override
 	public boolean existsById(Integer id) {
 		return userDAL.findById(id).isPresent();
 	}
 
+	
+	/** 
+	 * @param username
+	 * @return boolean
+	 */
 	@Override
 	public boolean existsByUsername(String username){
 		return !(userDAL.findByUsername(username) == null);
 	}
 
+	
+	/** 
+	 * @param email
+	 * @return boolean
+	 */
 	@Override
 	public boolean existsByEmail(String email){
 		return !(userDAL.findByEmail(email) == null);
 	}
 
+	
+	/** 
+	 * @return String
+	 */
 	@Override
 	public String generatePassword(){
 		String generatedPassword;

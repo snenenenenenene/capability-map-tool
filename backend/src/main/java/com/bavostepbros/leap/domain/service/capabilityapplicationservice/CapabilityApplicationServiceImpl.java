@@ -30,6 +30,19 @@ public class CapabilityApplicationServiceImpl implements CapabilityApplicationSe
 	@Autowired
 	private ITApplicationService itApplicationService;
 	
+	
+	/** 
+	 * @param capabilityId
+	 * @param applicationId
+	 * @param efficiencySupport
+	 * @param functionalCoverage
+	 * @param correctnessBusinessFit
+	 * @param futurePotential
+	 * @param completeness
+	 * @param correctnessInformationFit
+	 * @param availability
+	 * @return CapabilityApplication
+	 */
 	@Override
 	public CapabilityApplication save(Integer capabilityId, Integer applicationId, Integer efficiencySupport,
 			Integer functionalCoverage, Integer correctnessBusinessFit, Integer futurePotential, Integer completeness,
@@ -42,6 +55,12 @@ public class CapabilityApplicationServiceImpl implements CapabilityApplicationSe
 		return capabilityApplicationDAL.save(capabilityApplication);
 	}
 
+	
+	/** 
+	 * @param capabilityId
+	 * @param applicationId
+	 * @return CapabilityApplication
+	 */
 	@Override
 	public CapabilityApplication get(Integer capabilityId, Integer applicationId) {
 		Capability capability = capabilityService.get(capabilityId);
@@ -49,6 +68,19 @@ public class CapabilityApplicationServiceImpl implements CapabilityApplicationSe
 		return capabilityApplicationDAL.findByCapabilityAndApplication(capability, itApplication).get();
 	}
 
+	
+	/** 
+	 * @param capabilityId
+	 * @param applicationId
+	 * @param efficiencySupport
+	 * @param functionalCoverage
+	 * @param correctnessBusinessFit
+	 * @param futurePotential
+	 * @param completeness
+	 * @param correctnessInformationFit
+	 * @param availability
+	 * @return CapabilityApplication
+	 */
 	@Override
 	public CapabilityApplication update(Integer capabilityId, Integer applicationId, Integer efficiencySupport,
 			Integer functionalCoverage, Integer correctnessBusinessFit, Integer futurePotential, Integer completeness,
@@ -61,6 +93,11 @@ public class CapabilityApplicationServiceImpl implements CapabilityApplicationSe
 		return capabilityApplicationDAL.save(capabilityApplication);
 	}
 
+	
+	/** 
+	 * @param capabilityId
+	 * @param applicationId
+	 */
 	@Override
 	public void delete(Integer capabilityId, Integer applicationId) {
 		Capability capability = capabilityService.get(capabilityId);
@@ -69,12 +106,22 @@ public class CapabilityApplicationServiceImpl implements CapabilityApplicationSe
 		return;
 	}
 
+	
+	/** 
+	 * @param capabilityId
+	 * @return List<CapabilityApplication>
+	 */
 	@Override
 	public List<CapabilityApplication> getCapabilityApplicationsByCapability(Integer capabilityId) {
 		Capability capability = capabilityService.get(capabilityId);
 		return capabilityApplicationDAL.findByCapability(capability);
 	}
 
+	
+	/** 
+	 * @param applicationId
+	 * @return List<CapabilityApplication>
+	 */
 	@Override
 	public List<CapabilityApplication> getCapabilityApplicationsByApplication(Integer applicationId) {
 		ITApplication itApplication = itApplicationService.get(applicationId);

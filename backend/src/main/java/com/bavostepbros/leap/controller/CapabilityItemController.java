@@ -33,6 +33,11 @@ public class CapabilityItemController {
 	@Autowired
 	private CapabilityItemService capabilityItemService;
 
+	
+	/** 
+	 * @param @ModelAttribute("capabilityId"
+	 * @return CapabilityItemDto
+	 */
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public CapabilityItemDto addCapabilityItem(@ModelAttribute("capabilityId") Integer capabilityId,
 			@ModelAttribute("itemId") Integer itemId,
@@ -42,6 +47,11 @@ public class CapabilityItemController {
 		return convertCapabilityItem(capabilityItem);
 	}
 
+	
+	/** 
+	 * @param @PathVariable("capabilityId"
+	 * @return CapabilityItemDto
+	 */
 	@GetMapping(path = "{capabilityId}/{itemId}")
 	public CapabilityItemDto getCapabilityItem(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("itemId") Integer itemId) {
@@ -50,6 +60,11 @@ public class CapabilityItemController {
 		return convertCapabilityItem(capabilityItem);
 	}
 
+	
+	/** 
+	 * @param @PathVariable("capabilityId"
+	 * @return CapabilityItemDto
+	 */
 	@PutMapping(path = "{capabilityId}/{itemId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public CapabilityItemDto updateCapabilityItem(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("itemId") Integer itemId, @ModelAttribute("strategicImportance") String strategicImportance) {
@@ -58,12 +73,21 @@ public class CapabilityItemController {
 		return convertCapabilityItem(capabilityItem);
 	}
 
+	
+	/** 
+	 * @param @PathVariable("capabilityId"
+	 */
 	@DeleteMapping(path = "{capabilityId}/{itemId}")
 	public void deleteCapability(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("itemId") Integer itemId) {
 		capabilityItemService.delete(capabilityId, itemId);
 	}
 
+	
+	/** 
+	 * @param itemId
+	 * @return List<CapabilityItemDto>
+	 */
 	@GetMapping(path = "all-capabilityitems-by-strategyitemid/{itemId}")
 	public List<CapabilityItemDto> getAllCapabilityItemsByStrategyId(@PathVariable("itemId") Integer itemId) {
 
@@ -74,6 +98,11 @@ public class CapabilityItemController {
 		return capabilityItemsDto;
 	}
 
+	
+	/** 
+	 * @param getAllCapabilityItemsByCapabilityId(
+	 * @return List<CapabilityItemDto>
+	 */
 	@GetMapping(path = "all-capabilityitems-by-capabilityid/{capabilityId}")
 	public List<CapabilityItemDto> getAllCapabilityItemsByCapabilityId(
 			@PathVariable("capabilityId") Integer capabilityId) {
@@ -85,6 +114,11 @@ public class CapabilityItemController {
 		return capabilityItemsDto;
 	}
 
+	
+	/** 
+	 * @param capabilityItem
+	 * @return CapabilityItemDto
+	 */
 	private CapabilityItemDto convertCapabilityItem(CapabilityItem capabilityItem) {
 		CapabilityDto capabilityDto = new CapabilityDto(capabilityItem.getCapability().getCapabilityId(),
 				new EnvironmentDto(capabilityItem.getCapability().getEnvironment().getEnvironmentId(),

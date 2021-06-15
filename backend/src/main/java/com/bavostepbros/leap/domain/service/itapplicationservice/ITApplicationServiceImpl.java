@@ -36,6 +36,29 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 	@Autowired
 	private TechnologyService technologyService;
 
+	
+	/** 
+	 * @param statusId
+	 * @param name
+	 * @param version
+	 * @param purchaseDate
+	 * @param endOfLife
+	 * @param currentScalability
+	 * @param expectedScalability
+	 * @param currentPerformance
+	 * @param expectedPerformance
+	 * @param currentSecurityLevel
+	 * @param expectedSecurityLevel
+	 * @param currentStability
+	 * @param expectedStability
+	 * @param currencyType
+	 * @param costCurrency
+	 * @param currentValue
+	 * @param currentYearlyCost
+	 * @param acceptedYearlyCost
+	 * @param timeValue
+	 * @return ITApplication
+	 */
 	@Override
 	public ITApplication save(Integer statusId, String name, String version, LocalDate purchaseDate,
 			LocalDate endOfLife, Integer currentScalability, Integer expectedScalability, Integer currentPerformance,
@@ -52,10 +75,39 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 		return itApplicationDAL.save(itApplication);
 	}
 
+	
+	/** 
+	 * @param itapplicationID
+	 * @return ITApplication
+	 */
 	public ITApplication get(Integer itapplicationID) {
 		return itApplicationDAL.findById(itapplicationID).get();
 	}
 
+	
+	/** 
+	 * @param id
+	 * @param statusId
+	 * @param name
+	 * @param version
+	 * @param purchaseDate
+	 * @param endOfLife
+	 * @param currentScalability
+	 * @param expectedScalability
+	 * @param currentPerformance
+	 * @param expectedPerformance
+	 * @param currentSecurityLevel
+	 * @param expectedSecurityLevel
+	 * @param currentStability
+	 * @param expectedStability
+	 * @param currencyType
+	 * @param costCurrency
+	 * @param currentValue
+	 * @param currentYearlyCost
+	 * @param acceptedYearlyCost
+	 * @param timeValue
+	 * @return ITApplication
+	 */
 	@Override
 	public ITApplication update(Integer id, Integer statusId, String name, String version, LocalDate purchaseDate,
 			LocalDate endOfLife, Integer currentScalability, Integer expectedScalability, Integer currentPerformance,
@@ -72,19 +124,38 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 		return itApplicationDAL.save(itApplication);
 	}
 
+	
+	/** 
+	 * @param id
+	 */
 	@Override
 	public void delete(Integer id) {
 		itApplicationDAL.deleteById(id);
 	}
 
+	
+	/** 
+	 * @param id
+	 * @return boolean
+	 */
 	public boolean existsById(Integer id) {
 		return itApplicationDAL.existsById(id);
 	}
 
+	
+	/** 
+	 * @param name
+	 * @return boolean
+	 */
 	public boolean existsByName(String name) {
 		return !itApplicationDAL.findByName(name).isEmpty();
 	}
 
+	
+	/** 
+	 * @param name
+	 * @return ITApplication
+	 */
 	@Override
 	public ITApplication getItApplicationByName(String name) {
 		Optional<ITApplication> itApplication = itApplicationDAL.findByName(name);
@@ -92,11 +163,19 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 		return itApplication.get();
 	}
 
+	
+	/** 
+	 * @return List<ITApplication>
+	 */
 	@Override
 	public List<ITApplication> getAll() {
 		return itApplicationDAL.findAll();
 	}
 
+	
+	/** 
+	 * @return List<String>
+	 */
 	@Override
 	public List<String> getAllCurrencies() {
 		List<String> currencies = Currency.getAvailableCurrencies().stream()
@@ -105,11 +184,20 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 		return currencies;
 	}
 	
+	
+	/** 
+	 * @return List<String>
+	 */
 	@Override
 	public List<String> getAllTimeValues() {
 		return Arrays.stream(TimeValue.values()).map(TimeValue::name).collect(Collectors.toList());
 	}
 
+	
+	/** 
+	 * @param itApplicationId
+	 * @param technologyId
+	 */
 	@Override
 	public void addTechnology(Integer itApplicationId, Integer technologyId) {
 		ITApplication itApplication = get(itApplicationId);
@@ -118,6 +206,11 @@ public class ITApplicationServiceImpl implements ITApplicationService {
 		return;
 	}
 
+	
+	/** 
+	 * @param itApplicationId
+	 * @param technologyId
+	 */
 	@Override
 	public void deleteTechnology(Integer itApplicationId, Integer technologyId) {
 		ITApplication itApplication = get(itApplicationId);

@@ -415,6 +415,11 @@ public class StrategyItemServiceTest {
 		testStrategyItem(strategyItemSecond, fetchedStrategyItems.get(1));
 	}
 	
+	
+	/** 
+	 * @param expectedObject
+	 * @param actualObject
+	 */
 	private void testStrategyItem(StrategyItem expectedObject, StrategyItem actualObject) {
 		assertEquals(expectedObject.getItemId(), actualObject.getItemId());
 		assertEquals(expectedObject.getStrategy().getStrategyId(), actualObject.getStrategy().getStrategyId());

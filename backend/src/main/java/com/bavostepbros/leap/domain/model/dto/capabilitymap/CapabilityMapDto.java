@@ -9,6 +9,22 @@ import java.util.List;
 
 import com.bavostepbros.leap.domain.model.dto.StrategyDto;
 
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return List<CapabilityMapItemDto>
+ */
+
+/** 
+ * @return List<StrategyDto>
+ */
 @Getter
 @Setter
 @NoArgsConstructor

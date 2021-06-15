@@ -8,6 +8,11 @@ import javax.persistence.Converter;
 @Converter(autoApply = true)
 public class PaceOfChangeConverter implements AttributeConverter<PaceOfChange, Integer> {
 
+	
+	/** 
+	 * @param attribute
+	 * @return Integer
+	 */
 	@Override
 	public Integer convertToDatabaseColumn(PaceOfChange attribute) {
 		if (attribute == null) {
@@ -16,6 +21,11 @@ public class PaceOfChangeConverter implements AttributeConverter<PaceOfChange, I
 		return attribute.getPaceOfChangeValue();
 	}
 
+	
+	/** 
+	 * @param dbData
+	 * @return PaceOfChange
+	 */
 	@Override
 	public PaceOfChange convertToEntityAttribute(Integer dbData) {
 		if (dbData == null) {

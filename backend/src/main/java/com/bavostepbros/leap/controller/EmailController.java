@@ -59,11 +59,21 @@ public class EmailController {
         labels.put("sendAttachment", props);
     }
     
+    
+    /** 
+     * @return String
+     */
     @RequestMapping(method = RequestMethod.GET)
     public String showEmailsPage() {
         return "emails";
     }
 
+    
+    /** 
+     * @param model
+     * @param request
+     * @return String
+     */
     @RequestMapping(value = {"/send", "/sendTemplate", "/sendAttachment"}, method = RequestMethod.GET)
     public String createMail(Model model,
                              HttpServletRequest request) {
@@ -83,6 +93,12 @@ public class EmailController {
     }
 
 
+    
+    /** 
+     * @param model
+     * @param errors
+     * @return String
+     */
     @RequestMapping(value = "/send", method = RequestMethod.POST)
     public String createMail(Model model,
                              @ModelAttribute("mailObject") @Valid Email emailObject,

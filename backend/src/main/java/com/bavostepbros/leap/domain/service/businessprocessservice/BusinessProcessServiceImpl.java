@@ -29,12 +29,23 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
 	@Autowired
 	private CapabilityService capabilityService;
 
+	
+	/** 
+	 * @param businessProcessName
+	 * @param businessProcessDescription
+	 * @return BusinessProcess
+	 */
 	@Override
 	public BusinessProcess save(String businessProcessName, String businessProcessDescription) {
 		BusinessProcess businessProcess = new BusinessProcess(businessProcessName, businessProcessDescription);
 		return businessProcessDAL.save(businessProcess);
 	}
 
+	
+	/** 
+	 * @param businessProcessId
+	 * @return BusinessProcess
+	 */
 	@Override
 	public BusinessProcess get(Integer businessProcessId) {
 		Optional<BusinessProcess> businessProcess = businessProcessDAL.findById(businessProcessId);
@@ -42,6 +53,13 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
 		return businessProcess.get();
 	}
 
+	
+	/** 
+	 * @param businessProcessId
+	 * @param businessProcessName
+	 * @param businessProcessDescription
+	 * @return BusinessProcess
+	 */
 	@Override
 	public BusinessProcess update(Integer businessProcessId, String businessProcessName,
 			String businessProcessDescription) {
@@ -50,11 +68,20 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
 		return businessProcessDAL.save(businessProcess);
 	}
 
+	
+	/** 
+	 * @param businessProcessId
+	 */
 	@Override
 	public void delete(Integer businessProcessId) {
 		businessProcessDAL.deleteById(businessProcessId);
 	}
 
+	
+	/** 
+	 * @param businessProcessName
+	 * @return BusinessProcess
+	 */
 	@Override
 	public BusinessProcess getBusinessProcessByName(String businessProcessName) {
 		Optional<BusinessProcess> businessProcess = businessProcessDAL.findByBusinessProcessName(businessProcessName);
@@ -62,11 +89,20 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
 		return businessProcess.get();
 	}
 
+	
+	/** 
+	 * @return List<BusinessProcess>
+	 */
 	@Override
 	public List<BusinessProcess> getAll() {
 		return businessProcessDAL.findAll();
 	}
 
+	
+	/** 
+	 * @param businessProcessId
+	 * @param capabilityId
+	 */
 	@Override
 	public void addCapability(Integer businessProcessId, Integer capabilityId) {
 		BusinessProcess businessProcess = get(businessProcessId);
@@ -75,6 +111,11 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
 		return;
 	}
 
+	
+	/** 
+	 * @param businessProcessId
+	 * @param capabilityId
+	 */
 	@Override
 	public void deleteCapability(Integer businessProcessId, Integer capabilityId) {
 		BusinessProcess businessProcess = get(businessProcessId);
@@ -83,6 +124,11 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
 		return;
 	}
 
+	
+	/** 
+	 * @param businessProcessId
+	 * @return Set<Capability>
+	 */
 	@Override
 	public Set<Capability> getAllCapabilitiesByBusinessProcessId(Integer businessProcessId) {
 		BusinessProcess businessProcess = get(businessProcessId);

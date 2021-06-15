@@ -53,6 +53,12 @@ public class UserController {
 
 	private static Logger log = LoggerFactory.getLogger(UserController.class);
 
+	
+	/** 
+	 * @param username
+	 * @param @ModelAttribute("email"
+	 * @return UserDto
+	 */
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public UserDto addUser(@ModelAttribute("username") String username, @ModelAttribute("email") String email,
 			@ModelAttribute("roleId") Integer roleId) {
@@ -63,18 +69,32 @@ public class UserController {
 		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail(), user.getPassword());
 	}
 
+	
+	/** 
+	 * @param id
+	 * @return UserDto
+	 */
 	@GetMapping("/{id}")
 	public UserDto getUserById(@ModelAttribute("id") Integer id) {
 		User user = userService.get(id);
 		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail(), user.getPassword());
 	}
 
+	
+	/** 
+	 * @param email
+	 * @return UserDto
+	 */
 	@GetMapping("/email/{email}")
 	public UserDto getUserByEmail(@ModelAttribute("email") String email) {
 		User user = userService.getByEmail(email);
 		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail(), user.getPassword());
 	}
 
+	
+	/** 
+	 * @return List<UserDto>
+	 */
 	@GetMapping()
 	public List<UserDto> getAllUsers() {
 		List<User> users = userService.getAll();
@@ -83,6 +103,12 @@ public class UserController {
 		return usersDto;
 	}
 
+	
+	/** 
+	 * @param userId
+	 * @param @ModelAttribute("username"
+	 * @return UserDto
+	 */
 	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public UserDto updateUser(@ModelAttribute("userId") Integer userId, @ModelAttribute("username") String username,
 			@ModelAttribute("password") String password, @ModelAttribute("email") String email,
@@ -92,11 +118,20 @@ public class UserController {
 		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail(), user.getPassword());
 	}
 
+	
+	/** 
+	 * @param id
+	 */
 	@DeleteMapping(path = "/{id}")
 	public void deleteUser(@PathVariable("id") Integer id) {
 		userService.delete(id);
 	}
 
+	
+	/** 
+	 * @param @ModelAttribute("email"
+	 * @return ResponseEntity<String>
+	 */
 	// TODO remove password from response and userDTO
 	@PostMapping(value = "/authenticate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<String> authenticate(@ModelAttribute("email") String email,
@@ -110,6 +145,11 @@ public class UserController {
 		}
 	}
 
+	
+	/** 
+	 * @param changePassword(
+	 * @return String
+	 */
 	@PutMapping(path = "changePassword", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public String changePassword(
 			@ModelAttribute("password") String password, 
@@ -129,6 +169,11 @@ public class UserController {
 		}
 	}
 
+	
+	/** 
+	 * @param forgotPassword(
+	 * @return String
+	 */
 	@PutMapping(path = "/forgotPassword", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public String forgotPassword(
 		@ModelAttribute("email") String email) {

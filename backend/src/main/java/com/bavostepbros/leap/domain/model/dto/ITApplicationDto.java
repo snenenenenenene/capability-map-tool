@@ -10,6 +10,90 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return StatusDto
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return LocalDate
+ */
+
+/** 
+ * @return LocalDate
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return Double
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Double
+ */
+
+/** 
+ * @return Double
+ */
+
+/** 
+ * @return TimeValue
+ */
+
+/** 
+ * @return List<TechnologyDto>
+ */
 @Getter
 @Setter
 @NoArgsConstructor

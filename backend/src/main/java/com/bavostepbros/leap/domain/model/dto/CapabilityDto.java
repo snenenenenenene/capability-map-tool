@@ -9,6 +9,54 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return EnvironmentDto
+ */
+
+/** 
+ * @return StatusDto
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return CapabilityLevel
+ */
+
+/** 
+ * @return PaceOfChange
+ */
+
+/** 
+ * @return TargetOperatingModel
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
 @Getter
 @Setter
 @NoArgsConstructor

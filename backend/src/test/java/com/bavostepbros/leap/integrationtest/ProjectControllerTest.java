@@ -65,6 +65,11 @@ public class ProjectControllerTest extends ApiIntegrationTest {
 	
 	static final String PATH = "/api/project/";
 
+	
+	/** 
+	 * @param init(
+	 * @throws Exceptionpublic void init()
+	 */
 	@BeforeAll
 	public void authenticate() throws Exception { super.authenticate(); }
 
@@ -104,6 +109,10 @@ public class ProjectControllerTest extends ApiIntegrationTest {
 		assertNotNull(projectThirth);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_postProject_whenSaveProject() throws Exception {	
 		String projectName = "abc";
@@ -128,6 +137,10 @@ public class ProjectControllerTest extends ApiIntegrationTest {
 		testProject(project, projectDto);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getProject_whenGetProjectById() throws Exception {
 		Integer projectId = projectFirst.getProjectId();
@@ -143,6 +156,10 @@ public class ProjectControllerTest extends ApiIntegrationTest {
 		testProject(projectFirst, projectDto);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_putProject_whenUpdateProject() throws Exception {	
 		Integer projectId = projectFirst.getProjectId();
@@ -168,6 +185,10 @@ public class ProjectControllerTest extends ApiIntegrationTest {
 		testProject(project, projectDto);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_deleteProject_whenDeleteProject() throws Exception {
 		Integer projectId = projectFirst.getProjectId();
@@ -176,6 +197,10 @@ public class ProjectControllerTest extends ApiIntegrationTest {
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getProjects_whenGetAllProjects() throws Exception {
 		MvcResult mvcResult = mockMvc.perform(get(PATH))
@@ -191,6 +216,10 @@ public class ProjectControllerTest extends ApiIntegrationTest {
 		testProject(projectThirth, projectDtos.get(2));
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getProjects_whenGetAllProjectsByProgramId() throws Exception {
 		Integer programId = projectFirst.getProgram().getProgramId();
@@ -207,6 +236,10 @@ public class ProjectControllerTest extends ApiIntegrationTest {
 		testProject(projectSecond, projectDtos.get(1));
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getProject_whenGetProjectByName() throws Exception {
 		String projectName = projectSecond.getProjectName();
@@ -222,6 +255,11 @@ public class ProjectControllerTest extends ApiIntegrationTest {
 		testProject(projectSecond, projectDto);
 	}
 	
+	
+	/** 
+	 * @param expectedObject
+	 * @param actualObject
+	 */
 	@Test
 	private void testProject(Project expectedObject, ProjectDto actualObject) {
 		assertEquals(expectedObject.getStatus().getStatusId(), actualObject.getStatus().getStatusId());
