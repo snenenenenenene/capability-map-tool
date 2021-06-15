@@ -115,7 +115,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 			Integer informationQuality,
 			Integer applicationFit) {
 		// TODO duplicate name in same environment check
-			return update(capabilityId, new Capability(
+			return save(new Capability(
 					capabilityId,
 					environmentService.get(environmentId),
 					statusService.get(statusId),
@@ -128,12 +128,6 @@ public class CapabilityServiceImpl implements CapabilityService {
 					informationQuality,
 					applicationFit
 			));
-	}
-
-	@Override
-	public Capability update(@NotNull @Min(1) Integer capabilityId, Capability capability) {
-		updateLevel(capability);
-		return capabilityDAL.save(capability);
 	}
 
 	// TODO try catch for out of bounds exception

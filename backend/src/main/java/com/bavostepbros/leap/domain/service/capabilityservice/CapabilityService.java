@@ -28,8 +28,6 @@ public interface CapabilityService {
 			String capabilityName, String capabilityDescription, String paceOfChange, String targetOperatingModel,
 			Integer resourceQuality, Integer informationQuality, Integer applicationFit);
 
-	Capability update(Integer capabilityId, Capability capability);
-
 	void updateLevel(Capability capability);
 
 	void delete(Integer id);
