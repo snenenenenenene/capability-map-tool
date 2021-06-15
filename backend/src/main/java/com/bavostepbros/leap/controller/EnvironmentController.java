@@ -11,9 +11,12 @@ import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.CapabilityApplication;
 import com.bavostepbros.leap.domain.model.CapabilityInformation;
 import com.bavostepbros.leap.domain.model.CapabilityItem;
+
 import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapDto;
 import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapItemDto;
 
+import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -47,6 +50,7 @@ import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentServic
 
 import lombok.RequiredArgsConstructor;
 
+
 /**
  *
  * @author Bavo Van Meel
@@ -58,7 +62,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/environment/")
 public class EnvironmentController {
 
-	//TODO fix constructor injection
 	@Autowired
 	private EnvironmentService envService;
 
@@ -111,7 +114,6 @@ public class EnvironmentController {
 	}
 
 
-	// TODO fix exception catch
 	@GetMapping(path = "capabilitymap/{environmentId}")
 	public CapabilityMapDto getCapabilityMap(@PathVariable("environmentId") Integer environmentId) {
 		try {
