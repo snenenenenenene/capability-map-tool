@@ -61,11 +61,6 @@ public class StrategyItemControllerTest extends ApiIntegrationTest {
 	@Autowired
 	private StrategyItemService strategyItemService;
 
-	@Autowired
-	private RequestFactory requestFactory;
-
-	private String jwt;
-
 	private Status statusFirst;
 	private Status statusSecond;
 	private Environment environmentFirst;
@@ -135,14 +130,14 @@ public class StrategyItemControllerTest extends ApiIntegrationTest {
 	@Test
 	public void should_postStrategyItem_whenSaveStrategyItem() throws Exception {
 		Integer strategyId = strategyFirst.getStrategyId();
-		String strategyItemName = "StrategyItem post test";
-		String strategyItemDescription = "StrategyItem post test description";
+		String strategyItemName = "StrategyItem post test 1";
+		String description = "StrategyItem post test description 1";
 
-		MvcResult mvcResult = mockMvc.perform(requestFactory.post(PATH, jwt)
+		MvcResult mvcResult = mockMvc.perform(post(PATH)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("strategyId", strategyId.toString())
 				.param("strategyItemName", strategyItemName)
-				.param("strategyItemDescription", strategyItemDescription)
+				.param("description", description)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
@@ -160,7 +155,7 @@ public class StrategyItemControllerTest extends ApiIntegrationTest {
 	public void should_getStrategyItem_whenGetStrategyItemById() throws Exception {
 		Integer strategyItemId = strategyItemFirst.getItemId();
 
-		MvcResult mvcResult = mockMvc.perform(requestFactory.get(PATH + strategyItemId, jwt))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + strategyItemId))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
@@ -178,7 +173,7 @@ public class StrategyItemControllerTest extends ApiIntegrationTest {
 		String strategyItemName = "StrategyItem update test";
 		String strategyItemDescription = strategyItemFirst.getDescription();
 
-		MvcResult mvcResult = mockMvc.perform(requestFactory.put(PATH + strategyItemId, jwt)
+		MvcResult mvcResult = mockMvc.perform(put(PATH + strategyItemId)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("strategyId", strategyId.toString())
 				.param("strategyItemName", strategyItemName)
@@ -200,13 +195,13 @@ public class StrategyItemControllerTest extends ApiIntegrationTest {
 	public void should_deleteStrategyItem_whenDeleteStrategyItem() throws Exception {
 		Integer itemId = strategyItemFirst.getItemId();
 
-		mockMvc.perform(requestFactory.delete(PATH + itemId, jwt))
+		mockMvc.perform(delete(PATH + itemId))
 			.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
 	@Test
 	public void should_getStrategyItems_whenGetAllStrategyItems() throws Exception {
-		MvcResult mvcResult = mockMvc.perform(requestFactory.get(PATH, jwt))
+		MvcResult mvcResult = mockMvc.perform(get(PATH))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
@@ -224,7 +219,7 @@ public class StrategyItemControllerTest extends ApiIntegrationTest {
 	public void should_getBoolean_whenStrategyItemIdExists() throws Exception {
 		Integer itemId = strategyItemFirst.getItemId();
 		
-		mockMvc.perform(requestFactory.get(PATH + "exists-by-id/" + itemId, jwt))
+		mockMvc.perform(get(PATH + "exists-by-id/" + itemId))
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(MockMvcResultMatchers.content().string("true"));	
 	}
@@ -233,7 +228,7 @@ public class StrategyItemControllerTest extends ApiIntegrationTest {
 	public void should_getBoolean_whenStrategyItemNameExists() throws Exception {
 		String strategyItemName = strategyItemFirst.getStrategyItemName();
 		
-		mockMvc.perform(requestFactory.get(PATH + "exists-by-strategyitemname/" + strategyItemName, jwt))
+		mockMvc.perform(get(PATH + "exists-by-strategyitemname/" + strategyItemName))
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(MockMvcResultMatchers.content().string("true"));	
 	}
@@ -242,7 +237,7 @@ public class StrategyItemControllerTest extends ApiIntegrationTest {
 	public void should_getStrategyItem_whenGetStrategyItemByStrategyitemname() throws Exception {
 		String strategyItemName = strategyItemFirst.getStrategyItemName();
 		
-		MvcResult mvcResult = mockMvc.perform(requestFactory.get(PATH + "strategyitemname/" + strategyItemName, jwt))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + "strategyitemname/" + strategyItemName))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
@@ -257,7 +252,7 @@ public class StrategyItemControllerTest extends ApiIntegrationTest {
 	public void should_getStrategyItems_whenGetStrategyItemsByStrategyid() throws Exception {
 		Integer strategyId = strategyItemSecond.getStrategy().getStrategyId();
 		
-		MvcResult mvcResult = mockMvc.perform(requestFactory.get(PATH + "all-strategyitems-by-strategyid/" + strategyId, jwt))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + "all-strategyitems-by-strategyid/" + strategyId))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		

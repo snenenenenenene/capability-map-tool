@@ -18,4 +18,6 @@ public interface CapabilityApplicationService {
 	void delete(Integer capabilityId, Integer applicationId);
 	
 	List<CapabilityApplication> getCapabilityApplicationsByCapability(Integer capabilityId);
+	
+	List<CapabilityApplication> getCapabilityApplicationsByApplication(Integer applicationId);
 }

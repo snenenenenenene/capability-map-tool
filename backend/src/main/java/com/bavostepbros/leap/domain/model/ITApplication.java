@@ -18,7 +18,6 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.bavostepbros.leap.domain.model.timevalue.TimeValue;
@@ -52,7 +51,7 @@ public class ITApplication {
     @Column(name = "VERSION")
     private String version;
     
-    @NotNull(message = "Purchase date is required.")
+    @NotNull(message = "Purchase date must not be null.")
     @Column(name = "PURCHASEDATE")
     private LocalDate purchaseDate;
     
@@ -202,23 +201,5 @@ public class ITApplication {
 	public void removeTechnology(Technology technology) {
 		technologies.remove(technology);
 	}
-	
-	public boolean hasTechnology(Technology technology) {
-		return technologies.contains(technology);
-	}
 
-	@Override
-	public String toString() {
-		return "ITApplication [itApplicationId=" + itApplicationId + ", status=" + status + ", name=" + name
-				+ ", version=" + version + ", purchaseDate=" + purchaseDate + ", endOfLife=" + endOfLife
-				+ ", currentScalability=" + currentScalability + ", expectedScalability=" + expectedScalability
-				+ ", currentPerformance=" + currentPerformance + ", expectedPerformance=" + expectedPerformance
-				+ ", currentSecurityLevel=" + currentSecurityLevel + ", expectedSecurityLevel=" + expectedSecurityLevel
-				+ ", currentStability=" + currentStability + ", expectedStability=" + expectedStability
-				+ ", currencyType=" + currencyType + ", costCurrency=" + costCurrency + ", currentValue=" + currentValue
-				+ ", currentYearlyCost=" + currentYearlyCost + ", acceptedYearlyCost=" + acceptedYearlyCost
-				+ ", timeValue=" + timeValue + "]";
-	}
-
-    
 }

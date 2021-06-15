@@ -15,4 +15,7 @@ public interface CapabilityInformationDAL extends JpaRepository<CapabilityInform
 	void deleteByCapabilityAndInformation(Capability capability, Information information);
 	
 	List<CapabilityInformation> findByCapability(Capability capability);
+	
+	List<CapabilityInformation> findByInformation(Information information);
+	
 }

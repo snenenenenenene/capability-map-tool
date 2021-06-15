@@ -5,6 +5,7 @@ import User from "./Components/User/User";
 import AddCapability from "./Components/Capability/AddCapability";
 import "./App.css";
 import Signup from "./Components/Authentication/Login";
+import ForgotPassword from "./Components/Authentication/ForgotPassword";
 import LeapImg from "./img/LEAP logo.png";
 import { Switch, Route, Link, Redirect, withRouter } from "react-router-dom";
 import AddResource from "./Components/Resource/AddResource";
@@ -18,8 +19,6 @@ import AddProject from "./Components/Project/AddProject";
 import EditCapability from "./Components/Capability/EditCapability";
 import Capability from "./Components/Capability/Capability";
 import Project from "./Components/Project/Project";
-import NotFound from "./Components/Error/NotFound";
-import GeneralError from "./Components/Error/Error";
 import Status from "./Components/Status/Status";
 import NotFoundPage from "./Components/Error/NotFoundPage";
 import BusinessProcess from "./Components/BusinessProcess/BusinessProcess";
@@ -39,11 +38,9 @@ import Program from "./Components/Program/Program";
 import toast, { Toaster } from "react-hot-toast";
 import AddUser from "./Components/User/AddUser";
 import EditUser from "./Components/User/EditUser";
-import ConfigurePassword from "./Components/Authentication/ConfigurePassword";
 import CapabilityMap from "./Components/Environment/CapabilityMap";
 import EditEnvironment from "./Components/Environment/EditEnvironment";
 import Settings from "./Components/User/Settings";
-import axios from "axios";
 import API from "./Services/API";
 
 class App extends Component {
@@ -86,6 +83,13 @@ class App extends Component {
           this.setState({ user: JSON.parse(localStorage.getItem("user")) });
         })
         .catch((error) => {
+          if (error.response.status === 403) {
+            localStorage.removeItem("user");
+            localStorage.removeItem("environment");
+            this.props.history.push("/");
+            window.location.reload();
+            return;
+          }
           toast.error("Could not Load User");
         });
     }
@@ -453,11 +457,6 @@ class App extends Component {
 
               {/* USERS */}
               <Route exact path='/settings' component={Settings} />
-              <Route
-                exact
-                path='/configurePassword'
-                component={ConfigurePassword}
-              />
               {this.adminRoutes()}
               {/* ERRORS */}
               <Route path='/*' component={NotFoundPage} />
@@ -482,7 +481,8 @@ class App extends Component {
       return (
         <Switch>
           <Route exact path='/login' component={Signup} />
-          <Route exact path='/'>
+          <Route exact path='/forgotpassword' component={ForgotPassword} />
+          <Route path='/'>
             <Redirect to='/login' />
           </Route>
         </Switch>

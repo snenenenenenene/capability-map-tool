@@ -75,4 +75,10 @@ public class CapabilityApplicationServiceImpl implements CapabilityApplicationSe
 		return capabilityApplicationDAL.findByCapability(capability);
 	}
 
+	@Override
+	public List<CapabilityApplication> getCapabilityApplicationsByApplication(Integer applicationId) {
+		ITApplication itApplication = itApplicationService.get(applicationId);
+		return capabilityApplicationDAL.findByApplication(itApplication);
+	}
+
 }

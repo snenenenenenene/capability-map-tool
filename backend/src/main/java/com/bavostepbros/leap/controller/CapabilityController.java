@@ -1,6 +1,7 @@
 package com.bavostepbros.leap.controller;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.bavostepbros.leap.domain.model.dto.EnvironmentDto;
@@ -44,9 +45,10 @@ public class CapabilityController {
 	@Autowired
 	private CapabilityService capabilityService;
 
-	// Add catch for status/environment not found
+	// TODO Add catch for status/environment not found
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public CapabilityDto addCapability(@ModelAttribute("environmentId") Integer environmentId,
+	public CapabilityDto addCapability(
+			@ModelAttribute("environmentId") Integer environmentId,
 			@ModelAttribute("statusId") Integer statusId,
 			@ModelAttribute("parentCapabilityId") Integer parentCapabilityId,
 			@ModelAttribute("capabilityName") String capabilityName,
@@ -111,10 +113,9 @@ public class CapabilityController {
 
 	@GetMapping
 	public List<CapabilityDto> getAllCapabilities() {
-		List<Capability> capabilities = capabilityService.getAll();
-		List<CapabilityDto> capabilitiesDto = capabilities.stream().map(capability -> convertCapability(capability))
+		return capabilityService.getAll().stream()
+				.map(capability -> convertCapability(capability))
 				.collect(Collectors.toList());
-		return capabilitiesDto;
 	}
 
 	@GetMapping(path = "exists-by-id/{capabilityid}")
@@ -128,12 +129,15 @@ public class CapabilityController {
 	}
 
 	@PutMapping(path = "{capabilityId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public CapabilityDto updateCapability(@PathVariable("capabilityId") Integer capabilityId,
-			@ModelAttribute("environmentId") Integer environmentId, @ModelAttribute("statusId") Integer statusId,
+	public CapabilityDto updateCapability(
+			@PathVariable("capabilityId") Integer capabilityId,
+			@ModelAttribute("environmentId") Integer environmentId,
+			@ModelAttribute("statusId") Integer statusId,
 			@ModelAttribute("parentCapabilityId") Integer parentCapabilityId,
 			@ModelAttribute("capabilityName") String capabilityName,
 			@ModelAttribute("capabilityDescription") String capabilityDescription,
-			@ModelAttribute("level") String level, @ModelAttribute("paceOfChange") String paceOfChange,
+			@ModelAttribute("level") String level,
+		  	@ModelAttribute("paceOfChange") String paceOfChange,
 			@ModelAttribute("targetOperatingModel") String targetOperatingModel,
 			@ModelAttribute("resourceQuality") Integer resourceQuality,
 			@ModelAttribute("informationQuality") Integer informationQuality,
@@ -186,7 +190,7 @@ public class CapabilityController {
 
 	@GetMapping(path = "get-businessprocess/{capabilityId}")
 	public List<BusinessProcessDto> getBusinessProcess(@PathVariable("capabilityId") Integer capabilityId) {
-		List<BusinessProcess> businessProcess = capabilityService.getAllBusinessProcessByCapabilityId(capabilityId);
+		Set<BusinessProcess> businessProcess = capabilityService.getAllBusinessProcessByCapabilityId(capabilityId);
 		List<BusinessProcessDto> businessProcessDto = businessProcess.stream().map(bp -> convertBusinessProcess(bp))
 				.collect(Collectors.toList());
 		return businessProcessDto;

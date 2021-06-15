@@ -16,9 +16,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.web.servlet.MockMvc;
 
 import com.bavostepbros.leap.domain.customexceptions.CapabilityException;
 import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
@@ -44,8 +46,13 @@ import com.bavostepbros.leap.persistence.StatusDAL;
  * @author Bavo Van Meel
  *
  */
+@AutoConfigureMockMvc
 @SpringBootTest
 public class CapabilityServiceTest {
+
+	@SuppressWarnings(value = "unused")
+	@Autowired
+	private MockMvc mockMvc;
 
 	@Autowired
 	private CapabilityService capabilityService;
@@ -74,7 +81,8 @@ public class CapabilityServiceTest {
 	@SpyBean
 	private EnvironmentService spyEnvironmentService;
 
-	private Capability capability;
+	private Capability capabilityFirst;
+	private Capability capabilitySecond;
 	private Status status;
 	private Environment environment;
 	private List<Capability> capabilities;
@@ -89,16 +97,18 @@ public class CapabilityServiceTest {
 	public void init() {
 		status = new Status(1, LocalDate.of(2021, 5, 9));
 		environment = new Environment(1, "Environment test");
-		capability = new Capability(1, environment, status, 0, "Capability 1", "Description 1",
+		capabilityFirst = new Capability(1, environment, status, 0, "Capability 1", "Description 1",
 				PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 9, 8);
-		capabilityService.updateLevel(capability);
+		capabilitySecond = new Capability(1, environment, status, capabilityFirst.getCapabilityId(), "Capability 1",
+				"Description 1", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 9, 8);
+		capabilityService.updateLevel(capabilityFirst);
 		capabilities = List.of(
 				new Capability(1, environment, status, 1, "Capability 1", "Description 2", PaceOfChange.INNOVATIVE,
 						TargetOperatingModel.DIVERSIFICATION, 10, 9, 8),
 				new Capability(2, environment, status, 1, "Capability 2", "Description 3", PaceOfChange.STANDARD,
 						TargetOperatingModel.REPLICATION, 10, 9, 8));
 		optionalStatus = Optional.of(status);
-		optionalCapability = Optional.of(capability);
+		optionalCapability = Optional.of(capabilityFirst);
 		optionalEnvironment = Optional.of(environment);
 	}
 
@@ -112,23 +122,23 @@ public class CapabilityServiceTest {
 		assertNotNull(capabilityDAL);
 		assertNotNull(status);
 		assertNotNull(environment);
-		assertNotNull(capability);
+		assertNotNull(capabilityFirst);
 		assertNotNull(capabilities);
 		assertNotNull(optionalStatus);
 		assertNotNull(optionalEnvironment);
 		assertNotNull(optionalCapability);
 	}
 
-	@Test
+	@Test //1
 	void should_throwInvalidInputException_whenSavedInputIsInvalid() {
-		Integer parentCapabilityId = capability.getParentCapabilityId();
+		Integer parentCapabilityId = capabilityFirst.getParentCapabilityId();
 		String capabilityName = "";
-		String capabilityDescription = capability.getCapabilityDescription();
-		String paceOfChange = capability.getPaceOfChange().toString();
-		String targetOperatingModel = capability.getTargetOperatingModel().toString();
-		Integer resourceQuality = capability.getResourceQuality();
-		Integer informationQuality = capability.getInformationQuality();
-		Integer applicationFit = capability.getApplicationFit();
+		String capabilityDescription = capabilityFirst.getCapabilityDescription();
+		String paceOfChange = capabilityFirst.getPaceOfChange().toString();
+		String targetOperatingModel = capabilityFirst.getTargetOperatingModel().toString();
+		Integer resourceQuality = capabilityFirst.getResourceQuality();
+		Integer informationQuality = capabilityFirst.getInformationQuality();
+		Integer applicationFit = capabilityFirst.getApplicationFit();
 		Integer statusId = status.getStatusId();
 		Integer environmentId = environment.getEnvironmentId();
 		String expected = "Invalid input.";
@@ -141,16 +151,16 @@ public class CapabilityServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //2
 	void should_throwForeignKeyException_whenSavedEnvironmentIdIsInvalid() {
-		Integer parentCapabilityId = capability.getParentCapabilityId();
-		String capabilityName = capability.getCapabilityName();
-		String capabilityDescription = capability.getCapabilityDescription();
-		String paceOfChange = capability.getPaceOfChange().toString();
-		String targetOperatingModel = capability.getTargetOperatingModel().toString();
-		Integer resourceQuality = capability.getResourceQuality();
-		Integer informationQuality = capability.getInformationQuality();
-		Integer applicationFit = capability.getApplicationFit();
+		Integer parentCapabilityId = capabilityFirst.getParentCapabilityId();
+		String capabilityName = capabilityFirst.getCapabilityName();
+		String capabilityDescription = capabilityFirst.getCapabilityDescription();
+		String paceOfChange = capabilityFirst.getPaceOfChange().toString();
+		String targetOperatingModel = capabilityFirst.getTargetOperatingModel().toString();
+		Integer resourceQuality = capabilityFirst.getResourceQuality();
+		Integer informationQuality = capabilityFirst.getInformationQuality();
+		Integer applicationFit = capabilityFirst.getApplicationFit();
 		Integer statusId = status.getStatusId();
 		Integer environmentId = 0;
 		String expected = "Environment ID is invalid.";
@@ -163,16 +173,16 @@ public class CapabilityServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //3
 	void should_throwForeignKeyException_whenSavedStatusIdIsInvalid() {
-		Integer parentCapabilityId = capability.getParentCapabilityId();
-		String capabilityName = capability.getCapabilityName();
-		String capabilityDescription = capability.getCapabilityDescription();
-		String paceOfChange = capability.getPaceOfChange().toString();
-		String targetOperatingModel = capability.getTargetOperatingModel().toString();
-		Integer resourceQuality = capability.getResourceQuality();
-		Integer informationQuality = capability.getInformationQuality();
-		Integer applicationFit = capability.getApplicationFit();
+		Integer parentCapabilityId = capabilityFirst.getParentCapabilityId();
+		String capabilityName = capabilityFirst.getCapabilityName();
+		String capabilityDescription = capabilityFirst.getCapabilityDescription();
+		String paceOfChange = capabilityFirst.getPaceOfChange().toString();
+		String targetOperatingModel = capabilityFirst.getTargetOperatingModel().toString();
+		Integer resourceQuality = capabilityFirst.getResourceQuality();
+		Integer informationQuality = capabilityFirst.getInformationQuality();
+		Integer applicationFit = capabilityFirst.getApplicationFit();
 		Integer statusId = 0;
 		Integer environmentId = environment.getEnvironmentId();
 		String expected = "Status ID is invalid.";
@@ -185,16 +195,16 @@ public class CapabilityServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //4
 	void should_throwDuplicateValueException_whenSavedCapabilityNameExists() {
-		Integer parentCapabilityId = capability.getParentCapabilityId();
-		String capabilityName = capability.getCapabilityName();
-		String capabilityDescription = capability.getCapabilityDescription();
-		String paceOfChange = capability.getPaceOfChange().toString();
-		String targetOperatingModel = capability.getTargetOperatingModel().toString();
-		Integer resourceQuality = capability.getResourceQuality();
-		Integer informationQuality = capability.getInformationQuality();
-		Integer applicationFit = capability.getApplicationFit();
+		Integer parentCapabilityId = capabilityFirst.getParentCapabilityId();
+		String capabilityName = capabilityFirst.getCapabilityName();
+		String capabilityDescription = capabilityFirst.getCapabilityDescription();
+		String paceOfChange = capabilityFirst.getPaceOfChange().toString();
+		String targetOperatingModel = capabilityFirst.getTargetOperatingModel().toString();
+		Integer resourceQuality = capabilityFirst.getResourceQuality();
+		Integer informationQuality = capabilityFirst.getInformationQuality();
+		Integer applicationFit = capabilityFirst.getApplicationFit();
 		Integer statusId = status.getStatusId();
 		Integer environmentId = environment.getEnvironmentId();
 		String expected = "Capability name already exists.";
@@ -209,16 +219,16 @@ public class CapabilityServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //5
 	void should_throwForeignKeyException_whenSavedStatusDoesNotExists() {
-		Integer parentCapabilityId = capability.getParentCapabilityId();
-		String capabilityName = capability.getCapabilityName();
-		String capabilityDescription = capability.getCapabilityDescription();
-		String paceOfChange = capability.getPaceOfChange().toString();
-		String targetOperatingModel = capability.getTargetOperatingModel().toString();
-		Integer resourceQuality = capability.getResourceQuality();
-		Integer informationQuality = capability.getInformationQuality();
-		Integer applicationFit = capability.getApplicationFit();
+		Integer parentCapabilityId = capabilityFirst.getParentCapabilityId();
+		String capabilityName = capabilityFirst.getCapabilityName();
+		String capabilityDescription = capabilityFirst.getCapabilityDescription();
+		String paceOfChange = capabilityFirst.getPaceOfChange().toString();
+		String targetOperatingModel = capabilityFirst.getTargetOperatingModel().toString();
+		Integer resourceQuality = capabilityFirst.getResourceQuality();
+		Integer informationQuality = capabilityFirst.getInformationQuality();
+		Integer applicationFit = capabilityFirst.getApplicationFit();
 		Integer statusId = status.getStatusId();
 		Integer environmentId = environment.getEnvironmentId();
 		String expected = "Status ID does not exists.";
@@ -234,16 +244,16 @@ public class CapabilityServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //6
 	void should_throwForeignKeyException_whenSavedEnvironmentDoesNotExists() {
-		Integer parentCapabilityId = capability.getParentCapabilityId();
-		String capabilityName = capability.getCapabilityName();
-		String capabilityDescription = capability.getCapabilityDescription();
-		String paceOfChange = capability.getPaceOfChange().toString();
-		String targetOperatingModel = capability.getTargetOperatingModel().toString();
-		Integer resourceQuality = capability.getResourceQuality();
-		Integer informationQuality = capability.getInformationQuality();
-		Integer applicationFit = capability.getApplicationFit();
+		Integer parentCapabilityId = capabilityFirst.getParentCapabilityId();
+		String capabilityName = capabilityFirst.getCapabilityName();
+		String capabilityDescription = capabilityFirst.getCapabilityDescription();
+		String paceOfChange = capabilityFirst.getPaceOfChange().toString();
+		String targetOperatingModel = capabilityFirst.getTargetOperatingModel().toString();
+		Integer resourceQuality = capabilityFirst.getResourceQuality();
+		Integer informationQuality = capabilityFirst.getInformationQuality();
+		Integer applicationFit = capabilityFirst.getApplicationFit();
 		Integer statusId = status.getStatusId();
 		Integer environmentId = environment.getEnvironmentId();
 		String expected = "Environment ID does not exists.";
@@ -286,16 +296,16 @@ public class CapabilityServiceTest {
 //		assertEquals(expected, exception.getMessage());
 //	}
 
-	@Test
+	@Test //7
 	void should_saveCapability_whenCapabilityIsSaved() {
-		Integer parentCapabilityId = capability.getParentCapabilityId();
-		String capabilityName = capability.getCapabilityName();
-		String capabilityDescription = capability.getCapabilityDescription();
-		String paceOfChange = capability.getPaceOfChange().toString();
-		String targetOperatingModel = capability.getTargetOperatingModel().toString();
-		Integer resourceQuality = capability.getResourceQuality();
-		Integer informationQuality = capability.getInformationQuality();
-		Integer applicationFit = capability.getApplicationFit();
+		Integer parentCapabilityId = capabilityFirst.getParentCapabilityId();
+		String capabilityName = capabilityFirst.getCapabilityName();
+		String capabilityDescription = capabilityFirst.getCapabilityDescription();
+		String paceOfChange = capabilityFirst.getPaceOfChange().toString();
+		String targetOperatingModel = capabilityFirst.getTargetOperatingModel().toString();
+		Integer resourceQuality = capabilityFirst.getResourceQuality();
+		Integer informationQuality = capabilityFirst.getInformationQuality();
+		Integer applicationFit = capabilityFirst.getApplicationFit();
 		Integer statusId = status.getStatusId();
 		Integer environmentId = environment.getEnvironmentId();
 
@@ -305,7 +315,7 @@ public class CapabilityServiceTest {
 
 		BDDMockito.given(statusDAL.findById(BDDMockito.anyInt())).willReturn(optionalStatus);
 		BDDMockito.given(environmentDAL.findById(BDDMockito.anyInt())).willReturn(optionalEnvironment);
-		BDDMockito.given(capabilityDAL.save(BDDMockito.any(Capability.class))).willReturn(capability);
+		BDDMockito.given(capabilityDAL.save(BDDMockito.any(Capability.class))).willReturn(capabilityFirst);
 
 		Capability result = capabilityService.save(environmentId, statusId, parentCapabilityId, capabilityName,
 				capabilityDescription, paceOfChange, targetOperatingModel, resourceQuality, informationQuality,
@@ -314,22 +324,23 @@ public class CapabilityServiceTest {
 
 		assertNotNull(result);
 		assertTrue(result instanceof Capability);
-		assertEquals(capability.getCapabilityId(), result.getCapabilityId());
-		assertEquals(capability.getStatus().getStatusId(), result.getStatus().getStatusId());
-		assertEquals(capability.getStatus().getValidityPeriod(), result.getStatus().getValidityPeriod());
-		assertEquals(capability.getEnvironment().getEnvironmentId(), result.getEnvironment().getEnvironmentId());
-		assertEquals(capability.getEnvironment().getEnvironmentName(), result.getEnvironment().getEnvironmentName());
-		assertEquals(capability.getParentCapabilityId(), result.getParentCapabilityId());
-		assertEquals(capability.getCapabilityName(), result.getCapabilityName());
-		assertEquals(capability.getLevel(), result.getLevel());
-		assertEquals(capability.getPaceOfChange(), result.getPaceOfChange());
-		assertEquals(capability.getTargetOperatingModel(), result.getTargetOperatingModel());
-		assertEquals(capability.getResourceQuality(), result.getResourceQuality());
-		assertEquals(capability.getInformationQuality(), result.getInformationQuality());
-		assertEquals(capability.getApplicationFit(), result.getApplicationFit());
+		assertEquals(capabilityFirst.getCapabilityId(), result.getCapabilityId());
+		assertEquals(capabilityFirst.getStatus().getStatusId(), result.getStatus().getStatusId());
+		assertEquals(capabilityFirst.getStatus().getValidityPeriod(), result.getStatus().getValidityPeriod());
+		assertEquals(capabilityFirst.getEnvironment().getEnvironmentId(), result.getEnvironment().getEnvironmentId());
+		assertEquals(capabilityFirst.getEnvironment().getEnvironmentName(),
+				result.getEnvironment().getEnvironmentName());
+		assertEquals(capabilityFirst.getParentCapabilityId(), result.getParentCapabilityId());
+		assertEquals(capabilityFirst.getCapabilityName(), result.getCapabilityName());
+		assertEquals(capabilityFirst.getLevel(), result.getLevel());
+		assertEquals(capabilityFirst.getPaceOfChange(), result.getPaceOfChange());
+		assertEquals(capabilityFirst.getTargetOperatingModel(), result.getTargetOperatingModel());
+		assertEquals(capabilityFirst.getResourceQuality(), result.getResourceQuality());
+		assertEquals(capabilityFirst.getInformationQuality(), result.getInformationQuality());
+		assertEquals(capabilityFirst.getApplicationFit(), result.getApplicationFit());
 	}
 
-	@Test
+	@Test //8
 	void should_throwInvalidInputException_whenGetCapabilityIdNotValid() {
 		Integer capabilityId = 0;
 		String expected = "Capability ID is not valid.";
@@ -339,9 +350,9 @@ public class CapabilityServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //9
 	void should_throwIndexDoesNotExistException_whenGetCapabilityIdDoesNotExists() {
-		Integer capabilityId = capability.getCapabilityId();
+		Integer capabilityId = capabilityFirst.getCapabilityId();
 		String expected = "Capability ID does not exists.";
 
 		Exception exception = assertThrows(IndexDoesNotExistException.class, () -> capabilityService.get(capabilityId));
@@ -349,9 +360,9 @@ public class CapabilityServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //10
 	void should_retrieveValidCapability_whenIdIsValidAndIdExists() {
-		Integer capabilityId = capability.getCapabilityId();
+		Integer capabilityId = capabilityFirst.getCapabilityId();
 
 		BDDMockito.doReturn(true).when(spyCapabilityService).existsById(capabilityId);
 		BDDMockito.given(capabilityDAL.findById(capabilityId)).willReturn(optionalCapability);
@@ -359,24 +370,25 @@ public class CapabilityServiceTest {
 
 		assertNotNull(fetchedCapability);
 		assertTrue(fetchedCapability instanceof Capability);
-		assertEquals(capability.getCapabilityId(), fetchedCapability.getCapabilityId());
-		assertEquals(capability.getStatus().getStatusId(), fetchedCapability.getStatus().getStatusId());
-		assertEquals(capability.getStatus().getValidityPeriod(), fetchedCapability.getStatus().getValidityPeriod());
-		assertEquals(capability.getEnvironment().getEnvironmentId(),
+		assertEquals(capabilityFirst.getCapabilityId(), fetchedCapability.getCapabilityId());
+		assertEquals(capabilityFirst.getStatus().getStatusId(), fetchedCapability.getStatus().getStatusId());
+		assertEquals(capabilityFirst.getStatus().getValidityPeriod(),
+				fetchedCapability.getStatus().getValidityPeriod());
+		assertEquals(capabilityFirst.getEnvironment().getEnvironmentId(),
 				fetchedCapability.getEnvironment().getEnvironmentId());
-		assertEquals(capability.getEnvironment().getEnvironmentName(),
+		assertEquals(capabilityFirst.getEnvironment().getEnvironmentName(),
 				fetchedCapability.getEnvironment().getEnvironmentName());
-		assertEquals(capability.getParentCapabilityId(), fetchedCapability.getParentCapabilityId());
-		assertEquals(capability.getCapabilityName(), fetchedCapability.getCapabilityName());
-		assertEquals(capability.getLevel(), fetchedCapability.getLevel());
-		assertEquals(capability.getPaceOfChange(), fetchedCapability.getPaceOfChange());
-		assertEquals(capability.getTargetOperatingModel(), fetchedCapability.getTargetOperatingModel());
-		assertEquals(capability.getResourceQuality(), fetchedCapability.getResourceQuality());
-		assertEquals(capability.getInformationQuality(), fetchedCapability.getInformationQuality());
-		assertEquals(capability.getApplicationFit(), fetchedCapability.getApplicationFit());
+		assertEquals(capabilityFirst.getParentCapabilityId(), fetchedCapability.getParentCapabilityId());
+		assertEquals(capabilityFirst.getCapabilityName(), fetchedCapability.getCapabilityName());
+		assertEquals(capabilityFirst.getLevel(), fetchedCapability.getLevel());
+		assertEquals(capabilityFirst.getPaceOfChange(), fetchedCapability.getPaceOfChange());
+		assertEquals(capabilityFirst.getTargetOperatingModel(), fetchedCapability.getTargetOperatingModel());
+		assertEquals(capabilityFirst.getResourceQuality(), fetchedCapability.getResourceQuality());
+		assertEquals(capabilityFirst.getInformationQuality(), fetchedCapability.getInformationQuality());
+		assertEquals(capabilityFirst.getApplicationFit(), fetchedCapability.getApplicationFit());
 	}
 
-	@Test
+	@Test //11
 	void should_retrieveCapabilityList_whenGetAllIsCalled() {
 		BDDMockito.given(capabilityDAL.findAll()).willReturn(capabilities);
 
@@ -386,17 +398,17 @@ public class CapabilityServiceTest {
 		assertEquals(capabilities.size(), fetchedStrategies.size());
 	}
 
-	@Test
+	@Test //12
 	void should_throwInvalidInputException_whenUpdatedInputIsInvalid() {
-		Integer capabilityId = capability.getCapabilityId();
-		Integer parentCapabilityId = capability.getParentCapabilityId();
+		Integer capabilityId = capabilityFirst.getCapabilityId();
+		Integer parentCapabilityId = capabilityFirst.getParentCapabilityId();
 		String capabilityName = "";
-		String capabilityDescription = capability.getCapabilityDescription();
-		String paceOfChange = capability.getPaceOfChange().toString();
-		String targetOperatingModel = capability.getTargetOperatingModel().toString();
-		Integer resourceQuality = capability.getResourceQuality();
-		Integer informationQuality = capability.getInformationQuality();
-		Integer applicationFit = capability.getApplicationFit();
+		String capabilityDescription = capabilityFirst.getCapabilityDescription();
+		String paceOfChange = capabilityFirst.getPaceOfChange().toString();
+		String targetOperatingModel = capabilityFirst.getTargetOperatingModel().toString();
+		Integer resourceQuality = capabilityFirst.getResourceQuality();
+		Integer informationQuality = capabilityFirst.getInformationQuality();
+		Integer applicationFit = capabilityFirst.getApplicationFit();
 		Integer statusId = status.getStatusId();
 		Integer environmentId = environment.getEnvironmentId();
 		String expected = "Invalid input.";
@@ -409,17 +421,17 @@ public class CapabilityServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //13
 	void should_throwForeignKeyException_whenUpdatedEnvironmentIdIsInvalid() {
-		Integer capabilityId = capability.getCapabilityId();
-		Integer parentCapabilityId = capability.getParentCapabilityId();
-		String capabilityName = capability.getCapabilityName();
-		String capabilityDescription = capability.getCapabilityDescription();
-		String paceOfChange = capability.getPaceOfChange().toString();
-		String targetOperatingModel = capability.getTargetOperatingModel().toString();
-		Integer resourceQuality = capability.getResourceQuality();
-		Integer informationQuality = capability.getInformationQuality();
-		Integer applicationFit = capability.getApplicationFit();
+		Integer capabilityId = capabilityFirst.getCapabilityId();
+		Integer parentCapabilityId = capabilityFirst.getParentCapabilityId();
+		String capabilityName = capabilityFirst.getCapabilityName();
+		String capabilityDescription = capabilityFirst.getCapabilityDescription();
+		String paceOfChange = capabilityFirst.getPaceOfChange().toString();
+		String targetOperatingModel = capabilityFirst.getTargetOperatingModel().toString();
+		Integer resourceQuality = capabilityFirst.getResourceQuality();
+		Integer informationQuality = capabilityFirst.getInformationQuality();
+		Integer applicationFit = capabilityFirst.getApplicationFit();
 		Integer statusId = status.getStatusId();
 		Integer environmentId = 0;
 		String expected = "Environment ID is invalid.";
@@ -432,17 +444,17 @@ public class CapabilityServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //14
 	void should_throwForeignKeyException_whenUpdatedStatusIdIsInvalid() {
-		Integer capabilityId = capability.getCapabilityId();
-		Integer parentCapabilityId = capability.getParentCapabilityId();
-		String capabilityName = capability.getCapabilityName();
-		String capabilityDescription = capability.getCapabilityDescription();
-		String paceOfChange = capability.getPaceOfChange().toString();
-		String targetOperatingModel = capability.getTargetOperatingModel().toString();
-		Integer resourceQuality = capability.getResourceQuality();
-		Integer informationQuality = capability.getInformationQuality();
-		Integer applicationFit = capability.getApplicationFit();
+		Integer capabilityId = capabilityFirst.getCapabilityId();
+		Integer parentCapabilityId = capabilityFirst.getParentCapabilityId();
+		String capabilityName = capabilityFirst.getCapabilityName();
+		String capabilityDescription = capabilityFirst.getCapabilityDescription();
+		String paceOfChange = capabilityFirst.getPaceOfChange().toString();
+		String targetOperatingModel = capabilityFirst.getTargetOperatingModel().toString();
+		Integer resourceQuality = capabilityFirst.getResourceQuality();
+		Integer informationQuality = capabilityFirst.getInformationQuality();
+		Integer applicationFit = capabilityFirst.getApplicationFit();
 		Integer statusId = 0;
 		Integer environmentId = environment.getEnvironmentId();
 		String expected = "Status ID is invalid.";
@@ -455,17 +467,17 @@ public class CapabilityServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //15
 	void should_throwCapabilityException_whenUpdateCapabilityIdDoesNotExist() {
-		Integer capabilityId = capability.getCapabilityId();
-		Integer parentCapabilityId = capability.getParentCapabilityId();
-		String capabilityName = capability.getCapabilityName();
-		String capabilityDescription = capability.getCapabilityDescription();
-		String paceOfChange = capability.getPaceOfChange().toString();
-		String targetOperatingModel = capability.getTargetOperatingModel().toString();
-		Integer resourceQuality = capability.getResourceQuality();
-		Integer informationQuality = capability.getInformationQuality();
-		Integer applicationFit = capability.getApplicationFit();
+		Integer capabilityId = capabilityFirst.getCapabilityId();
+		Integer parentCapabilityId = capabilityFirst.getParentCapabilityId();
+		String capabilityName = capabilityFirst.getCapabilityName();
+		String capabilityDescription = capabilityFirst.getCapabilityDescription();
+		String paceOfChange = capabilityFirst.getPaceOfChange().toString();
+		String targetOperatingModel = capabilityFirst.getTargetOperatingModel().toString();
+		Integer resourceQuality = capabilityFirst.getResourceQuality();
+		Integer informationQuality = capabilityFirst.getInformationQuality();
+		Integer applicationFit = capabilityFirst.getApplicationFit();
 		Integer statusId = status.getStatusId();
 		Integer environmentId = environment.getEnvironmentId();
 		String expected = "Can not update capability if it does not exist.";
@@ -480,17 +492,17 @@ public class CapabilityServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //16
 	void should_throwDuplicateValueException_whenUpdateCapabilityNameExist() {
-		Integer capabilityId = capability.getCapabilityId();
-		Integer parentCapabilityId = capability.getParentCapabilityId();
+		Integer capabilityId = capabilityFirst.getCapabilityId();
+		Integer parentCapabilityId = capabilityFirst.getParentCapabilityId();
 		String capabilityName = "xyz";
-		String capabilityDescription = capability.getCapabilityDescription();
-		String paceOfChange = capability.getPaceOfChange().toString();
-		String targetOperatingModel = capability.getTargetOperatingModel().toString();
-		Integer resourceQuality = capability.getResourceQuality();
-		Integer informationQuality = capability.getInformationQuality();
-		Integer applicationFit = capability.getApplicationFit();
+		String capabilityDescription = capabilityFirst.getCapabilityDescription();
+		String paceOfChange = capabilityFirst.getPaceOfChange().toString();
+		String targetOperatingModel = capabilityFirst.getTargetOperatingModel().toString();
+		Integer resourceQuality = capabilityFirst.getResourceQuality();
+		Integer informationQuality = capabilityFirst.getInformationQuality();
+		Integer applicationFit = capabilityFirst.getApplicationFit();
 		Integer statusId = status.getStatusId();
 		Integer environmentId = environment.getEnvironmentId();
 		String expected = "Capability name already exists.";
@@ -508,17 +520,17 @@ public class CapabilityServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //17
 	void should_throwForeignKeyException_whenUpdateStatusDoesNotExists() {
-		Integer capabilityId = capability.getCapabilityId();
-		Integer parentCapabilityId = capability.getParentCapabilityId();
-		String capabilityName = capability.getCapabilityName();
-		String capabilityDescription = capability.getCapabilityDescription();
-		String paceOfChange = capability.getPaceOfChange().toString();
-		String targetOperatingModel = capability.getTargetOperatingModel().toString();
-		Integer resourceQuality = capability.getResourceQuality();
-		Integer informationQuality = capability.getInformationQuality();
-		Integer applicationFit = capability.getApplicationFit();
+		Integer capabilityId = capabilityFirst.getCapabilityId();
+		Integer parentCapabilityId = capabilityFirst.getParentCapabilityId();
+		String capabilityName = capabilityFirst.getCapabilityName();
+		String capabilityDescription = capabilityFirst.getCapabilityDescription();
+		String paceOfChange = capabilityFirst.getPaceOfChange().toString();
+		String targetOperatingModel = capabilityFirst.getTargetOperatingModel().toString();
+		Integer resourceQuality = capabilityFirst.getResourceQuality();
+		Integer informationQuality = capabilityFirst.getInformationQuality();
+		Integer applicationFit = capabilityFirst.getApplicationFit();
 		Integer statusId = status.getStatusId();
 		Integer environmentId = environment.getEnvironmentId();
 		String expected = "Status ID does not exists.";
@@ -537,17 +549,17 @@ public class CapabilityServiceTest {
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test
+	@Test //18
 	void should_throwForeignKeyException_whenUpdateEnvironmentDoesNotExists() {
-		Integer capabilityId = capability.getCapabilityId();
-		Integer parentCapabilityId = capability.getParentCapabilityId();
-		String capabilityName = capability.getCapabilityName();
-		String capabilityDescription = capability.getCapabilityDescription();
-		String paceOfChange = capability.getPaceOfChange().toString();
-		String targetOperatingModel = capability.getTargetOperatingModel().toString();
-		Integer resourceQuality = capability.getResourceQuality();
-		Integer informationQuality = capability.getInformationQuality();
-		Integer applicationFit = capability.getApplicationFit();
+		Integer capabilityId = capabilityFirst.getCapabilityId();
+		Integer parentCapabilityId = capabilityFirst.getParentCapabilityId();
+		String capabilityName = capabilityFirst.getCapabilityName();
+		String capabilityDescription = capabilityFirst.getCapabilityDescription();
+		String paceOfChange = capabilityFirst.getPaceOfChange().toString();
+		String targetOperatingModel = capabilityFirst.getTargetOperatingModel().toString();
+		Integer resourceQuality = capabilityFirst.getResourceQuality();
+		Integer informationQuality = capabilityFirst.getInformationQuality();
+		Integer applicationFit = capabilityFirst.getApplicationFit();
 		Integer statusId = status.getStatusId();
 		Integer environmentId = environment.getEnvironmentId();
 		String expected = "Environment ID does not exists.";
@@ -597,20 +609,20 @@ public class CapabilityServiceTest {
 //		assertEquals(expected, exception.getMessage());
 //	}
 
-	@Test
+	@Test //19
 	void should_retrieveValidCapability_whenSCapabilityIsUpdated() {
-		Integer capabilityId = capability.getCapabilityId();
-		Integer parentCapabilityId = capability.getParentCapabilityId();
-		String capabilityName = capability.getCapabilityName();
-		String capabilityDescription = capability.getCapabilityDescription();
-		String paceOfChange = capability.getPaceOfChange().toString();
-		String targetOperatingModel = capability.getTargetOperatingModel().toString();
-		Integer resourceQuality = capability.getResourceQuality();
-		Integer informationQuality = capability.getInformationQuality();
-		Integer applicationFit = capability.getApplicationFit();
+		Integer capabilityId = capabilityFirst.getCapabilityId();
+		Integer parentCapabilityId = capabilityFirst.getParentCapabilityId();
+		String capabilityName = capabilityFirst.getCapabilityName();
+		String capabilityDescription = capabilityFirst.getCapabilityDescription();
+		String paceOfChange = capabilityFirst.getPaceOfChange().toString();
+		String targetOperatingModel = capabilityFirst.getTargetOperatingModel().toString();
+		Integer resourceQuality = capabilityFirst.getResourceQuality();
+		Integer informationQuality = capabilityFirst.getInformationQuality();
+		Integer applicationFit = capabilityFirst.getApplicationFit();
 		Integer statusId = status.getStatusId();
 		Integer environmentId = environment.getEnvironmentId();
-		capabilityDAL.save(capability);
+		capabilityDAL.save(capabilityFirst);
 
 		BDDMockito.doReturn(true).when(spyCapabilityService).existsById(capabilityId);
 		BDDMockito.doReturn(false).when(spyCapabilityService).existsByCapabilityName(capabilityName);
@@ -619,7 +631,7 @@ public class CapabilityServiceTest {
 
 		BDDMockito.given(statusDAL.findById(BDDMockito.anyInt())).willReturn(optionalStatus);
 		BDDMockito.given(environmentDAL.findById(BDDMockito.anyInt())).willReturn(optionalEnvironment);
-		BDDMockito.given(capabilityDAL.save(capability)).willReturn(capability);
+		BDDMockito.given(capabilityDAL.save(capabilityFirst)).willReturn(capabilityFirst);
 		BDDMockito.given(capabilityDAL.findById(BDDMockito.anyInt())).willReturn(optionalCapability);
 
 		Capability fetchedCapability = capabilityService.update(capabilityId, environmentId, statusId,
@@ -628,24 +640,25 @@ public class CapabilityServiceTest {
 
 		assertNotNull(fetchedCapability);
 		assertTrue(fetchedCapability instanceof Capability);
-		assertEquals(capability.getCapabilityId(), fetchedCapability.getCapabilityId());
-		assertEquals(capability.getStatus().getStatusId(), fetchedCapability.getStatus().getStatusId());
-		assertEquals(capability.getStatus().getValidityPeriod(), fetchedCapability.getStatus().getValidityPeriod());
-		assertEquals(capability.getEnvironment().getEnvironmentId(),
+		assertEquals(capabilityFirst.getCapabilityId(), fetchedCapability.getCapabilityId());
+		assertEquals(capabilityFirst.getStatus().getStatusId(), fetchedCapability.getStatus().getStatusId());
+		assertEquals(capabilityFirst.getStatus().getValidityPeriod(),
+				fetchedCapability.getStatus().getValidityPeriod());
+		assertEquals(capabilityFirst.getEnvironment().getEnvironmentId(),
 				fetchedCapability.getEnvironment().getEnvironmentId());
-		assertEquals(capability.getEnvironment().getEnvironmentName(),
+		assertEquals(capabilityFirst.getEnvironment().getEnvironmentName(),
 				fetchedCapability.getEnvironment().getEnvironmentName());
-		assertEquals(capability.getParentCapabilityId(), fetchedCapability.getParentCapabilityId());
-		assertEquals(capability.getCapabilityName(), fetchedCapability.getCapabilityName());
-		assertEquals(capability.getLevel(), fetchedCapability.getLevel());
-		assertEquals(capability.getPaceOfChange(), fetchedCapability.getPaceOfChange());
-		assertEquals(capability.getTargetOperatingModel(), fetchedCapability.getTargetOperatingModel());
-		assertEquals(capability.getResourceQuality(), fetchedCapability.getResourceQuality());
-		assertEquals(capability.getInformationQuality(), fetchedCapability.getInformationQuality());
-		assertEquals(capability.getApplicationFit(), fetchedCapability.getApplicationFit());
+		assertEquals(capabilityFirst.getParentCapabilityId(), fetchedCapability.getParentCapabilityId());
+		assertEquals(capabilityFirst.getCapabilityName(), fetchedCapability.getCapabilityName());
+		assertEquals(capabilityFirst.getLevel(), fetchedCapability.getLevel());
+		assertEquals(capabilityFirst.getPaceOfChange(), fetchedCapability.getPaceOfChange());
+		assertEquals(capabilityFirst.getTargetOperatingModel(), fetchedCapability.getTargetOperatingModel());
+		assertEquals(capabilityFirst.getResourceQuality(), fetchedCapability.getResourceQuality());
+		assertEquals(capabilityFirst.getInformationQuality(), fetchedCapability.getInformationQuality());
+		assertEquals(capabilityFirst.getApplicationFit(), fetchedCapability.getApplicationFit());
 	}
 
-	@Test
+	@Test //20
 	void should_throwInvalidInputException_whenDeleteInputIsInvalid() {
 		Integer capabilityId = 0;
 		String expected = "Capability ID is not valid.";
@@ -655,9 +668,9 @@ public class CapabilityServiceTest {
 		assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test
+	@Test //21
 	void should_throwIndexDoesNotExistException_whenDeleteCapabilityIdDoesNotExist() {
-		Integer id = capability.getCapabilityId();
+		Integer id = capabilityFirst.getCapabilityId();
 		String expected = "Capability ID does not exists.";
 		BDDMockito.doReturn(false).when(spyCapabilityService).existsById(id);
 
@@ -666,9 +679,9 @@ public class CapabilityServiceTest {
 		assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test
+	@Test //22
 	void should_throwIndexDoesNotExistException_whenDeleteInputDoesNotExists() {
-		Integer capabilityId = capability.getCapabilityId();
+		Integer capabilityId = capabilityFirst.getCapabilityId();
 		String expected = "Capability ID does not exists.";
 
 		capabilityDAL.deleteById(capabilityId);
@@ -678,7 +691,7 @@ public class CapabilityServiceTest {
 		assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test
+	@Test //23
 	void should_throwInvalidInputException_whenGetCapabilitiesByEnvironmentInputIsInvalid() {
 		Integer environmentId = 0;
 		String expected = "Environment ID is not valid.";
@@ -689,9 +702,9 @@ public class CapabilityServiceTest {
 		assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test
+	@Test //24
 	void should_throwIndexDoesNotExistException_whenGetCapabilitiesByEnvironmentIdDoesNotExist() {
-		Integer environmentId = capability.getEnvironment().getEnvironmentId();
+		Integer environmentId = capabilityFirst.getEnvironment().getEnvironmentId();
 		String expected = "Environment ID does not exists.";
 
 		BDDMockito.doReturn(false).when(spyEnvironmentService).existsById(environmentId);
@@ -703,9 +716,9 @@ public class CapabilityServiceTest {
 
 	}
 
-	@Test
+	@Test //25
 	void should_retrieveValidEnvironment_whenGetCapabilitiesByEnvironmentIdDoesExistAndIsValid() {
-		Integer environmentId = capability.getEnvironment().getEnvironmentId();
+		Integer environmentId = capabilityFirst.getEnvironment().getEnvironmentId();
 
 		BDDMockito.doReturn(true).when(spyEnvironmentService).existsById(environmentId);
 		BDDMockito.given(environmentDAL.findById(environmentId)).willReturn(optionalEnvironment);
@@ -713,13 +726,13 @@ public class CapabilityServiceTest {
 
 		assertNotNull(fetchedEnvironment);
 		assertTrue(fetchedEnvironment instanceof Environment);
-		assertEquals(capability.getEnvironment().getEnvironmentId(), fetchedEnvironment.getEnvironmentId());
-		assertEquals(capability.getEnvironment().getEnvironmentName(), fetchedEnvironment.getEnvironmentName());
+		assertEquals(capabilityFirst.getEnvironment().getEnvironmentId(), fetchedEnvironment.getEnvironmentId());
+		assertEquals(capabilityFirst.getEnvironment().getEnvironmentName(), fetchedEnvironment.getEnvironmentName());
 	}
 
-	@Test
+	@Test //26
 	void should_retrieveValidCapabilities_whenGetCapabilitiesByEnvironmentIdDoesExistAndIsValid() {
-		Integer environmentId = capability.getEnvironment().getEnvironmentId();
+		Integer environmentId = capabilityFirst.getEnvironment().getEnvironmentId();
 
 		BDDMockito.doReturn(true).when(spyEnvironmentService).existsById(environmentId);
 		BDDMockito.given(environmentDAL.findById(environmentId)).willReturn(optionalEnvironment);
@@ -730,7 +743,7 @@ public class CapabilityServiceTest {
 		assertEquals(capabilities.size(), fetchedCapablities.size());
 	}
 
-	@Test
+	@Test //27
 	void should_throwInvalidInputException_whenGetCapabilitiesByLevelInputIsInvalid() {
 		String level = null;
 		String expected = "CapabilityLevel is not valid.";
@@ -741,7 +754,7 @@ public class CapabilityServiceTest {
 		assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test
+	@Test //28
 	void should_throwEnumException_whenGetCapabilitiesByLevelInputIsInvalid() {
 		String level = "FOUR";
 		String expected = "CapabilityLevel is not valid.";
@@ -751,10 +764,10 @@ public class CapabilityServiceTest {
 		assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test
+	@Test //29
 	void should_retrieveValidCapabilities_whenGetCapabilitiesByLevel() {
 		String level = "ONE";
-		CapabilityLevel capabilityLevel = capability.getLevel();
+		CapabilityLevel capabilityLevel = capabilityFirst.getLevel();
 
 		BDDMockito.given(capabilityDAL.findByLevel(capabilityLevel)).willReturn(capabilities);
 		List<Capability> fetchedCapablities = capabilityService.getCapabilitiesByLevel(level);
@@ -763,7 +776,7 @@ public class CapabilityServiceTest {
 		assertEquals(capabilities.size(), fetchedCapablities.size());
 	}
 
-	@Test
+	@Test //30
 	void should_throwInvalidInputException_whenGetCapabilityChildrenInputIsInvalid() {
 		Integer parentId = 0;
 		String expected = "Parent ID is not valid.";
@@ -774,22 +787,22 @@ public class CapabilityServiceTest {
 		assertEquals(exception.getMessage(), expected);
 	}
 
-//	@Test
-//	void should_throwIndexDoesNotExistException_whenGetCapabilityChildrenIdDoesNotExists() {
-//		Integer parentId = capability.getParentCapabilityId();
-//		String expected = "Parent ID does not exists.";
-//
-//		BDDMockito.doReturn(false).when(spyCapabilityService).existsById(parentId);
-//
-//		Exception exception = assertThrows(IndexDoesNotExistException.class,
-//				() -> capabilityService.getCapabilityChildren(parentId));
-//
-//		assertEquals(exception.getMessage(), expected);
-//	}
+	@Test //31
+	void should_throwIndexDoesNotExistException_whenGetCapabilityChildrenIdDoesNotExists() {
+		Integer parentId = capabilitySecond.getParentCapabilityId();
+		String expected = "Parent ID does not exists.";
 
-	@Test
+		BDDMockito.doReturn(false).when(spyCapabilityService).existsById(parentId);
+
+		Exception exception = assertThrows(IndexDoesNotExistException.class,
+				() -> capabilityService.getCapabilityChildren(parentId));
+
+		assertEquals(exception.getMessage(), expected);
+	}
+
+	@Test //32
 	void should_retrieveValidCapabilities_whenGetCapabilityChildren() {
-		Integer parentId = capability.getParentCapabilityId();
+		Integer parentId = capabilitySecond.getParentCapabilityId();
 
 		BDDMockito.doReturn(true).when(spyCapabilityService).existsById(parentId);
 
@@ -800,7 +813,7 @@ public class CapabilityServiceTest {
 		assertEquals(capabilities.size(), fetchedCapablities.size());
 	}
 
-	@Test
+	@Test //33
 	void should_throwInvalidInputException_whenGetCapabilitiesByParentIdAndLevelParentIdIsInvalid() {
 		Integer parentId = 0;
 		String level = "ONE";
@@ -812,51 +825,51 @@ public class CapabilityServiceTest {
 		assertEquals(exception.getMessage(), expected);
 	}
 
-//	@Test
-//	void should_throwInvalidInputException_whenGetCapabilitiesByParentIdAndLevelLevelIsInvalid() {
-//		Integer parentId = capability.getParentCapabilityId();
-//		String level = null;
-//		String expected = "CapabilityLevel is not valid.";
-//
-//		Exception exception = assertThrows(InvalidInputException.class,
-//				() -> capabilityService.getCapabilitiesByParentIdAndLevel(parentId, level));
-//
-//		assertEquals(exception.getMessage(), expected);
-//	}
-//
-//	@Test
-//	void should_throwIndexDoesNotExistException_whenGetCapabilitiesByParentIdAndLevelIdDoesNotExists() {
-//		Integer parentId = capability.getParentCapabilityId();
-//		String level = "ONE";
-//		String expected = "Parent ID does not exists.";
-//
-//		BDDMockito.doReturn(false).when(spyCapabilityService).existsById(parentId);
-//
-//		Exception exception = assertThrows(IndexDoesNotExistException.class,
-//				() -> capabilityService.getCapabilitiesByParentIdAndLevel(parentId, level));
-//
-//		assertEquals(exception.getMessage(), expected);
-//	}
-//
-//	@Test
-//	void should_throwEnumException_whenGetCapabilitiesByParentIdAndLevelInputIsInvalid() {
-//		Integer parentId = capability.getParentCapabilityId();
-//		String level = "FOUR";
-//		String expected = "CapabilityLevel is not valid.";
-//
-//		BDDMockito.doReturn(true).when(spyCapabilityService).existsById(parentId);
-//
-//		Exception exception = assertThrows(EnumException.class,
-//				() -> capabilityService.getCapabilitiesByParentIdAndLevel(parentId, level));
-//
-//		assertEquals(exception.getMessage(), expected);
-//	}
-//
+	@Test //34
+	void should_throwInvalidInputException_whenGetCapabilitiesByParentIdAndLevelLevelIsInvalid() {
+		Integer parentId = capabilitySecond.getParentCapabilityId();
+		String level = null;
+		String expected = "CapabilityLevel is not valid.";
+
+		Exception exception = assertThrows(InvalidInputException.class,
+				() -> capabilityService.getCapabilitiesByParentIdAndLevel(parentId, level));
+
+		assertEquals(exception.getMessage(), expected);
+	}
+
+	@Test //35
+	void should_throwIndexDoesNotExistException_whenGetCapabilitiesByParentIdAndLevelIdDoesNotExists() {
+		Integer parentId = capabilitySecond.getParentCapabilityId();
+		String level = "ONE";
+		String expected = "Parent ID does not exists.";
+
+		BDDMockito.doReturn(false).when(spyCapabilityService).existsById(parentId);
+
+		Exception exception = assertThrows(IndexDoesNotExistException.class,
+				() -> capabilityService.getCapabilitiesByParentIdAndLevel(parentId, level));
+
+		assertEquals(exception.getMessage(), expected);
+	}
+
+	@Test //36
+	void should_throwEnumException_whenGetCapabilitiesByParentIdAndLevelInputIsInvalid() {
+		Integer parentId = capabilitySecond.getParentCapabilityId();
+		String level = "FOUR";
+		String expected = "CapabilityLevel is not valid.";
+
+		BDDMockito.doReturn(true).when(spyCapabilityService).existsById(parentId);
+
+		Exception exception = assertThrows(EnumException.class,
+				() -> capabilityService.getCapabilitiesByParentIdAndLevel(parentId, level));
+
+		assertEquals(exception.getMessage(), expected);
+	}
+
 //	@Test
 //	void should_retrieveValidCapabilities_whenGetCapabilitiesByParentIdAndLevel() {
-//		Integer parentId = capability.getParentCapabilityId();
-//		String level = "ONE";
-//		CapabilityLevel capabilityLevel = capability.getLevel();
+//		Integer parentId = capabilitySecond.getParentCapabilityId();
+//		String level = capabilitySecond.getLevel().toString();
+//		CapabilityLevel capabilityLevel = capabilitySecond.getLevel();
 //
 //		BDDMockito.doReturn(true).when(spyCapabilityService).existsById(parentId);
 //
@@ -867,39 +880,39 @@ public class CapabilityServiceTest {
 //		assertEquals(capabilities.size(), fetchedCapablities.size());
 //	}
 
-	@Test
+	@Test //37
 	void should_ReturnFalse_whenCapabilityDoesNotExistById() {
 		BDDMockito.given(capabilityDAL.existsById(BDDMockito.anyInt())).willReturn(false);
 
-		boolean result = capabilityService.existsById(capability.getCapabilityId());
+		boolean result = capabilityService.existsById(capabilityFirst.getCapabilityId());
 
 		assertFalse(result);
 	}
 
-	@Test
+	@Test //38
 	void should_ReturnTrue_whenCapabilityDoesExistById() {
 		BDDMockito.given(capabilityDAL.existsById(BDDMockito.anyInt())).willReturn(true);
 
-		boolean result = capabilityService.existsById(capability.getCapabilityId());
+		boolean result = capabilityService.existsById(capabilityFirst.getCapabilityId());
 
 		assertTrue(result);
 	}
 
-	@Test
+	@Test //39
 	void should_ReturnTrue_whenCapabilityDoesExistByCapabilityName() {
 		BDDMockito.given(capabilityDAL.findByCapabilityName(BDDMockito.any(String.class)))
 				.willReturn(optionalCapability);
 
-		boolean result = capabilityService.existsByCapabilityName(capability.getCapabilityName());
+		boolean result = capabilityService.existsByCapabilityName(capabilityFirst.getCapabilityName());
 
 		assertTrue(result);
 	}
 
-	@Test
+	@Test //40
 	void should_ReturnFalse_whenCapabilityDoesNotExistByCapabilityName() {
 		BDDMockito.given(capabilityDAL.findByCapabilityName(BDDMockito.any(String.class))).willReturn(Optional.empty());
 
-		boolean result = capabilityService.existsByCapabilityName(capability.getCapabilityName());
+		boolean result = capabilityService.existsByCapabilityName(capabilityFirst.getCapabilityName());
 
 		assertFalse(result);
 	}

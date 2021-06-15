@@ -43,14 +43,4 @@ public class User {
         this.email = email;
     }
 
-    @Override
-    public String toString() {
-        return "{" +
-            " userId='" + getUserId() + "'" +
-            " roleId='" + getRoleId() + "'" +
-            " email= '" + getEmail() + "'" +
-            " roleId='" + getUsername() + "'" +
-            ", password='" + getPassword() + "'" +
-            "}";
-    }
 }

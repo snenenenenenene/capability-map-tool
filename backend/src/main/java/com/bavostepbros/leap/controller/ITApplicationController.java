@@ -1,14 +1,14 @@
 package com.bavostepbros.leap.controller;
 
-import com.bavostepbros.leap.domain.model.ITApplication;
-import com.bavostepbros.leap.domain.model.dto.ITApplicationDto;
-import com.bavostepbros.leap.domain.model.dto.StatusDto;
-import com.bavostepbros.leap.domain.model.dto.TechnologyDto;
-import com.bavostepbros.leap.domain.service.itapplicationservice.ITApplicationService;
-import lombok.RequiredArgsConstructor;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,13 +18,17 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.bavostepbros.leap.domain.model.ITApplication;
+import com.bavostepbros.leap.domain.model.dto.ITApplicationDto;
+import com.bavostepbros.leap.domain.model.dto.StatusDto;
+import com.bavostepbros.leap.domain.model.dto.TechnologyDto;
+import com.bavostepbros.leap.domain.service.itapplicationservice.ITApplicationService;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
+@Validated
 @RequestMapping("/api/itapplication")
 public class ITApplicationController {
 
@@ -143,12 +147,6 @@ public class ITApplicationController {
 		return;
 	}
 
-	@GetMapping(path = "has-technology/{itApplicationId}/{technologyId}")
-	public boolean hasTechnology(@PathVariable("itApplicationId") Integer itApplicationId,
-			@PathVariable("technologyId") Integer technologyId) {
-		return itApplicationService.doesItApplicationHasTechnology(itApplicationId, technologyId);
-	}
-
 	private ITApplicationDto convertItApplication(ITApplication itApplication) {
 		StatusDto status = new StatusDto(itApplication.getStatus().getStatusId(),
 				itApplication.getStatus().getValidityPeriod());
@@ -159,28 +157,6 @@ public class ITApplicationController {
 					.map(technology -> new TechnologyDto(technology.getTechnologyId(), technology.getTechnologyName()))
 					.collect(Collectors.toList());
 		}
-
-		/*
-		 * List<CapabilityDto> capabilitiesDto = new ArrayList<CapabilityDto>(); if
-		 * (!itApplication.getCapabilityApplication().isEmpty()) { capabilitiesDto =
-		 * itApplication.getCapabilityApplication().stream() .map(capabilityApplication
-		 * -> new CapabilityDto(
-		 * capabilityApplication.getCapability().getCapabilityId(), new EnvironmentDto(
-		 * capabilityApplication.getCapability().getEnvironment().getEnvironmentId(),
-		 * capabilityApplication.getCapability().getEnvironment().getEnvironmentName()),
-		 * new
-		 * StatusDto(capabilityApplication.getCapability().getStatus().getStatusId(),
-		 * capabilityApplication.getCapability().getStatus().getValidityPeriod()),
-		 * capabilityApplication.getCapability().getParentCapabilityId(),
-		 * capabilityApplication.getCapability().getCapabilityName(),
-		 * capabilityApplication.getCapability().getLevel(),
-		 * capabilityApplication.getCapability().isPaceOfChange(),
-		 * capabilityApplication.getCapability().getTargetOperatingModel(),
-		 * capabilityApplication.getCapability().getResourceQuality(),
-		 * capabilityApplication.getCapability().getInformationQuality(),
-		 * capabilityApplication.getCapability().getApplicationFit()))
-		 * .collect(Collectors.toList()); }
-		 */
 		
 		return new ITApplicationDto(itApplication.getItApplicationId(), status, itApplication.getName(),
 				itApplication.getVersion(), itApplication.getPurchaseDate(), itApplication.getEndOfLife(),
@@ -192,4 +168,5 @@ public class ITApplicationController {
 				itApplication.getCurrentYearlyCost(), itApplication.getAcceptedYearlyCost(),
 				itApplication.getTimeValue(), technologies);
 	}
+	
 }

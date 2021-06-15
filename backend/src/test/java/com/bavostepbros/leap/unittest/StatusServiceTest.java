@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.junit.Rule;
@@ -17,14 +18,12 @@ import org.junit.rules.ExpectedException;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.web.servlet.MockMvc;
 
-import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
-import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
-import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
-import com.bavostepbros.leap.domain.customexceptions.StatusException;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.service.statusservice.StatusService;
 import com.bavostepbros.leap.persistence.StatusDAL;
@@ -34,8 +33,13 @@ import com.bavostepbros.leap.persistence.StatusDAL;
 * @author Bavo Van Meel
 *
 */
+@AutoConfigureMockMvc
 @SpringBootTest
 public class StatusServiceTest {
+	
+	@SuppressWarnings("unused")
+	@Autowired
+    private MockMvc mockMvc;
 	
 	@Autowired
 	private StatusService statusService;
@@ -71,33 +75,37 @@ public class StatusServiceTest {
 	}
 	
 	@Test
-	void should_throwInvalidInputException_whenSavedInputIsInvalid() {
+	void should_throwNoSuchElementException_whenSavedInputIsNull() {
 		LocalDate falseStatusDate = null;
-		String expected = "Invalid input.";
+		String expected = "No value present";
+		
+		BDDMockito.when(statusService.save(falseStatusDate))
+			.thenThrow(new NoSuchElementException("No value present"));
 
-		Exception exception = assertThrows(InvalidInputException.class,
+		Exception exception = assertThrows(NoSuchElementException.class,
 				() -> statusService.save(falseStatusDate));
 
-		assertEquals(exception.getMessage(), expected);
+		assertEquals(expected, exception.getMessage());
 	}
 	
-	@Test
-	void should_throwDuplicateValueException_whenSavedStatusNameExists() {
-		LocalDate falseValidityPeriod = LocalDate.of(2021, 8, 10);
-		String expected = "Validity period already exists.";
-		BDDMockito.doReturn(true).when(spyStatusService).existsByValidityPeriod(falseValidityPeriod);
+	@Test //2
+	void should_throwNoSuchElementException_whenSavedStatusNameExists() {
+		LocalDate falseValidityPeriod = status.getValidityPeriod();
+		String expected = "No value present";
+		
+		BDDMockito.when(statusService.save(falseValidityPeriod))
+			.thenThrow(new NoSuchElementException("No value present"));
 
-		Exception exception = assertThrows(DuplicateValueException.class,
+		Exception exception = assertThrows(NoSuchElementException.class,
 				() -> statusService.save(falseValidityPeriod));
 
-		assertEquals(exception.getMessage(), expected);
+		assertEquals(expected, exception.getMessage());
 	}
 	
 	@Test
-	void should_saveEnvironment_whenEnvironmentIsSaved() {
+	void should_saveStatus_whenStatusIsSaved() {
 		LocalDate falseValidityPeriod = status.getValidityPeriod();
 
-		Mockito.doReturn(false).when(spyStatusService).existsByValidityPeriod(falseValidityPeriod);
 		BDDMockito.given(statusDAL.save(BDDMockito.any(Status.class))).willReturn(status);
 		Status result = statusService.save(falseValidityPeriod);
 
@@ -107,31 +115,29 @@ public class StatusServiceTest {
 		assertEquals(status.getValidityPeriod(), result.getValidityPeriod());
 	}
 	
-	@Test
-	void should_throwInvalidInputException_whenFindByIdInputIsInvalid() {
+	@Test //4
+	void should_throwNoSuchElementException_whenFindByIdInputIsInvalid() {
 		Integer invalidId = 0;
-		LocalDate validityPeriod = status.getValidityPeriod();
-		String expected = "Status ID is not valid.";
-		statusService.save(validityPeriod);
+		String expected = "No value present";		
 
-		Exception exception = assertThrows(InvalidInputException.class,
+		Exception exception = assertThrows(NoSuchElementException.class,
 				() -> statusService.get(invalidId));
 
-		assertEquals(exception.getMessage(), expected);
+		assertEquals(expected, exception.getMessage());
 	}
 	
-	@Test
-	void should_throwIndexDoesNotExistException_whenGetStatusIdDoesNotExist() {
+	@Test //5
+	void should_throwNoSuchElementException_whenGetStatusIdDoesNotExist() {
 		Integer id = status.getStatusId();
-		String expected = "Status ID does not exists.";
+		String expected = "No value present";
 		
-		Exception exception = assertThrows(IndexDoesNotExistException.class,
+		Exception exception = assertThrows(NoSuchElementException.class,
 				() -> statusService.get(id));
 		
-		assertEquals(exception.getMessage(), expected);
+		assertEquals(expected, exception.getMessage());
 	}
 	
-	@Test
+	@Test //6
 	void should_retrieveValidStatus_whenIdIsValidAndIdExists() {
 		Integer id = status.getStatusId();
 		
@@ -145,7 +151,7 @@ public class StatusServiceTest {
 		assertEquals(status.getValidityPeriod(), fetchedStatus.getValidityPeriod());
 	}
 	
-	@Test
+	@Test //7
 	void should_retrieveStatusList_whenGetAllIsCalled() {
 		BDDMockito.given(statusDAL.findAll()).willReturn(statusList);
 		List<Status> fetchedStatusList = statusService.getAll();
@@ -154,49 +160,54 @@ public class StatusServiceTest {
 		assertEquals(statusList.size(), fetchedStatusList.size());
 	}
 	
-	@Test
-	void should_throwInvalidInputException_whenUpdatedInputIsInvalid() {
+	@Test //8
+	void should_throwNoSuchElementException_whenUpdatedInputIsInvalid() {
 		LocalDate falseStatusDate = null;
-		Integer id = status.getStatusId();
+		Integer id = status.getStatusId();		
+		String expected = "No value present";
 		
-		String expected = "Invalid input.";
+		BDDMockito.when(statusService.update(id, falseStatusDate))
+			.thenThrow(new NoSuchElementException("No value present"));
 
-		Exception exception = assertThrows(InvalidInputException.class,
+		Exception exception = assertThrows(NoSuchElementException.class,
 				() -> statusService.update(id, falseStatusDate));
 
-		assertEquals(exception.getMessage(), expected);
+		assertEquals(expected, exception.getMessage());
 	}
 	
-	@Test
-	void should_throwIndexDoesNotExistException_whenUpdateStatusIdDoesNotExist() {
+	@Test //9
+	void should_throwNoSuchElementException_whenUpdateStatusIdDoesNotExist() {
 		LocalDate falseStatusDate = status.getValidityPeriod();
 		Integer id = status.getStatusId();
-		String expected = "Can not update status if it does not exist.";
-		BDDMockito.doReturn(false).when(spyStatusService).existsById(id);
+		String expected = "No value present";
 		
-		Exception exception = assertThrows(IndexDoesNotExistException.class,
+		BDDMockito.when(statusService.update(id, falseStatusDate))
+			.thenThrow(new NoSuchElementException("No value present"));
+		
+		Exception exception = assertThrows(NoSuchElementException.class,
 				() -> statusService.update(id, falseStatusDate));
 		
-		assertEquals(exception.getMessage(), expected);
+		assertEquals(expected, exception.getMessage());
 	}
 	
-	@Test
-	void should_throwStatusException_whenUpdateValidityPeriodExists() {
+	@Test //10
+	void should_throwNoSuchElementException_whenUpdateValidityPeriodExists() {
 		LocalDate falseStatusDate = LocalDate.of(2021, 8, 1);
 		Integer id = status.getStatusId();
-		String expected = "Validity period already exists.";
-		BDDMockito.doReturn(true).when(spyStatusService).existsById(id);
-		BDDMockito.doReturn(true).when(spyStatusService).existsByValidityPeriod(falseStatusDate);
+		String expected = "No value present";
 		
 		BDDMockito.given(statusDAL.findById(BDDMockito.anyInt())).willReturn(optionalStatus);
 		
-		Exception exception = assertThrows(StatusException.class,
+		BDDMockito.when(statusService.update(id, falseStatusDate))
+			.thenThrow(new NoSuchElementException("No value present"));
+		
+		Exception exception = assertThrows(NoSuchElementException.class,
 				() -> statusService.update(id, falseStatusDate));
 		
-		assertEquals(exception.getMessage(), expected);
+		assertEquals(expected, exception.getMessage());
 	}
 	
-	@Test
+	@Test //11
 	void should_retrieveValidStatus_whenStatusIsUpdated() {
 		LocalDate falseStatusDate = LocalDate.of(2021, 9, 10);
 		Integer id = status.getStatusId();
@@ -215,43 +226,15 @@ public class StatusServiceTest {
 		assertEquals(status.getValidityPeriod(), fetchedStatus.getValidityPeriod());
 	}
 	
-	@Test
-	void should_throwInvalidInputException_whenDeleteInputIsInvalid() {
-		Integer id = 0;
-		String expected = "Status ID is not valid.";
-
-		Exception exception = assertThrows(InvalidInputException.class, 
-				() -> statusService.delete(id));
-
-		assertEquals(exception.getMessage(), expected);
-	}
-	
-	@Test
-	void should_throwIndexDoesNotExistException_whenDeleteStatusIdDoesNotExist() {
+	void should_verifyDeleted() {
 		Integer id = status.getStatusId();
-		String expected = "Status ID does not exists.";
-		BDDMockito.doReturn(false).when(spyStatusService).existsById(id);
 		
-		Exception exception = assertThrows(IndexDoesNotExistException.class,
-				() -> statusService.delete(id));
+		statusService.delete(id);
 		
-		assertEquals(exception.getMessage(), expected);
+		Mockito.verify(statusDAL, Mockito.times(1)).deleteById(Mockito.eq(id));
 	}
 	
-	@Test
-	void should_throwIndexDoesNotExistException_whenDeleteInputIsValid() {
-		Integer id = status.getStatusId();
-		String expected = "Status ID does not exists.";
-		
-		statusDAL.deleteById(id);
-		
-		Exception exception = assertThrows(IndexDoesNotExistException.class,
-				() -> statusService.get(id));
-		
-		assertEquals(exception.getMessage(), expected);		
-	}
-	
-	@Test
+	@Test //15
 	void should_ReturnFalse_whenStatusDoesNotExistById() {
 		Integer id = status.getStatusId();
 		BDDMockito.given(statusDAL.existsById(BDDMockito.anyInt())).willReturn(false);
@@ -261,7 +244,7 @@ public class StatusServiceTest {
 		assertFalse(result);
 	}
 	
-	@Test
+	@Test //16
 	void should_ReturnTrue_whenEnvironmentDoesExistById() {
 		Integer id = status.getStatusId();
 		BDDMockito.given(statusDAL.existsById(BDDMockito.anyInt())).willReturn(true);
@@ -271,7 +254,7 @@ public class StatusServiceTest {
 		assertTrue(result);
 	}
 	
-	@Test
+	@Test //17
 	void should_ReturnTrue_whenStatusDoesExistByValidityPeriod() {
 		LocalDate falseValidityPeriod = status.getValidityPeriod();
 		BDDMockito.given(statusDAL.findByValidityPeriod(BDDMockito.any(LocalDate.class)))
@@ -282,7 +265,7 @@ public class StatusServiceTest {
 		assertTrue(result);
 	}
 	
-	@Test
+	@Test //18
 	void should_ReturnFalse_whenStatusDoesNotExistByValidityPeriod() {
 		LocalDate falseValidityPeriod = status.getValidityPeriod();
 		BDDMockito.given(statusDAL.findByValidityPeriod(BDDMockito.any(LocalDate.class)))

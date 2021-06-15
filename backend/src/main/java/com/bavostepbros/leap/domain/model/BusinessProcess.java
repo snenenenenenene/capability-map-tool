@@ -1,5 +1,6 @@
 package com.bavostepbros.leap.domain.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -36,7 +37,7 @@ public class BusinessProcess {
 	private String businessProcessDescription;
 	
 	@ManyToMany(mappedBy = "businessProcess")
-	private Set<Capability> capabilities;
+	private Set<Capability> capabilities = new HashSet<>();
 
 	public BusinessProcess(@NotBlank String businessProcessName, String businessProcessDescription) {
 		this.businessProcessName = businessProcessName;

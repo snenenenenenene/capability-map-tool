@@ -1,6 +1,8 @@
 package com.bavostepbros.leap.domain.model;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -48,10 +50,12 @@ public class Capability {
 	private Integer capabilityId;
 
 	@ManyToOne
+	@NotNull(message = "Validity period must not be null.")
 	@JoinColumn(name = "ENVIRONMENTID", nullable = false)
 	private Environment environment;
 
 	@OneToOne
+	@NotNull(message = "Validity period must not be null.")
 	@JoinColumn
 	private Status status;
 
@@ -98,28 +102,28 @@ public class Capability {
 	@OneToMany(mappedBy = "capability")
 	private List<CapabilityInformation> capabilityInformation;
 
-	@ManyToMany(cascade = CascadeType.MERGE)
-	@JoinTable(name = "CAPABILITY_PROJECT", 
-		joinColumns = { @JoinColumn(name = "CAPABILITYID") }, 
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@JoinTable(name = "CAPABILITY_PROJECT",
+		joinColumns = { @JoinColumn(name = "CAPABILITYID") },
 		inverseJoinColumns = {@JoinColumn(name = "PROJECTID") },
 		uniqueConstraints = { @UniqueConstraint(columnNames = {"CAPABILITYID", "PROJECTID"})})
 	private List<Project> projects;
 
-	@ManyToMany(cascade = CascadeType.MERGE)
-	@JoinTable(name = "CAPABILITY_BUSINESSPROCESS", 
-		joinColumns = { @JoinColumn(name = "CAPABILITYID") }, 
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@JoinTable(name = "CAPABILITY_BUSINESSPROCESS",
+		joinColumns = { @JoinColumn(name = "CAPABILITYID") },
 		inverseJoinColumns = { @JoinColumn(name = "BUSINESSPROCESSID") },
 		uniqueConstraints = { @UniqueConstraint(columnNames = {"CAPABILITYID", "BUSINESSPROCESSID"})})
-	private List<BusinessProcess> businessProcess;
+	private Set<BusinessProcess> businessProcess = new HashSet<>();
 
-	@ManyToMany(cascade = CascadeType.MERGE)
-	@JoinTable(name = "CAPABILITY_RESOURCE", 
-		joinColumns = { @JoinColumn(name = "CAPABILITYID") }, 
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@JoinTable(name = "CAPABILITY_RESOURCE",
+		joinColumns = { @JoinColumn(name = "CAPABILITYID") },
 		inverseJoinColumns = { @JoinColumn(name = "RESOURCEID") },
 		uniqueConstraints = { @UniqueConstraint(columnNames = {"CAPABILITYID", "RESOURCEID"})})
 	private List<Resource> resources;
 
-	public Capability(Environment environment, Status status, Integer parentCapabilityId, String capabilityName,
+	public Capability(Environment environment, Status status, Integer parentCapabilityId, @NotBlank String capabilityName,
 			String capabilityDescription, PaceOfChange paceOfChange, TargetOperatingModel targetOperatingModel,
 			Integer resourceQuality, Integer informationQuality, Integer applicationFit) {
 		this.environment = environment;
@@ -135,7 +139,7 @@ public class Capability {
 	}
 
 	public Capability(Integer capabilityId, Environment environment, Status status, Integer parentCapabilityId,
-			String capabilityName, String capabilityDescription, PaceOfChange paceOfChange,
+			@NotBlank String capabilityName, String capabilityDescription, PaceOfChange paceOfChange,
 			TargetOperatingModel targetOperatingModel, Integer resourceQuality, Integer informationQuality,
 			Integer applicationFit) {
 		this.capabilityId = capabilityId;
@@ -151,10 +155,20 @@ public class Capability {
 		this.applicationFit = applicationFit;
 	}
 
+	public Capability(Integer capabilityId, Environment environment, Status status, Integer parentCapabilityId) {
+		this.capabilityId = capabilityId;
+		this.environment = environment;
+		this.status = status;
+		this.parentCapabilityId = parentCapabilityId;
+		this.capabilityName = "Default " + capabilityId;
+		this.paceOfChange = PaceOfChange.STANDARD;
+		this.targetOperatingModel = TargetOperatingModel.COORDINATION;
+		this.resourceQuality = 1;
+	}
+
 	public void addProject(Project project) {
 		projects.add(project);
 		project.getCapabilities().add(this);
-		return;
 	}
 
 	public void removeProject(Project project) {
@@ -169,43 +183,29 @@ public class Capability {
 	public void addBusinessProcess(BusinessProcess businessProcessItem) {
 		businessProcess.add(businessProcessItem);
 		businessProcessItem.getCapabilities().add(this);
-		return;
 	}
 
 	public void removeBusinessProcess(BusinessProcess businessProcessItem) {
 		businessProcess.remove(businessProcessItem);
 		businessProcessItem.getCapabilities().remove(this);
-		return;
 	}
 
-	public List<BusinessProcess> getBusinessProcess() {
+	public Set<BusinessProcess> getBusinessProcess() {
 		return businessProcess;
 	}
 
 	public void addResource(Resource resource) {
 		resources.add(resource);
 		resource.getCapabilities().add(this);
-		return;
 	}
 
 	public void removeResource(Resource resource) {
 		resources.remove(resource);
 		resource.getCapabilities().remove(this);
-		return;
 	}
 
 	public List<Resource> getResources() {
 		return resources;
-	}
-
-	@Override
-	public String toString() {
-		return "{" + " capabilityId='" + getCapabilityId() + "'" + ", environment='" + getEnvironment() + "'"
-				+ ", status='" + getStatus() + "'" + ", parentCapabilityId='" + getParentCapabilityId() + "'"
-				+ ", name='" + getCapabilityName() + "'" + ", level='" + getLevel() + "'" + ", paceOfChange='"
-				+ getPaceOfChange() + "'" + ", targetOperatingModel='" + getTargetOperatingModel() + "'"
-				+ ", resourceQuality='" + getResourceQuality() + "'" + ", informationQuality='"
-				+ getInformationQuality() + "'" + ", applicationFit='" + getApplicationFit() + "'" + "}";
 	}
 
 }

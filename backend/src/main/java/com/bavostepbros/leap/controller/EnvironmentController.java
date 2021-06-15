@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import com.bavostepbros.leap.domain.model.BusinessProcess;
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.CapabilityApplication;
@@ -14,14 +16,8 @@ import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapItemDto
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.ITApplication;
@@ -58,14 +54,16 @@ import lombok.RequiredArgsConstructor;
  */
 @RestController
 @RequiredArgsConstructor
+@Validated
 @RequestMapping("/api/environment/")
 public class EnvironmentController {
 
+	//TODO fix constructor injection
 	@Autowired
 	private EnvironmentService envService;
 
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public EnvironmentDto addEnvironment(@ModelAttribute("environmentName") String environmentName) {
+	public EnvironmentDto addEnvironment(@ModelAttribute("environmentName") @Valid String environmentName) {
 		Environment environment = envService.save(environmentName);
 		return convertEnvironment(environment);
 	}
@@ -112,6 +110,8 @@ public class EnvironmentController {
 		envService.delete(environmentId);
 	}
 
+
+	// TODO fix exception catch
 	@GetMapping(path = "capabilitymap/{environmentId}")
 	public CapabilityMapDto getCapabilityMap(@PathVariable("environmentId") Integer environmentId) {
 		try {
@@ -133,8 +133,10 @@ public class EnvironmentController {
 		}
 
 		return new CapabilityMapDto(environment.getEnvironmentId(), environment.getEnvironmentName(),
-				environment.getCapabilities().stream().filter(i -> i.getParentCapabilityId().equals(0))
-						.map(i -> constructGraph(i, environment.getCapabilities())).collect(Collectors.toList()),
+				environment.getCapabilities().stream()
+						.filter(i -> i.getParentCapabilityId().equals(0))
+						.map(i -> constructCapabilityTree(i, environment.getCapabilities()))
+						.collect(Collectors.toList()),
 				strategiesDto);
 	}
 
@@ -227,7 +229,7 @@ public class EnvironmentController {
 				capabilityApplication.getCorrectnessInformationFit(), capabilityApplication.getAvailability());
 	}
 
-	private CapabilityMapItemDto constructGraph(Capability capability, List<Capability> pool) {
+	private CapabilityMapItemDto constructCapabilityTree(Capability capability, List<Capability> pool) {
 		List<CapabilityItemDto> capabilityItemsDto = new ArrayList<CapabilityItemDto>();
 		if (capability.getCapabilityItems() != null) {
 			capabilityItemsDto = capability.getCapabilityItems().stream()
@@ -275,7 +277,7 @@ public class EnvironmentController {
 				capability.getResourceQuality(), capability.getInformationQuality(), capability.getApplicationFit(),
 				convertBasicStatus(capability.getStatus()),
 				pool.stream().filter(i -> i.getParentCapabilityId().equals(capability.getCapabilityId()))
-						.map(i -> constructGraph(i, pool)).collect(Collectors.toList()),
+						.map(i -> constructCapabilityTree(i, pool)).collect(Collectors.toList()),
 				capabilityItemsDto, projectsDto, businessProcessDto, capabilityInformationDto, resourceDto,
 				capabilityApplicationDto);
 	}

@@ -8,25 +8,20 @@ public abstract class ApiIntegrationTest {
     private String jwt;
 
     @Autowired
-    protected RequestFactory requestFactory;
+    private RequestFactory requestFactory;
 
     protected void authenticate() throws Exception {
         jwt = requestFactory.authenticate();
     }
-
     protected MockHttpServletRequestBuilder post(String url) {
         return requestFactory.post(url, jwt);
     }
-
-
     protected MockHttpServletRequestBuilder put(String url) {
         return requestFactory.put(url, jwt);
     }
-
     protected MockHttpServletRequestBuilder get(String url) {
         return requestFactory.get(url, jwt);
     }
-
     protected MockHttpServletRequestBuilder delete(String url) {
         return requestFactory.delete(url, jwt);
     }

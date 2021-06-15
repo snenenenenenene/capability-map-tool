@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.bavostepbros.leap.domain.model.BusinessProcess;
@@ -24,6 +25,7 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
 	@Autowired
 	private BusinessProcessDAL businessProcessDAL;
 	
+	@Lazy
 	@Autowired
 	private CapabilityService capabilityService;
 
