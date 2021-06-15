@@ -45,9 +45,10 @@ public class CapabilityController {
 	@Autowired
 	private CapabilityService capabilityService;
 
-	// Add catch for status/environment not found
+	// TODO Add catch for status/environment not found
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public CapabilityDto addCapability(@ModelAttribute("environmentId") Integer environmentId,
+	public CapabilityDto addCapability(
+			@ModelAttribute("environmentId") Integer environmentId,
 			@ModelAttribute("statusId") Integer statusId,
 			@ModelAttribute("parentCapabilityId") Integer parentCapabilityId,
 			@ModelAttribute("capabilityName") String capabilityName,
@@ -128,12 +129,15 @@ public class CapabilityController {
 	}
 
 	@PutMapping(path = "{capabilityId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public CapabilityDto updateCapability(@PathVariable("capabilityId") Integer capabilityId,
-			@ModelAttribute("environmentId") Integer environmentId, @ModelAttribute("statusId") Integer statusId,
+	public CapabilityDto updateCapability(
+			@PathVariable("capabilityId") Integer capabilityId,
+			@ModelAttribute("environmentId") Integer environmentId,
+			@ModelAttribute("statusId") Integer statusId,
 			@ModelAttribute("parentCapabilityId") Integer parentCapabilityId,
 			@ModelAttribute("capabilityName") String capabilityName,
 			@ModelAttribute("capabilityDescription") String capabilityDescription,
-			@ModelAttribute("level") String level, @ModelAttribute("paceOfChange") String paceOfChange,
+			@ModelAttribute("level") String level,
+		  	@ModelAttribute("paceOfChange") String paceOfChange,
 			@ModelAttribute("targetOperatingModel") String targetOperatingModel,
 			@ModelAttribute("resourceQuality") Integer resourceQuality,
 			@ModelAttribute("informationQuality") Integer informationQuality,

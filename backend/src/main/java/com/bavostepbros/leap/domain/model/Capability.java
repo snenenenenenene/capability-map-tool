@@ -50,10 +50,12 @@ public class Capability {
 	private Integer capabilityId;
 
 	@ManyToOne
+	@NotNull(message = "Validity period must not be null.")
 	@JoinColumn(name = "ENVIRONMENTID", nullable = false)
 	private Environment environment;
 
 	@OneToOne
+	@NotNull(message = "Validity period must not be null.")
 	@JoinColumn
 	private Status status;
 
@@ -121,7 +123,7 @@ public class Capability {
 		uniqueConstraints = { @UniqueConstraint(columnNames = {"CAPABILITYID", "RESOURCEID"})})
 	private List<Resource> resources;
 
-	public Capability(Environment environment, Status status, Integer parentCapabilityId, String capabilityName,
+	public Capability(Environment environment, Status status, Integer parentCapabilityId, @NotBlank String capabilityName,
 			String capabilityDescription, PaceOfChange paceOfChange, TargetOperatingModel targetOperatingModel,
 			Integer resourceQuality, Integer informationQuality, Integer applicationFit) {
 		this.environment = environment;
@@ -137,7 +139,7 @@ public class Capability {
 	}
 
 	public Capability(Integer capabilityId, Environment environment, Status status, Integer parentCapabilityId,
-			String capabilityName, String capabilityDescription, PaceOfChange paceOfChange,
+			@NotBlank String capabilityName, String capabilityDescription, PaceOfChange paceOfChange,
 			TargetOperatingModel targetOperatingModel, Integer resourceQuality, Integer informationQuality,
 			Integer applicationFit) {
 		this.capabilityId = capabilityId;
