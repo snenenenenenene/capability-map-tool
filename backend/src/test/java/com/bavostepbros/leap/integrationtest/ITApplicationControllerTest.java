@@ -69,6 +69,11 @@ public class ITApplicationControllerTest extends ApiIntegrationTest {
 	private ITApplication itApplicationFirst;
 	private ITApplication itApplicationSecond;
 
+	
+	/** 
+	 * @param init(
+	 * @throws Exceptionpublic void init()
+	 */
 	@BeforeAll
 	public void authenticate() throws Exception { super.authenticate(); }
 
@@ -110,6 +115,10 @@ public class ITApplicationControllerTest extends ApiIntegrationTest {
 		assertNotNull(itApplicationSecond);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_postItApplication_whenSaveItApplication() throws Exception {
 		Integer statusId = statusFirst.getStatusId();
@@ -166,6 +175,10 @@ public class ITApplicationControllerTest extends ApiIntegrationTest {
 		testItApplication(itApplication, itapplicationDto);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getItApplication_whenGetItApplication() throws Exception {
 		Integer itApplicationId = itApplicationFirst.getItApplicationId();
@@ -181,6 +194,10 @@ public class ITApplicationControllerTest extends ApiIntegrationTest {
 		testItApplication(itApplicationFirst, itapplicationDto);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_updateItApplication_whenUpdateItApplication() throws Exception {
 		Integer itApplicationId = itApplicationFirst.getItApplicationId();
@@ -238,6 +255,10 @@ public class ITApplicationControllerTest extends ApiIntegrationTest {
 		testItApplication(itApplication, itapplicationDto);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_deleteItApplication_whenDeleteItApplication() throws Exception {
 		Integer itApplicationId = itApplicationFirst.getItApplicationId();
@@ -246,6 +267,10 @@ public class ITApplicationControllerTest extends ApiIntegrationTest {
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getTrue_whenItApplicationExistsById() throws Exception {
 		Integer itApplicationId = itApplicationFirst.getItApplicationId();
@@ -255,6 +280,10 @@ public class ITApplicationControllerTest extends ApiIntegrationTest {
 				.andExpect(MockMvcResultMatchers.content().string("true"));
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getTrue_whenItApplicationExistsByName() throws Exception {
 		String itApplicationName = itApplicationFirst.getName();
@@ -264,6 +293,10 @@ public class ITApplicationControllerTest extends ApiIntegrationTest {
 				.andExpect(MockMvcResultMatchers.content().string("true"));
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getItApplication_whenGetItApplicationByName() throws Exception {
 		String itApplicationName = itApplicationFirst.getName();
@@ -279,6 +312,10 @@ public class ITApplicationControllerTest extends ApiIntegrationTest {
 		testItApplication(itApplicationFirst, itapplicationDto);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getAllItApplications_whenGetAllItApplication() throws Exception {
 		MvcResult mvcResult = mockMvc.perform(get(PATH))
@@ -293,6 +330,10 @@ public class ITApplicationControllerTest extends ApiIntegrationTest {
 		testItApplication(itApplicationSecond, itapplicationDto.get(1));
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getAllCurrencies_whenGetAllCurrencies() throws Exception {
 		MvcResult mvcResult = mockMvc.perform(get(PATH + "all-currencies"))
@@ -310,6 +351,10 @@ public class ITApplicationControllerTest extends ApiIntegrationTest {
 		assertEquals(testCurrencies, currencies);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getAllTimeValues_whenGetAllTimeValues() throws Exception {
 		MvcResult mvcResult = mockMvc.perform(get(PATH + "all-timevalues"))
@@ -325,6 +370,10 @@ public class ITApplicationControllerTest extends ApiIntegrationTest {
 		assertEquals(testTimeValues, timeValues);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_linkTechnology_whenLinkTechnology() throws Exception {
 		Integer itApplicationId = itApplicationFirst.getItApplicationId();
@@ -341,6 +390,10 @@ public class ITApplicationControllerTest extends ApiIntegrationTest {
 		testTechnology(technologyFirst, technologyDto);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_unlinkTechnology_whenDeleteTechnology() throws Exception {
 		Integer itApplicationId = itApplicationSecond.getItApplicationId();
@@ -357,6 +410,10 @@ public class ITApplicationControllerTest extends ApiIntegrationTest {
 		assertEquals(itApplicationSecond.getTechnologies(), technologies);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_returnTrue_whenHasTechnology() throws Exception {
 		Integer itApplicationId = itApplicationSecond.getItApplicationId();
@@ -368,6 +425,11 @@ public class ITApplicationControllerTest extends ApiIntegrationTest {
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
+	
+	/** 
+	 * @param expectedObject
+	 * @param actualObject
+	 */
 	@Test
 	private void testItApplication(ITApplication expectedObject, ITApplicationDto actualObject) {
 		assertEquals(expectedObject.getItApplicationId(), actualObject.getItApplicationId());
@@ -393,6 +455,11 @@ public class ITApplicationControllerTest extends ApiIntegrationTest {
 		assertEquals(expectedObject.getTimeValue(), actualObject.getTimeValue());
 	}
 	
+	
+	/** 
+	 * @param expectedObject
+	 * @param actualObject
+	 */
 	@Test
 	private void testTechnology(Technology expectedObject, TechnologyDto actualObject) {
 		assertEquals(expectedObject.getTechnologyId(), actualObject.getTechnologyId());

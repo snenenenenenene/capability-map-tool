@@ -8,6 +8,34 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return StatusDto
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return LocalDate
+ */
+
+/** 
+ * @return LocalDate
+ */
+
+/** 
+ * @return EnvironmentDto
+ */
+
+/** 
+ * @return List<StrategyItemDto>
+ */
 @Getter
 @Setter
 @NoArgsConstructor

@@ -7,6 +7,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
+/** 
+ * @return CapabilityDto
+ */
+
+/** 
+ * @return InformationDto
+ */
+
+/** 
+ * @return StrategicImportance
+ */
 @Getter
 @Setter
 @NoArgsConstructor

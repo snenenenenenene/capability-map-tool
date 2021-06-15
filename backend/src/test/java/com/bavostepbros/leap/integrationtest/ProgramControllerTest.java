@@ -49,6 +49,11 @@ public class ProgramControllerTest extends ApiIntegrationTest {
 	
 	static final String PATH = "/api/program/";
 
+	
+	/** 
+	 * @param init(
+	 * @throws Exceptionpublic void init()
+	 */
 	@BeforeAll
 	public void authenticate() throws Exception { super.authenticate(); }
 
@@ -72,6 +77,10 @@ public class ProgramControllerTest extends ApiIntegrationTest {
 		assertNotNull(programSecond);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	/*
 	 * @Test public void
 	 * should_throwInvalidInputIfProgramNameIsInvalid_whenSaveProgram() throws
@@ -108,6 +117,10 @@ public class ProgramControllerTest extends ApiIntegrationTest {
 		testProgram(program, programDto);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getProgram_whenGetProgramById() throws Exception {	
 		Integer programId = programFirst.getProgramId();
@@ -123,6 +136,10 @@ public class ProgramControllerTest extends ApiIntegrationTest {
 		testProgram(programFirst, programDto);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_putProgram_whenUpdateProgram() throws Exception {	
 		Integer programId = programFirst.getProgramId();
@@ -144,6 +161,10 @@ public class ProgramControllerTest extends ApiIntegrationTest {
 		testProgram(program, programDto);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_deleteProgram_whenDeleteProgram() throws Exception {	
 		Integer programId = programFirst.getProgramId();
@@ -152,6 +173,10 @@ public class ProgramControllerTest extends ApiIntegrationTest {
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getPrograms_whenGetAllProgram() throws Exception {			
 		MvcResult mvcResult = mockMvc.perform(get(PATH))
@@ -167,6 +192,10 @@ public class ProgramControllerTest extends ApiIntegrationTest {
 		testProgram(programSecond, programDtos.get(1));
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getProgram_whenGetProgramByName() throws Exception {	
 		String programName = programFirst.getProgramName();
@@ -182,6 +211,11 @@ public class ProgramControllerTest extends ApiIntegrationTest {
 		testProgram(programFirst, programDto);
 	}
 	
+	
+	/** 
+	 * @param expectedObject
+	 * @param actualObject
+	 */
 	@Test
 	private void testProgram(Program expectedObject, ProgramDto actualObject) {
 		assertEquals(expectedObject.getProgramId(), actualObject.getProgramId());

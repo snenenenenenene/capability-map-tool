@@ -51,18 +51,33 @@ public class BusinessProcess {
 		this.businessProcessDescription = businessProcessDescription;
 	}
 	
+	
+	/** 
+	 * Adds a capability to the business process.
+	 * @param capability The capability you want to add.
+	 */
 	public void addCapability(Capability capability) {
 		capabilities.add(capability);
 		capability.getBusinessProcess().add(this);
 		return;
 	}
 	
+	
+	/** 
+	 * Removes a capability from the business process.
+	 * @param capability The capability you want to remove.
+	 */
 	public void removeCapability(Capability capability) {
 		capabilities.add(capability);
 		capability.getBusinessProcess().remove(this);
 		return;
 	}
 	
+	
+	/** 
+	 * Gets the capabilities from the business process.
+	 * @return Set<Capability> Returns a set of all the capabilities that are linked.
+	 */
 	public Set<Capability> getCapabilities() {
 		return capabilities;
 	}

@@ -8,6 +8,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
+/** 
+ * @return List<Violation>
+ */
 @Getter
 @Setter
 @AllArgsConstructor

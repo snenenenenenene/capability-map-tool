@@ -29,6 +29,11 @@ public class CapabilityApplicationId implements Serializable {
 		this.applicationId = applicationId;
 	}
 	
+	
+	/** 
+	 * @param o
+	 * @return boolean
+	 */
 	@Override
     public boolean equals(Object o) {
 		if (o == this)
@@ -41,6 +46,10 @@ public class CapabilityApplicationId implements Serializable {
 				Objects.equals(applicationId, capabilityApplicationId.applicationId);	
 	}
 	
+	
+	/** 
+	 * @return int
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(capabilityId, applicationId);

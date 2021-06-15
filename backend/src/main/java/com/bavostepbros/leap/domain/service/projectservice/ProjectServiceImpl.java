@@ -39,6 +39,13 @@ public class ProjectServiceImpl implements ProjectService {
 	@Autowired
 	private CapabilityService capabilityService;
 	
+	
+	/** 
+	 * @param projectName
+	 * @param programId
+	 * @param statusId
+	 * @return Project
+	 */
 	@Override
 	public Project save(String projectName, Integer programId, Integer statusId) {
 		Optional<Program> program = programDAL.findById(programId);
@@ -49,6 +56,11 @@ public class ProjectServiceImpl implements ProjectService {
 		return projectDAL.save(project);
 	}
 
+	
+	/** 
+	 * @param projectId
+	 * @return Project
+	 */
 	@Override
 	public Project get(Integer projectId) {
 		Optional<Project> project = projectDAL.findById(projectId);
@@ -56,6 +68,14 @@ public class ProjectServiceImpl implements ProjectService {
 		return project.get();
 	}
 
+	
+	/** 
+	 * @param projectId
+	 * @param projectName
+	 * @param programId
+	 * @param statusId
+	 * @return Project
+	 */
 	@Override
 	public Project update(Integer projectId, String projectName, Integer programId, Integer statusId) {
 		Optional<Program> program = programDAL.findById(programId);
@@ -66,16 +86,29 @@ public class ProjectServiceImpl implements ProjectService {
 		return projectDAL.save(project);
 	}
 
+	
+	/** 
+	 * @param projectId
+	 */
 	@Override
 	public void delete(Integer projectId) {
 		projectDAL.deleteById(projectId);
 	}
 
+	
+	/** 
+	 * @return List<Project>
+	 */
 	@Override
 	public List<Project> getAll() {
 		return projectDAL.findAll();
 	}
 
+	
+	/** 
+	 * @param programId
+	 * @return List<Project>
+	 */
 	@Override
 	public List<Project> getAllProgramId(Integer programId) {
 		Optional<Program> program = programDAL.findById(programId);
@@ -83,6 +116,11 @@ public class ProjectServiceImpl implements ProjectService {
 		return projectDAL.findByProgram(program.get());
 	}
 
+	
+	/** 
+	 * @param projectName
+	 * @return Project
+	 */
 	@Override
 	public Project getProjectByName(String projectName) {
 		Optional<Project> project = projectDAL.findByProjectName(projectName);
@@ -90,6 +128,11 @@ public class ProjectServiceImpl implements ProjectService {
 		return project.get();
 	}
 
+	
+	/** 
+	 * @param projectId
+	 * @param capabilityId
+	 */
 	@Override
 	public void addCapability(Integer projectId, Integer capabilityId) {
 		Project project = get(projectId);
@@ -98,6 +141,11 @@ public class ProjectServiceImpl implements ProjectService {
 		return;
 	}
 
+	
+	/** 
+	 * @param projectId
+	 * @param capabilityId
+	 */
 	@Override
 	public void deleteCapability(Integer projectId, Integer capabilityId) {
 		Project project = get(projectId);
@@ -106,6 +154,11 @@ public class ProjectServiceImpl implements ProjectService {
 		return;
 	}
 
+	
+	/** 
+	 * @param projectId
+	 * @return Set<Capability>
+	 */
 	@Override
 	public Set<Capability> getAllCapabilitiesByProjectId(Integer projectId) {
 		Project project = get(projectId);

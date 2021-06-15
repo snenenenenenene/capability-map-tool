@@ -13,6 +13,11 @@ import javax.persistence.Converter;
 @Converter(autoApply = true)
 public class CapabilityLevelConverter implements AttributeConverter<CapabilityLevel, Integer> {
 
+	
+	/** 
+	 * @param capabilityLevel
+	 * @return Integer
+	 */
 	@Override
 	public Integer convertToDatabaseColumn(CapabilityLevel capabilityLevel) {
 		if (capabilityLevel == null) {
@@ -21,6 +26,11 @@ public class CapabilityLevelConverter implements AttributeConverter<CapabilityLe
 		return capabilityLevel.getLevel();
 	}
 
+	
+	/** 
+	 * @param level
+	 * @return CapabilityLevel
+	 */
 	@Override
 	public CapabilityLevel convertToEntityAttribute(Integer level) {
 		if (level == null) {

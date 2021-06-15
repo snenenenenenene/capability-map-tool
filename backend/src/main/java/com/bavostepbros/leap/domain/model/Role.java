@@ -11,6 +11,14 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 @Entity
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return String
+ */
 @Getter
 @Setter
 @NoArgsConstructor

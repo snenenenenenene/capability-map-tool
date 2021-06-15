@@ -49,6 +49,11 @@ public class TechnologyControllerTest extends ApiIntegrationTest {
 	private Technology technologyFirst;
 	private Technology technologySecond;
 
+	
+	/** 
+	 * @param init(
+	 * @throws Exceptionpublic void init()
+	 */
 	@BeforeAll
 	public void authenticate() throws Exception { super.authenticate(); }
 
@@ -72,6 +77,10 @@ public class TechnologyControllerTest extends ApiIntegrationTest {
 		assertNotNull(technologySecond);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_postTechnology_whenSaveTechnology() throws Exception {
 		String technologyName = "Javascript";
@@ -92,6 +101,10 @@ public class TechnologyControllerTest extends ApiIntegrationTest {
 		testTechnology(technology, technologyDto);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getTechnology_whenGetTechnology() throws Exception {
 		Integer technologyId = technologyFirst.getTechnologyId();
@@ -107,6 +120,10 @@ public class TechnologyControllerTest extends ApiIntegrationTest {
 		testTechnology(technologyFirst, technologyDto);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_putTechnology_whenUpdateTechnology() throws Exception {
 		Integer technologyId = technologyFirst.getTechnologyId();
@@ -128,6 +145,10 @@ public class TechnologyControllerTest extends ApiIntegrationTest {
 		testTechnology(technology, technologyDto);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_deleteTechnology_whenDeleteTechnology() throws Exception {
 		Integer technologyId = technologyFirst.getTechnologyId();
@@ -136,6 +157,10 @@ public class TechnologyControllerTest extends ApiIntegrationTest {
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getAllTechnologies_whenGetAllTechnologies() throws Exception {
 		MvcResult mvcResult = mockMvc.perform(get(PATH))
@@ -150,6 +175,11 @@ public class TechnologyControllerTest extends ApiIntegrationTest {
 		testTechnology(technologySecond, technologies.get(1));
 	}
 	
+	
+	/** 
+	 * @param expectedObject
+	 * @param actualObject
+	 */
 	@Test
 	private void testTechnology(Technology expectedObject, TechnologyDto actualObject) {
 		assertEquals(expectedObject.getTechnologyId(), actualObject.getTechnologyId());

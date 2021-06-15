@@ -78,6 +78,10 @@ public class CapabilityApplicationControllerTest extends ApiIntegrationTest {
 	private CapabilityApplication capabilityApplicationSecond;
 	private CapabilityApplication capabilityApplicationThird;
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@BeforeAll
 	public void authenticate() throws Exception {
 		super.authenticate();
@@ -144,6 +148,10 @@ public class CapabilityApplicationControllerTest extends ApiIntegrationTest {
 		assertNotNull(capabilityApplicationThird);
 	}
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_postCapabilityApplication_whenSaveCapabilityApplication() throws Exception {
 		Integer capabilityId = capabilityFirst.getCapabilityId();
@@ -177,6 +185,10 @@ public class CapabilityApplicationControllerTest extends ApiIntegrationTest {
 		testCapabilityApplication(capabilityApplication, capabilityApplicationDto);
 	}
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getCapabilityApplication_whenGetCapabilityApplication() throws Exception {
 		Integer capabilityId = capabilityApplicationFirst.getCapability().getCapabilityId();
@@ -192,6 +204,10 @@ public class CapabilityApplicationControllerTest extends ApiIntegrationTest {
 		testCapabilityApplication(capabilityApplicationFirst, capabilityApplicationDto);
 	}
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_putCapabilityApplication_whenUpdateCapabilityApplication() throws Exception {
 		Integer capabilityId = capabilityApplicationFirst.getCapability().getCapabilityId();
@@ -224,6 +240,10 @@ public class CapabilityApplicationControllerTest extends ApiIntegrationTest {
 		testCapabilityApplication(capabilityApplication, capabilityApplicationDto);
 	}
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_deleteCapabilityApplication_whenDeleteCapabilityApplication() throws Exception {
 		Integer capabilityId = capabilityApplicationFirst.getCapability().getCapabilityId();
@@ -233,6 +253,10 @@ public class CapabilityApplicationControllerTest extends ApiIntegrationTest {
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getCapabilityApplications_whenGetlAllByCapabilityIdCapabilityApplication() throws Exception {
 		Integer capabilityId = capabilityApplicationSecond.getCapability().getCapabilityId();
@@ -250,6 +274,11 @@ public class CapabilityApplicationControllerTest extends ApiIntegrationTest {
 		testCapabilityApplication(capabilityApplicationThird, capabilityApplicationDto.get(1));
 	}
 
+	
+	/** 
+	 * @param expectedObject
+	 * @param actualObject
+	 */
 	@Test
 	private void testCapabilityApplication(CapabilityApplication expectedObject,
 			CapabilityApplicationDto actualObject) {

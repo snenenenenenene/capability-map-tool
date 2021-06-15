@@ -24,9 +24,41 @@ import lombok.Setter;
 *
 */
 @Entity
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Strategy
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return List<CapabilityItem>
+ */
 @Getter
 @Setter
 @NoArgsConstructor
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return int
+ */
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class StrategyItem {
 

@@ -32,10 +32,38 @@ public class Project {
     @EqualsAndHashCode.Include
     @Column(name = "PROJECTID")
 	private Integer projectId;
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return Program
+ */
+
+/** 
+ * @return Status
+ */
 	
 	@NotBlank(message = "Project name is required.")
 	@Column(name = "PROJECTNAME", unique = true)
 	private String projectName;
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return int
+ */
 	
 	@ManyToOne
 	@JoinColumn(name = "PROGRAMID")
@@ -61,18 +89,30 @@ public class Project {
 		this.status = status;
 	}
 	
+	
+	/** 
+	 * @param capability
+	 */
 	public void addCapability(Capability capability) {
 		capabilities.add(capability);
 		capability.getProjects().add(this);
 		return;
 	}
 	
+	
+	/** 
+	 * @param capability
+	 */
 	public void removeCapability(Capability capability) {
 		capabilities.remove(capability);
 		capability.getProjects().remove(this);
 		return;
 	}
 	
+	
+	/** 
+	 * @return Set<Capability>
+	 */
 	public Set<Capability> getCapabilities() {
 		return capabilities;
 	}

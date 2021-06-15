@@ -20,9 +20,33 @@ import lombok.Setter;
 *
 */
 @Entity
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return LocalDate
+ */
+
+/** 
+ * @return Project
+ */
 @Getter
 @Setter
 @NoArgsConstructor
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return int
+ */
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Status {
 

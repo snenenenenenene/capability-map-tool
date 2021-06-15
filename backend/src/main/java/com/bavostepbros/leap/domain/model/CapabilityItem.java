@@ -20,9 +20,37 @@ import lombok.Setter;
 *
 */
 @Entity
+
+/** 
+ * @return CapabilityItemId
+ */
+
+/** 
+ * @return Capability
+ */
+
+/** 
+ * @return StrategyItem
+ */
+
+/** 
+ * @return StrategicImportance
+ */
 @Getter
 @Setter
 @NoArgsConstructor
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return int
+ */
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class CapabilityItem {
 		

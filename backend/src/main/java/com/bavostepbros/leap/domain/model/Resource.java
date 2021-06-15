@@ -28,9 +28,37 @@ public class Resource {
     @Column(name = "RESOURCEID")
 	private Integer resourceId;
 	
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return Double
+ */
 	@NotBlank(message = "Resource name is required.")
 	@Column(name = "RESOURCENAME", unique = true)
 	private String resourceName;
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return int
+ */
 	
 	@NotBlank(message = "Resource descirption is required.")
 	@Column(name = "RESOURCEDESCRIPTION")
@@ -58,18 +86,30 @@ public class Resource {
 		this.fullTimeEquivalentYearlyValue = fullTimeEquivalentYearlyValue;
 	}
 	
+	
+	/** 
+	 * @param capability
+	 */
 	public void addCapability(Capability capability) {
 		capabilities.add(capability);
 		capability.getResources().add(this);
 		return;
 	}
 	
+	
+	/** 
+	 * @param capability
+	 */
 	public void removeCapability(Capability capability) {
 		capabilities.remove(capability);
 		capability.getResources().remove(this);
 		return;
 	}
 	
+	
+	/** 
+	 * @return Set<Capability>
+	 */
 	public Set<Capability> getCapabilities() {
 		return capabilities;
 	}

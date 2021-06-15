@@ -88,6 +88,10 @@ public class CapabilityItemControllerTest extends ApiIntegrationTest {
 
 	static final String PATH = "/api/capabilityitem/";
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@BeforeAll
 	public void authenticate() throws Exception {
 		super.authenticate();
@@ -156,6 +160,10 @@ public class CapabilityItemControllerTest extends ApiIntegrationTest {
 		assertNotNull(capabilityItemSecond);
 	}
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_postCapabilityItem_whenSaveCapabilityItem() throws Exception {
 		Integer capabilityId = capabilityFirst.getCapabilityId();
@@ -177,6 +185,10 @@ public class CapabilityItemControllerTest extends ApiIntegrationTest {
 		testCapabilityItem(capabilityItem, resultCapabilityItem);
 	}
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getCapabilityItem_whenGetCapabilityItemByCapabilityIdAndItemId() throws Exception {
 		Integer capabilityId = capabilityItemFirst.getCapability().getCapabilityId();
@@ -192,6 +204,10 @@ public class CapabilityItemControllerTest extends ApiIntegrationTest {
 		testCapabilityItem(capabilityItemFirst, resultCapabilityItem);
 	}
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_putCapabilityItem_whenUpdateCapabilityItem() throws Exception {
 		Integer capabilityId = capabilityFirst.getCapabilityId();
@@ -212,6 +228,10 @@ public class CapabilityItemControllerTest extends ApiIntegrationTest {
 		testCapabilityItem(capabilityItem, resultCapabilityItem);
 	}
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_deleteCapabilityItem_whenDeleteCapabilityItem() throws Exception {
 		Integer capabilityId = capabilityItemFirst.getCapability().getCapabilityId();
@@ -220,6 +240,10 @@ public class CapabilityItemControllerTest extends ApiIntegrationTest {
 		mockMvc.perform(delete(PATH + capabilityId + "/" + itemId)).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getCapabilityItems_whenGetCapabilityItemsByStrategyItemid() throws Exception {
 		Integer itemId = strategyItemSecond.getItemId();
@@ -236,6 +260,10 @@ public class CapabilityItemControllerTest extends ApiIntegrationTest {
 		testCapabilityItem(capabilityItemSecond, resultCapabilityItems.get(0));
 	}
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getCapabilityItems_whenGetCapabilityItemsByCapabilityid() throws Exception {
 		Integer capabilityId = capabilityItemSecond.getCapability().getCapabilityId();
@@ -252,6 +280,11 @@ public class CapabilityItemControllerTest extends ApiIntegrationTest {
 		testCapabilityItem(capabilityItemSecond, resultCapabilityItems.get(0));
 	}
 
+	
+	/** 
+	 * @param expectedObject
+	 * @param actualObject
+	 */
 	@Test
 	private void testCapabilityItem(CapabilityItem expectedObject, CapabilityItemDto actualObject) {
 		assertEquals(expectedObject.getCapability().getCapabilityId(), actualObject.getCapability().getCapabilityId());

@@ -39,6 +39,13 @@ public class BusinessProcessController {
 	@Autowired
 	private BusinessProcessService businessProcessService;
 
+	
+	/** 
+	 * Adds a new business process.
+	 * @param businessProcessName Name of the new business process.
+	 * @param businessProcessDescription Describes the new business process.
+	 * @return BusinessProcessDto Returns a DTO of the newly made business process.
+	 */
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public BusinessProcessDto addBusinessProcess(
 			@Valid @ModelAttribute("businessProcessName") String businessProcessName,
@@ -47,6 +54,12 @@ public class BusinessProcessController {
 		return convertBusinessProcess(businessProcess);
 	}
 
+	
+	/** 
+	 * Gets a business process from its ID.
+	 * @param businessProcessId The ID for which you want to get the business process.
+	 * @return BusinessProcessDto Returns a DTO of the business process you retrieve.
+	 */
 	@GetMapping(path = "{businessProcessId}")
 	public BusinessProcessDto getBusinessProcess(
 			@PathVariable("businessProcessId") @Positive Integer businessProcessId) {
@@ -54,6 +67,14 @@ public class BusinessProcessController {
 		return convertBusinessProcess(businessProcess);
 	}
 
+	
+	/** 
+	 * Updates a business process.
+	 * @param businessProcessId The id of the business process you want to update.
+	 * @param businessProcessName The (new) name of the business process.
+	 * @param businessProcessDescription THhe (new) description of the business process.
+	 * @return BusinessProcessDto Returns a DTO of the updated business process.
+	 */
 	@PutMapping(path = "{businessProcessId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public BusinessProcessDto updateBusinessProcess(
 			@PathVariable("businessProcessId") @Positive Integer businessProcessId,
@@ -64,11 +85,22 @@ public class BusinessProcessController {
 		return convertBusinessProcess(businessProcess);
 	}
 
+	
+	/** 
+	 * Deletes a business process from its ID.
+	 * @param businessProcessId The ID of the process you want to delete.
+	 */
 	@DeleteMapping(path = "{businessProcessId}")
 	public void deleteBusinessProcess(@PathVariable("businessProcessId") @Positive Integer businessProcessId) {
 		businessProcessService.delete(businessProcessId);
 	}
 
+	
+	/** 
+	 * Gets a business process from its name.
+	 * @param businessProcessName The name of the business process you want to get.
+	 * @return BusinessProcessDto Returns a DTO of the retrieved business process.
+	 */
 	@GetMapping(path = "businessProcessName/{businessProcessName}")
 	public BusinessProcessDto getBusinessProcess(
 			@Valid @PathVariable("businessProcessName") String businessProcessName) {
@@ -76,6 +108,11 @@ public class BusinessProcessController {
 		return convertBusinessProcess(businessProcess);
 	}
 
+	
+	/** 
+	 * Gets all business processes.
+	 * @return List<BusinessProcessDto>
+	 */
 	@GetMapping
 	public List<BusinessProcessDto> getAllBusinessProcess() {
 		List<BusinessProcess> businessProcessList = businessProcessService.getAll();
@@ -84,18 +121,36 @@ public class BusinessProcessController {
 		return businessProcessDto;
 	}
 
+	
+	/** 
+	 * Links a business process to a capability.
+	 * @param businessProcessId The ID of the business process you want to link.
+	 * @param capabilityId The ID of the capability you want to link.
+	 */
 	@PutMapping(path = "link-capability/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void linkCapability(@ModelAttribute("businessProcessId") Integer businessProcessId,
 			@ModelAttribute("capabilityId") Integer capabilityId) {
 		businessProcessService.addCapability(businessProcessId, capabilityId);
 	}
 
+	
+	/** 
+	 * Unlinks a capability from a business process.
+	 * @param businessProcessId The ID of the business process you want to unlink.
+	 * @param capabilityId The ID of the capability you want to unlink.
+	 */
 	@DeleteMapping(path = "unlink-capability/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void unlinkCapability(@ModelAttribute("businessProcessId") Integer businessProcessId,
 			@ModelAttribute("capabilityId") Integer capabilityId) {
 		businessProcessService.deleteCapability(businessProcessId, capabilityId);
 	}
 
+	
+	/** 
+	 * Gets all capabilities linked to one business process.
+	 * @param businessProcessId The ID of the business process for which you want to find all capabilities.
+	 * @return List<CapabilityDto> Returns a List of DTO's of the linked capabilities.
+	 */
 	@GetMapping(path = "get-capabilities/{businessProcessId}")
 	public List<CapabilityDto> getCapabilities(@PathVariable("businessProcessId") Integer businessProcessId) {
 		Set<Capability> capabilities = businessProcessService.getAllCapabilitiesByBusinessProcessId(businessProcessId);
@@ -104,11 +159,23 @@ public class BusinessProcessController {
 		return capabilitiesDto;
 	}
 
+	
+	/** 
+	 * Converts a business process from the original object to the equivalent DTO.
+	 * @param businessProcess The business process object to convert.
+	 * @return BusinessProcessDto Returns the DTO of the business process.
+	 */
 	private BusinessProcessDto convertBusinessProcess(BusinessProcess businessProcess) {
 		return new BusinessProcessDto(businessProcess.getBusinessProcessId(), businessProcess.getBusinessProcessName(),
 				businessProcess.getBusinessProcessDescription());
 	}
 
+	
+	/** 
+	 * Converts a capability from the original object to the equivalent DTO.
+	 * @param capability The capability object to convert.
+	 * @return CapabilityDto Returns the DTO of the capability.
+	 */
 	private CapabilityDto convertCapability(Capability capability) {
 		EnvironmentDto environmentDto = new EnvironmentDto(capability.getEnvironment().getEnvironmentId(),
 				capability.getEnvironment().getEnvironmentName());
@@ -121,5 +188,4 @@ public class BusinessProcessController {
 				capability.getTargetOperatingModel(), capability.getResourceQuality(),
 				capability.getInformationQuality(), capability.getApplicationFit());
 	}
-
 }

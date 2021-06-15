@@ -21,12 +21,23 @@ public class InformationServiceImpl implements InformationService {
 	@Autowired
 	private InformationDAL informationDAL;
 	
+	
+	/** 
+	 * @param informationName
+	 * @param informationDescription
+	 * @return Information
+	 */
 	@Override
 	public Information save(String informationName, String informationDescription) {
 		Information information = new Information(informationName, informationDescription);
 		return informationDAL.save(information);
 	}
 
+	
+	/** 
+	 * @param informationId
+	 * @return Information
+	 */
 	@Override
 	public Information get(Integer informationId) {
 		Optional<Information> information = informationDAL.findById(informationId);
@@ -34,17 +45,33 @@ public class InformationServiceImpl implements InformationService {
 		return information.get();
 	}
 
+	
+	/** 
+	 * @param informationId
+	 * @param informationName
+	 * @param informationDescription
+	 * @return Information
+	 */
 	@Override
 	public Information update(Integer informationId, String informationName, String informationDescription) {
 		Information information = new Information(informationId, informationName, informationDescription);
 		return informationDAL.save(information);
 	}
 
+	
+	/** 
+	 * @param informationId
+	 */
 	@Override
 	public void delete(Integer informationId) {
 		informationDAL.deleteById(informationId);
 	}
 
+	
+	/** 
+	 * @param informationName
+	 * @return Information
+	 */
 	@Override
 	public Information getInformationByName(String informationName) {
 		Optional<Information> information = informationDAL.findByInformationName(informationName);
@@ -52,6 +79,10 @@ public class InformationServiceImpl implements InformationService {
 		return information.get();
 	}
 
+	
+	/** 
+	 * @return List<Information>
+	 */
 	@Override
 	public List<Information> getAll() {
 		return informationDAL.findAll();

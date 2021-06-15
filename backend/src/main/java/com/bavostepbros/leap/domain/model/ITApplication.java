@@ -35,9 +35,109 @@ public class ITApplication {
 
     @Id
     @GeneratedValue
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Status
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return LocalDate
+ */
+
+/** 
+ * @return LocalDate
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return Double
+ */
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Double
+ */
+
+/** 
+ * @return Double
+ */
+
+/** 
+ * @return TimeValue
+ */
+
+/** 
+ * @return List<CapabilityApplication>
+ */
+
+/** 
+ * @return List<Technology>
+ */
     @EqualsAndHashCode.Include
     @Column(name = "ITAPPLICATIONID")
     private Integer itApplicationId;
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return int
+ */
 
     @OneToOne
     @JoinColumn
@@ -193,12 +293,20 @@ public class ITApplication {
 		this.timeValue = timeValue;
 	}
 	
-	public void addTechnology(Technology technology) {
+	
+    /** 
+     * @param technology
+     */
+    public void addTechnology(Technology technology) {
     	technologies.add(technology);
     	return;
     }
 	
-	public void removeTechnology(Technology technology) {
+	
+    /** 
+     * @param technology
+     */
+    public void removeTechnology(Technology technology) {
 		technologies.remove(technology);
 	}
 

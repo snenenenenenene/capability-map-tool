@@ -1,6 +1,8 @@
 package com.bavostepbros.leap.controller;
 
+import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,6 +53,12 @@ public class UserController {
 
 	private static Logger log = LoggerFactory.getLogger(UserController.class);
 
+	
+	/** 
+	 * @param username
+	 * @param @ModelAttribute("email"
+	 * @return UserDto
+	 */
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public UserDto addUser(@ModelAttribute("username") String username, @ModelAttribute("email") String email,
 			@ModelAttribute("roleId") Integer roleId) {
@@ -60,18 +69,32 @@ public class UserController {
 		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail(), user.getPassword());
 	}
 
+	
+	/** 
+	 * @param id
+	 * @return UserDto
+	 */
 	@GetMapping("/{id}")
 	public UserDto getUserById(@ModelAttribute("id") Integer id) {
 		User user = userService.get(id);
 		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail(), user.getPassword());
 	}
 
+	
+	/** 
+	 * @param email
+	 * @return UserDto
+	 */
 	@GetMapping("/email/{email}")
 	public UserDto getUserByEmail(@ModelAttribute("email") String email) {
 		User user = userService.getByEmail(email);
 		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail(), user.getPassword());
 	}
 
+	
+	/** 
+	 * @return List<UserDto>
+	 */
 	@GetMapping()
 	public List<UserDto> getAllUsers() {
 		List<User> users = userService.getAll();
@@ -80,6 +103,12 @@ public class UserController {
 		return usersDto;
 	}
 
+	
+	/** 
+	 * @param userId
+	 * @param @ModelAttribute("username"
+	 * @return UserDto
+	 */
 	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public UserDto updateUser(@ModelAttribute("userId") Integer userId, @ModelAttribute("username") String username,
 			@ModelAttribute("password") String password, @ModelAttribute("email") String email,
@@ -89,11 +118,20 @@ public class UserController {
 		return new UserDto(user.getUserId(), user.getRoleId(), user.getUsername(), user.getEmail(), user.getPassword());
 	}
 
+	
+	/** 
+	 * @param id
+	 */
 	@DeleteMapping(path = "/{id}")
 	public void deleteUser(@PathVariable("id") Integer id) {
 		userService.delete(id);
 	}
 
+	
+	/** 
+	 * @param @ModelAttribute("email"
+	 * @return ResponseEntity<String>
+	 */
 	// TODO remove password from response and userDTO
 	@PostMapping(value = "/authenticate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<String> authenticate(@ModelAttribute("email") String email,
@@ -107,11 +145,50 @@ public class UserController {
 		}
 	}
 
+	
+	/** 
+	 * @param changePassword(
+	 * @return String
+	 */
 	@PutMapping(path = "changePassword", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public String changePassword(@ModelAttribute("password") String password, @ModelAttribute("id") Integer id) {
-
+	public String changePassword(
+			@ModelAttribute("password") String password, 
+			@ModelAttribute("id") Integer id,			
+			@RequestHeader("Authorization") String token) {
+		String jwt = token.substring(7);
 		User user = userService.get(id);
-		userService.update(id, user.getRoleId(), user.getUsername(), password, user.getEmail());
-		return "Password saved";
+
+		String username = user.getUsername();
+		String currentUser = jwtUtility.extractUsername(jwt);
+		if(currentUser.equals(username)){
+			userService.update(id, user.getRoleId(), user.getUsername(), password, user.getEmail());
+			return "Password saved";
+		}
+		else{
+			return "Can not change someone elses password.";
+		}
 	}
+
+	
+	/** 
+	 * @param forgotPassword(
+	 * @return String
+	 */
+	@PutMapping(path = "/forgotPassword", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public String forgotPassword(
+		@ModelAttribute("email") String email) {
+		String result = "";
+		if(userService.existsByEmail(email)){
+			User user = userService.getByEmail(email);
+			String password = userService.generatePassword();
+			Integer userId = user.getUserId();
+			Integer roleId = user.getRoleId();
+			String username = user.getUsername();
+			userService.update(userId, roleId, username, password, email);
+			emailService.sendForgotPassword(email, password);
+			result = "Email sent.";
+		}
+		return result;
+	}
+
 }

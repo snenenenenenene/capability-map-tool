@@ -25,9 +25,49 @@ import lombok.Setter;
 *
 */
 @Entity
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Status
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return LocalDate
+ */
+
+/** 
+ * @return LocalDate
+ */
+
+/** 
+ * @return Environment
+ */
+
+/** 
+ * @return List<StrategyItem>
+ */
 @Getter
 @Setter
 @NoArgsConstructor
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return int
+ */
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Strategy {
 

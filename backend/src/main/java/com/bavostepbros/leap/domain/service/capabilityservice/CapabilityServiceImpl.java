@@ -57,6 +57,20 @@ public class CapabilityServiceImpl implements CapabilityService {
 	@Autowired
 	private ResourceService resourceService;
 
+	
+	/** 
+	 * @param environmentId
+	 * @param statusId
+	 * @param parentCapabilityId
+	 * @param capabilityName
+	 * @param capabilityDescription
+	 * @param paceOfChange
+	 * @param targetOperatingModel
+	 * @param resourceQuality
+	 * @param informationQuality
+	 * @param applicationFit
+	 * @return Capability
+	 */
 	@Override
 	public Capability save(
 			@NotNull @Min(1) Integer environmentId,
@@ -91,16 +105,40 @@ public class CapabilityServiceImpl implements CapabilityService {
 		return savedCapability;
 	}
 
+	
+	/** 
+	 * @param id
+	 * @return Capability
+	 */
 	@Override
 	public Capability get(@NotNull @Min(1) Integer id) throws NoSuchElementException {
 		return capabilityDAL.findById(id).get();
 	}
 
+	
+	/** 
+	 * @return List<Capability>
+	 */
 	@Override
 	public List<Capability> getAll() {
 		return capabilityDAL.findAll();
 	}
 
+	
+	/** 
+	 * @param capabilityId
+	 * @param environmentId
+	 * @param statusId
+	 * @param parentCapabilityId
+	 * @param capabilityName
+	 * @param capabilityDescription
+	 * @param paceOfChange
+	 * @param targetOperatingModel
+	 * @param resourceQuality
+	 * @param informationQuality
+	 * @param applicationFit
+	 * @return Capability
+	 */
 	@Override
 	public Capability update(
 			@NotNull @Min(1) Integer capabilityId,
@@ -136,6 +174,10 @@ public class CapabilityServiceImpl implements CapabilityService {
 		return capabilityDAL.save(capability);
 	}
 
+	
+	/** 
+	 * @param capability
+	 */
 	// TODO try catch for out of bounds exception
 	@Override
 	public void updateLevel(Capability capability) {
@@ -145,6 +187,10 @@ public class CapabilityServiceImpl implements CapabilityService {
 			capability.setLevel(capabilityDAL.getOne(capability.getParentCapabilityId()).getLevel().next());
 	}
 
+	
+	/** 
+	 * @param id
+	 */
 	// TODO write unit tests!
 	@Override
 	public void delete(Integer id) {
@@ -166,6 +212,11 @@ public class CapabilityServiceImpl implements CapabilityService {
 		}
 	}
 
+	
+	/** 
+	 * @param environmentId
+	 * @return List<Capability>
+	 */
 	@Override
 	public List<Capability> getCapabilitiesByEnvironment(Integer environmentId) {
 		if (environmentId == null || environmentId.equals(0)) {
@@ -180,6 +231,11 @@ public class CapabilityServiceImpl implements CapabilityService {
 		return capabilities;
 	}
 
+	
+	/** 
+	 * @param level
+	 * @return List<Capability>
+	 */
 	@Override
 	public List<Capability> getCapabilitiesByLevel(String level) {
 		if (level == null) {
@@ -194,6 +250,11 @@ public class CapabilityServiceImpl implements CapabilityService {
 		return capabilities;
 	}
 
+	
+	/** 
+	 * @param parentId
+	 * @return List<Capability>
+	 */
 	@Override
 	public List<Capability> getCapabilityChildren(Integer parentId) {
 		if (parentId == null || parentId.equals(0)) {
@@ -206,6 +267,12 @@ public class CapabilityServiceImpl implements CapabilityService {
 		return capabilities;
 	}
 
+	
+	/** 
+	 * @param parentId
+	 * @param level
+	 * @return List<Capability>
+	 */
 	@Override
 	public List<Capability> getCapabilitiesByParentIdAndLevel(Integer parentId, String level) {
 		if (parentId == null || parentId.equals(0)) {
@@ -226,16 +293,31 @@ public class CapabilityServiceImpl implements CapabilityService {
 		return capabilities;
 	}
 
+	
+	/** 
+	 * @param id
+	 * @return boolean
+	 */
 	@Override
 	public boolean existsById(Integer id) {
 		return capabilityDAL.existsById(id);
 	}
 
+	
+	/** 
+	 * @param capabilityName
+	 * @return boolean
+	 */
 	@Override
 	public boolean existsByCapabilityName(String capabilityName) {
 		return !capabilityDAL.findByCapabilityName(capabilityName).isEmpty();
 	}
 
+	
+	/** 
+	 * @param capabilityName
+	 * @return Capability
+	 */
 	// TODO write unit tests for this one!
 	@Override
 	public Capability getCapabilityByCapabilityName(String capabilityName) {
@@ -246,6 +328,11 @@ public class CapabilityServiceImpl implements CapabilityService {
 		return capabilityDAL.findByCapabilityName(capabilityName).get();
 	}
 
+	
+	/** 
+	 * @param capabilityId
+	 * @param projectId
+	 */
 	@Override
 	public void addProject(Integer capabilityId, Integer projectId) {
 		Capability capability = get(capabilityId);
@@ -254,6 +341,11 @@ public class CapabilityServiceImpl implements CapabilityService {
 		return;
 	}
 
+	
+	/** 
+	 * @param capabilityId
+	 * @param projectId
+	 */
 	@Override
 	public void deleteProject(Integer capabilityId, Integer projectId) {
 		Capability capability = get(capabilityId);
@@ -262,12 +354,22 @@ public class CapabilityServiceImpl implements CapabilityService {
 		return;
 	}
 
+	
+	/** 
+	 * @param capabilityId
+	 * @return List<Project>
+	 */
 	@Override
 	public List<Project> getAllProjectsByCapabilityId(Integer capabilityId) {
 		Capability capability = get(capabilityId);
 		return capability.getProjects();
 	}
 
+	
+	/** 
+	 * @param capabilityId
+	 * @param businessProcessId
+	 */
 	@Override
 	public void addBusinessProcess(Integer capabilityId, Integer businessProcessId) {
 		Capability capability = get(capabilityId);
@@ -276,6 +378,11 @@ public class CapabilityServiceImpl implements CapabilityService {
 		return;
 	}
 
+	
+	/** 
+	 * @param capabilityId
+	 * @param businessProcessId
+	 */
 	@Override
 	public void deleteBusinessProcess(Integer capabilityId, Integer businessProcessId) {
 		Capability capability = get(capabilityId);
@@ -284,12 +391,22 @@ public class CapabilityServiceImpl implements CapabilityService {
 		return;
 	}
 
+	
+	/** 
+	 * @param capabilityId
+	 * @return Set<BusinessProcess>
+	 */
 	@Override
 	public Set<BusinessProcess> getAllBusinessProcessByCapabilityId(Integer capabilityId) {
 		Capability capability = get(capabilityId);
 		return capability.getBusinessProcess();
 	}
 
+	
+	/** 
+	 * @param capabilityId
+	 * @param resourceId
+	 */
 	@Override
 	public void addResource(Integer capabilityId, Integer resourceId) {
 		Capability capability = get(capabilityId);
@@ -298,6 +415,11 @@ public class CapabilityServiceImpl implements CapabilityService {
 		return;
 	}
 
+	
+	/** 
+	 * @param capabilityId
+	 * @param resourceId
+	 */
 	@Override
 	public void deleteResource(Integer capabilityId, Integer resourceId) {
 		Capability capability = get(capabilityId);
@@ -306,6 +428,11 @@ public class CapabilityServiceImpl implements CapabilityService {
 		return;
 	}
 
+	
+	/** 
+	 * @param capabilityId
+	 * @return List<Resource>
+	 */
 	@Override
 	public List<Resource> getAllResourceByResourceId(Integer capabilityId) {
 		Capability capability = get(capabilityId);

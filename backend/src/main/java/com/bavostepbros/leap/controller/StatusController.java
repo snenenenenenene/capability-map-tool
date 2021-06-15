@@ -40,6 +40,11 @@ public class StatusController {
 	@Autowired
 	private StatusService statusService;
 	
+	
+	/** 
+	 * @param addStatus(
+	 * @return StatusDto
+	 */
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public StatusDto addStatus(
 			@Valid @ModelAttribute("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityPeriod) {		
@@ -47,12 +52,22 @@ public class StatusController {
 		return new StatusDto(status.getStatusId(), status.getValidityPeriod());
 	}
 	
+	
+	/** 
+	 * @param id
+	 * @return StatusDto
+	 */
 	@GetMapping(path = "{statusId}")
     public StatusDto getStatusById(@PathVariable("statusId") Integer id) {		
 		Status status = statusService.get(id);
         return new StatusDto(status.getStatusId(), status.getValidityPeriod());
     }
 	
+	
+	/** 
+	 * @param getStatusByValidityPeriod(
+	 * @return StatusDto
+	 */
 	@GetMapping(path = "validityperiod/{validityPeriod}")
     public StatusDto getStatusByValidityPeriod(
     		@Valid @PathVariable("validityPeriod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityPeriod) {		
@@ -60,6 +75,10 @@ public class StatusController {
         return new StatusDto(status.getStatusId(), status.getValidityPeriod());
     }
 	
+	
+	/** 
+	 * @return List<StatusDto>
+	 */
 	@GetMapping
 	public List<StatusDto> getAllStatus() {
 		List<Status> status = statusService.getAll();
@@ -69,17 +88,32 @@ public class StatusController {
 		return statusDto;
 	}
 	
+	
+	/** 
+	 * @param id
+	 * @return boolean
+	 */
 	@GetMapping(path = "exists-by-id/{statusId}")
 	public boolean doesStatusExistsById(@PathVariable("statusId") Integer id) {		
 		return statusService.existsById(id);
 	}
 	
+	
+	/** 
+	 * @param doesValidityPeriodExists(
+	 * @return boolean
+	 */
 	@GetMapping(path = "exists-by-validityperiod/{validityperiod}")
 	public boolean doesValidityPeriodExists(
 			@Valid @PathVariable("validityperiod") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate validityPeriod) {		
 		return statusService.existsByValidityPeriod(validityPeriod);
 	}
 	
+	
+	/** 
+	 * @param updateStatus(
+	 * @return StatusDto
+	 */
 	@PutMapping(path = "{statusId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public StatusDto updateStatus(
 			@PathVariable("statusId") Integer statusId,
@@ -88,6 +122,10 @@ public class StatusController {
 		return new StatusDto(status.getStatusId(), status.getValidityPeriod());
 	}
 	
+	
+	/** 
+	 * @param id
+	 */
 	@DeleteMapping(path = "{statusId}")
 	public void deleteStatus(@PathVariable("statusId") Integer id) {		
 		statusService.delete(id);

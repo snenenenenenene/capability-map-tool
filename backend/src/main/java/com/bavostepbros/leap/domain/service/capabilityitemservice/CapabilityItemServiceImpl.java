@@ -34,6 +34,13 @@ public class CapabilityItemServiceImpl implements CapabilityItemService {
 	@Autowired
 	private CapabilityService capabilityService;
 	
+	
+	/** 
+	 * @param capabilityId
+	 * @param itemId
+	 * @param strategicImportance
+	 * @return CapabilityItem
+	 */
 	@Override
 	public CapabilityItem save(Integer capabilityId, Integer itemId, String strategicImportance) {
 		if (capabilityId == null || capabilityId.equals(0)) {
@@ -54,6 +61,12 @@ public class CapabilityItemServiceImpl implements CapabilityItemService {
 		return capabilityItemDAL.save(capabilityItem);
 	}
 
+	
+	/** 
+	 * @param capabilityId
+	 * @param itemId
+	 * @return CapabilityItem
+	 */
 	@Override
 	public CapabilityItem get(Integer capabilityId, Integer itemId) {
 		if (capabilityId == null || capabilityId.equals(0)) {
@@ -69,6 +82,13 @@ public class CapabilityItemServiceImpl implements CapabilityItemService {
 		return capabilityItem;
 	}
 
+	
+	/** 
+	 * @param capabilityId
+	 * @param itemId
+	 * @param strategicImportance
+	 * @return CapabilityItem
+	 */
 	@Override
 	public CapabilityItem update(Integer capabilityId, Integer itemId, String strategicImportance) {
 		if (capabilityId == null || capabilityId.equals(0)) {
@@ -89,6 +109,11 @@ public class CapabilityItemServiceImpl implements CapabilityItemService {
 		return capabilityItemDAL.save(capabilityItem);
 	}
 
+	
+	/** 
+	 * @param capabilityId
+	 * @param itemId
+	 */
 	@Override
 	public void delete(Integer capabilityId, Integer itemId) {
 		if (capabilityId == null || capabilityId.equals(0)) {
@@ -103,6 +128,11 @@ public class CapabilityItemServiceImpl implements CapabilityItemService {
 		capabilityItemDAL.deleteByCapabilityAndStrategyItem(capability, strategyItem);
 	}
 
+	
+	/** 
+	 * @param itemId
+	 * @return List<CapabilityItem>
+	 */
 	@Override
 	public List<CapabilityItem> getCapabilityItemsByStrategyItem(Integer itemId) {
 		if (itemId == null || itemId.equals(0)) {
@@ -113,6 +143,11 @@ public class CapabilityItemServiceImpl implements CapabilityItemService {
 		return capabilityItemDAL.findByStrategyItem(strategyItem);
 	}
 
+	
+	/** 
+	 * @param capabilityId
+	 * @return List<CapabilityItem>
+	 */
 	@Override
 	public List<CapabilityItem> getCapabilityItemsByCapability(Integer capabilityId) {
 		Capability capability = capabilityService.get(capabilityId);

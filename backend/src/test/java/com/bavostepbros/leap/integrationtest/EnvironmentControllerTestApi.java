@@ -51,6 +51,11 @@ public class EnvironmentControllerTestApi extends ApiIntegrationTest {
 	
 	static final String PATH = "/api/environment/";
 	
+	
+	/** 
+	 * @param init(
+	 * @throws Exceptionpublic void init()
+	 */
 	// private static final Logger logger = LoggerFactory.getLogger(EnvironmentControllerIntegrationTest.class);
 
 	@BeforeAll
@@ -76,6 +81,10 @@ public class EnvironmentControllerTestApi extends ApiIntegrationTest {
 		assertNotNull(environmentSecond);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_postEnvironment_whenSaveEnvironment() throws Exception {		
 		MvcResult mvcResult = mockMvc.perform(post(PATH)
@@ -94,6 +103,10 @@ public class EnvironmentControllerTestApi extends ApiIntegrationTest {
 		testEnvironment(environment, resultEnvironment);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getEnvironment_whenGetEnvironmentById() throws Exception {
 		Integer environmentId = environmentFirst.getEnvironmentId();
@@ -109,6 +122,10 @@ public class EnvironmentControllerTestApi extends ApiIntegrationTest {
 		testEnvironment(environmentFirst, resultEnvironment);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getEnvironment_whenGetEnvironmentByEnvironmentName() throws Exception {
 		String environmentName = environmentFirst.getEnvironmentName();
@@ -124,6 +141,10 @@ public class EnvironmentControllerTestApi extends ApiIntegrationTest {
 		testEnvironment(environmentFirst, resultEnvironment);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getBoolean_whenEnvironmentExistsById() throws Exception {
 		Integer environmentId = environmentFirst.getEnvironmentId();
@@ -133,6 +154,10 @@ public class EnvironmentControllerTestApi extends ApiIntegrationTest {
 				.andExpect(MockMvcResultMatchers.content().string("true"));		
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getBoolean_whenEnvironmentNameExists() throws Exception {
 		String environmentName = environmentFirst.getEnvironmentName();
@@ -142,6 +167,10 @@ public class EnvironmentControllerTestApi extends ApiIntegrationTest {
 				.andExpect(MockMvcResultMatchers.content().string("true"));		
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getAllEnvironments_whenGetAllEnvironments() throws Exception {
 		MvcResult mvcResult = mockMvc.perform(get(PATH))
@@ -157,6 +186,10 @@ public class EnvironmentControllerTestApi extends ApiIntegrationTest {
 		testEnvironment(environmentSecond, resultEnvironments.get(1));
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_putEnvironment_whenUpdateEnvironment() throws Exception {
 		Integer environmentId = environmentFirst.getEnvironmentId();
@@ -178,6 +211,10 @@ public class EnvironmentControllerTestApi extends ApiIntegrationTest {
 		testEnvironment(environment, resultEnvironment);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_deleteEnvironment_whenDeleteEnvironment() throws Exception {
 		Integer environmentId = environmentFirst.getEnvironmentId();
@@ -186,6 +223,11 @@ public class EnvironmentControllerTestApi extends ApiIntegrationTest {
 				.andExpect(MockMvcResultMatchers.status().isOk());	
 	}
 	
+	
+	/** 
+	 * @param expectedObject
+	 * @param actualObject
+	 */
 	@Test
 	private void testEnvironment(Environment expectedObject, EnvironmentDto actualObject) {
 		assertEquals(expectedObject.getEnvironmentId(), actualObject.getEnvironmentId());

@@ -19,6 +19,14 @@ public class CapabilityInformationId implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Column(name = "CAPABILITYID")
+
+/** 
+ * @return Integer
+ */
+
+/** 
+ * @return Integer
+ */
 	private Integer capabilityId;
 	
 	@Column(name = "INFORMATIONID")
@@ -29,6 +37,11 @@ public class CapabilityInformationId implements Serializable {
 		this.informationId = informationId;
 	}
 	
+	
+	/** 
+	 * @param o
+	 * @return boolean
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (o == this)
@@ -41,6 +54,10 @@ public class CapabilityInformationId implements Serializable {
 				Objects.equals(informationId, capabilityInformationId.informationId);
 	}
 	
+	
+	/** 
+	 * @return int
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(capabilityId, informationId);

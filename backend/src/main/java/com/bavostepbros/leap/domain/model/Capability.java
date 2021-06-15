@@ -50,12 +50,10 @@ public class Capability {
 	private Integer capabilityId;
 
 	@ManyToOne
-	@NotNull(message = "Validity period must not be null.")
 	@JoinColumn(name = "ENVIRONMENTID", nullable = false)
 	private Environment environment;
 
 	@OneToOne
-	@NotNull(message = "Validity period must not be null.")
 	@JoinColumn
 	private Status status;
 
@@ -90,6 +88,7 @@ public class Capability {
 	@Column(name = "INFORMATIONQUALITY")
 	private Integer informationQuality;
 
+	@CsvBindByName
 	@Column(name = "APPLICATIONFIT")
 	private Integer applicationFit;
 
@@ -166,44 +165,80 @@ public class Capability {
 		this.resourceQuality = 1;
 	}
 
+
+	/**
+	 * @param project
+	 */
 	public void addProject(Project project) {
 		projects.add(project);
 		project.getCapabilities().add(this);
 	}
 
+
+	/**
+	 * @param project
+	 */
 	public void removeProject(Project project) {
 		projects.remove(project);
 		project.getCapabilities().remove(this);
 	}
 
+
+	/**
+	 * @return List<Project>
+	 */
 	public List<Project> getProjects() {
 		return projects;
 	}
 
+
+	/**
+	 * @param businessProcessItem
+	 */
 	public void addBusinessProcess(BusinessProcess businessProcessItem) {
 		businessProcess.add(businessProcessItem);
 		businessProcessItem.getCapabilities().add(this);
 	}
 
+
+	/**
+	 * @param businessProcessItem
+	 */
 	public void removeBusinessProcess(BusinessProcess businessProcessItem) {
 		businessProcess.remove(businessProcessItem);
 		businessProcessItem.getCapabilities().remove(this);
 	}
 
+
+	/**
+	 * @return Set<BusinessProcess>
+	 */
 	public Set<BusinessProcess> getBusinessProcess() {
 		return businessProcess;
 	}
 
+
+	/**
+	 * @param resource
+	 */
 	public void addResource(Resource resource) {
 		resources.add(resource);
 		resource.getCapabilities().add(this);
 	}
 
+
+	/**
+	 * @param resource
+	 */
 	public void removeResource(Resource resource) {
 		resources.remove(resource);
 		resource.getCapabilities().remove(this);
 	}
 
+
+	/**
+	 * @return List<Resource>
+	 */
 	public List<Resource> getResources() {
 		return resources;
 	}

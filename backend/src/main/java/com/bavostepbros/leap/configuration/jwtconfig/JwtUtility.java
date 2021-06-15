@@ -37,6 +37,12 @@ public class JwtUtility implements Serializable {
 	}
 
 
+	
+	/** 
+	 * @param username
+	 * @param role
+	 * @return String
+	 */
 	public String createToken(String username, Role role) {
 		Claims claims = Jwts.claims().setSubject(username);
 		claims.put("auth", role);
@@ -47,28 +53,58 @@ public class JwtUtility implements Serializable {
 				.signWith(SignatureAlgorithm.HS256, SECRETKEY).compact();
 	}
 
+	
+	/** 
+	 * @param username
+	 * @return Authentication
+	 */
 	public Authentication getAuthentication(String username) {
 		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 		return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(),
 				userDetails.getAuthorities());
 	}
 
+	
+	/** 
+	 * @param jwt
+	 * @return Claims
+	 */
 	public Claims getClaimsFromToken(String jwt) {
 		return Jwts.parser().setSigningKey(SECRETKEY).parseClaimsJws(jwt).getBody();
 	}
 
+	
+	/** 
+	 * @param jwt
+	 * @return String
+	 */
 	public String extractUsername(String jwt) {
 		return getClaimsFromToken(jwt).getSubject();
 	}
 
+	
+	/** 
+	 * @param jwt
+	 * @return Date
+	 */
 	public Date extractExpirationDate(String jwt) {
 		return getClaimsFromToken(jwt).getExpiration();
 	}
 
+	
+	/** 
+	 * @param jwt
+	 * @return Boolean
+	 */
 	public Boolean isExpired(String jwt) {
 		return extractExpirationDate(jwt).before(new Date());
 	}
 
+	
+	/** 
+	 * @param jwt
+	 * @return Boolean
+	 */
 	public Boolean validateToken(String jwt) {
 		UserDetails userDetails = userDetailsService.loadUserByUsername(extractUsername(jwt));
 		return userDetails.getUsername().equals(extractUsername(jwt)) && !isExpired(jwt);

@@ -74,6 +74,11 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 	private Capability capabilityFirst;
 	private Capability capabilitySecond;
 
+	
+	/** 
+	 * @param init(
+	 * @throws Exceptionpublic void init()
+	 */
 	@BeforeAll
 	public void authenticate() throws Exception { super.authenticate(); }
 
@@ -119,6 +124,10 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 		assertNotNull(capabilitySecond);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_throwInvalidInput_whenSaveBusinessProcessInvalidName() throws Exception {
 		String newBusinessProcessName = "";
@@ -132,6 +141,10 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 				.andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_throwInvalidInput_whenSaveBusinessProcessInvalidDescription() throws Exception {
 		String newBusinessProcessName = "Very unique name";
@@ -145,6 +158,10 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 				.andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_postBusinessProcess_whenSaveBusinessProcess() throws Exception {
 		String newBusinessProcessName = "Post test";
@@ -167,6 +184,10 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 		testBusinessProcess(businessProcess, businessProcessDto);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_throwInvalidInput_whenGetBusinessProcessInvalidId() throws Exception {
 		Integer businessProcessId = 0;
@@ -175,6 +196,10 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 				.andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getBusinessProcess_whenGetBusinessProcess() throws Exception {
 		Integer businessProcessId = businessProcessFirst.getBusinessProcessId();
@@ -190,6 +215,10 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 		testBusinessProcess(businessProcessFirst, businessProcessDto);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_throwInvalidInput_whenUpdateBusinessProcessInvalidId() throws Exception {
 		Integer businessProcessId = 0;
@@ -204,6 +233,10 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 				.andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_throwInvalidInput_whenUpdateBusinessProcessInvalidName() throws Exception {
 		Integer businessProcessId = businessProcessFirst.getBusinessProcessId();
@@ -218,6 +251,10 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 				.andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_throwInvalidInput_whenUpdateBusinessProcessInvalidDescription() throws Exception {
 		Integer businessProcessId = businessProcessFirst.getBusinessProcessId();
@@ -232,6 +269,10 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 				.andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_putBusinessProcess_whenUpdateBusinessProcess() throws Exception {
 		Integer businessProcessId = businessProcessFirst.getBusinessProcessId();
@@ -255,6 +296,10 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 		testBusinessProcess(businessProcess, businessProcessDto);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_throwInvalidInput_whenDeleteBusinessProcessInvalidId() throws Exception {
 		Integer businessProcessId = 0;
@@ -263,6 +308,10 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 				.andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_deleteBusinessProcess_whenDeleteBusinessProcess() throws Exception {
 		Integer businessProcessId = businessProcessFirst.getBusinessProcessId();
@@ -271,6 +320,10 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_throwInvalidInput_whenGetBusinessProcessByNameInvalidName() throws Exception {
 		String businessProcessName = "";
@@ -279,6 +332,10 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 				.andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getBusinessProcess_whenGetBusinessProcessByName() throws Exception {
 		String businessProcessName = businessProcessFirst.getBusinessProcessName();
@@ -294,6 +351,10 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 		testBusinessProcess(businessProcessFirst, businessProcessDto);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getAllBusinessProcess_whenGetAllBusinessProcessByName() throws Exception {
 		MvcResult mvcResult = mockMvc.perform(get(PATH))
@@ -308,6 +369,10 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 		testBusinessProcess(businessProcessSecond, businessProcessDto.get(1));
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_returnOk_whenLinkCapability() throws Exception {
 		Integer businessProcessId = businessProcessFirst.getBusinessProcessId();
@@ -321,6 +386,10 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 			.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_returnOk_whenUnlinkCapability() throws Exception {
 		Integer businessProcessId = businessProcessFirst.getBusinessProcessId();
@@ -334,6 +403,10 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 			.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getAllCapabilities_whenGetAllCapabilitiesByBusinessProcessId() throws Exception {
 		Integer businessProcessId = businessProcessSecond.getBusinessProcessId();
@@ -349,12 +422,22 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 		testCapability(capabilitySecond, resultCapabilities.get(0));
 	}
 	
+	
+	/** 
+	 * @param expectedObject
+	 * @param actualObject
+	 */
 	private void testBusinessProcess(BusinessProcess expectedObject, BusinessProcessDto actualObject) {
 		assertEquals(expectedObject.getBusinessProcessId(), actualObject.getBusinessProcessId());
 		assertEquals(expectedObject.getBusinessProcessName(), actualObject.getBusinessProcessName());
 		assertEquals(expectedObject.getBusinessProcessDescription(), actualObject.getBusinessProcessDescription());
 	}
 	
+	
+	/** 
+	 * @param expectedObject
+	 * @param actualObject
+	 */
 	private void testCapability(Capability expectedObject, CapabilityDto actualObject) {
 		assertEquals(expectedObject.getCapabilityId(), actualObject.getCapabilityId());
 		assertEquals(expectedObject.getEnvironment().getEnvironmentId(),

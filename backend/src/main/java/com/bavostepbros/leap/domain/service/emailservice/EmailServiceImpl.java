@@ -32,6 +32,12 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private JavaMailSender emailSender;
 
+
+/** 
+ * @param to
+ * @param subject
+ * @param text
+ */
 /*    @Autowired
     private SimpleMailMessage template;
     
@@ -58,6 +64,11 @@ public class EmailServiceImpl implements EmailService {
         }
     }
 
+    
+    /** 
+     * @param to
+     * @param password
+     */
     public void sendNewUserMessage(String to, String password) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
@@ -71,6 +82,26 @@ public class EmailServiceImpl implements EmailService {
             exception.printStackTrace();
         }
     }
+
+    
+    /** 
+     * @param to
+     * @param password
+     */
+    public void sendForgotPassword(String to, String password) {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(NOREPLY_ADDRESS);
+            message.setTo(to);
+            message.setSubject("New password requested");
+            message.setText("U vroeg een nieuw passwoord aan. Dit is uw nieuwe paswoord: " + password);
+
+            emailSender.send(message);
+        } catch (MailException exception) {
+            exception.printStackTrace();
+        }
+    }
+
 
 /*    @Override
     public void sendSimpleMessageUsingTemplate(String to,

@@ -8,6 +8,11 @@ import javax.persistence.Converter;
 @Converter(autoApply = true)
 public class TargetOperatingModelConverter implements AttributeConverter<TargetOperatingModel, Integer> {
 
+	
+	/** 
+	 * @param attribute
+	 * @return Integer
+	 */
 	@Override
 	public Integer convertToDatabaseColumn(TargetOperatingModel attribute) {
 		if (attribute == null) {
@@ -16,6 +21,11 @@ public class TargetOperatingModelConverter implements AttributeConverter<TargetO
 		return attribute.getTargetOperatingModelValue();
 	}
 
+	
+	/** 
+	 * @param dbData
+	 * @return TargetOperatingModel
+	 */
 	@Override
 	public TargetOperatingModel convertToEntityAttribute(Integer dbData) {
 		if (dbData == null) {

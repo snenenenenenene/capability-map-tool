@@ -24,6 +24,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Autowired
     private RoleService roleService;
 
+	
+	/** 
+	 * @param email
+	 * @return UserDetails
+	 * @throws UsernameNotFoundException
+	 */
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		User user = userDAL.findByEmail(email);
@@ -34,6 +40,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 				getGrantedAuthority(user));
 	}
 
+	
+	/** 
+	 * @param user
+	 * @return Collection<GrantedAuthority>
+	 */
 	private Collection<GrantedAuthority> getGrantedAuthority(User user) {
 		Collection<GrantedAuthority> authorities = new ArrayList<>();
 		if (roleService.get(user.getRoleId()).getRoleName().equalsIgnoreCase("admin")) {

@@ -9,10 +9,46 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.AllArgsConstructor;
 
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return String
+ */
+
+/** 
+ * @return String
+ */
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return int
+ */
 @EqualsAndHashCode
 public class Email {
     @javax.validation.constraints.Email

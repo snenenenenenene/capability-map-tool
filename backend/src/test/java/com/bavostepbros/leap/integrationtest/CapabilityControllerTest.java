@@ -67,6 +67,10 @@ public class CapabilityControllerTest extends ApiIntegrationTest {
 
 	static final String PATH = "/api/capability/";
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@BeforeAll
 	public void authenticate() throws Exception {
 		super.authenticate();
@@ -116,6 +120,10 @@ public class CapabilityControllerTest extends ApiIntegrationTest {
 		assertNotNull(capabilitySecond);
 	}
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_postCapability_whenSaveCapability() throws Exception {
 		Integer environmentId = environmentFirst.getEnvironmentId();
@@ -146,6 +154,10 @@ public class CapabilityControllerTest extends ApiIntegrationTest {
 		testCapability(capability, resultCapability);
 	}
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getCapability_whenGetCapabilityById() throws Exception {
 		Integer capabilityId = capabilityFirst.getCapabilityId();
@@ -160,6 +172,10 @@ public class CapabilityControllerTest extends ApiIntegrationTest {
 		testCapability(capabilityFirst, resultCapability);
 	}
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getCapability_whenGetCapabilityByCapabilityName() throws Exception {
 		String capabilityName = capabilityFirst.getCapabilityName();
@@ -174,6 +190,10 @@ public class CapabilityControllerTest extends ApiIntegrationTest {
 		testCapability(capabilityFirst, resultCapability);
 	}
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getCapabilities_whenGetCapabilitiesByEnvironmentid() throws Exception {
 		Integer environmentId = capabilityFirst.getEnvironment().getEnvironmentId();
@@ -191,6 +211,10 @@ public class CapabilityControllerTest extends ApiIntegrationTest {
 		testCapability(capabilitySecond, resultCapabilities.get(1));
 	}
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getCapabilities_whenGetCapabilitiesByLevel() throws Exception {
 		String level = capabilityFirst.getLevel().toString();
@@ -207,6 +231,10 @@ public class CapabilityControllerTest extends ApiIntegrationTest {
 		testCapability(capabilityFirst, resultCapabilities.get(0));
 	}
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getCapabilities_whenGetCapabilitiesByParentcapabilityid() throws Exception {
 		Integer parentCapabilityId = capabilitySecond.getParentCapabilityId();
@@ -225,6 +253,10 @@ public class CapabilityControllerTest extends ApiIntegrationTest {
 		testCapability(capabilityThird, resultCapabilities.get(1));
 	}
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getCapabilities_whenGetCapabilitiesByParentcapabilityidAndLevel() throws Exception {
 		String level = capabilitySecond.getLevel().toString();
@@ -245,6 +277,10 @@ public class CapabilityControllerTest extends ApiIntegrationTest {
 		testCapability(capabilityThird, resultCapabilities.get(1));
 	}
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getCapabilities_whenGetAllCapabilities() throws Exception {
 		MvcResult mvcResult = mockMvc.perform(get(PATH)).andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
@@ -260,6 +296,10 @@ public class CapabilityControllerTest extends ApiIntegrationTest {
 		testCapability(capabilityThird, resultCapabilities.get(2));
 	}
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getBoolean_whenCapabilityIdExists() throws Exception {
 		Integer capabilityId = capabilityFirst.getCapabilityId();
@@ -268,6 +308,10 @@ public class CapabilityControllerTest extends ApiIntegrationTest {
 				.andExpect(MockMvcResultMatchers.content().string("true"));
 	}
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getBoolean_whenCapabilityNameExists() throws Exception {
 		String capabilityName = capabilityFirst.getCapabilityName();
@@ -277,6 +321,10 @@ public class CapabilityControllerTest extends ApiIntegrationTest {
 				.andExpect(MockMvcResultMatchers.content().string("true"));
 	}
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_putCapability_whenUpdateCapability() throws Exception {
 		Integer capabilityId = capabilityFirst.getCapabilityId();
@@ -311,6 +359,10 @@ public class CapabilityControllerTest extends ApiIntegrationTest {
 		testCapability(capability, resultCapability);
 	}
 
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_deleteCapability_whenDeleteCapability() throws Exception {
 		Integer capabilityId = capabilityFirst.getCapabilityId();
@@ -318,6 +370,11 @@ public class CapabilityControllerTest extends ApiIntegrationTest {
 		mockMvc.perform(delete(PATH + capabilityId)).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
+	
+	/** 
+	 * @param expectedObject
+	 * @param actualObject
+	 */
 	@Test
 	private void testCapability(Capability expectedObject, CapabilityDto actualObject) {
 		assertEquals(expectedObject.getCapabilityId(), actualObject.getCapabilityId());

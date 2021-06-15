@@ -39,6 +39,11 @@ import com.bavostepbros.leap.domain.customexceptions.Violation;
 public class ErrorHandlingController {
 	private static final Logger logger = LoggerFactory.getLogger(ErrorHandlingController.class);
 
+	
+	/** 
+	 * @param exception
+	 * @return ResponseEntity<String>
+	 */
 	@ExceptionHandler({ InvalidInputException.class, IndexDoesNotExistException.class, DuplicateValueException.class,
 			ForeignKeyException.class, EnumException.class, EnvironmentException.class, StatusException.class,
 			StrategyException.class, TechnologyException.class, RelationshipException.class })
@@ -48,6 +53,11 @@ public class ErrorHandlingController {
 		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 
+	
+	/** 
+	 * @param e
+	 * @return ResponseEntity<ValidationErrorResponse>
+	 */
 	@ExceptionHandler(ConstraintViolationException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
@@ -59,6 +69,11 @@ public class ErrorHandlingController {
 		return new ResponseEntity<ValidationErrorResponse>(error, HttpStatus.BAD_REQUEST);
 	}
 
+	
+	/** 
+	 * @param e
+	 * @return ResponseEntity<ValidationErrorResponse>
+	 */
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody

@@ -31,6 +31,11 @@ public class RoleController {
 	@Autowired
 	private RoleService roleService;
 
+	
+	/** 
+	 * @param addRole(
+	 * @return RoleDto
+	 */
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public RoleDto addRole(
 			@ModelAttribute("roleName") String roleName) {
@@ -38,12 +43,21 @@ public class RoleController {
 		return new RoleDto(role.getRoleId(), role.getRoleName());
 	}
 	
+	
+	/** 
+	 * @param roleId
+	 * @return RoleDto
+	 */
 	@GetMapping(path = "{roleId}")
     public RoleDto getRoleById(@PathVariable("roleId") Integer roleId) {		
 		Role role = roleService.get(roleId);
 		return new RoleDto(role.getRoleId(), role.getRoleName());
     }
 	
+	
+	/** 
+	 * @return List<RoleDto>
+	 */
 	@GetMapping
 	public List<RoleDto> getAllRoles() {
 		List<Role> roles = roleService.getAll();
@@ -53,6 +67,11 @@ public class RoleController {
 		return rolesDto;
 	}
 	
+	
+	/** 
+	 * @param updateRole(
+	 * @return RoleDto
+	 */
 	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public RoleDto updateRole(
 			@ModelAttribute("roleId") Integer roleId,
@@ -61,6 +80,10 @@ public class RoleController {
 		return new RoleDto(role.getRoleId(), role.getRoleName());
 	}
 	
+	
+	/** 
+	 * @param roleId
+	 */
 	@DeleteMapping(path = "{roleId}")
 	public void deleteRole(@PathVariable("roleId") Integer roleId) {
 		roleService.delete(roleId);

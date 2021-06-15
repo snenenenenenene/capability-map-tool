@@ -50,6 +50,11 @@ public class StatusControllerTest extends ApiIntegrationTest {
 	
 	static final String PATH = "/api/status/";
 
+	
+	/** 
+	 * @param init(
+	 * @throws Exceptionpublic void init()
+	 */
 	@BeforeAll
 	public void authenticate() throws Exception { super.authenticate(); }
 
@@ -73,6 +78,10 @@ public class StatusControllerTest extends ApiIntegrationTest {
 		assertNotNull(statusSecond);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_postStatus_whenSaveStatus() throws Exception {
 		LocalDate validityPeriod = LocalDate.of(2021, 05, 27);
@@ -93,6 +102,10 @@ public class StatusControllerTest extends ApiIntegrationTest {
 		testStatus(status, resultStatus);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getStatus_whenGetStatusById() throws Exception {
 		Integer statusId = statusFirst.getStatusId();
@@ -108,6 +121,10 @@ public class StatusControllerTest extends ApiIntegrationTest {
 		testStatus(statusFirst, resultStatus);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getStatus_whenGetStatusByValidityPeriod() throws Exception {
 		LocalDate validityPeriod = statusFirst.getValidityPeriod();
@@ -123,6 +140,10 @@ public class StatusControllerTest extends ApiIntegrationTest {
 		testStatus(statusFirst, resultStatus);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getAllStatus_whenGetAllStatus() throws Exception {		
 		MvcResult mvcResult = mockMvc.perform(get(PATH))
@@ -138,6 +159,10 @@ public class StatusControllerTest extends ApiIntegrationTest {
 		testStatus(statusSecond, resultStatus.get(1));
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getBoolean_whenStatusIdExists() throws Exception {
 		Integer statusId = statusFirst.getStatusId();
@@ -147,6 +172,10 @@ public class StatusControllerTest extends ApiIntegrationTest {
 			.andExpect(MockMvcResultMatchers.content().string("true"));	
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getBoolean_whenValidityPeriodExists() throws Exception {
 		LocalDate validityPeriod = statusFirst.getValidityPeriod();
@@ -156,6 +185,10 @@ public class StatusControllerTest extends ApiIntegrationTest {
 			.andExpect(MockMvcResultMatchers.content().string("true"));	
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_putStatus_whenUpdateStatus() throws Exception {
 		Integer statusId = statusFirst.getStatusId();
@@ -177,6 +210,10 @@ public class StatusControllerTest extends ApiIntegrationTest {
 		testStatus(status, resultStatus);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_deleteStatus_whenDeleteStatus() throws Exception {
 		Integer statusId = statusFirst.getStatusId();
@@ -185,6 +222,11 @@ public class StatusControllerTest extends ApiIntegrationTest {
 			.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
+	
+	/** 
+	 * @param expectedObject
+	 * @param actualObject
+	 */
 	@Test
 	private void testStatus(Status expectedObject, StatusDto actualObject) {
 		assertEquals(expectedObject.getStatusId(), actualObject.getStatusId());

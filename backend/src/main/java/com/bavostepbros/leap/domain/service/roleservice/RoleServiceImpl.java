@@ -31,6 +31,11 @@ public class RoleServiceImpl implements RoleService {
 
 	private final RoleDAL roleDAL;
 
+	
+	/** 
+	 * @param roleName
+	 * @return Role
+	 */
 	@Override
 	public Role save(String roleName) {
 		if (roleName == null || roleName.isBlank() || roleName.isEmpty()) {
@@ -44,6 +49,11 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 
+	
+	/** 
+	 * @param id
+	 * @return Role
+	 */
 	//TODO perform checks
 	@Override
 	public Role get(Integer id) {
@@ -58,6 +68,10 @@ public class RoleServiceImpl implements RoleService {
 		return role;
 	}
 	
+	
+	/** 
+	 * @return List<Role>
+	 */
 	@Override
 	public List<Role> getAll() {
 		List<Role> roles = new ArrayList<Role>();
@@ -65,6 +79,12 @@ public class RoleServiceImpl implements RoleService {
 		return roles;
 	}
 	
+	
+	/** 
+	 * @param roleId
+	 * @param roleName
+	 * @return Role
+	 */
 	@Override
 	public Role update(Integer roleId, String roleName) {
 		if (roleId == null || roleId.equals(0) || 
@@ -83,6 +103,10 @@ public class RoleServiceImpl implements RoleService {
 		return updated;
 	}
 
+	
+	/** 
+	 * @param id
+	 */
 	@Override
 	public void delete(Integer id) {
 		if (id == null || id.equals(0)) {
@@ -94,12 +118,22 @@ public class RoleServiceImpl implements RoleService {
 		roleDAL.deleteById(id);
 	}
 	
+	
+	/** 
+	 * @param id
+	 * @return boolean
+	 */
 	@Override
 	public boolean existsById(Integer id){
 		boolean result = roleDAL.findById(id) == null;
 		return !result;
 	}
 
+	
+	/** 
+	 * @param roleName
+	 * @return boolean
+	 */
 	@Override
 	public boolean existsByRoleName(String roleName){
 		boolean result = roleDAL.findByRoleName(roleName).isEmpty();

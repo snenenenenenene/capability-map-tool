@@ -34,6 +34,21 @@ public class CapabilityApplicationController {
 	@Autowired
 	private CapabilityApplicationService capabilityApplicationService;
 
+	
+	/** 
+	 * Adds a new capabilityApplication. 
+	 * A capabilityApplication is a link between a Capability and a IT application.
+	 * @param capabilityId The ID of the capability you want to link.
+	 * @param applicationId The ID of the application you want to link.
+	 * @param efficiencySupport The efficiency support score.
+	 * @param functionalCoverage The coverage of functionalities of the application for the capability.
+	 * @param correctnessBusinessFit The correctness of the fit to the business.
+	 * @param futurePotential The score for future potential usage.
+	 * @param completeness The score for how complete the application is for the capability.
+	 * @param correctnessInformationFit The correctness of the fit to the information.
+	 * @param availability The score of how available the application is for the capability.
+	 * @return CapabilityApplicationDto Returns the DTO equivalent of the newly adde capabilityApplication.
+	 */
 	@PostMapping(path = "{capabilityId}/{applicationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public CapabilityApplicationDto addCapabilityApplication(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("applicationId") Integer applicationId,
@@ -51,6 +66,13 @@ public class CapabilityApplicationController {
 		return convertCapabilityApplication(capabilityApplication);
 	}
 
+	
+	/** 
+	 * Gets a capabilityApplication from the capability and application IDs.
+	 * @param capabilityId The ID of the capablity.
+	 * @param applicationId The ID of the application.
+	 * @return CapabilityApplicationDto Returns the DTO equivalent of the retrieved capabilityApplication.
+	 */
 	@GetMapping(path = "{capabilityId}/{applicationId}")
 	public CapabilityApplicationDto getCapabilityApplication(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("applicationId") Integer applicationId) {
@@ -58,6 +80,20 @@ public class CapabilityApplicationController {
 		return convertCapabilityApplication(capabilityApplication);
 	}
 
+	
+	/** 
+	 * Updates a capabilityApplication
+	 * @param capabilityId The ID of the capability.
+	 * @param applicationId The id of the application.
+	 * @param efficiencySupport The (new) efficiencySupport score.
+	 * @param functionalCoverage The (new) functionalCoverage score.
+	 * @param correctnessBusinessFit The (new) correctnessBusinessFit score.
+	 * @param futurePotential The (new) futurePotential score.
+	 * @param completeness The (new) completeness score.
+	 * @param correctnessInformationFIt The (new) correctnessInformationFit score.
+	 * @param availability The (new) availability score.
+	 * @return CapabilityApplicationDto Returns the DTO equivalent of the updated CapabilityApplication.
+	 */
 	@PutMapping(path = "{capabilityId}/{applicationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public CapabilityApplicationDto updateCapabilityApplication(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("applicationId") Integer applicationId,
@@ -75,12 +111,24 @@ public class CapabilityApplicationController {
 		return convertCapabilityApplication(capabilityApplication);
 	}
 
+	
+	/** 
+	 * Deletes a capabilityApplication from its ID.
+	 * @param capabilityId The ID of the capability.
+	 * @param applicationId The ID of the application.
+	 */
 	@DeleteMapping(path = "{capabilityId}/{applicationId}")
 	public void deleteCapabilityApplication(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("applicationId") Integer applicationId) {
 		capabilityApplicationService.delete(capabilityId, applicationId);
 	}
 
+	
+	/** 
+	 * Gets all capabilityApplications from a capability ID.
+	 * @param capabilityId The ID of the capability for which you want to get the capabilityApplications.
+	 * @return List<CapabilityApplicationDto> Returns a list of DTO's equivalent to the original objects.
+	 */
 	@GetMapping(path = "all-capabilityApplications-by-capabilityid/{capabilityId}")
 	public List<CapabilityApplicationDto> getCapabilityApplicationByCapabilityId(@PathVariable("capabilityId") Integer capabilityId) {
 		List<CapabilityApplication> capabilityApplications = capabilityApplicationService
@@ -91,6 +139,12 @@ public class CapabilityApplicationController {
 		return capabilityApplicationsDto;
 	}
 	
+	
+	/** 
+	 * Gets all capabilityApplications from a application ID.
+	 * @param applicationId The ID of the application for which you want to get the capabilityApplications
+	 * @return List<CapabilityApplicationDto> Returns a list of DTO's equivalent to the original objects.
+	 */
 	@GetMapping(path = "all-capabilityApplications-by-applicationid/{applicationId}")
 	public List<CapabilityApplicationDto> getCapabilityApplicationByApplicationId(@PathVariable("applicationId") Integer applicationId) {
 		List<CapabilityApplication> capabilityApplications = capabilityApplicationService
@@ -101,6 +155,12 @@ public class CapabilityApplicationController {
 		return capabilityApplicationsDto;
 	}
 
+	
+	/** 
+	 * Converts a capablityApplication from the original object to the equivalent DTO.
+	 * @param capabilityApplication The capabilityApplication you want to convert.
+	 * @return CapabilityApplicationDto The DTO of the capabilityApplication.
+	 */
 	private CapabilityApplicationDto convertCapabilityApplication(CapabilityApplication capabilityApplication) {
 
 		CapabilityDto capabilityDto = new CapabilityDto(capabilityApplication.getCapability().getCapabilityId(),

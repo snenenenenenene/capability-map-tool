@@ -73,6 +73,11 @@ public class StrategyItemControllerTest extends ApiIntegrationTest {
 	
 	static final String PATH = "/api/strategyitem/";
 
+	
+	/** 
+	 * @param init(
+	 * @throws Exceptionpublic void init()
+	 */
 	@BeforeAll
 	public void authenticate() throws Exception { super.authenticate(); }
 
@@ -127,6 +132,10 @@ public class StrategyItemControllerTest extends ApiIntegrationTest {
 		assertNotNull(strategyItemThirth);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_postStrategyItem_whenSaveStrategyItem() throws Exception {
 		Integer strategyId = strategyFirst.getStrategyId();
@@ -151,6 +160,10 @@ public class StrategyItemControllerTest extends ApiIntegrationTest {
 		testStrategyItem(strategyItem, resultStrategyItem);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getStrategyItem_whenGetStrategyItemById() throws Exception {
 		Integer strategyItemId = strategyItemFirst.getItemId();
@@ -166,6 +179,10 @@ public class StrategyItemControllerTest extends ApiIntegrationTest {
 		testStrategyItem(strategyItemFirst, resultStrategyItem);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_putStrategyItem_whenUpdateStrategyItem() throws Exception {
 		Integer strategyItemId = strategyItemFirst.getItemId();
@@ -191,6 +208,10 @@ public class StrategyItemControllerTest extends ApiIntegrationTest {
 		testStrategyItem(strategyItem, resultStrategyItem);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_deleteStrategyItem_whenDeleteStrategyItem() throws Exception {
 		Integer itemId = strategyItemFirst.getItemId();
@@ -199,6 +220,10 @@ public class StrategyItemControllerTest extends ApiIntegrationTest {
 			.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getStrategyItems_whenGetAllStrategyItems() throws Exception {
 		MvcResult mvcResult = mockMvc.perform(get(PATH))
@@ -215,6 +240,10 @@ public class StrategyItemControllerTest extends ApiIntegrationTest {
 		testStrategyItem(strategyItemThirth, resultStrategyItems.get(2));
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getBoolean_whenStrategyItemIdExists() throws Exception {
 		Integer itemId = strategyItemFirst.getItemId();
@@ -224,6 +253,10 @@ public class StrategyItemControllerTest extends ApiIntegrationTest {
 			.andExpect(MockMvcResultMatchers.content().string("true"));	
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getBoolean_whenStrategyItemNameExists() throws Exception {
 		String strategyItemName = strategyItemFirst.getStrategyItemName();
@@ -233,6 +266,10 @@ public class StrategyItemControllerTest extends ApiIntegrationTest {
 			.andExpect(MockMvcResultMatchers.content().string("true"));	
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getStrategyItem_whenGetStrategyItemByStrategyitemname() throws Exception {
 		String strategyItemName = strategyItemFirst.getStrategyItemName();
@@ -248,6 +285,10 @@ public class StrategyItemControllerTest extends ApiIntegrationTest {
 		testStrategyItem(strategyItemFirst, resultStrategyItem);
 	}
 	
+	
+	/** 
+	 * @throws Exception
+	 */
 	@Test
 	public void should_getStrategyItems_whenGetStrategyItemsByStrategyid() throws Exception {
 		Integer strategyId = strategyItemSecond.getStrategy().getStrategyId();
@@ -265,6 +306,11 @@ public class StrategyItemControllerTest extends ApiIntegrationTest {
 		testStrategyItem(strategyItemThirth, resultStrategyItems.get(1));
 	}
 	
+	
+	/** 
+	 * @param expectedObject
+	 * @param actualObject
+	 */
 	@Test
 	private void testStrategyItem(StrategyItem expectedObject, StrategyItemDto actualObject) {
 		assertEquals(expectedObject.getStrategy().getStrategyId(), actualObject.getStrategy().getStrategyId());

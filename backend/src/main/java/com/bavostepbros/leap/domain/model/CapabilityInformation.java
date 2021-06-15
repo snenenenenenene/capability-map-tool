@@ -15,9 +15,37 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+
+/** 
+ * @return CapabilityInformationId
+ */
+
+/** 
+ * @return Capability
+ */
+
+/** 
+ * @return Information
+ */
+
+/** 
+ * @return StrategicImportance
+ */
 @Getter
 @Setter
 @NoArgsConstructor
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return boolean
+ */
+
+/** 
+ * @return int
+ */
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class CapabilityInformation {
 
