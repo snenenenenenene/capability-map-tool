@@ -12,8 +12,8 @@ class LeapApplicationTests {
 		
 	}
 
-    @Test
-    void contextLoads() {
-    }
+//    @Test
+//    void contextLoads() {
+//    }
 
 }

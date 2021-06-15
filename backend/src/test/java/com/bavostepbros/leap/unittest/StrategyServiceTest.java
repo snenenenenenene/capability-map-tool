@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.junit.Rule;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,11 +24,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
-import com.bavostepbros.leap.domain.customexceptions.ForeignKeyException;
-import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
-import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
-import com.bavostepbros.leap.domain.customexceptions.StrategyException;
 import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.Strategy;
@@ -77,13 +74,21 @@ public class StrategyServiceTest {
 	@SpyBean
 	private EnvironmentService spyEnvironmentService;
 
-	private Strategy strategy;
+	private Strategy strategyFirst;
+	private Strategy strategySecond;
 	private Status status;
 	private Environment environment;
 	private List<Strategy> strategies;
 	private Optional<Status> optionalStatus;
 	private Optional<Strategy> optionalStrategy;
 	private Optional<Environment> optionalEnvironment;
+	
+	private Integer strategyId;
+	private Integer statusId;
+	private String strategyName;
+	private LocalDate timeFrameStart;
+	private LocalDate timeFrameEnd;
+	private Integer environmentId;
 
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
@@ -92,16 +97,21 @@ public class StrategyServiceTest {
 	public void init() {
 		status = new Status(1, LocalDate.of(2021, 5, 9));
 		environment = new Environment(1, "Environment test");
-		strategy = new Strategy(1, status, "Strategy name", LocalDate.of(2021, 8, 10), LocalDate.of(2021, 8, 10),
+		strategyFirst = new Strategy(1, status, "Strategy name", LocalDate.of(2021, 8, 10), LocalDate.of(2021, 8, 10),
 				environment);
-		strategies = List.of(
-				new Strategy(status, "Strategy name", LocalDate.of(2021, 8, 10), LocalDate.of(2021, 8, 10),
-						environment),
-				new Strategy(status, "Strategy name 1", LocalDate.of(2021, 8, 10), LocalDate.of(2021, 8, 10),
-						environment));
+		strategySecond = new Strategy(2, status, "Strategy name 1", LocalDate.of(2021, 8, 10), LocalDate.of(2021, 8, 10),
+						environment);
+		strategies = List.of(strategyFirst, strategySecond);
 		optionalStatus = Optional.of(status);
-		optionalStrategy = Optional.of(strategy);
+		optionalStrategy = Optional.of(strategyFirst);
 		optionalEnvironment = Optional.of(environment);
+		
+		strategyId = strategyFirst.getStrategyId();
+		statusId = strategyFirst.getStatus().getStatusId();
+		strategyName = strategyFirst.getStrategyName();
+		timeFrameStart = strategyFirst.getTimeFrameStart();
+		timeFrameEnd = strategyFirst.getTimeFrameEnd();
+		environmentId = strategyFirst.getEnvironment().getEnvironmentId();
 	}
 
 	@Test
@@ -114,311 +124,187 @@ public class StrategyServiceTest {
 		assertNotNull(strategyDAL);
 		assertNotNull(status);
 		assertNotNull(environment);
-		assertNotNull(strategy);
+		assertNotNull(strategyFirst);
+		assertNotNull(strategySecond);
 		assertNotNull(strategies);
 		assertNotNull(optionalStatus);
 		assertNotNull(optionalStrategy);
 		assertNotNull(optionalEnvironment);
 	}
 
-	@Test //1
-	void should_throwInvalidInputException_whenSavedInputIsInvalid() {
-		String falseStrategyName = "";
-		LocalDate timeFrameStart = strategy.getTimeFrameStart();
-		LocalDate timeFrameEnd = strategy.getTimeFrameEnd();
-		Integer statusId = status.getStatusId();
-		Integer environmentId = environment.getEnvironmentId();
-		String expected = "Invalid input.";
+	@Test 
+	void should_throwNoSuchElementException_whenSavedInputNameIsInvalid() {
+		String strategyName = "";
+		String expected = "No value present";
 
-		Exception exception = assertThrows(InvalidInputException.class,
-				() -> strategyService.save(statusId, falseStrategyName, timeFrameStart, timeFrameEnd, environmentId));
+		Exception exception = assertThrows(NoSuchElementException.class,
+				() -> strategyService.save(statusId, strategyName, timeFrameStart, timeFrameEnd, environmentId));
+
+		assertEquals(expected, exception.getMessage());
+	}
+	
+	@Test 
+	void should_throwNoSuchElementException_whenSavedInputNameIsDuplicate() {
+		String strategyName = strategyFirst.getStrategyName();
+		String expected = "No value present";
+
+		Exception exception = assertThrows(NoSuchElementException.class,
+				() -> strategyService.save(statusId, strategyName, timeFrameStart, timeFrameEnd, environmentId));
 
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //2
-	void should_throwForeignKeyException_whenSavedStatusIdIsInvalid() {
-		String falseStrategyName = strategy.getStrategyName();
-		LocalDate timeFrameStart = strategy.getTimeFrameStart();
-		LocalDate timeFrameEnd = strategy.getTimeFrameEnd();
+	@Test 
+	void should_throwNoSuchElementException_whenSavedStatusIdIsInvalid() {
 		Integer statusId = 0;
-		Integer environmentId = environment.getEnvironmentId();
-		String expected = "Status ID is invalid.";
+		String expected = "No value present";
 
-		Exception exception = assertThrows(ForeignKeyException.class,
-				() -> strategyService.save(statusId, falseStrategyName, timeFrameStart, timeFrameEnd, environmentId));
+		Exception exception = assertThrows(NoSuchElementException.class,
+				() -> strategyService.save(statusId, strategyName, timeFrameStart, timeFrameEnd, environmentId));
 
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //3
-	void should_throwForeignKeyException_whenSavedEnvironmentIdIsInvalid() {
-		String falseStrategyName = strategy.getStrategyName();
-		LocalDate timeFrameStart = strategy.getTimeFrameStart();
-		LocalDate timeFrameEnd = strategy.getTimeFrameEnd();
-		Integer statusId = status.getStatusId();
+	@Test 
+	void should_throwNoSuchElementException_whenSavedEnvironmentIdIsInvalid() {
 		Integer environmentId = 0;
-		String expected = "Environment ID is invalid.";
+		String expected = "No value present";
 
-		Exception exception = assertThrows(ForeignKeyException.class,
-				() -> strategyService.save(statusId, falseStrategyName, timeFrameStart, timeFrameEnd, environmentId));
-
-		assertEquals(expected, exception.getMessage());
-	}
-
-	@Test //4
-	void should_throwDuplicateValueException_whenSavedStrategyNameExists() {
-		String falseStrategyName = strategy.getStrategyName();
-		LocalDate timeFrameStart = strategy.getTimeFrameStart();
-		LocalDate timeFrameEnd = strategy.getTimeFrameEnd();
-		Integer statusId = status.getStatusId();
-		Integer environmentId = environment.getEnvironmentId();
-		String expected = "Strategy name already exists.";
-
-		BDDMockito.doReturn(true).when(spyStrategyService).existsByStrategyName(falseStrategyName);
-
-		Exception exception = assertThrows(DuplicateValueException.class,
-				() -> strategyService.save(statusId, falseStrategyName, timeFrameStart, timeFrameEnd, environmentId));
+		Exception exception = assertThrows(NoSuchElementException.class,
+				() -> strategyService.save(statusId, strategyName, timeFrameStart, timeFrameEnd, environmentId));
 
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //5
-	void should_throwForeignKeyException_whenSavedStatusDoesNotExists() {
-		String falseStrategyName = strategy.getStrategyName();
-		LocalDate timeFrameStart = strategy.getTimeFrameStart();
-		LocalDate timeFrameEnd = strategy.getTimeFrameEnd();
-		Integer statusId = status.getStatusId();
-		Integer environmentId = environment.getEnvironmentId();
-		String expected = "Status ID does not exists.";
-
-		BDDMockito.doReturn(false).when(spyStatusService).existsById(statusId);
-
-		Exception exception = assertThrows(ForeignKeyException.class,
-				() -> strategyService.save(statusId, falseStrategyName, timeFrameStart, timeFrameEnd, environmentId));
-
-		assertEquals(expected, exception.getMessage());
-	}
-
-	@Test //6
-	void should_throwForeignKeyException_whenSavedEnvironmentDoesNotExists() {
-		String falseStrategyName = strategy.getStrategyName();
-		LocalDate timeFrameStart = strategy.getTimeFrameStart();
-		LocalDate timeFrameEnd = strategy.getTimeFrameEnd();
-		Integer statusId = status.getStatusId();
-		Integer environmentId = environment.getEnvironmentId();
-		String expected = "Environment ID does not exists.";
-
-		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
-		BDDMockito.doReturn(false).when(spyEnvironmentService).existsById(environmentId);
-
-		Exception exception = assertThrows(ForeignKeyException.class,
-				() -> strategyService.save(statusId, falseStrategyName, timeFrameStart, timeFrameEnd, environmentId));
-
-		assertEquals(expected, exception.getMessage());
-	}
-
-	@Test //7
-	void should_saveEnvironment_whenEnvironmentIsSaved() {
-		String falseStrategyName = strategy.getStrategyName();
-		LocalDate timeFrameStart = strategy.getTimeFrameStart();
-		LocalDate timeFrameEnd = strategy.getTimeFrameEnd();
-		Integer statusId = status.getStatusId();
-		Integer environmentId = environment.getEnvironmentId();
-
-		BDDMockito.doReturn(false).when(spyStrategyService).existsByStrategyName(falseStrategyName);
-		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
-		BDDMockito.doReturn(true).when(spyEnvironmentService).existsById(environmentId);
-
+	@Test 
+	void should_returnStrategy_whenStrategyIsSaved() {
 		BDDMockito.given(statusDAL.findById(BDDMockito.anyInt())).willReturn(optionalStatus);
 		BDDMockito.given(environmentDAL.findById(BDDMockito.anyInt())).willReturn(optionalEnvironment);
-		BDDMockito.given(strategyDAL.save(BDDMockito.any(Strategy.class))).willReturn(strategy);
+		BDDMockito.given(strategyDAL.save(BDDMockito.any(Strategy.class))).willReturn(strategyFirst);
 		
-		Strategy result = strategyService.save(statusId, falseStrategyName, timeFrameStart, timeFrameEnd,
+		Strategy result = strategyService.save(statusId, strategyName, timeFrameStart, timeFrameEnd,
 				environmentId);
 
 		assertNotNull(result);
 		assertTrue(result instanceof Strategy);
-		assertEquals(strategy.getStrategyId(), result.getStrategyId());
-		assertEquals(strategy.getStrategyName(), result.getStrategyName());
-		assertEquals(strategy.getStatus().getStatusId(), result.getStatus().getStatusId());
-		assertEquals(strategy.getStatus().getValidityPeriod(), result.getStatus().getValidityPeriod());
-		assertEquals(strategy.getTimeFrameStart(), result.getTimeFrameStart());
-		assertEquals(strategy.getTimeFrameEnd(), result.getTimeFrameEnd());
-		assertEquals(strategy.getEnvironment().getEnvironmentId(), result.getEnvironment().getEnvironmentId());
-		assertEquals(strategy.getEnvironment().getEnvironmentName(), result.getEnvironment().getEnvironmentName());
+		testStrategy(strategyFirst, result);
 	}
 
-	@Test //8
-	void should_throwInvalidInputException_whenGetStrategyIdNotValid() {
+	@Test 
+	void should_throwNoSuchElementException_whenGetStrategyIdNotValid() {
 		Integer strategyId = 0;
-		String expected = "Strategy ID is not valid.";
+		String expected = "No value present";
 
-		Exception exception = assertThrows(InvalidInputException.class, 
+		Exception exception = assertThrows(NoSuchElementException.class, 
 				() -> strategyService.get(strategyId));
 
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //9
-	void should_throwIndexDoesNotExistException_whenGetStrategyIdDoesNotExists() {
-		Integer strategyId = strategy.getStrategyId();
-		String expected = "Strategy ID does not exists.";
+	@Test 
+	void should_throwNoSuchElementException_whenGetStrategyIdDoesNotExists() {
+		Integer strategyId = strategyFirst.getStrategyId();
+		String expected = "No value present";
 
-		Exception exception = assertThrows(IndexDoesNotExistException.class, 
+		Exception exception = assertThrows(NoSuchElementException.class, 
 				() -> strategyService.get(strategyId));
 
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //10
+	@Test 
 	void should_retrieveValidStrategy_whenIdIsValidAndIdExists() {
-		Integer strategyId = strategy.getStrategyId();
+		Integer strategyId = strategyFirst.getStrategyId();
 
-		BDDMockito.doReturn(true).when(spyStrategyService).existsById(strategyId);
 		BDDMockito.given(strategyDAL.findById(strategyId)).willReturn(optionalStrategy);
 		Strategy fetchedStrategy = strategyService.get(strategyId);
 
 		assertNotNull(fetchedStrategy);
 		assertTrue(fetchedStrategy instanceof Strategy);
-		assertEquals(strategy.getStrategyId(), fetchedStrategy.getStrategyId());
-		assertEquals(strategy.getStrategyName(), fetchedStrategy.getStrategyName());
-		assertEquals(strategy.getStatus().getStatusId(), fetchedStrategy.getStatus().getStatusId());
-		assertEquals(strategy.getStatus().getValidityPeriod(), fetchedStrategy.getStatus().getValidityPeriod());
-		assertEquals(strategy.getTimeFrameStart(), fetchedStrategy.getTimeFrameStart());
-		assertEquals(strategy.getTimeFrameEnd(), fetchedStrategy.getTimeFrameEnd());
-		assertEquals(strategy.getEnvironment().getEnvironmentId(), fetchedStrategy.getEnvironment().getEnvironmentId());
-		assertEquals(strategy.getEnvironment().getEnvironmentName(), fetchedStrategy.getEnvironment().getEnvironmentName());
+		testStrategy(strategyFirst, fetchedStrategy);
 	}
 
-	@Test //11
-	void should_retrieveEnvironmentList_whenGetAllIsCalled() {
+	@Test 
+	void should_retrieveStrategyList_whenGetAllIsCalled() {
 		BDDMockito.given(strategyDAL.findAll()).willReturn(strategies);
 		List<Strategy> fetchedStrategies = strategyService.getAll();
 
 		assertNotNull(fetchedStrategies);
 		assertEquals(strategies.size(), fetchedStrategies.size());
+		testStrategy(strategyFirst, strategies.get(0));
+		testStrategy(strategySecond, strategies.get(1));
 	}
 
-	@Test //12
-	void should_throwInvalidInputException_whenUpdatedInputIsInvalid() {
-		Integer strategyId = strategy.getStrategyId();
-		String falseStrategyName = "";
-		LocalDate timeFrameStart = strategy.getTimeFrameStart();
-		LocalDate timeFrameEnd = strategy.getTimeFrameEnd();
-		Integer statusId = status.getStatusId();
-		Integer environmentId = environment.getEnvironmentId();
-		String expected = "Invalid input.";
+	@Test
+	void should_throwNoSuchElementException_whenUpdatedInputNameIsInvalid() {
+		String strategyName = "";
+		String expected = "No value present";
 
-		Exception exception = assertThrows(InvalidInputException.class, 
-				() -> strategyService.update(strategyId, statusId, falseStrategyName, 
+		Exception exception = assertThrows(NoSuchElementException.class, 
+				() -> strategyService.update(strategyId, statusId, strategyName, 
 						timeFrameStart, timeFrameEnd, environmentId));
 
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //13
-	void should_throwStrategyException_whenUpdateStrategyIdDoesNotExist() {
-		Integer strategyId = strategy.getStrategyId();
-		String falseStrategyName = strategy.getStrategyName();
-		LocalDate timeFrameStart = strategy.getTimeFrameStart();
-		LocalDate timeFrameEnd = strategy.getTimeFrameEnd();
-		Integer statusId = status.getStatusId();
-		Integer environmentId = environment.getEnvironmentId();
-		String expected = "Can not update strategy if it does not exist.";
+	@Test 
+	void should_throwNoSuchElementException_whenUpdateStrategyIdDoesNotExist() {
+		Integer strategyId = strategyFirst.getStrategyId() + 10;
+		String expected = "No value present";
 
-		BDDMockito.doReturn(false).when(spyStrategyService).existsById(strategyId);
-
-		Exception exception = assertThrows(StrategyException.class, () -> strategyService.update(strategyId, statusId,
-				falseStrategyName, timeFrameStart, timeFrameEnd, environmentId));
+		Exception exception = assertThrows(NoSuchElementException.class, () -> strategyService.update(strategyId, statusId,
+				strategyName, timeFrameStart, timeFrameEnd, environmentId));
 
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //14
-	void should_throwDuplicateValueException_whenUpdateStrategyNameExist() {
-		Integer strategyId = strategy.getStrategyId();
-		String falseStrategyName = "xyz";
-		LocalDate timeFrameStart = strategy.getTimeFrameStart();
-		LocalDate timeFrameEnd = strategy.getTimeFrameEnd();
-		Integer statusId = status.getStatusId();
-		Integer environmentId = environment.getEnvironmentId();
-		String expected = "Strategy name already exists.";
-
-		BDDMockito.doReturn(true).when(spyStrategyService).existsById(strategyId);
-		BDDMockito.doReturn(true).when(spyStrategyService).existsByStrategyName(falseStrategyName);
+	@Test 
+	void should_throwNoSuchElementException_whenUpdateStrategyNameExist() {
+		String falseStrategyName = strategyFirst.getStrategyName();
+		String expected = "No value present";
 		
 		BDDMockito.given(strategyDAL.findById(BDDMockito.anyInt())).willReturn(optionalStrategy);
 
-		Exception exception = assertThrows(DuplicateValueException.class, () -> strategyService.update(strategyId,
+		Exception exception = assertThrows(NoSuchElementException.class, () -> strategyService.update(strategyId,
 				statusId, falseStrategyName, timeFrameStart, timeFrameEnd, environmentId));
 
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //15
-	void should_throwIndexDoesNotExistException_whenUpdateStatusDoesNotExist() {
-		Integer strategyId = strategy.getStrategyId();
-		String falseStrategyName = strategy.getStrategyName();
-		LocalDate timeFrameStart = strategy.getTimeFrameStart();
-		LocalDate timeFrameEnd = strategy.getTimeFrameEnd();
-		Integer statusId = status.getStatusId();
-		Integer environmentId = environment.getEnvironmentId();
-		String expected = "Status ID does not exists.";
-
-		BDDMockito.doReturn(true).when(spyStrategyService).existsById(strategyId);
-		BDDMockito.doReturn(false).when(spyStrategyService).existsByStrategyName(falseStrategyName);
-		BDDMockito.doReturn(false).when(spyStatusService).existsById(statusId);
+	@Test 
+	void should_throwNoSuchElementException_whenUpdateStatusDoesNotExist() {
+		Integer statusId = status.getStatusId() + 10;
+		String expected = "No value present";
 		
 		BDDMockito.given(strategyDAL.findById(BDDMockito.anyInt())).willReturn(optionalStrategy);
 
-		Exception exception = assertThrows(ForeignKeyException.class, () -> strategyService.update(strategyId, statusId,
-				falseStrategyName, timeFrameStart, timeFrameEnd, environmentId));
+		Exception exception = assertThrows(NoSuchElementException.class, () -> strategyService.update(strategyId, statusId,
+				strategyName, timeFrameStart, timeFrameEnd, environmentId));
 
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //16
-	void should_throwIndexDoesNotExistException_whenUpdateEnvironmentDoesNotExist() {
-		Integer strategyId = strategy.getStrategyId();
-		String falseStrategyName = strategy.getStrategyName();
-		LocalDate timeFrameStart = strategy.getTimeFrameStart();
-		LocalDate timeFrameEnd = strategy.getTimeFrameEnd();
-		Integer statusId = status.getStatusId();
-		Integer environmentId = environment.getEnvironmentId();
-		String expected = "Environment ID does not exists.";
-
-		BDDMockito.doReturn(true).when(spyStrategyService).existsById(strategyId);
-		BDDMockito.doReturn(false).when(spyStrategyService).existsByStrategyName(falseStrategyName);
-		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
-		BDDMockito.doReturn(false).when(spyEnvironmentService).existsById(statusId);
+	@Test 
+	void should_throwNoSuchElementException_whenUpdateEnvironmentDoesNotExist() {
+		Integer environmentId = environment.getEnvironmentId() + 10;
+		String expected = "No value present";
 		
 		BDDMockito.given(strategyDAL.findById(BDDMockito.anyInt())).willReturn(optionalStrategy);
 
-		Exception exception = assertThrows(ForeignKeyException.class, () -> strategyService.update(strategyId, statusId,
-				falseStrategyName, timeFrameStart, timeFrameEnd, environmentId));
+		Exception exception = assertThrows(NoSuchElementException.class, () -> strategyService.update(strategyId, statusId,
+				strategyName, timeFrameStart, timeFrameEnd, environmentId));
 
 		assertEquals(expected, exception.getMessage());
 	}
 
-	@Test //17
+	@Test 
 	void should_retrieveValidStrategy_whenStrategyIsUpdated() {
-		Integer strategyId = strategy.getStrategyId();
-		String falseStrategyName = strategy.getStrategyName();
-		LocalDate timeFrameStart = strategy.getTimeFrameStart();
-		LocalDate timeFrameEnd = strategy.getTimeFrameEnd();
-		Integer statusId = status.getStatusId();
-		Integer environmentId = environment.getEnvironmentId();
-		strategyDAL.save(strategy);
-
-		BDDMockito.doReturn(true).when(spyStrategyService).existsById(strategyId);
-		BDDMockito.doReturn(false).when(spyStrategyService).existsByStrategyName(falseStrategyName);
-		BDDMockito.doReturn(true).when(spyStatusService).existsById(statusId);
-		BDDMockito.doReturn(true).when(spyEnvironmentService).existsById(statusId);
+		String falseStrategyName = "Update test";
+		strategyDAL.save(strategyFirst);
 
 		BDDMockito.given(statusDAL.findById(BDDMockito.anyInt())).willReturn(optionalStatus);
 		BDDMockito.given(environmentDAL.findById(BDDMockito.anyInt())).willReturn(optionalEnvironment);
-		BDDMockito.given(strategyDAL.save(strategy)).willReturn(strategy);
+		BDDMockito.given(strategyDAL.save(strategyFirst)).willReturn(strategyFirst);
 		BDDMockito.given(strategyDAL.findById(BDDMockito.anyInt())).willReturn(optionalStrategy);
 		
 		Strategy fetchedStrategy = strategyService.update(strategyId, statusId, falseStrategyName, timeFrameStart,
@@ -426,137 +312,143 @@ public class StrategyServiceTest {
 
 		assertNotNull(fetchedStrategy);
 		assertTrue(fetchedStrategy instanceof Strategy);
-		assertEquals(strategy.getStrategyId(), fetchedStrategy.getStrategyId());
-		assertEquals(strategy.getStrategyName(), fetchedStrategy.getStrategyName());
-		assertEquals(strategy.getStatus().getStatusId(), fetchedStrategy.getStatus().getStatusId());
-		assertEquals(strategy.getStatus().getValidityPeriod(), fetchedStrategy.getStatus().getValidityPeriod());
-		assertEquals(strategy.getTimeFrameStart(), fetchedStrategy.getTimeFrameStart());
-		assertEquals(strategy.getTimeFrameEnd(), fetchedStrategy.getTimeFrameEnd());
-		assertEquals(strategy.getEnvironment().getEnvironmentId(), fetchedStrategy.getEnvironment().getEnvironmentId());
-		assertEquals(strategy.getEnvironment().getEnvironmentName(), fetchedStrategy.getEnvironment().getEnvironmentName());
+		testStrategy(strategyFirst, fetchedStrategy);
 	}
 
-	@Test //18
-	void should_throwInvalidInputException_whenDeleteInputIsInvalid() {
-		Integer strategyId = 0;
-		String expected = "Strategy ID is not valid.";
-
-		Exception exception = assertThrows(InvalidInputException.class, 
-				() -> strategyService.delete(strategyId));
-
-		assertEquals(exception.getMessage(), expected);
-	}
-
-	@Test //19
-	void should_throwIndexDoesNotExistException_whenDeleteStrategyIdDoesNotExist() {
-		Integer id = strategy.getStrategyId();
-		String expected = "Strategy ID does not exists.";
-		BDDMockito.doReturn(false).when(spyStatusService).existsById(id);
-
-		Exception exception = assertThrows(IndexDoesNotExistException.class, 
-				() -> strategyService.delete(id));
-
-		assertEquals(exception.getMessage(), expected);
-	}
-
-	@Test //20
+	@Test 
 	void should_throwIndexDoesNotExistException_whenDeleteInputDoesNotExists() {
-		Integer strategyId = strategy.getStrategyId();
-		String expected = "Strategy ID does not exists.";
+		strategyService.delete(strategyId);
 
-		strategyDAL.deleteById(strategyId);
-
-		Exception exception = assertThrows(IndexDoesNotExistException.class, 
-				() -> strategyService.get(strategyId));
-
-		assertEquals(exception.getMessage(), expected);
+		Mockito.verify(strategyDAL, Mockito.times(1)).deleteById(Mockito.eq(strategyId));
 	}
 
-	@Test //21
+	@Test 
 	void should_ReturnFalse_whenStrategyDoesNotExistById() {
 		BDDMockito.given(strategyDAL.existsById(BDDMockito.anyInt())).willReturn(false);
 
-		boolean result = strategyService.existsById(strategy.getStrategyId());
+		boolean result = strategyService.existsById(strategyFirst.getStrategyId());
 
 		assertFalse(result);
 	}
 
-	@Test //22
+	@Test
 	void should_ReturnTrue_whenStrategyDoesExistById() {
 		BDDMockito.given(strategyDAL.existsById(BDDMockito.anyInt())).willReturn(true);
 
-		boolean result = strategyService.existsById(strategy.getStrategyId());
+		boolean result = strategyService.existsById(strategyFirst.getStrategyId());
 
 		assertTrue(result);
 	}
 
-	@Test //23
+	@Test 
 	void should_ReturnTrue_whenStrategyDoesExistByStrategyName() {
 		BDDMockito.given(strategyDAL.findByStrategyName(BDDMockito.any(String.class))).willReturn(optionalStrategy);
 
-		boolean result = strategyService.existsByStrategyName(strategy.getStrategyName());
+		boolean result = strategyService.existsByStrategyName(strategyFirst.getStrategyName());
 
 		assertTrue(result);
 	}
 
-	@Test //24
+	@Test 
 	void should_ReturnFalse_whenStrategyDoesNotExistByStrategyName() {
 		BDDMockito.given(strategyDAL.findByStrategyName(BDDMockito.any(String.class))).willReturn(Optional.empty());
 
-		boolean result = strategyService.existsByStrategyName(strategy.getStrategyName());
+		boolean result = strategyService.existsByStrategyName(strategyFirst.getStrategyName());
 
 		assertFalse(result);
 	}
 
-	@Test //25
+	@Test 
 	void should_throwInvalidInputException_whenGetStrategiesByEnvironmentInputIsInvalid() {
 		Integer environmentId = 0;
-		String expected = "Environment ID is not valid.";
+		String expected = "Environment does not exist.";
 
-		Exception exception = assertThrows(InvalidInputException.class,
+		Exception exception = assertThrows(NullPointerException.class,
 				() -> strategyService.getStrategiesByEnvironment(environmentId));
 
 		assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test //26
+	@Test 
 	void should_throwIndexDoesNotExistException_whenGetStrategiesByEnvironmentIdDoesNotExist() {
-		Integer environmentId = strategy.getEnvironment().getEnvironmentId();
-		String expected = "Environment ID does not exists.";
-		
-		BDDMockito.doReturn(false).when(spyEnvironmentService).existsById(environmentId);
+		Integer environmentId = strategyFirst.getEnvironment().getEnvironmentId() + 10;
+		String expected = "Environment does not exist.";
 
-		Exception exception = assertThrows(ForeignKeyException.class,
+		Exception exception = assertThrows(NullPointerException.class,
 				() -> strategyService.getStrategiesByEnvironment(environmentId));
 
 		assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test //27
+	@Test 
 	void should_retrieveValidEnvironment_whenGetStrategiesByEnvironmentIdDoesExistAndIsValid() {
-		Integer environmentId = strategy.getEnvironment().getEnvironmentId();
+		Integer environmentId = strategyFirst.getEnvironment().getEnvironmentId();
 
-		BDDMockito.doReturn(true).when(spyEnvironmentService).existsById(environmentId);
 		BDDMockito.given(environmentDAL.findById(environmentId)).willReturn(optionalEnvironment);
 		Environment fetchedEnvironment = environmentService.get(environmentId);
 
 		assertNotNull(fetchedEnvironment);
 		assertTrue(fetchedEnvironment instanceof Environment);
-		assertEquals(strategy.getEnvironment().getEnvironmentId(), fetchedEnvironment.getEnvironmentId());
-		assertEquals(strategy.getEnvironment().getEnvironmentName(), fetchedEnvironment.getEnvironmentName());
+		assertEquals(strategyFirst.getEnvironment().getEnvironmentId(), fetchedEnvironment.getEnvironmentId());
+		assertEquals(strategyFirst.getEnvironment().getEnvironmentName(), fetchedEnvironment.getEnvironmentName());
 	}
 
-	@Test //28
+	@Test
 	void should_retrieveValidStrategies_whenGetStrategiesByEnvironmentIdDoesExistAndIsValid() {
-		Integer environmentId = strategy.getEnvironment().getEnvironmentId();
+		Integer environmentId = strategyFirst.getEnvironment().getEnvironmentId();
 
-		BDDMockito.doReturn(true).when(spyEnvironmentService).existsById(environmentId);
 		BDDMockito.given(environmentDAL.findById(environmentId)).willReturn(optionalEnvironment);
 		BDDMockito.given(strategyDAL.findByEnvironment(environment)).willReturn(strategies);
 		List<Strategy> fetchedStrategies = strategyService.getStrategiesByEnvironment(environmentId);
 
 		assertNotNull(fetchedStrategies);
 		assertEquals(strategies.size(), fetchedStrategies.size());
+		testStrategy(strategyFirst, strategies.get(0));
+		testStrategy(strategySecond, strategies.get(1));
+	}
+	
+	@Test 
+	void should_throwNullPointerException_whenGetByNameStrategyNameNotValid() {
+		String strategyName = "";
+		String expected = "Strategy does not exist";
+
+		Exception exception = assertThrows(NullPointerException.class, 
+				() -> strategyService.getStrategyByStrategyname(strategyName));
+
+		assertEquals(expected, exception.getMessage());
+	}
+
+	@Test 
+	void should_throwNullPointerException_whenGetByNameStrategyNameDoesNotExists() {
+		String strategyName = "Very strange query search";
+		String expected = "Strategy does not exist";
+
+		Exception exception = assertThrows(NullPointerException.class, 
+				() -> strategyService.getStrategyByStrategyname(strategyName));
+
+		assertEquals(expected, exception.getMessage());
+	}
+
+	@Test 
+	void should_retrieveValidStrategy_whenGetByNameIsValidAndExists() {
+		BDDMockito.given(strategyDAL.findByStrategyName(strategyName)).willReturn(optionalStrategy);
+		
+		Strategy fetchedStrategy = strategyService.getStrategyByStrategyname(strategyName);
+
+		assertNotNull(fetchedStrategy);
+		assertTrue(fetchedStrategy instanceof Strategy);
+		testStrategy(strategyFirst, fetchedStrategy);
+	}
+	
+	private void testStrategy(Strategy expectedObject, Strategy actualObject) {
+		assertEquals(expectedObject.getStrategyId(), actualObject.getStrategyId());
+		assertEquals(expectedObject.getStrategyName(), actualObject.getStrategyName());
+		assertEquals(expectedObject.getStatus().getStatusId(), actualObject.getStatus().getStatusId());
+		assertEquals(expectedObject.getStatus().getValidityPeriod(), actualObject.getStatus().getValidityPeriod());
+		assertEquals(expectedObject.getTimeFrameStart(), actualObject.getTimeFrameStart());
+		assertEquals(expectedObject.getTimeFrameEnd(), actualObject.getTimeFrameEnd());
+		assertEquals(expectedObject.getEnvironment().getEnvironmentId(), actualObject.getEnvironment().getEnvironmentId());
+		assertEquals(expectedObject.getEnvironment().getEnvironmentName(), actualObject.getEnvironment().getEnvironmentName());
 	}
 	 
 }

@@ -51,13 +51,4 @@ public class CapabilityItem {
         this.capabilityItemId = new CapabilityItemId(capability.getCapabilityId(), strategyItem.getItemId());
     }
 
-    @Override
-    public String toString() {
-        return "{" +
-            " capability='" + getCapability() + "'" +
-            ", strategyItem='" + getStrategyItem() + "'" +
-            ", strategicImportance='" + getStrategicImportance() + "'" +
-            "}";
-    }
-
 }

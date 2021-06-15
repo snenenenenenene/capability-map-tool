@@ -92,7 +92,7 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 				new Capability(2, environmentSecond, statusSecond, capabilityFirst.getCapabilityId(), "Capability 2",
 						"Description 2", PaceOfChange.INNOVATIVE, TargetOperatingModel.DIVERSIFICATION, 1, 1, 1));
 		capabilityService.updateLevel(capabilitySecond);
-		// businessProcessService.addCapability(businessProcessSecond.getBusinessProcessId(), capabilitySecond.getCapabilityId());
+		businessProcessService.addCapability(businessProcessSecond.getBusinessProcessId(), capabilitySecond.getCapabilityId());
 	}
 	
 	@AfterEach
@@ -143,19 +143,6 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 				.param("businessProcessDescription", newBusinessProcessDescription)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isBadRequest());
-	}
-	
-	@Test
-	public void should_throwInternalServerError_whenSaveBusinessProcessDuplicateName() throws Exception {
-		String newBusinessProcessName = businessProcessFirst.getBusinessProcessName();
-		String newBusinessProcessDescription = businessProcessFirst.getBusinessProcessDescription();
-		
-		mockMvc.perform(post(PATH)
-				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-				.param("businessProcessName", newBusinessProcessName)
-				.param("businessProcessDescription", newBusinessProcessDescription)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(MockMvcResultMatchers.status().isInternalServerError());
 	}
 	
 	@Test
@@ -243,20 +230,6 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 				.param("businessProcessDescription", businessProcessDescription)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isBadRequest());
-	}
-	
-	@Test
-	public void should_throwInternalServerError_whenUpdateBusinessProcessDuplicateName() throws Exception {
-		Integer businessProcessId = businessProcessFirst.getBusinessProcessId();
-		String newBusinessProcessName = businessProcessSecond.getBusinessProcessName();
-		String businessProcessDescription = businessProcessFirst.getBusinessProcessDescription();
-		
-		mockMvc.perform(put(PATH + businessProcessId)
-				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-				.param("businessProcessName", newBusinessProcessName)
-				.param("businessProcessDescription", businessProcessDescription)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(MockMvcResultMatchers.status().isInternalServerError());
 	}
 	
 	@Test
@@ -349,13 +322,39 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 	}
 	
 	@Test
+	public void should_returnOk_whenUnlinkCapability() throws Exception {
+		Integer businessProcessId = businessProcessFirst.getBusinessProcessId();
+		Integer capabilityId = capabilityFirst.getCapabilityId();
+		
+		mockMvc.perform(delete(PATH + "unlink-capability/")
+			.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+			.param("businessProcessId", businessProcessId.toString())
+			.param("capabilityId", capabilityId.toString())
+			.accept(MediaType.APPLICATION_JSON))
+			.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+	
+	@Test
+	public void should_getAllCapabilities_whenGetAllCapabilitiesByBusinessProcessId() throws Exception {
+		Integer businessProcessId = businessProcessSecond.getBusinessProcessId();
+		
+		MvcResult mvcResult = mockMvc.perform(get(PATH + "get-capabilities/" + businessProcessId))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn();
+		
+		List<CapabilityDto> resultCapabilities = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), 
+				new TypeReference<List<CapabilityDto>>() {});
+		
+		assertNotNull(resultCapabilities);
+		testCapability(capabilitySecond, resultCapabilities.get(0));
+	}
+	
 	private void testBusinessProcess(BusinessProcess expectedObject, BusinessProcessDto actualObject) {
 		assertEquals(expectedObject.getBusinessProcessId(), actualObject.getBusinessProcessId());
 		assertEquals(expectedObject.getBusinessProcessName(), actualObject.getBusinessProcessName());
 		assertEquals(expectedObject.getBusinessProcessDescription(), actualObject.getBusinessProcessDescription());
 	}
 	
-	@Test
 	private void testCapability(Capability expectedObject, CapabilityDto actualObject) {
 		assertEquals(expectedObject.getCapabilityId(), actualObject.getCapabilityId());
 		assertEquals(expectedObject.getEnvironment().getEnvironmentId(),
