@@ -38,8 +38,8 @@ export default class API {
     //USER
     endpoints.updateUser = (toUpdate) =>
       axios.put(`${resourceURL}/`, toUpdate, config);
-      endpoints.forgotPassword = (toUpdate) =>
-      axios.post(`${resourceURL}/forgotPassword`, toUpdate, config);
+    endpoints.forgotPassword = (toUpdate) =>
+      axios.put(`${resourceURL}/forgotPassword`, toUpdate);
 
     //GENERAL
     endpoints.getAll = ({ query } = {}) => axios.get(`${resourceURL}/`, config);

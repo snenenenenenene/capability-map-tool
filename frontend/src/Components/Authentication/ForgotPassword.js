@@ -24,7 +24,7 @@ export default class Settings extends Component {
     this.state.api.createEntity({ name: "user" });
     e.preventDefault();
     const formData = new FormData();
-    formData.append("email", this.state.user.email);
+    formData.append("email", this.state.email);
     await this.state.api.endpoints.user
       .forgotPassword(formData)
       .then((response) => {
