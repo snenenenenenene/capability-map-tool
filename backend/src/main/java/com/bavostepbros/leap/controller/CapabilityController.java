@@ -46,6 +46,11 @@ public class CapabilityController {
 	private CapabilityService capabilityService;
 
 	// TODO Add catch for status/environment not found
+
+	/**
+	 * @param @ModelAttribute("environmentId"
+	 * @return CapabilityDto
+	 */
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public CapabilityDto addCapability(
 			@ModelAttribute("environmentId") Integer environmentId,
@@ -65,18 +70,33 @@ public class CapabilityController {
 		return convertCapability(capability);
 	}
 
+
+	/**
+	 * @param capabilityId
+	 * @return CapabilityDto
+	 */
 	@GetMapping(path = "{capabilityid}")
 	public CapabilityDto getCapabilityByCapabilityid(@PathVariable("capabilityid") Integer capabilityId) {
 		Capability capability = capabilityService.get(capabilityId);
 		return convertCapability(capability);
 	}
 
+
+	/**
+	 * @param capabilityName
+	 * @return CapabilityDto
+	 */
 	@GetMapping(path = "capabilityname/{capabilityname}")
 	public CapabilityDto getCapabilityByCapabilityname(@PathVariable("capabilityname") String capabilityName) {
 		Capability capability = capabilityService.getCapabilityByCapabilityName(capabilityName);
 		return convertCapability(capability);
 	}
 
+
+	/**
+	 * @param environmentId
+	 * @return List<CapabilityDto>
+	 */
 	@GetMapping(path = "all-capabilities-by-environmentid/{environmentid}")
 	public List<CapabilityDto> getAllCapabilitiesByEnvironmentId(@PathVariable("environmentid") Integer environmentId) {
 		List<Capability> capabilities = capabilityService.getCapabilitiesByEnvironment(environmentId);
@@ -85,6 +105,11 @@ public class CapabilityController {
 		return capabilitiesDto;
 	}
 
+
+	/**
+	 * @param level
+	 * @return List<CapabilityDto>
+	 */
 	@GetMapping(path = "all-capabilities-by-level/{level}")
 	public List<CapabilityDto> getAllCapabilitiesByLevel(@PathVariable("level") String level) {
 		List<Capability> capabilities = capabilityService.getCapabilitiesByLevel(level);
@@ -93,6 +118,11 @@ public class CapabilityController {
 		return capabilitiesDto;
 	}
 
+
+	/**
+	 * @param parentId
+	 * @return List<CapabilityDto>
+	 */
 	@GetMapping(path = "all-capabilities-by-parentcapabilityid/{parentcapabilityid}")
 	public List<CapabilityDto> getAllCapabilitiesByParentCapabilityId(
 			@PathVariable("parentcapabilityid") Integer parentId) {
@@ -102,6 +132,11 @@ public class CapabilityController {
 		return capabilitiesDto;
 	}
 
+
+	/**
+	 * @param parentId
+	 * @return List<CapabilityDto>
+	 */
 	@GetMapping(path = "all-capabilities-by-parentcapabilityid-and-level/{parentcapabilityid}/{level}")
 	public List<CapabilityDto> getAllCapabilitiesByParentIdAndLevel(
 			@PathVariable("parentcapabilityid") Integer parentId, @PathVariable("level") String level) {
@@ -111,6 +146,10 @@ public class CapabilityController {
 		return capabilitiesDto;
 	}
 
+
+	/**
+	 * @return List<CapabilityDto>
+	 */
 	@GetMapping
 	public List<CapabilityDto> getAllCapabilities() {
 		return capabilityService.getAll().stream()
@@ -118,16 +157,31 @@ public class CapabilityController {
 				.collect(Collectors.toList());
 	}
 
+
+	/**
+	 * @param id
+	 * @return boolean
+	 */
 	@GetMapping(path = "exists-by-id/{capabilityid}")
 	public boolean doesCapabilityExistsById(@PathVariable("capabilityid") Integer id) {
 		return capabilityService.existsById(id);
 	}
 
+
+	/**
+	 * @param capabilityName
+	 * @return boolean
+	 */
 	@GetMapping(path = "exists-by-capabilityname/{capabilityname}")
 	public boolean doesCapabilityNameExists(@PathVariable("capabilityname") String capabilityName) {
 		return capabilityService.existsByCapabilityName(capabilityName);
 	}
 
+
+	/**
+	 * @param @PathVariable("capabilityId"
+	 * @return CapabilityDto
+	 */
 	@PutMapping(path = "{capabilityId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public CapabilityDto updateCapability(
 			@PathVariable("capabilityId") Integer capabilityId,
@@ -149,11 +203,19 @@ public class CapabilityController {
 		return convertCapability(capability);
 	}
 
+
+	/**
+	 * @param capabilityId
+	 */
 	@DeleteMapping(path = "{capabilityid}")
 	public void deleteCapability(@PathVariable("capabilityid") Integer capabilityId) {
 		capabilityService.delete(capabilityId);
 	}
 
+
+	/**
+	 * @param @ModelAttribute("capabilityId"
+	 */
 	// TODO add test
 	@PutMapping(path = "link-project/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void linkProject(@ModelAttribute("capabilityId") Integer capabilityId,
@@ -161,6 +223,10 @@ public class CapabilityController {
 		capabilityService.addProject(capabilityId, projectId);
 	}
 
+
+	/**
+	 * @param @PathVariable("capabilityId"
+	 */
 	// TODO add test
 	@DeleteMapping(path = "unlink-project/{capabilityId}/{projectId}")
 	public void unlinkProject(@PathVariable("capabilityId") Integer capabilityId,
@@ -168,6 +234,11 @@ public class CapabilityController {
 		capabilityService.deleteProject(capabilityId, projectId);
 	}
 
+
+	/**
+	 * @param capabilityId
+	 * @return List<ProjectDto>
+	 */
 	@GetMapping(path = "get-projects/{capabilityId}")
 	public List<ProjectDto> getCapabilities(@PathVariable("capabilityId") Integer capabilityId) {
 		List<Project> projects = capabilityService.getAllProjectsByCapabilityId(capabilityId);
@@ -176,18 +247,31 @@ public class CapabilityController {
 		return projectsDto;
 	}
 
+
+	/**
+	 * @param @ModelAttribute("capabilityId"
+	 */
 	@PutMapping(path = "link-businessprocess/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void linkBusinessProcess(@ModelAttribute("capabilityId") Integer capabilityId,
 			@ModelAttribute("businessProcessId") Integer businessProcessId) {
 		capabilityService.addBusinessProcess(capabilityId, businessProcessId);
 	}
 
+
+	/**
+	 * @param @PathVariable("capabilityId"
+	 */
 	@DeleteMapping(path = "unlink-businessprocess/{capabilityId}/{businessProcessId}")
 	public void unlinkBusinessProcess(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("businessProcessId") Integer businessProcessId) {
 		capabilityService.deleteBusinessProcess(capabilityId, businessProcessId);
 	}
 
+
+	/**
+	 * @param capabilityId
+	 * @return List<BusinessProcessDto>
+	 */
 	@GetMapping(path = "get-businessprocess/{capabilityId}")
 	public List<BusinessProcessDto> getBusinessProcess(@PathVariable("capabilityId") Integer capabilityId) {
 		Set<BusinessProcess> businessProcess = capabilityService.getAllBusinessProcessByCapabilityId(capabilityId);
@@ -196,18 +280,31 @@ public class CapabilityController {
 		return businessProcessDto;
 	}
 
+
+	/**
+	 * @param @ModelAttribute("capabilityId"
+	 */
 	@PutMapping(path = "link-resource/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void linkResource(@ModelAttribute("capabilityId") Integer capabilityId,
 			@ModelAttribute("resourceId") Integer resourceId) {
 		capabilityService.addResource(capabilityId, resourceId);
 	}
 
+
+	/**
+	 * @param @PathVariable("capabilityId"
+	 */
 	@DeleteMapping(path = "unlink-resource/{capabilityId}/{resourceId}")
 	public void unlinkResource(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("resourceId") Integer resourceId) {
 		capabilityService.deleteResource(capabilityId, resourceId);
 	}
 
+
+	/**
+	 * @param capabilityId
+	 * @return List<ResourceDto>
+	 */
 	@GetMapping(path = "get-resources/{capabilityId}")
 	public List<ResourceDto> getResource(@PathVariable("capabilityId") Integer capabilityId) {
 		List<Resource> resources = capabilityService.getAllResourceByResourceId(capabilityId);
@@ -216,6 +313,11 @@ public class CapabilityController {
 		return resourcesDto;
 	}
 
+
+	/**
+	 * @param capability
+	 * @return CapabilityDto
+	 */
 	private CapabilityDto convertCapability(Capability capability) {
 		EnvironmentDto environmentDto = new EnvironmentDto(capability.getEnvironment().getEnvironmentId(),
 				capability.getEnvironment().getEnvironmentName());
@@ -229,17 +331,32 @@ public class CapabilityController {
 				capability.getInformationQuality(), capability.getApplicationFit());
 	}
 
+
+	/**
+	 * @param project
+	 * @return ProjectDto
+	 */
 	private ProjectDto convertProject(Project project) {
 		ProgramDto program = new ProgramDto(project.getProgram().getProgramId(), project.getProgram().getProgramName());
 		StatusDto status = new StatusDto(project.getStatus().getStatusId(), project.getStatus().getValidityPeriod());
 		return new ProjectDto(project.getProjectId(), project.getProjectName(), program, status);
 	}
 
+
+	/**
+	 * @param businessProcess
+	 * @return BusinessProcessDto
+	 */
 	private BusinessProcessDto convertBusinessProcess(BusinessProcess businessProcess) {
 		return new BusinessProcessDto(businessProcess.getBusinessProcessId(), businessProcess.getBusinessProcessName(),
 				businessProcess.getBusinessProcessDescription());
 	}
 
+
+	/**
+	 * @param resource
+	 * @return ResourceDto
+	 */
 	private ResourceDto convertResource(Resource resource) {
 		return new ResourceDto(resource.getResourceId(), resource.getResourceName(), resource.getResourceDescription(),
 				resource.getFullTimeEquivalentYearlyValue());

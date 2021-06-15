@@ -46,9 +46,6 @@ import com.bavostepbros.leap.domain.model.dto.StatusDto;
 import com.bavostepbros.leap.domain.model.dto.StrategyDto;
 import com.bavostepbros.leap.domain.model.dto.StrategyItemDto;
 import com.bavostepbros.leap.domain.model.dto.TechnologyDto;
-import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
-
-import lombok.RequiredArgsConstructor;
 
 
 /**
@@ -62,37 +59,67 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/environment/")
 public class EnvironmentController {
 
+	//TODO fix constructor injection
 	@Autowired
 	private EnvironmentService envService;
 
+
+	/**
+	 * @param environmentName
+	 * @return EnvironmentDto
+	 */
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public EnvironmentDto addEnvironment(@ModelAttribute("environmentName") @Valid String environmentName) {
 		Environment environment = envService.save(environmentName);
 		return convertEnvironment(environment);
 	}
 
+
+	/**
+	 * @param environmentId
+	 * @return EnvironmentDto
+	 */
 	@GetMapping(path = "{environmentId}")
 	public EnvironmentDto getEnvironmentById(@PathVariable("environmentId") Integer environmentId) {
 		Environment environment = envService.get(environmentId);
 		return convertEnvironment(environment);
 	}
 
+
+	/**
+	 * @param environmentName
+	 * @return EnvironmentDto
+	 */
 	@GetMapping(path = "environmentname/{environmentname}")
 	public EnvironmentDto getEnvironmentByEnvironmentName(@PathVariable("environmentname") String environmentName) {
 		Environment environment = envService.getByEnvironmentName(environmentName);
 		return convertEnvironment(environment);
 	}
 
+
+	/**
+	 * @param environmentId
+	 * @return boolean
+	 */
 	@GetMapping(path = "exists-by-id/{environmentId}")
 	public boolean doesEnvironmentExistsById(@ModelAttribute("environmentId") Integer environmentId) {
 		return envService.existsById(environmentId);
 	}
 
+
+	/**
+	 * @param environmentName
+	 * @return boolean
+	 */
 	@GetMapping(path = "exists-by-environmentname/{environmentname}")
 	public boolean doesEnvironmentNameExists(@PathVariable("environmentname") String environmentName) {
 		return envService.existsByEnvironmentName(environmentName);
 	}
 
+
+	/**
+	 * @return List<EnvironmentDto>
+	 */
 	@GetMapping
 	public List<EnvironmentDto> getAllEnvironments() {
 		List<Environment> environments = envService.getAll();
@@ -101,6 +128,11 @@ public class EnvironmentController {
 		return environmentsDto;
 	}
 
+
+	/**
+	 * @param @PathVariable("environmentId"
+	 * @return EnvironmentDto
+	 */
 	@PutMapping(path = "{environmentId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public EnvironmentDto updateEnvironment(@PathVariable("environmentId") Integer environmentId,
 			@ModelAttribute("environmentName") String environmentName) {
@@ -108,12 +140,22 @@ public class EnvironmentController {
 		return convertEnvironment(environment);
 	}
 
+
+	/**
+	 * @param environmentId
+	 */
 	@DeleteMapping(path = "{environmentId}")
 	public void deleteEnvironment(@PathVariable("environmentId") Integer environmentId) {
 		envService.delete(environmentId);
 	}
 
 
+	// TODO fix exception catch
+
+	/**
+	 * @param environmentId
+	 * @return CapabilityMapDto
+	 */
 	@GetMapping(path = "capabilitymap/{environmentId}")
 	public CapabilityMapDto getCapabilityMap(@PathVariable("environmentId") Integer environmentId) {
 		try {
@@ -127,6 +169,11 @@ public class EnvironmentController {
 		return new EnvironmentDto(environment.getEnvironmentId(), environment.getEnvironmentName());
 	}
 
+
+	/**
+	 * @param environment
+	 * @return CapabilityMapDto
+	 */
 	private CapabilityMapDto constructMap(Environment environment) {
 		List<StrategyDto> strategiesDto = new ArrayList<StrategyDto>();
 		if (environment.getStrategies() != null) {
@@ -142,14 +189,29 @@ public class EnvironmentController {
 				strategiesDto);
 	}
 
+
+	/**
+	 * @param environment
+	 * @return EnvironmentDto
+	 */
 	private EnvironmentDto convertBasicEnvironment(Environment environment) {
 		return new EnvironmentDto(environment.getEnvironmentId(), environment.getEnvironmentName());
 	}
 
+
+	/**
+	 * @param status
+	 * @return StatusDto
+	 */
 	private StatusDto convertBasicStatus(Status status) {
 		return new StatusDto(status.getStatusId(), status.getValidityPeriod());
 	}
 
+
+	/**
+	 * @param strategy
+	 * @return StrategyDto
+	 */
 	private StrategyDto convertStrategy(Strategy strategy) {
 		List<StrategyItemDto> strategyItemsDto = new ArrayList<StrategyItemDto>();
 		if (strategy.getItems() != null) {
@@ -162,49 +224,99 @@ public class EnvironmentController {
 				convertBasicEnvironment(strategy.getEnvironment()), strategyItemsDto);
 	}
 
+
+	/**
+	 * @param strategyItem
+	 * @return StrategyItemDto
+	 */
 	private StrategyItemDto convertStrategyItem(StrategyItem strategyItem) {
 		return new StrategyItemDto(strategyItem.getItemId(), strategyItem.getStrategyItemName(),
 				strategyItem.getDescription());
 	}
 
+
+	/**
+	 * @param capabilityItem
+	 * @return CapabilityItemDto
+	 */
 	private CapabilityItemDto convertCapabilityItem(CapabilityItem capabilityItem) {
 		return new CapabilityItemDto(convertStrategyItem(capabilityItem.getStrategyItem()),
 				capabilityItem.getStrategicImportance());
 	}
 
+
+	/**
+	 * @param program
+	 * @return ProgramDto
+	 */
 	private ProgramDto convertProgram(Program program) {
 		return new ProgramDto(program.getProgramId(), program.getProgramName());
 	}
 
+
+	/**
+	 * @param project
+	 * @return ProjectDto
+	 */
 	private ProjectDto convertProject(Project project) {
 		return new ProjectDto(project.getProjectId(), project.getProjectName(), convertProgram(project.getProgram()),
 				convertBasicStatus(project.getStatus()));
 	}
 
+
+	/**
+	 * @param businessProcess
+	 * @return BusinessProcessDto
+	 */
 	private BusinessProcessDto convertBusinessProcess(BusinessProcess businessProcess) {
 		return new BusinessProcessDto(businessProcess.getBusinessProcessId(), businessProcess.getBusinessProcessName(),
 				businessProcess.getBusinessProcessDescription());
 	}
 
+
+	/**
+	 * @param information
+	 * @return InformationDto
+	 */
 	private InformationDto convertInformation(Information information) {
 		return new InformationDto(information.getInformationId(), information.getInformationName(),
 				information.getInformationDescription());
 	}
 
+
+	/**
+	 * @param capabilityInformation
+	 * @return CapabilityInformationDto
+	 */
 	private CapabilityInformationDto convertCapabilityInformation(CapabilityInformation capabilityInformation) {
 		return new CapabilityInformationDto(convertInformation(capabilityInformation.getInformation()),
 				capabilityInformation.getCriticality());
 	}
 	
+
+	/**
+	 * @param resource
+	 * @return ResourceDto
+	 */
 	private ResourceDto convertResource(Resource resource) {
 		return new ResourceDto(resource.getResourceId(), resource.getResourceName(), resource.getResourceDescription(), 
 				resource.getFullTimeEquivalentYearlyValue());
 	}
 	
+
+	/**
+	 * @param technology
+	 * @return TechnologyDto
+	 */
 	private TechnologyDto convertTechnology(Technology technology) {
 		return new TechnologyDto(technology.getTechnologyId(), technology.getTechnologyName());
 	}
 	
+
+	/**
+	 * @param itApplication
+	 * @return ITApplicationDto
+	 */
 	private ITApplicationDto convertItApplication(ITApplication itApplication) {
 		List<TechnologyDto> technologiesDto = new ArrayList<TechnologyDto>();
 		if (itApplication.getTechnologies() != null) {
@@ -223,6 +335,11 @@ public class EnvironmentController {
 				itApplication.getAcceptedYearlyCost(), itApplication.getTimeValue(), technologiesDto);
 	}
 	
+
+	/**
+	 * @param capabilityApplication
+	 * @return CapabilityApplicationDto
+	 */
 	private CapabilityApplicationDto convertCapabilityApplication(CapabilityApplication capabilityApplication) {
 		return new CapabilityApplicationDto(convertItApplication(capabilityApplication.getApplication()),
 				capabilityApplication.getImportance(), capabilityApplication.getEfficiencySupport(),
@@ -231,6 +348,12 @@ public class EnvironmentController {
 				capabilityApplication.getCorrectnessInformationFit(), capabilityApplication.getAvailability());
 	}
 
+
+	/**
+	 * @param capability
+	 * @param pool
+	 * @return CapabilityMapItemDto
+	 */
 	private CapabilityMapItemDto constructCapabilityTree(Capability capability, List<Capability> pool) {
 		List<CapabilityItemDto> capabilityItemsDto = new ArrayList<CapabilityItemDto>();
 		if (capability.getCapabilityItems() != null) {
@@ -274,7 +397,7 @@ public class EnvironmentController {
 					.collect(Collectors.toList());
 		}
 
-		return new CapabilityMapItemDto(capability.getCapabilityId(), capability.getCapabilityName(),
+		return new CapabilityMapItemDto(capability.getCapabilityId(), capability.getCapabilityName(), capability.getCapabilityDescription(),
 				capability.getLevel(), capability.getPaceOfChange(), capability.getTargetOperatingModel(),
 				capability.getResourceQuality(), capability.getInformationQuality(), capability.getApplicationFit(),
 				convertBasicStatus(capability.getStatus()),
