@@ -35,11 +35,12 @@ export default class ITApplication extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
   }
-
+  //HANDLE INPUT CHANGE
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
 
+  //UNLINK CAPABILITIES FROM ITAPPLICATION
   async unlinkCapability(capabilityId) {
     await this.state.api.endpoints.capabilityapplication
       .unlink({ capabilityId: capabilityId, id: this.state.itApplicationId })
@@ -48,7 +49,7 @@ export default class ITApplication extends Component {
 
     this.capabilityTable(this.state.itApplicationId);
   }
-
+  //FETCH CAPABILITIES AND INSERT THEM INTO HTML SELECT
   async capabilityTable(itApplicationId) {
     await this.state.api.endpoints.capabilityapplication
       .getAllCapabilitiesByApplicationId({ id: itApplicationId })
@@ -60,6 +61,7 @@ export default class ITApplication extends Component {
       });
   }
 
+  //HANDLE SUBMIT
   handleSubmit = (itApplicationId) => async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -134,12 +136,14 @@ export default class ITApplication extends Component {
       });
   }
 
+  //REDIRCET TO EDIT PAGE
   edit(itApplicationId) {
     this.props.history.push(
       `/environment/${this.state.environmentName}/itapplication/${itApplicationId}`
     );
   }
 
+  //CONFIRM DELETION OF ITAPPLICATION WTIH ID ITAPPLICATIONID
   fetchDeleteITApplications = async (itApplicationId) => {
     await this.state.api.endpoints.itapplication
       .delete({ id: itApplicationId })
@@ -157,6 +161,7 @@ export default class ITApplication extends Component {
       });
   };
 
+  //TOGGLE MODAL
   handleModal() {
     this.setState({ showModal: !this.state.showModal });
   }

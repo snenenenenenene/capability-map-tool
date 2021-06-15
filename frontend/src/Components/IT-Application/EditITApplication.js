@@ -98,23 +98,27 @@ export default class EditITApplication extends Component {
       );
     });
   }
-
+  //TRANSFER RATINGS FROM RATINGS COMPONENT TO ITAPPLICATION
   transferRatings(name, value) {
     this.setState({ [name]: value });
   }
 
+  //HANDLE INPUT CHANGE
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
 
+  //TOGGLE MODAL
   handleModal() {
     this.setState({ showModal: !this.state.showModal });
   }
 
+  //TOGGLE STATUS MODAL
   handleStatusModal() {
     this.setState({ showStatusModal: !this.state.showStatusModal });
   }
 
+  //FETCH CURRENCIES AND INSERT THEM INTO HTML SELECT
   currencyListRow() {
     return this.state.currencies.map((currency) => {
       return (
@@ -125,10 +129,7 @@ export default class EditITApplication extends Component {
     });
   }
 
-  transferRatings(name, value) {
-    this.setState({ [name]: value });
-  }
-
+  //UPATE STATUSES WHEN ADDING NEW DATE
   async updateDate() {
     await this.state.api.endpoints.status
       .getAll()
@@ -196,28 +197,6 @@ export default class EditITApplication extends Component {
       .catch((error) => {
         this.props.history.push("/error");
       });
-  }
-
-  handleInputChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
-  }
-
-  handleModal() {
-    this.setState({ showModal: !this.state.showModal });
-  }
-
-  currencyListRow() {
-    return this.state.currencies.map((currency) => {
-      return (
-        <option key={currency} value={currency}>
-          {currency}
-        </option>
-      );
-    });
-  }
-
-  handleStatusModal() {
-    this.setState({ showStatusModal: !this.state.showStatusModal });
   }
 
   render() {

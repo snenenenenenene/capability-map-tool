@@ -28,6 +28,7 @@ export default class AddProject extends Component {
     this.updateDate = this.updateDate.bind(this);
   }
 
+  //HANDLE SUBMIT
   handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -86,55 +87,59 @@ export default class AddProject extends Component {
       });
   }
 
+  //TOGGLE ITEM MODAL
   handleItemModal() {
     this.setState({ showItemModal: !this.state.showItemModal });
   }
 
+  //HANDLE INPUT CHANGE
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
 
+  //UPDATE DATES WHEN ADDING A NEW STATUS
   async updateDate() {
     this.componentDidMount();
   }
 
+  //TOGGLE MODAL
   handleModal() {
     this.setState({ showModal: !this.state.showModal });
   }
 
   render() {
     return (
-      <div className='container'>
+      <div className="container">
         <br></br>
-        <nav aria-label='breadcrumb'>
-          <ol className='breadcrumb'>
-            <li className='breadcrumb-item'>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
               <Link to={`/`}>Home</Link>
             </li>
-            <li className='breadcrumb-item'>
+            <li className="breadcrumb-item">
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className='breadcrumb-item active' aria-current='page'>
+            <li className="breadcrumb-item active" aria-current="page">
               Add Project
             </li>
           </ol>
         </nav>
-        <div className='jumbotron'>
+        <div className="jumbotron">
           <h3>Add Project</h3>
           <form onSubmit={this.handleSubmit}>
-            <div className='row'>
-              <div className='col-sm-12'>
-                <div className='form-row'>
-                  <div className='form-group col-md-12'>
-                    <label htmlFor='projectName'>Name Project</label>
+            <div className="row">
+              <div className="col-sm-12">
+                <div className="form-row">
+                  <div className="form-group col-md-12">
+                    <label htmlFor="projectName">Name Project</label>
                     <input
-                      type='text'
-                      id='projectName'
-                      name='projectName'
-                      className='form-control'
-                      placeholder='Name Project'
+                      type="text"
+                      id="projectName"
+                      name="projectName"
+                      className="form-control"
+                      placeholder="Name Project"
                       value={this.state.projectName}
                       onChange={this.handleInputChange}
                       required
@@ -142,15 +147,15 @@ export default class AddProject extends Component {
                   </div>
                 </div>
               </div>
-              <div className='col-sm-6'>
-                <div className='form-row'>
-                  <div className='form-group col-md'>
-                    <label htmlFor='paceOfChange'>Program</label>
+              <div className="col-sm-6">
+                <div className="form-row">
+                  <div className="form-group col-md">
+                    <label htmlFor="paceOfChange">Program</label>
                     <Select
                       options={this.state.programs}
-                      name='program'
-                      id='program'
-                      placeholder='Add Program'
+                      name="program"
+                      id="program"
+                      placeholder="Add Program"
                       value={this.state.programId}
                       onChange={(program) =>
                         this.setState({ selectedProgram: program })
@@ -160,14 +165,14 @@ export default class AddProject extends Component {
                   </div>
                 </div>
               </div>
-              <div className='col-sm-6'>
-                <div className='form-row'>
-                  <div className='form-group col-md-9'>
-                    <label htmlFor='statusId'>Status</label>
+              <div className="col-sm-6">
+                <div className="form-row">
+                  <div className="form-group col-md-9">
+                    <label htmlFor="statusId">Status</label>
                     <Select
-                      id='statusId'
-                      name='statusId'
-                      placeholder='Validity Period'
+                      id="statusId"
+                      name="statusId"
+                      placeholder="Validity Period"
                       value={this.state.statusId}
                       options={this.state.statuses}
                       required
@@ -185,8 +190,8 @@ export default class AddProject extends Component {
                       </Modal.Body>
                       <Modal.Footer>
                         <button
-                          type='button'
-                          className='btn btn-secondary'
+                          type="button"
+                          className="btn btn-secondary"
                           onClick={() => this.handleModal()}
                         >
                           Close Modal
@@ -195,8 +200,8 @@ export default class AddProject extends Component {
                     </Modal>
                   </div>
                   <button
-                    type='button'
-                    className='btn btn-secondary'
+                    type="button"
+                    className="btn btn-secondary"
                     style={{ height: 40, marginTop: 30 }}
                     onClick={() => this.handleModal()}
                   >
@@ -206,8 +211,8 @@ export default class AddProject extends Component {
               </div>
             </div>
             <button
-              className='btn btn-primary'
-              type='button'
+              className="btn btn-primary"
+              type="button"
               onClick={this.handleSubmit}
             >
               Submit

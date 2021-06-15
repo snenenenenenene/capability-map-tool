@@ -59,10 +59,12 @@ export default class Project extends Component {
       });
   }
 
+  //TOGGLE MODAL
   handleModal() {
     this.setState({ showModal: !this.state.showModal });
   }
 
+  //SUBMIT PROJECT
   handleSubmit = (projectId) => async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -76,12 +78,14 @@ export default class Project extends Component {
     this.capabilityTable(projectId);
   };
 
+  //REDIRCET TO EDIT PAGE
   edit(projectId) {
     this.props.history.push(
       `/environment/${this.state.environmentName}/project/${projectId}`
     );
   }
 
+  //UNLINK PROJECT FROM CAPABILITY WITH ID CAPABILITYID
   async unlinkCapability(capabilityId) {
     await this.state.api.endpoints.capability
       .unlinkProject({ capabilityId: capabilityId, id: this.state.projectId })
@@ -123,6 +127,7 @@ export default class Project extends Component {
     );
   };
 
+  //FETCH CAPABILITIES AND INSERT THEM INTO HTML SELECT
   async capabilityTable(projectId) {
     await this.state.api.endpoints.project
       .getCapabilities({ id: projectId })
@@ -133,7 +138,7 @@ export default class Project extends Component {
         toast.error("Could Not Find Capabilities");
       });
   }
-
+  //CONFIRM DELETION OF PROJECT WITH ID PROJECTID
   fetchDeleteProjects = async (projectId) => {
     await this.state.api.endpoints.project
       .delete({ id: projectId })

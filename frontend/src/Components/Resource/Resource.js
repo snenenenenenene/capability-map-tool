@@ -60,11 +60,14 @@ export default class Resource extends Component {
       });
   }
 
+  //REDIRECT TO EDIT PAGE
   edit(resourceId) {
     this.props.history.push(
       `/environment/${this.state.environmentName}/resource/${resourceId}`
     );
   }
+
+  //CONFIRM RESOURCE DELETION WITH ID RESOURCEID
   fetchDeleteResources = async (resourceId) => {
     await this.state.api.endpoints.resource
       .delete({ id: resourceId })
@@ -72,7 +75,6 @@ export default class Resource extends Component {
       .catch((error) => toast.error("Could not Delete Resource"));
     //REFRESH RESOURCES
     await this.state.api.endpoints.resource
-
       .getAll()
       .then((response) => {
         this.setState({ resources: response.data });
@@ -82,6 +84,7 @@ export default class Resource extends Component {
       });
   };
 
+  //DELETE RESOURCE
   delete = async (resourceId) => {
     toast(
       (t) => (
@@ -114,6 +117,7 @@ export default class Resource extends Component {
     );
   };
 
+  //UNLINK CAPABILITY FROM RESOURCE
   async unlinkCapability(capabilityId) {
     await this.state.api.endpoints.capability
       .unlinkResource({ capabilityId: capabilityId, id: this.state.resourceId })
@@ -122,6 +126,8 @@ export default class Resource extends Component {
 
     this.capabilityTable(this.state.resourceId);
   }
+
+  //GENERATE CAPABILITY TABLE WITH ALL LINKED CAPABILTIES TO A RESOURCE
   async capabilityTable(resourceId) {
     await this.state.api.endpoints.resource
       .getCapabilities({ id: resourceId })
@@ -133,10 +139,12 @@ export default class Resource extends Component {
       });
   }
 
+  //TOGGLE MODAL
   handleModal() {
     this.setState({ showModal: !this.state.showModal });
   }
 
+  //HANDLE SUBMIT
   handleSubmit = (resourceId) => async (e) => {
     e.preventDefault();
     const formData = new FormData();

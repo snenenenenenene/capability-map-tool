@@ -25,6 +25,7 @@ export default class BusinessProcess extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
+  //HANDLE INPUT CHANGE
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
@@ -66,11 +67,14 @@ export default class BusinessProcess extends Component {
       });
   }
 
+  //REDIRECT TO EDIT PAGE
   edit(businessProcessId) {
     this.props.history.push(
       `/environment/${this.state.environmentName}/businessprocess/${businessProcessId}`
     );
   }
+
+  //DELETE BUSINESSPROCESS
   fetchDeleteBusinessProcesses = async (businessProcessId) => {
     await this.state.api.endpoints.businessprocess
       .delete({ id: businessProcessId })
@@ -89,6 +93,7 @@ export default class BusinessProcess extends Component {
       });
   };
 
+  //HANDLE SUBMIT
   handleSubmit = (businessProcessId) => async (e) => {
     e.preventDefault();
 
@@ -110,6 +115,7 @@ export default class BusinessProcess extends Component {
       });
   };
 
+  //UNLINK BUSINESSPROCESS FROM CAPABILITY
   async unlinkCapability(capabilityId) {
     await this.state.api.endpoints.capability
       .unlinkBusinessProcess({
@@ -122,6 +128,7 @@ export default class BusinessProcess extends Component {
     this.capabilityTable(this.state.businessProcessId);
   }
 
+  //FETCH CAPABILITIES AND INSERT THEM INTO HTML SELECT
   async capabilityTable(businessProcessId) {
     await this.state.api.endpoints.businessprocess
       .getCapabilities({ id: businessProcessId })
@@ -133,6 +140,7 @@ export default class BusinessProcess extends Component {
       });
   }
 
+  //CONFIRM DELETION OF BUSINESSPROCESS WITH ID BUSINESSPROCESSID
   delete = async (businessProcessId) => {
     toast(
       (t) => (
@@ -164,6 +172,7 @@ export default class BusinessProcess extends Component {
       { duration: 50000 }
     );
   };
+  //TOGGLE MODAL
   handleModal() {
     this.setState({ showModal: !this.state.showModal });
   }

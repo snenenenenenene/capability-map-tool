@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -20,6 +19,7 @@ export default class NewEnvironment extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  //DELETE ENVIRONMENT
   fetchDeleteEnvironments = async (environmentId) => {
     await this.state.api.endpoints.environment
       .delete({ id: environmentId })
@@ -36,6 +36,7 @@ export default class NewEnvironment extends Component {
     //REFRESH ENVIRONMENTS
   };
 
+  //GENERATE TEMPLATE WHEN CLICKING IN HTML
   generateTemplate() {
     const formData = new FormData();
     formData.append("environmentName", this.state.environmentName);
@@ -63,6 +64,7 @@ export default class NewEnvironment extends Component {
       });
   }
 
+  //HANDLE SUBMIT
   handleSubmit = async (e) => {
     e.preventDefault();
     await this.state.api.endpoints.environment
@@ -111,6 +113,7 @@ export default class NewEnvironment extends Component {
       });
   };
 
+  //HANDLE INPUT CHANGE
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
@@ -125,6 +128,7 @@ export default class NewEnvironment extends Component {
       });
   }
 
+  //TOGGLE MODAL
   handleModal() {
     this.setState({ showModal: !this.state.showModal });
   }
@@ -283,6 +287,7 @@ export default class NewEnvironment extends Component {
             >
               <img
                 className="templateImage"
+                alt="Template"
                 src={TemplateImage}
                 style={{ maxWidth: 100 + "%", maxHeight: 100 + "%" }}
               ></img>

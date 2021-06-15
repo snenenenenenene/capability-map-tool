@@ -19,6 +19,7 @@ export default class AddITApplication extends Component {
     };
     this.handleInputChange = this.handleInputChange.bind(this);
   }
+  //HANDLE INPUT CHANGE
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }

@@ -16,20 +16,23 @@ export default class Settings extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
+  //HANDLE INPUT
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
 
+  //SEND MAIL WHEN SUBMITTING FORM
   sendMail = async (e) => {
-    this.state.api.createEntity({ name: "user" });
     e.preventDefault();
+    this.state.api.createEntity({ name: "user" });
+    const toastLoading = toast.loading("Sending Mail...");
     const formData = new FormData();
     formData.append("email", this.state.email);
     await this.state.api.endpoints.user
       .forgotPassword(formData)
       .then((response) => {
+        toast.dismiss(toastLoading);
         toast.success(`Mail Sent to ${this.state.email}`);
-        this.props.history.push(`/login`);
       })
       .catch((error) => toast.error("Something went Wrong"));
   };

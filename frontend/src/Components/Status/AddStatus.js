@@ -17,6 +17,7 @@ export default class AddStatus extends Component {
     this.handleDateChange = this.handleDateChange.bind(this);
   }
 
+  //HANDLE SUBMIT
   handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -50,58 +51,60 @@ export default class AddStatus extends Component {
       .then((response) => this.setState({ statuses: response.data }));
   }
 
+  //HANDLE INPUT CHANGE
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
 
+  //HANDLE DATE CHANGE
   handleDateChange(event) {
     this.setState({ [event.target.name]: event.target.value.toLocaleString() });
   }
 
   render() {
     return (
-      <div className='container'>
+      <div className="container">
         <br></br>
-        <nav aria-label='breadcrumb'>
-          <ol className='breadcrumb'>
-            <li className='breadcrumb-item'>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
               <Link to={`/`}>Home</Link>
             </li>
-            <li className='breadcrumb-item'>
+            <li className="breadcrumb-item">
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className='breadcrumb-item active' aria-current='page'>
+            <li className="breadcrumb-item active" aria-current="page">
               Add Status
             </li>
           </ol>
         </nav>
-        <div className='jumbotron'>
+        <div className="jumbotron">
           <h3>Add Status</h3>
           <form onSubmit={this.handleSubmit}>
-            <div className='row'>
-              <div className='col-sm-6'>
-                <div className='form-row'>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='validityPeriod'>Validity Period</label>
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label htmlFor="validityPeriod">Validity Period</label>
                     <input
-                      type='date'
-                      id='validityPeriod'
-                      name='validityPeriod'
-                      className='form-control'
-                      placeholder='End Date'
+                      type="date"
+                      id="validityPeriod"
+                      name="validityPeriod"
+                      className="form-control"
+                      placeholder="End Date"
                       value={this.state.validityPeriod}
                       onChange={this.handleDateChange}
                     />
                   </div>
                 </div>
               </div>
-              <div className='col-sm-6'></div>
+              <div className="col-sm-6"></div>
             </div>
             <button
-              className='btn btn-primary'
-              type='button'
+              className="btn btn-primary"
+              type="button"
               onClick={this.handleSubmit}
             >
               Submit

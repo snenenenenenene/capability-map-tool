@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import Select from "react-select";
 import API from "../../Services/API";
 
 export default class EditBusinessProcess extends Component {
@@ -20,6 +19,7 @@ export default class EditBusinessProcess extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
+  //HANDLE SUBMIT
   handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -39,6 +39,7 @@ export default class EditBusinessProcess extends Component {
       .catch((error) => toast.error("Could not Edit Business Process"));
   };
 
+  //HANDLE CAPABILITY CHANGE
   handleChange = (selectedOption) => {
     this.setState({ selectedCapabilities: selectedOption });
   };
@@ -68,69 +69,70 @@ export default class EditBusinessProcess extends Component {
       });
   }
 
+  //HANDLE INPUT CHANGE
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
 
   render() {
     return (
-      <div className='container'>
+      <div className="container">
         <br></br>
-        <nav aria-label='breadcrumb'>
-          <ol className='breadcrumb'>
-            <li className='breadcrumb-item'>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
               <Link to={`/`}>Home</Link>
             </li>
-            <li className='breadcrumb-item'>
+            <li className="breadcrumb-item">
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className='breadcrumb-item'>
+            <li className="breadcrumb-item">
               <Link
                 to={`/environment/${this.state.environmentName}/businessprocess`}
               >
                 Business Process
               </Link>
             </li>
-            <li className='breadcrumb-item active' aria-current='page'>
+            <li className="breadcrumb-item active" aria-current="page">
               {this.state.businessProcessId}
             </li>
           </ol>
         </nav>
-        <div className='jumbotron'>
+        <div className="jumbotron">
           <h3>Edit Business Process</h3>
           <form onSubmit={this.handleSubmit}>
-            <div className='row'>
-              <div className='col-sm-6'>
-                <div className='form-row'>
-                  <div className='form-group col-md'>
-                    <label htmlFor='businessProcessName'>
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="form-row">
+                  <div className="form-group col-md">
+                    <label htmlFor="businessProcessName">
                       Name Business Process
                     </label>
                     <input
-                      type='text'
-                      id='businessProcessName'
-                      name='businessProcessName'
-                      className='form-control'
-                      placeholder='Name Business Process'
+                      type="text"
+                      id="businessProcessName"
+                      name="businessProcessName"
+                      className="form-control"
+                      placeholder="Name Business Process"
                       value={this.state.businessProcessName}
                       onChange={this.handleInputChange}
                     />
                   </div>
                 </div>
-                <div className='form-row'></div>
-                <div className='form-group'>
-                  <label htmlFor='businessProcessDescription'>
+                <div className="form-row"></div>
+                <div className="form-group">
+                  <label htmlFor="businessProcessDescription">
                     Description
                   </label>
                   <textarea
-                    type='text'
-                    id='businessProcessDescription'
-                    name='businessProcessDescription'
-                    className='form-control'
-                    rows='5'
-                    placeholder='Description'
+                    type="text"
+                    id="businessProcessDescription"
+                    name="businessProcessDescription"
+                    className="form-control"
+                    rows="5"
+                    placeholder="Description"
                     value={this.state.businessProcessDescription}
                     onChange={this.handleInputChange}
                   />
@@ -138,8 +140,8 @@ export default class EditBusinessProcess extends Component {
               </div>
             </div>
             <button
-              className='btn btn-primary'
-              type='button'
+              className="btn btn-primary"
+              type="button"
               onClick={this.handleSubmit}
             >
               Submit

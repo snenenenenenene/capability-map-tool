@@ -10,7 +10,6 @@ export default class StrategyItem extends Component {
     super(props);
     this.state = {
       api: new API(),
-
       environments: [],
       environmentName: this.props.match.params.name,
       environmentId: "",
@@ -51,7 +50,6 @@ export default class StrategyItem extends Component {
       });
 
     await this.state.api.endpoints.capability
-
       .getAll()
       .then((response) => {
         response.data.forEach((capability) => {
@@ -65,12 +63,14 @@ export default class StrategyItem extends Component {
       });
   }
 
+  //REDIRECT TO EDIT STATUS
   edit(strategyItemId) {
     this.props.history.push(
       `/environment/${this.state.environmentName}/strategyitem/${strategyItemId}`
     );
   }
 
+  //ASK ADMIN WHETHER THEY ARE SURE ABOUT REMOVING A USER
   fetchDeleteStrategyItems = async (itemId) => {
     await this.state.api.endpoints.strategyitem
       .delete({ id: itemId })
@@ -86,11 +86,12 @@ export default class StrategyItem extends Component {
         toast.error("Could not Find Strategy Items");
       });
   };
-
+  //HANDLE INPUT CHANGE
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
 
+  //HANDLE SUBMIT
   handleSubmit = (itemId) => async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -112,6 +113,7 @@ export default class StrategyItem extends Component {
       });
   };
 
+  //DELETE STRATEGY ITEM
   delete = async (itemId) => {
     toast(
       (t) => (
@@ -144,6 +146,7 @@ export default class StrategyItem extends Component {
     );
   };
 
+  //UNLINK CAPABILITY FROM STRATEGY ITEM
   async unlinkCapability(capabilityId) {
     await this.state.api.endpoints.capabilityitem
       .unlink({ capabilityId: capabilityId, id: this.state.itemId })
@@ -153,6 +156,7 @@ export default class StrategyItem extends Component {
     this.capabilityTable(this.state.itemId);
   }
 
+  //SHOW ALL CAPABILITIES LINKED TO STRATEGY ITEM WITH ID ITEMID
   async capabilityTable(itemId) {
     await this.state.api.endpoints.capabilityitem
       .getAllCapabilityItemsByItemId({ id: itemId })
@@ -164,6 +168,7 @@ export default class StrategyItem extends Component {
       });
   }
 
+  //HANDLE MODAL
   handleModal() {
     this.setState({ showModal: !this.state.showModal });
   }

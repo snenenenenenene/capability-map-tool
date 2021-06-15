@@ -28,10 +28,12 @@ export default class Capability extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
+  //HANDLE INPUT CHANGE
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
 
+  //HANDLE SUBMIT
   handleSubmit = (capabilityId) => async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -93,12 +95,14 @@ export default class Capability extends Component {
       });
   }
 
+  //REDIRECT TO EDIT PAGE
   edit(capabilityId) {
     this.props.history.push(
       `/environment/${this.state.environmentName}/capability/${capabilityId}`
     );
   }
 
+  // FETCH STRATEGY ITEMS AND INSERT THEM INTO HTML SELECT
   async strategyItemTable(capabilityId) {
     await this.state.api.endpoints.capabilityitem
       .getAllCapabilityItemsByCapabilityId({ id: capabilityId })
@@ -110,14 +114,17 @@ export default class Capability extends Component {
       });
   }
 
+  //TOGGLE ITEM MODAL
   handleItemModal() {
     this.setState({ showItemModal: !this.state.showItemModal });
   }
 
+  //TOGGLE INFO MODAL
   handleInfoModal() {
     this.setState({ showInfoModal: !this.state.showInfoModal });
   }
 
+  //DELETE CAPABILITY
   fetchDeleteCapabilities = async (capabilityId) => {
     await this.state.api.endpoints.capability
       .delete({ id: capabilityId })
@@ -125,7 +132,6 @@ export default class Capability extends Component {
       .catch((error) => toast.error("Could not Delete Capability"));
 
     //REFRESH CAPABILITIES
-
     await this.state.api.endpoints.capability
       .getAllCapabilitiesByEnvironmentId({ id: this.state.environmentId })
       .then((response) => {
@@ -136,6 +142,7 @@ export default class Capability extends Component {
       });
   };
 
+  //CONFIRM DELETION OF CAPABILTIY WITH ID CAPABILITYID
   delete = async (capabilityId) => {
     toast(
       (t) => (

@@ -106,14 +106,20 @@ class App extends Component {
       }
     });
   }
-
-  logout() {
+  //EXEUCTE LOGOUT PROCEDURE
+  //REMOVE USER FROM STORAGE AND SEND USER TO LOGIN PAGE
+  async logout() {
     localStorage.removeItem("user");
     localStorage.removeItem("environment");
     this.props.history.push("/");
     window.location.reload();
+    await this.state.api.endpoints.user
+      .logout(this.state.user.email)
+      .then((result) => toast.success("Logged Out..."))
+      .catch((error) => console.log(error));
   }
 
+  //DISPLAY USER-ADMIN SETTINGS ONLY FOR USER-ADMINS
   adminSettings() {
     if (this.state.user.roleId === 2) {
       return (
@@ -124,7 +130,7 @@ class App extends Component {
     }
     return;
   }
-
+  //MAKE ROUTES ACCESSIBLE TO USER-ADMINS ONLY
   adminRoutes() {
     if (this.state.user.roleId === 2) {
       return (
@@ -137,6 +143,7 @@ class App extends Component {
     }
   }
 
+  //SHOW SIDEBAR
   sideBar() {
     if (localStorage.getItem("environment")) {
       return (
@@ -281,7 +288,7 @@ class App extends Component {
                         </Link>
                         <hr></hr>
                         <li
-                          classname="dropdown-item my-auto"
+                          className="dropdown-item my-auto"
                           style={{ marginBottom: 5 }}
                         >
                           {this.state.user.username}

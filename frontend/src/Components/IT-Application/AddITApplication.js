@@ -4,8 +4,6 @@ import toast from "react-hot-toast";
 import { Modal } from "react-bootstrap";
 import Ratings from "./Ratings";
 import StatusQuickAdd from "../Status/StatusQuickAdd";
-import Select from "react-select";
-
 import API from "../../Services/API";
 
 export default class AddITApplication extends Component {
@@ -46,14 +44,12 @@ export default class AddITApplication extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.updateDate = this.updateDate.bind(this);
   }
-
+  //HANDLE SUMBIT
   handleSubmit = async (e) => {
     e.preventDefault();
-
     const formData = new FormData();
     formData.append("statusId", this.state.statusId);
     formData.append("name", this.state.itApplicationName);
-    // formData.append("technology", this.state.technology);
     formData.append("version", this.state.version);
     formData.append("purchaseDate", this.state.purchaseDate);
     formData.append("endOfLife", this.state.endOfLife);
@@ -93,6 +89,7 @@ export default class AddITApplication extends Component {
       });
   };
 
+  //FETCH STATUSES AND INSERT THEM INTO HTML SELECT
   statusListRows() {
     return this.state.statuses.map((status) => {
       return (
@@ -103,10 +100,11 @@ export default class AddITApplication extends Component {
     });
   }
 
+  //PERSIST STATUSES FROM RATINGS TO ITAPPLICATION
   transferRatings(name, value) {
     this.setState({ [name]: value });
   }
-
+  //UPDATE STATUSES WHEN ADDING A NEW DATE
   async updateDate() {
     await this.state.api.endpoints.status
       .getAll()
@@ -145,14 +143,17 @@ export default class AddITApplication extends Component {
         toast.error("No Currencies");
       });
   }
+
+  //HANDLE INPUT CHANGE
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
-
+  //HANDLE RAITNGS MODAL
   handleModal() {
     this.setState({ showModal: !this.state.showModal });
   }
 
+  //FETCH CURRENCIES AND INSERT THEM INTO HTML SELECT
   currencyListRow() {
     return this.state.currencies.map((currency) => {
       return (
@@ -162,7 +163,7 @@ export default class AddITApplication extends Component {
       );
     });
   }
-
+  //HANDLE STATUS MODAL
   handleStatusModal() {
     this.setState({ showStatusModal: !this.state.showStatusModal });
   }

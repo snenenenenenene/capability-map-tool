@@ -20,6 +20,7 @@ export default class EditUser extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
+  //SUBMIT EDITED USER FORM
   handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -62,10 +63,12 @@ export default class EditUser extends Component {
       });
   }
 
+  //HANDLE INPUT
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
 
+  //FETCH ROLES AND INSERT THEM INTO HTML SELECT
   roleListRows() {
     return this.state.roles.map((role) => {
       return (
@@ -78,64 +81,64 @@ export default class EditUser extends Component {
 
   render() {
     return (
-      <div className='container'>
+      <div className="container">
         <br></br>
-        <nav aria-label='breadcrumb'>
-          <ol className='breadcrumb'>
-            <li className='breadcrumb-item'>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
               <Link to={`/`}>Home</Link>
             </li>
-            <li className='breadcrumb-item'>
+            <li className="breadcrumb-item">
               <Link to={`/user`}>User</Link>
             </li>
-            <li className='breadcrumb-item active' aria-current='page'>
+            <li className="breadcrumb-item active" aria-current="page">
               Edit User
             </li>
           </ol>
         </nav>
-        <div className='jumbotron'>
+        <div className="jumbotron">
           <h3>Edit User</h3>
           <form onSubmit={this.handleSubmit}>
-            <div className='row'>
-              <div className='col-sm'>
-                <div className='form-row'>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='username'>Name</label>
+            <div className="row">
+              <div className="col-sm">
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label htmlFor="username">Name</label>
                     <input
-                      type='text'
-                      id='username'
-                      name='username'
-                      className='form-control'
-                      placeholder='Username'
+                      type="text"
+                      id="username"
+                      name="username"
+                      className="form-control"
+                      placeholder="Username"
                       value={this.state.username}
                       onChange={this.handleInputChange}
                       required
                     />
                   </div>
                 </div>
-                <div className='form-row'>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='email'>Email</label>
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label htmlFor="email">Email</label>
                     <input
-                      type='email'
-                      id='email'
-                      name='email'
-                      className='form-control'
-                      placeholder='Email'
+                      type="email"
+                      id="email"
+                      name="email"
+                      className="form-control"
+                      placeholder="Email"
                       value={this.state.email}
                       onChange={this.handleInputChange}
                       required
                     />
                   </div>
                 </div>
-                <div className='form-row'>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='paceOfChange'>Role</label>
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label htmlFor="paceOfChange">Role</label>
                     <select
-                      className='form-control'
-                      name='roleId'
-                      id='roleId'
-                      placeholder='Role'
+                      className="form-control"
+                      name="roleId"
+                      id="roleId"
+                      placeholder="Role"
                       value={this.state.roleId}
                       onChange={this.handleInputChange}
                       required
@@ -147,8 +150,8 @@ export default class EditUser extends Component {
               </div>
             </div>
             <button
-              className='btn btn-primary'
-              type='submit'
+              className="btn btn-primary"
+              type="submit"
               onClick={this.handleSubmit}
             >
               Submit

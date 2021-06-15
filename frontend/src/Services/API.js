@@ -8,24 +8,31 @@ export default class API {
     this.email = this.emailCheck();
   }
 
+  //CHECK IF JWT EXISTS
   jwtCheck() {
     if (localStorage.getItem("user"))
       return JSON.parse(localStorage.getItem("user")).jwt;
     return null;
   }
+
+  //CHECK IF MAIL IS VALID
   emailCheck() {
     if (localStorage.getItem("user"))
       return JSON.parse(localStorage.getItem("user")).email;
     return null;
   }
+
+  //CREATE ENTITY/ENDPOINT
   createEntity(entity) {
     this.endpoints[entity.name] = this.CRUDEndpoints(entity);
   }
 
+  //CREATE MULTIPLE ENTITIES/ENDPOINTS
   createEntities(arrayOfEntity) {
     arrayOfEntity.forEach(this.createEntity.bind(this));
   }
 
+  //ACCESS ENDPOINTS GENERATE BY CREATEENTITY FUNCTION
   CRUDEndpoints({ name }) {
     var endpoints = {};
     const config = {

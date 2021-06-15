@@ -21,15 +21,18 @@ export default class CapabilityMap extends Component {
     };
   }
 
+  //TOGGLE MODAL
   handleModal() {
     this.setState({ showModal: !this.state.showModal });
   }
 
+  //TOGGLE MODAL WHEN CLICKING CAPABILITY
   handleCapabilityClick(capability) {
     this.setState({ capability: capability });
     this.handleModal();
   }
 
+  //CHECK IF STRATEGY ITEMS EXIST
   strategyItemExists(capability) {
     if (capability.capabilityItems.length !== 0) {
       return (
@@ -42,7 +45,7 @@ export default class CapabilityMap extends Component {
       );
     }
   }
-
+  //CHECK IF PROJECTS EXIST
   projectExists = (capability) => {
     if (
       typeof capability.projects !== "undefined" &&
@@ -56,6 +59,7 @@ export default class CapabilityMap extends Component {
       );
     }
   };
+  //CHECK IF RESOURCES EXIST
   resourceExists = (capability) => {
     if (
       typeof capability.resources !== "undefined" &&
@@ -70,6 +74,7 @@ export default class CapabilityMap extends Component {
     }
   };
 
+  //CHECK IF ITAPPLICATIONS EXIST
   itApplicationExists = (capability) => {
     if (
       typeof capability.capabilityApplications !== "undefined" &&
@@ -83,8 +88,8 @@ export default class CapabilityMap extends Component {
       );
     }
   };
-  itApplicationExists;
 
+  //CHECK IF BUSINESSPROCESSES EXIST
   businessProcessExists = (capability) => {
     if (
       typeof capability.businessprocess !== "undefined" &&
@@ -100,6 +105,8 @@ export default class CapabilityMap extends Component {
       );
     }
   };
+
+  //CHECK IF INFORMATIONS EXIST
   informationExists = (capability) => {
     if (
       typeof capability.capabilityInformation !== "undefined" &&
@@ -114,6 +121,7 @@ export default class CapabilityMap extends Component {
     }
   };
 
+  //MAP CAPABILITIES TO THEIR HTML COUNTERPARTS
   capabilityMapping(capabilities) {
     return capabilities.map((capability, i) => {
       return (
@@ -164,10 +172,12 @@ export default class CapabilityMap extends Component {
       });
   }
 
+  //HANDLE ZOOM WHEN CLICKING THE MINIMIZE OR MAXIMIZE BUTTONS
   zoomHandler(zoom) {
     this.setState({ capabilityMapZoom: this.state.capabilityMapZoom + zoom });
   }
 
+  //RENDER STRATEGY ITEMS AND ADD COLOURS BASED ON THEIR STRATEGIC IMPORTANCE
   renderStrategyItems(capability) {
     if (capability.capabilityItems !== undefined) {
       return capability.capabilityItems.map((capabilityItem) => {
@@ -213,6 +223,7 @@ export default class CapabilityMap extends Component {
     } else return;
   }
 
+  //RENDER PROJECTS AS CARDS
   renderProjects(capability) {
     return capability.projects.map((project) => {
       return (
@@ -226,6 +237,8 @@ export default class CapabilityMap extends Component {
       );
     });
   }
+
+  //RENDER INFO AS CARDS
   renderInfo(capability) {
     return capability.capabilityInformation.map((information) => {
       return (
@@ -246,6 +259,7 @@ export default class CapabilityMap extends Component {
     });
   }
 
+  //RENDER RESOURCES AS CARDS
   renderResources(capability) {
     return capability.resources.map((resource) => {
       return (
@@ -260,6 +274,7 @@ export default class CapabilityMap extends Component {
     });
   }
 
+  //RENDER BUSINESSPROCESSES AS CARDS
   renderBusinessProcesses(capability) {
     if (capability.businessprocess !== undefined) {
       return capability.businessprocess.map((businessProcess) => {
@@ -278,6 +293,7 @@ export default class CapabilityMap extends Component {
     } else return;
   }
 
+  //RENDER IT APPLICATIONS AS CARDS
   renderITApplication(capability) {
     if (capability.capabilityApplications !== undefined) {
       return capability.capabilityApplications.map((capabilityApplication) => {
@@ -326,13 +342,17 @@ export default class CapabilityMap extends Component {
     } else return;
   }
 
+  //EXPORT ENTIRE MAP
   handleExportWithComponent = (event) => {
     this.state.pdfExportComponent.current.save();
   };
+
+  //EXPORT CAPABILITY
   handleCapabilityExportWithComponent = (event) => {
     this.state.capabilityPdfExportComponent.current.save();
   };
 
+  //HANDLE UPLOADING CSV
   handleFileUpload = async (event) => {
     const formData = new FormData();
     formData.append("file", event.target.value);

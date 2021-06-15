@@ -61,10 +61,12 @@ export default class Info extends Component {
       });
   }
 
+  //TOGGLE MODAL
   handleModal() {
     this.setState({ showModal: !this.state.showModal });
   }
 
+  //HANDLE SUBMIT
   handleSubmit = (informationId) => async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -79,16 +81,19 @@ export default class Info extends Component {
     this.capabilityTable(informationId);
   };
 
+  //HANDLE INPUT CHANGE
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
 
+  //REDIRECT TO EDIT PAGE
   edit(informationId) {
     this.props.history.push(
       `/environment/${this.state.environmentName}/info/${informationId}`
     );
   }
 
+  //UNLINK INFO FROM CAPABILITY WITH ID CAPABILITYID
   async unlinkCapability(capabilityId) {
     await this.state.api.endpoints.capabilityinformation
       .unlink({ capabilityId: capabilityId, id: this.state.informationId })
@@ -98,7 +103,7 @@ export default class Info extends Component {
     this.capabilityTable(this.state.informationId);
   }
 
-  //DELETE info
+  //CONFIRM DELETION OF INFO
   delete = async (infoId) => {
     toast(
       (t) => (
@@ -131,6 +136,7 @@ export default class Info extends Component {
     );
   };
 
+  //FETCH CAPABILITIES AND INSERT THEM INTO HTML SELECT
   async capabilityTable(informationId) {
     await this.state.api.endpoints.capabilityinformation
       .getAllCapabilitiesByInformationId({ id: informationId })
@@ -142,6 +148,7 @@ export default class Info extends Component {
       });
   }
 
+  //DELETE INFO
   fetchDeleteInfos = async (infoId) => {
     await this.state.api.endpoints.info
       .delete({ id: infoId })

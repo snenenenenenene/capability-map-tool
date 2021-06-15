@@ -13,10 +13,8 @@ export default class EditInfo extends Component {
       api: new API(),
       statuses: [],
       programs: [],
-
       selectedStatus: "",
       selectedProgram: "",
-
       environmentName: this.props.match.params.name,
       environmentId: "",
       infoName: "",
@@ -29,7 +27,7 @@ export default class EditInfo extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
   }
-
+  //HANDLE SUBMIT
   handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -102,14 +100,17 @@ export default class EditInfo extends Component {
       });
   }
 
+  //HANDLE INPUT CHANGE
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
 
+  //UPDATE DATES AFTER ADDING A NEW STATUS
   async updateDate() {
     this.componentDidMount();
   }
 
+  //TOGGLE MODAL
   handleModal() {
     this.setState({ showModal: !this.state.showModal });
   }

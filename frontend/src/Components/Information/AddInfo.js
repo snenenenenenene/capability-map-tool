@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Modal } from "react-bootstrap";
-import StatusQuickAdd from "../Status/StatusQuickAdd";
 import toast from "react-hot-toast";
-import Select from "react-select";
 import API from "../../Services/API";
 
 export default class AddInfo extends Component {
@@ -21,7 +18,7 @@ export default class AddInfo extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
   }
-
+  //HANDLE SUBMIT
   handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -54,7 +51,7 @@ export default class AddInfo extends Component {
         this.props.history.push("/404");
       });
   }
-
+  //HANDLE INPUT CHANGE
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }

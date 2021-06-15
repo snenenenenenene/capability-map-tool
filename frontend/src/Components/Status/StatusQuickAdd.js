@@ -16,6 +16,7 @@ export default class StatusQuickAdd extends Component {
     this.handleDateChange = this.handleDateChange.bind(this);
   }
 
+  //HANDLE SUBMIT
   handleSubmit = async (e) => {
     e.preventDefault();
     this.state.api.createEntity({ name: "status" });
@@ -32,10 +33,12 @@ export default class StatusQuickAdd extends Component {
       });
   };
 
+  //HANDLE INPUT CHANGE
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
 
+  //HANDLE DATE CHANGE FROM INPUT HTML
   handleDateChange(event) {
     this.setState({ [event.target.name]: event.target.value.toLocaleString() });
   }
@@ -43,20 +46,20 @@ export default class StatusQuickAdd extends Component {
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
-          <label htmlFor='validityPeriod'>Validity Period</label>
+          <label htmlFor="validityPeriod">Validity Period</label>
           <input
-            type='date'
-            id='validityPeriod'
-            name='validityPeriod'
-            className='form-control'
-            placeholder='End Date'
+            type="date"
+            id="validityPeriod"
+            name="validityPeriod"
+            className="form-control"
+            placeholder="End Date"
             value={this.state.validityPeriod}
             onChange={this.handleDateChange}
           />
           <br></br>
           <button
-            className='btn btn-primary'
-            type='button'
+            className="btn btn-primary"
+            type="button"
             onClick={this.handleSubmit}
           >
             Submit

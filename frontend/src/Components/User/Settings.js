@@ -44,27 +44,15 @@ export default class Settings extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
 
+    //GENERATE PASSWORD SCHEMA
     var schema = new passwordValidator();
-
-    schema
-      .is()
-      .min(8)
-      .is()
-      .max(100)
-      .has()
-      .uppercase()
-      .has()
-      .lowercase()
-      .has()
-      .digits(2)
-      .has()
-      .not()
-      .spaces();
+    schema.is().min(8).is().max(50).has().not().spaces();
 
     var sha = sha1(this.state.password).toUpperCase();
     var prefix = sha.substring(0, 5);
     var suffix = sha.substring(5, sha.length);
     if (schema.validate(this.state.password)) {
+      //CHECK IS PASSWORD HAS BEEN BREACHED IN THE PAST USING THE HIBP API
       axios(`https://api.pwnedpasswords.com/range/${prefix}`)
         .then(async (response) => {
           let hashes = response.data.split("\n");
@@ -97,9 +85,7 @@ export default class Settings extends Component {
           toast.error("Something went Wrong...");
         });
     } else {
-      toast.error(
-        "Password must be 8 letters, have 1 uppercase letter, 2 numbers"
-      );
+      toast.error("Password must be at least 8 letters!");
     }
   };
 
