@@ -28,33 +28,9 @@ public class BusinessProcess {
     @Column(name = "BUSINESSPROCESSID")
 	private Integer businessProcessId;
 	
-
-/** 
- * @return Integer
- */
-
-/** 
- * @return String
- */
-
-/** 
- * @return String
- */
 	@NotBlank(message = "Businessprocess name is required.")
 	@Column(name = "BUSINESSPROCESSNAME", unique = true)
 	private String businessProcessName;
-
-/** 
- * @return boolean
- */
-
-/** 
- * @return boolean
- */
-
-/** 
- * @return int
- */
 	
 	@NotBlank(message = "Businessprocess description is required.")
 	@Column(name = "BUSINESSPROCESSDESCRIPTION")
@@ -77,7 +53,8 @@ public class BusinessProcess {
 	
 	
 	/** 
-	 * @param capability
+	 * Adds a capability to the business process.
+	 * @param capability The capability you want to add.
 	 */
 	public void addCapability(Capability capability) {
 		capabilities.add(capability);
@@ -87,7 +64,8 @@ public class BusinessProcess {
 	
 	
 	/** 
-	 * @param capability
+	 * Removes a capability from the business process.
+	 * @param capability The capability you want to remove.
 	 */
 	public void removeCapability(Capability capability) {
 		capabilities.add(capability);
@@ -97,7 +75,8 @@ public class BusinessProcess {
 	
 	
 	/** 
-	 * @return Set<Capability>
+	 * Gets the capabilities from the business process.
+	 * @return Set<Capability> Returns a set of all the capabilities that are linked.
 	 */
 	public Set<Capability> getCapabilities() {
 		return capabilities;
