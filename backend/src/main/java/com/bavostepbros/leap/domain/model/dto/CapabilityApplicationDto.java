@@ -5,46 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
-/** 
- * @return CapabilityDto
- */
-
-/** 
- * @return ITApplicationDto
- */
-
-/** 
- * @return Integer
- */
-
-/** 
- * @return Integer
- */
-
-/** 
- * @return Integer
- */
-
-/** 
- * @return Integer
- */
-
-/** 
- * @return Integer
- */
-
-/** 
- * @return Integer
- */
-
-/** 
- * @return Integer
- */
-
-/** 
- * @return Integer
- */
 @Getter
 @Setter
 @NoArgsConstructor

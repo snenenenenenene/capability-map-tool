@@ -41,7 +41,7 @@ public class BusinessProcessController {
 
 	
 	/** 
-	 * Posting new business process.
+	 * Adds a new business process.
 	 * @param businessProcessName Name of the new business process.
 	 * @param businessProcessDescription Describes the new business process.
 	 * @return BusinessProcessDto Returns a DTO of the newly made business process.
