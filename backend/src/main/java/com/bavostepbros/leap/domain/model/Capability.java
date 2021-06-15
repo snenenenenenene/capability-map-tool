@@ -88,7 +88,6 @@ public class Capability {
 	@Column(name = "INFORMATIONQUALITY")
 	private Integer informationQuality;
 
-	@CsvBindByName
 	@Column(name = "APPLICATIONFIT")
 	private Integer applicationFit;
 
