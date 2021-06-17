@@ -44,8 +44,8 @@ public class User {
     
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "USER_ROLE", 
-        joinColumns = { @JoinColumn(name = "USERID", referencedColumnName = "userId")}, 
-        inverseJoinColumns = @JoinColumn(name = "ROLEID", referencedColumnName = "roleId")) 
+        joinColumns = { @JoinColumn(name = "USERID")}, 
+        inverseJoinColumns = @JoinColumn(name = "ROLEID")) 
     private Set<Role> roles = new HashSet<>();
 
     public User(String username, String password, String email) {       

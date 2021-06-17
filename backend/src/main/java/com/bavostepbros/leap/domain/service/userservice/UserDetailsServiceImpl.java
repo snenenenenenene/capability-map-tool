@@ -39,7 +39,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	private Collection<GrantedAuthority> getGrantedAuthority(User user) {
 		Collection<GrantedAuthority> authorities = new ArrayList<>();
 		Iterator<Role> roles = user.getRoles().iterator();
-		Role role = roles.hasNext() ? roles.next() : null;
+		Role role = roles.hasNext() ? roles.next() : roleService.getRoleByRoleName("CREATING_USER");
 		String authority = "";
 		
 		switch (roleService.get(role.getRoleId()).getRoleName()) {
