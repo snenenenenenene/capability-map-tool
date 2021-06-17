@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -59,11 +60,13 @@ public class EmailController {
         labels.put("sendAttachment", props);
     }
     
+    @PreAuthorize("hasAuthority('USER_ADMIN')")
     @RequestMapping(method = RequestMethod.GET)
     public String showEmailsPage() {
         return "emails";
     }
 
+    @PreAuthorize("hasAuthority('USER_ADMIN')")
     @RequestMapping(value = {"/send", "/sendTemplate", "/sendAttachment"}, method = RequestMethod.GET)
     public String createMail(Model model,
                              HttpServletRequest request) {
@@ -82,7 +85,7 @@ public class EmailController {
         return "mail/send";
     }
 
-
+    @PreAuthorize("hasAuthority('USER_ADMIN')")
     @RequestMapping(value = "/send", method = RequestMethod.POST)
     public String createMail(Model model,
                              @ModelAttribute("mailObject") @Valid Email emailObject,

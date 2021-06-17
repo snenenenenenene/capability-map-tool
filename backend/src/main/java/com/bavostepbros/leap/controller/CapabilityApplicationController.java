@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -34,6 +35,7 @@ public class CapabilityApplicationController {
 	@Autowired
 	private CapabilityApplicationService capabilityApplicationService;
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PostMapping(path = "{capabilityId}/{applicationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public CapabilityApplicationDto addCapabilityApplication(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("applicationId") Integer applicationId,
@@ -51,6 +53,7 @@ public class CapabilityApplicationController {
 		return convertCapabilityApplication(capabilityApplication);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "{capabilityId}/{applicationId}")
 	public CapabilityApplicationDto getCapabilityApplication(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("applicationId") Integer applicationId) {
@@ -58,6 +61,7 @@ public class CapabilityApplicationController {
 		return convertCapabilityApplication(capabilityApplication);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PutMapping(path = "{capabilityId}/{applicationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public CapabilityApplicationDto updateCapabilityApplication(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("applicationId") Integer applicationId,
@@ -75,12 +79,14 @@ public class CapabilityApplicationController {
 		return convertCapabilityApplication(capabilityApplication);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@DeleteMapping(path = "{capabilityId}/{applicationId}")
 	public void deleteCapabilityApplication(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("applicationId") Integer applicationId) {
 		capabilityApplicationService.delete(capabilityId, applicationId);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "all-capabilityApplications-by-capabilityid/{capabilityId}")
 	public List<CapabilityApplicationDto> getCapabilityApplicationByCapabilityId(@PathVariable("capabilityId") Integer capabilityId) {
 		List<CapabilityApplication> capabilityApplications = capabilityApplicationService
@@ -91,6 +97,7 @@ public class CapabilityApplicationController {
 		return capabilityApplicationsDto;
 	}
 	
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "all-capabilityApplications-by-applicationid/{applicationId}")
 	public List<CapabilityApplicationDto> getCapabilityApplicationByApplicationId(@PathVariable("applicationId") Integer applicationId) {
 		List<CapabilityApplication> capabilityApplications = capabilityApplicationService

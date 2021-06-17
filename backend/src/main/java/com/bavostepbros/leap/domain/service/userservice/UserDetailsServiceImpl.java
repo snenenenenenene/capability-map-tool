@@ -2,7 +2,10 @@ package com.bavostepbros.leap.domain.service.userservice;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -38,11 +41,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	private Collection<GrantedAuthority> getGrantedAuthority(User user) {
 		Collection<GrantedAuthority> authorities = new ArrayList<>();
-		Iterator<Role> roles = user.getRoles().iterator();
-		Role role = roles.hasNext() ? roles.next() : roleService.getRoleByRoleName("CREATING_USER");
+		Role highestRole = new Role("test", Integer.MAX_VALUE);
 		String authority = "";
 		
-		switch (roleService.get(role.getRoleId()).getRoleName()) {
+		for (Role role : user.getRoles()) {
+			if (role.getWeight() < highestRole.getWeight()) {
+				highestRole = role;
+			}
+		}
+		
+		switch (roleService.get(highestRole.getRoleId()).getRoleName()) {
 		case "USER_ADMIN":
 			authority = "USER_ADMIN";
 			break;
@@ -58,13 +66,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		}
 		System.out.println("authority:" + authority);
 		authorities.add(new SimpleGrantedAuthority(authority));
-//		if (roleService.get(user.getRoleId()).getRoleName().equalsIgnoreCase("admin")) {
-//			authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-//		}
-//		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 		return authorities;
 	}
-	
-	
 
 }

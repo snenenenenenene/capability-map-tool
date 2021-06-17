@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +39,7 @@ public class ProjectController {
 	@Autowired
 	private ProjectService projectService;
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ProjectDto addProject(@Valid @ModelAttribute("projectName") String projectName,
 			@Valid @ModelAttribute("programId") Integer programId,
@@ -46,12 +48,14 @@ public class ProjectController {
 		return convertProject(project);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "{projectId}")
 	public ProjectDto getProject(@PathVariable("projectId") Integer projectId) {
 		Project project = projectService.get(projectId);
 		return convertProject(project);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PutMapping(path = "{projectId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ProjectDto updateProject(@Valid @PathVariable("projectId") Integer projectId,
 			@Valid @ModelAttribute("projectName") String projectName,
@@ -61,11 +65,13 @@ public class ProjectController {
 		return convertProject(project);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@DeleteMapping(path = "{projectId}")
 	public void deleteProject(@Valid @PathVariable("projectId") Integer projectId) {
 		projectService.delete(projectId);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping
 	public List<ProjectDto> getAllProjects() {
 		List<Project> projects = projectService.getAll();
@@ -75,6 +81,7 @@ public class ProjectController {
 		return projectsDto;
 	}
 	
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "get-all-projects-by-programid/{programId}")
 	public List<ProjectDto> getAllProjectsByProgramId(@Valid @PathVariable("programId") Integer programId) {
 		List<Project> projects = projectService.getAllProgramId(programId);
@@ -84,24 +91,28 @@ public class ProjectController {
 		return projectsDto;
 	}
 	
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "projectname/{projectName}")
 	public ProjectDto getProject(@Valid @PathVariable("projectName") String projectName) {
 		Project project = projectService.getProjectByName(projectName);
 		return convertProject(project);
 	}
 	
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PutMapping(path = "link-capability/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void linkCapability(@ModelAttribute("projectId") Integer projectId, 
 			@ModelAttribute("capabilityId") Integer capabilityId) {
 		projectService.addCapability(projectId, capabilityId);
 	}
 	
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@DeleteMapping(path = "unlink-capability/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void unlinkCapability(@ModelAttribute("projectId") Integer projectId, 
 			@ModelAttribute("capabilityId") Integer capabilityId) {
 		projectService.deleteCapability(projectId, capabilityId);
 	}
 	
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "get-capabilities/{projectId}")
 	public List<CapabilityDto> getCapabilities(@PathVariable("projectId") Integer projectId) {
 		Set<Capability> capabilities = projectService.getAllCapabilitiesByProjectId(projectId);

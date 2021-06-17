@@ -11,6 +11,7 @@ import com.bavostepbros.leap.domain.model.dto.ResourceDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -46,6 +47,7 @@ public class CapabilityController {
 	private CapabilityService capabilityService;
 
 	// Add catch for status/environment not found
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public CapabilityDto addCapability(@ModelAttribute("environmentId") Integer environmentId,
 			@ModelAttribute("statusId") Integer statusId,
@@ -64,18 +66,21 @@ public class CapabilityController {
 		return convertCapability(capability);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "{capabilityid}")
 	public CapabilityDto getCapabilityByCapabilityid(@PathVariable("capabilityid") Integer capabilityId) {
 		Capability capability = capabilityService.get(capabilityId);
 		return convertCapability(capability);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "capabilityname/{capabilityname}")
 	public CapabilityDto getCapabilityByCapabilityname(@PathVariable("capabilityname") String capabilityName) {
 		Capability capability = capabilityService.getCapabilityByCapabilityName(capabilityName);
 		return convertCapability(capability);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "all-capabilities-by-environmentid/{environmentid}")
 	public List<CapabilityDto> getAllCapabilitiesByEnvironmentId(@PathVariable("environmentid") Integer environmentId) {
 		List<Capability> capabilities = capabilityService.getCapabilitiesByEnvironment(environmentId);
@@ -84,6 +89,7 @@ public class CapabilityController {
 		return capabilitiesDto;
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "all-capabilities-by-level/{level}")
 	public List<CapabilityDto> getAllCapabilitiesByLevel(@PathVariable("level") String level) {
 		List<Capability> capabilities = capabilityService.getCapabilitiesByLevel(level);
@@ -92,6 +98,7 @@ public class CapabilityController {
 		return capabilitiesDto;
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "all-capabilities-by-parentcapabilityid/{parentcapabilityid}")
 	public List<CapabilityDto> getAllCapabilitiesByParentCapabilityId(
 			@PathVariable("parentcapabilityid") Integer parentId) {
@@ -101,6 +108,7 @@ public class CapabilityController {
 		return capabilitiesDto;
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "all-capabilities-by-parentcapabilityid-and-level/{parentcapabilityid}/{level}")
 	public List<CapabilityDto> getAllCapabilitiesByParentIdAndLevel(
 			@PathVariable("parentcapabilityid") Integer parentId, @PathVariable("level") String level) {
@@ -110,6 +118,7 @@ public class CapabilityController {
 		return capabilitiesDto;
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping
 	public List<CapabilityDto> getAllCapabilities() {
 		List<Capability> capabilities = capabilityService.getAll();
@@ -118,16 +127,19 @@ public class CapabilityController {
 		return capabilitiesDto;
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "exists-by-id/{capabilityid}")
 	public boolean doesCapabilityExistsById(@PathVariable("capabilityid") Integer id) {
 		return capabilityService.existsById(id);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "exists-by-capabilityname/{capabilityname}")
 	public boolean doesCapabilityNameExists(@PathVariable("capabilityname") String capabilityName) {
 		return capabilityService.existsByCapabilityName(capabilityName);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PutMapping(path = "{capabilityId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public CapabilityDto updateCapability(@PathVariable("capabilityId") Integer capabilityId,
 			@ModelAttribute("environmentId") Integer environmentId, @ModelAttribute("statusId") Integer statusId,
@@ -146,12 +158,14 @@ public class CapabilityController {
 		return convertCapability(capability);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@DeleteMapping(path = "{capabilityid}")
 	public void deleteCapability(@PathVariable("capabilityid") Integer capabilityId) {
 		capabilityService.delete(capabilityId);
 	}
 
 	// TODO add test
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PutMapping(path = "link-project/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void linkProject(@ModelAttribute("capabilityId") Integer capabilityId,
 			@ModelAttribute("projectId") Integer projectId) {
@@ -159,12 +173,14 @@ public class CapabilityController {
 	}
 
 	// TODO add test
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@DeleteMapping(path = "unlink-project/{capabilityId}/{projectId}")
 	public void unlinkProject(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("projectId") Integer projectId) {
 		capabilityService.deleteProject(capabilityId, projectId);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "get-projects/{capabilityId}")
 	public List<ProjectDto> getCapabilities(@PathVariable("capabilityId") Integer capabilityId) {
 		List<Project> projects = capabilityService.getAllProjectsByCapabilityId(capabilityId);
@@ -173,18 +189,21 @@ public class CapabilityController {
 		return projectsDto;
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PutMapping(path = "link-businessprocess/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void linkBusinessProcess(@ModelAttribute("capabilityId") Integer capabilityId,
 			@ModelAttribute("businessProcessId") Integer businessProcessId) {
 		capabilityService.addBusinessProcess(capabilityId, businessProcessId);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@DeleteMapping(path = "unlink-businessprocess/{capabilityId}/{businessProcessId}")
 	public void unlinkBusinessProcess(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("businessProcessId") Integer businessProcessId) {
 		capabilityService.deleteBusinessProcess(capabilityId, businessProcessId);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "get-businessprocess/{capabilityId}")
 	public List<BusinessProcessDto> getBusinessProcess(@PathVariable("capabilityId") Integer capabilityId) {
 		Set<BusinessProcess> businessProcess = capabilityService.getAllBusinessProcessByCapabilityId(capabilityId);
@@ -193,18 +212,21 @@ public class CapabilityController {
 		return businessProcessDto;
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PutMapping(path = "link-resource/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void linkResource(@ModelAttribute("capabilityId") Integer capabilityId,
 			@ModelAttribute("resourceId") Integer resourceId) {
 		capabilityService.addResource(capabilityId, resourceId);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@DeleteMapping(path = "unlink-resource/{capabilityId}/{resourceId}")
 	public void unlinkResource(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("resourceId") Integer resourceId) {
 		capabilityService.deleteResource(capabilityId, resourceId);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "get-resources/{capabilityId}")
 	public List<ResourceDto> getResource(@PathVariable("capabilityId") Integer capabilityId) {
 		List<Resource> resources = capabilityService.getAllResourceByResourceId(capabilityId);

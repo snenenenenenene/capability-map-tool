@@ -26,17 +26,17 @@ public class RoleServiceImpl implements RoleService {
 	//TODO put in application.properties
 	@PostConstruct
 	private void init() {
-		save("USER_ADMIN");
-		save("APP_ADMIN");
-		save("VIEWING_USER");
-		save("CREATING_USER");
+		save("USER_ADMIN", 1);
+		save("APP_ADMIN", 2);
+		save("CREATING_USER", 3);
+		save("VIEWING_USER", 4);
 	}
 
 	private final RoleDAL roleDAL;
 
 	@Override
-	public Role save(String roleName) {
-		return roleDAL.save(new Role(roleName));
+	public Role save(String roleName, Integer weight) {
+		return roleDAL.save(new Role(roleName, weight));
 	}
 
 
@@ -55,8 +55,8 @@ public class RoleServiceImpl implements RoleService {
 	}
 	
 	@Override
-	public Role update(Integer roleId, String roleName) {
-		Role role = new Role(roleId, roleName);
+	public Role update(Integer roleId, String roleName, Integer weight) {
+		Role role = new Role(roleId, roleName, weight);
 		Role updated = roleDAL.save(role);
 		return updated;
 	}

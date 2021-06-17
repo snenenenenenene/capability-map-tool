@@ -20,13 +20,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
@@ -61,11 +63,23 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 			.csrf().disable()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 			.authorizeRequests().antMatchers("/api/user/authenticate").permitAll()
-//			.antMatchers("/api/**").authenticated()
-//			.anyRequest().authenticated()
+			.antMatchers("/api/**").permitAll()
+			.anyRequest().authenticated()
 			.and()
 			.apply(new JwtConfigurer(jwtUtility));
 	}
+	
+	@Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registery) {
+                registery.addMapping("/**")
+                	.allowedOrigins("http://localhost:3000", "https://groep-5.project.ap.be/")
+                	.allowedMethods("GET", "POST", "PUT", "DELETE");
+            }
+        };
+    }
 
 
 //	@Bean
@@ -75,15 +89,15 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 //		return source;
 //	}
 
-	@Bean
-	CorsConfigurationSource corsConfigurationSource() {
-		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-		configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-		configuration.setExposedHeaders(Arrays.asList("Authorization", "content-type"));
-		configuration.setAllowedHeaders(Arrays.asList("Authorization", "content-type"));
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration);
-		return source;
-	}
+//	@Bean
+//	CorsConfigurationSource corsConfigurationSource() {
+//		CorsConfiguration configuration = new CorsConfiguration();
+//		configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+//		configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+//		configuration.setExposedHeaders(Arrays.asList("Authorization", "content-type"));
+//		configuration.setAllowedHeaders(Arrays.asList("Authorization", "content-type"));
+//		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//		source.registerCorsConfiguration("/**", configuration);
+//		return source;
+//	}
 }

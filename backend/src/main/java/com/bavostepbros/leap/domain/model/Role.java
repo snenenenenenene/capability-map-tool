@@ -30,16 +30,21 @@ public class Role {
     @Column(name = "ROLENAME")
     private String roleName;
     
+    @Column(name = "WEIGHT", unique = true)
+    private Integer weight;
+    
     @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
     private Set<User> users = new HashSet<>();
 
-    public Role(String roleName) {
+    public Role(String roleName, Integer weight) {
         this.roleName = roleName;
+        this.weight = weight;
     }
 
-	public Role(Integer roleId, String roleName) {
+	public Role(Integer roleId, String roleName, Integer weight) {
 		this.roleId = roleId;
 		this.roleName = roleName;
+		this.weight = weight;
 	}
     
 }

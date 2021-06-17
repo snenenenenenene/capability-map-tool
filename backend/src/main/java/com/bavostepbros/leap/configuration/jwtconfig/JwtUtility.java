@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import com.bavostepbros.leap.domain.model.Role;
+import com.bavostepbros.leap.domain.model.dto.BasicRoleDto;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -38,13 +39,17 @@ public class JwtUtility implements Serializable {
 
 
 	public String createToken(String username, Role role) {
+		BasicRoleDto basicRole = new BasicRoleDto(role.getRoleId(), role.getRoleName());
 		Claims claims = Jwts.claims().setSubject(username);
-		claims.put("auth", role);
+		claims.put("auth", basicRole);
 
 		Date now = new Date();
-		return Jwts.builder().setClaims(claims).setIssuedAt(now)
+		System.out.println(now);
+		String string = Jwts.builder().setClaims(claims).setIssuedAt(now)
 				.setExpiration(new Date(now.getTime() + VALIDITYTIME))
 				.signWith(SignatureAlgorithm.HS256, SECRETKEY).compact();
+		System.out.println(string);
+		return string;
 	}
 
 	public Authentication getAuthentication(String username) {

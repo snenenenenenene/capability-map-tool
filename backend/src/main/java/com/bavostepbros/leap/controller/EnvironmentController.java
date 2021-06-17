@@ -22,6 +22,7 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,34 +69,40 @@ public class EnvironmentController {
 	@Autowired
 	private EnvironmentService envService;
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public EnvironmentDto addEnvironment(@ModelAttribute("environmentName") @Valid String environmentName) {
 		Environment environment = envService.save(environmentName);
 		return convertEnvironment(environment);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "{environmentId}")
 	public EnvironmentDto getEnvironmentById(@PathVariable("environmentId") Integer environmentId) {
 		Environment environment = envService.get(environmentId);
 		return convertEnvironment(environment);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "environmentname/{environmentname}")
 	public EnvironmentDto getEnvironmentByEnvironmentName(@PathVariable("environmentname") String environmentName) {
 		Environment environment = envService.getByEnvironmentName(environmentName);
 		return convertEnvironment(environment);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "exists-by-id/{environmentId}")
 	public boolean doesEnvironmentExistsById(@ModelAttribute("environmentId") Integer environmentId) {
 		return envService.existsById(environmentId);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "exists-by-environmentname/{environmentname}")
 	public boolean doesEnvironmentNameExists(@PathVariable("environmentname") String environmentName) {
 		return envService.existsByEnvironmentName(environmentName);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping
 	public List<EnvironmentDto> getAllEnvironments() {
 		List<Environment> environments = envService.getAll();
@@ -104,6 +111,7 @@ public class EnvironmentController {
 		return environmentsDto;
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PutMapping(path = "{environmentId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public EnvironmentDto updateEnvironment(@PathVariable("environmentId") Integer environmentId,
 			@ModelAttribute("environmentName") String environmentName) {
@@ -111,11 +119,13 @@ public class EnvironmentController {
 		return convertEnvironment(environment);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@DeleteMapping(path = "{environmentId}")
 	public void deleteEnvironment(@PathVariable("environmentId") Integer environmentId) {
 		envService.delete(environmentId);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "capabilitymap/{environmentId}")
 	public CapabilityMapDto getCapabilityMap(@PathVariable("environmentId") Integer environmentId) {
 		try {
@@ -125,6 +135,7 @@ public class EnvironmentController {
 		}
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PostMapping(path = "upload-csv-file")
 	public void uploadCsvFile(
 			@ModelAttribute("file") MultipartFile file,

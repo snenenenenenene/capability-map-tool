@@ -20,7 +20,6 @@ import com.bavostepbros.leap.domain.service.roleservice.RoleService;
 import com.bavostepbros.leap.persistence.UserDAL;
 import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
 import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
-import com.bavostepbros.leap.domain.customexceptions.ForeignKeyException;
 import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
 import com.bavostepbros.leap.domain.customexceptions.UserException;
 
@@ -44,6 +43,12 @@ public class UserServiceImpl implements UserService {
 		User user = save("super_admin", "super_admin", "super_admin");
 		Role role = roleService.getRoleByRoleName("USER_ADMIN");
 		user.addRole(role);
+		userDAL.save(user);
+				
+		User viewingUser = save("viewing_user", "viewing_user", "viewing_user");
+		Role viewingRole = roleService.getRoleByRoleName("VIEWING_USER");
+		viewingUser.addRole(viewingRole);
+		userDAL.save(viewingUser);
 	}
 
 	@Override

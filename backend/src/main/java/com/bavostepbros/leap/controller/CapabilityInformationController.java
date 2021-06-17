@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +37,7 @@ public class CapabilityInformationController {
 	@Autowired
 	private CapabilityInformationService capabilityInformationService;
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public CapabilityInformationDto addCapabilityInformation(
 			@Valid @ModelAttribute("capabilityId") Integer capabilityId,
@@ -46,6 +48,7 @@ public class CapabilityInformationController {
 		return convertCapabilityInformation(capabilityInformation);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "{capabilityId}/{informationId}")
 	public CapabilityInformationDto getCapabilityInformation(@Valid @PathVariable("capabilityId") Integer capabilityId,
 			@Valid @PathVariable("informationId") Integer informationId) {
@@ -53,6 +56,7 @@ public class CapabilityInformationController {
 		return convertCapabilityInformation(capabilityInformation);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PutMapping(path = "{capabilityId}/{informationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public CapabilityInformationDto updateCapabilityInformation(
 			@Valid @PathVariable("capabilityId") Integer capabilityId,
@@ -63,12 +67,14 @@ public class CapabilityInformationController {
 		return convertCapabilityInformation(capabilityInformation);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@DeleteMapping(path = "{capabilityId}/{informationId}")
 	public void deleteCapabilityInformation(@Valid @PathVariable("capabilityId") Integer capabilityId,
 			@Valid @PathVariable("informationId") Integer informationId) {
 		capabilityInformationService.delete(capabilityId, informationId);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "all-capabilityinformation-by-capabilityid/{capabilityId}")
 	public List<CapabilityInformationDto> getCapabilityInformationByCapability(
 			@Valid @PathVariable("capabilityId") Integer capabilityId) {
@@ -80,6 +86,7 @@ public class CapabilityInformationController {
 		return capabilityInformationDto;
 	}
 	
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "all-capabilityinformation-by-informationid/{informationId}")
 	public List<CapabilityInformationDto> getCapabilityInformationByInformation(
 			@Valid @PathVariable("informationId") Integer informationId) {

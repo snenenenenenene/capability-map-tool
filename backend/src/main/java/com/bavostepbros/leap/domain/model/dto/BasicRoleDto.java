@@ -9,9 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoleDto {
+public class BasicRoleDto {
 	private Integer roleId;
 	private String roleName;
-	private Integer weight;
 }
-

@@ -6,13 +6,13 @@ import java.util.Optional;
 import com.bavostepbros.leap.domain.model.Role;
 
 public interface RoleService {
-	Role save(String roleName);
+	Role save(String roleName, Integer weight);
 
 	Role get(Integer id);
 
 	List<Role> getAll();
 
-	Role update(Integer id, String roleName);
+	Role update(Integer id, String roleName, Integer weight);
 
 	void delete(Integer id);
 

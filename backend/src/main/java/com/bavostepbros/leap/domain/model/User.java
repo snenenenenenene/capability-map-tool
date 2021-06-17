@@ -1,9 +1,9 @@
 package com.bavostepbros.leap.domain.model;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -42,7 +42,7 @@ public class User {
     @Column(name = "EMAIL", unique = true)
     private String email;
     
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(name = "USER_ROLE", 
         joinColumns = { @JoinColumn(name = "USERID")}, 
         inverseJoinColumns = @JoinColumn(name = "ROLEID")) 
@@ -71,7 +71,9 @@ public class User {
 		role.getUsers().remove(this);
 	}
 	
-	public Collection<Role> getRoles() {
+	public Set<Role> getRoles() {
+//		System.out.println("Roles in user " + roles.size());
+//		roles.forEach(r -> System.out.println("Roles in user " + r.getRoleName()));
 		return roles;
 	}
 
