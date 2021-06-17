@@ -14,6 +14,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.bavostepbros.leap.domain.model.Role;
 import com.bavostepbros.leap.domain.model.User;
 import com.bavostepbros.leap.domain.service.roleservice.RoleService;
 import com.bavostepbros.leap.persistence.UserDAL;
@@ -40,11 +41,13 @@ public class UserServiceImpl implements UserService {
 
 	@PostConstruct
 	private void init() {
-		save(2, "super_admin", "super_admin", "super_admin");
+		User user = save("super_admin", "super_admin", "super_admin");
+		Role role = roleService.getRoleByRoleName("USER_ADMIN");
+		user.addRole(role);
 	}
 
 	@Override
-	public User save(Integer roleId, String username, String password, String email) {
+	public User save(String username, String password, String email) {
 		if (username == null 
 			|| username.isBlank() 
 			|| username.isEmpty() 
@@ -62,10 +65,10 @@ public class UserServiceImpl implements UserService {
 		if(existsByEmail(email)) {
 			throw new DuplicateValueException("Email already exists.");
 		}
-		if(!roleService.existsById(roleId)) {
-			throw new ForeignKeyException("Role ID is invalid.");
-		}
-    	return userDAL.save(new User(username, roleId, passwordEncoder.encode(password), email));
+//		if(!roleService.existsById(roleId)) {
+//			throw new ForeignKeyException("Role ID is invalid.");
+//		}
+    	return userDAL.save(new User(username, passwordEncoder.encode(password), email));
 	}
 
 	@Override
@@ -97,7 +100,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public User update(Integer userId, Integer roleId, String username, String password, String email) {
+	public User update(Integer userId, String username, String password, String email) {
 		if (userId == null ||
 				userId.equals(0) ||
 				username == null ||
@@ -115,10 +118,10 @@ public class UserServiceImpl implements UserService {
 			throw new UserException("Can not update user if it does not exist.");
 		}
 
-		if (!roleService.existsById(roleId)) {
-			throw new ForeignKeyException("Role ID does not exist.");
-		}
-		return userDAL.save(new User(userId, roleId, username, passwordEncoder.encode(password), email));
+//		if (!roleService.existsById(roleId)) {
+//			throw new ForeignKeyException("Role ID does not exist.");
+//		}
+		return userDAL.save(new User(userId, username, passwordEncoder.encode(password), email));
 	}
 
 	@Override
@@ -136,6 +139,7 @@ public class UserServiceImpl implements UserService {
 	//TODO fix exception handling here or in controller?
 	@Override
 	public Authentication authenticate(String email, String password) throws AuthenticationException {
+		System.out.println(email + " " + password);
 		return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
 	}
 

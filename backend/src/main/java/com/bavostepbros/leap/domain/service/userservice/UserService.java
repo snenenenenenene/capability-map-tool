@@ -7,11 +7,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
 public interface UserService {
-	User save(Integer roleId, String username, String password, String email);
+	User save(String username, String password, String email);
 	User get(Integer id);
 	User getByEmail(String email);
 	List<User> getAll();
-	User update(Integer userId, Integer roleId, String username, String password, String email);
+	User update(Integer userId, String username, String password, String email);
 	void delete(Integer id);
 	Authentication authenticate(String email, String password) throws AuthenticationException;
 	boolean existsById(Integer id);

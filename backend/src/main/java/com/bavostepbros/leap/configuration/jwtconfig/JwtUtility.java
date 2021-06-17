@@ -48,7 +48,9 @@ public class JwtUtility implements Serializable {
 	}
 
 	public Authentication getAuthentication(String username) {
+		System.out.println("in auth");
 		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+		System.out.println("Details " + userDetails.getUsername() + " " + userDetails.getPassword() + " " + userDetails.getAuthorities());
 		return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(),
 				userDetails.getAuthorities());
 	}

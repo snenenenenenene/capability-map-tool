@@ -90,9 +90,6 @@ class ITApplicationServiceTest {
 	private Double acceptedYearlyCost;
 	private String timeValue;
 
-	@Rule
-	public ExpectedException expectedException = ExpectedException.none();
-
 	@BeforeEach
 	void init() {
 		statusFirst = new Status(1, LocalDate.of(2021, 05, 15));

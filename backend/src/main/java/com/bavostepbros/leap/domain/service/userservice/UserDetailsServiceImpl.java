@@ -2,6 +2,7 @@ package com.bavostepbros.leap.domain.service.userservice;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,9 +12,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.bavostepbros.leap.domain.model.Role;
 import com.bavostepbros.leap.domain.model.User;
-import com.bavostepbros.leap.persistence.UserDAL;
 import com.bavostepbros.leap.domain.service.roleservice.RoleService;
+import com.bavostepbros.leap.persistence.UserDAL;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -36,11 +38,29 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	private Collection<GrantedAuthority> getGrantedAuthority(User user) {
 		Collection<GrantedAuthority> authorities = new ArrayList<>();
-		if (roleService.get(user.getRoleId()).getRoleName().equalsIgnoreCase("admin")) {
-			authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+		Iterator<Role> roles = user.getRoles().iterator();
+		Role role = roles.hasNext() ? roles.next() : null;
+		String authority = "";
+		
+		switch (roleService.get(role.getRoleId()).getRoleName()) {
+		case "USER_ADMIN":
+			authority = "USER_ADMIN";
+		case "APP_ADMIN":
+			authority = "APP_ADMIN";
+		case "VIEWING_USER":
+			authority = "VIEWING_USER";
+		case "CREATING_USER":
+			authority = "CREATING_USER";
 		}
-		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+		System.out.println("authority:" + authority);
+		authorities.add(new SimpleGrantedAuthority(authority));
+//		if (roleService.get(user.getRoleId()).getRoleName().equalsIgnoreCase("admin")) {
+//			authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+//		}
+//		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 		return authorities;
 	}
+	
+	
 
 }

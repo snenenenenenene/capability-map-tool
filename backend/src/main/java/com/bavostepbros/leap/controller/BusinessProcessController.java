@@ -10,6 +10,10 @@ import javax.validation.constraints.Positive;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,10 +43,15 @@ public class BusinessProcessController {
 	@Autowired
 	private BusinessProcessService businessProcessService;
 
+	@PreAuthorize("hasAnyRole('USER_ADMIN','APP_ADMIN', 'CREATING_USER', 'ROLE_USER')")
+	//"hasRole('USER_ADMIN') or hasRole('APP_ADMIN') or hasRole('CREATING_USER')"
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public BusinessProcessDto addBusinessProcess(
 			@Valid @ModelAttribute("businessProcessName") String businessProcessName,
 			@Valid @ModelAttribute("businessProcessDescription") String businessProcessDescription) {
+		SecurityContext securityContext = SecurityContextHolder.getContext();
+	    System.out.println(securityContext.getAuthentication().getName());
+	    System.out.println(securityContext.getAuthentication().getAuthorities());
 		BusinessProcess businessProcess = businessProcessService.save(businessProcessName, businessProcessDescription);
 		return convertBusinessProcess(businessProcess);
 	}
