@@ -39,13 +39,13 @@ public class BusinessProcess {
 	@ManyToMany(mappedBy = "businessProcess")
 	private Set<Capability> capabilities = new HashSet<>();
 
-	public BusinessProcess(@NotBlank String businessProcessName, String businessProcessDescription) {
+	public BusinessProcess(@NotBlank String businessProcessName, @NotBlank String businessProcessDescription) {
 		this.businessProcessName = businessProcessName;
 		this.businessProcessDescription = businessProcessDescription;
 	}
 
 	public BusinessProcess(Integer businessProcessId, @NotBlank String businessProcessName,
-			String businessProcessDescription) {
+			@NotBlank String businessProcessDescription) {
 		this.businessProcessId = businessProcessId;
 		this.businessProcessName = businessProcessName;
 		this.businessProcessDescription = businessProcessDescription;

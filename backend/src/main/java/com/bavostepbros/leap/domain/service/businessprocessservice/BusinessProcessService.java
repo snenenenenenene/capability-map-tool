@@ -3,11 +3,13 @@ package com.bavostepbros.leap.domain.service.businessprocessservice;
 import java.util.List;
 import java.util.Set;
 
+import javax.validation.constraints.NotBlank;
+
 import com.bavostepbros.leap.domain.model.BusinessProcess;
 import com.bavostepbros.leap.domain.model.Capability;
 
 public interface BusinessProcessService {
-	BusinessProcess save(String businessProcessName, String businessProcessDescription);
+	BusinessProcess save(@NotBlank String businessProcessName, @NotBlank String businessProcessDescription);
 
 	BusinessProcess get(Integer businessProcessId);
 

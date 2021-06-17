@@ -5,9 +5,11 @@ import java.util.Optional;
 import java.util.Set;
 
 import javax.transaction.Transactional;
+import javax.validation.constraints.NotBlank;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.bavostepbros.leap.domain.model.BusinessProcess;
@@ -30,7 +32,7 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
 	private CapabilityService capabilityService;
 
 	@Override
-	public BusinessProcess save(String businessProcessName, String businessProcessDescription) {
+	public BusinessProcess save(@NotBlank String businessProcessName, @NotBlank String businessProcessDescription) {
 		BusinessProcess businessProcess = new BusinessProcess(businessProcessName, businessProcessDescription);
 		return businessProcessDAL.save(businessProcess);
 	}

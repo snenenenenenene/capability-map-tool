@@ -10,6 +10,9 @@ import javax.validation.constraints.Positive;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,15 +41,20 @@ public class BusinessProcessController {
 
 	@Autowired
 	private BusinessProcessService businessProcessService;
-
+	
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public BusinessProcessDto addBusinessProcess(
 			@Valid @ModelAttribute("businessProcessName") String businessProcessName,
 			@Valid @ModelAttribute("businessProcessDescription") String businessProcessDescription) {
+		SecurityContext securityContext = SecurityContextHolder.getContext();
+	    System.out.println(securityContext.getAuthentication().getName());
+	    System.out.println(securityContext.getAuthentication().getAuthorities());
 		BusinessProcess businessProcess = businessProcessService.save(businessProcessName, businessProcessDescription);
 		return convertBusinessProcess(businessProcess);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "{businessProcessId}")
 	public BusinessProcessDto getBusinessProcess(
 			@PathVariable("businessProcessId") @Positive Integer businessProcessId) {
@@ -54,6 +62,7 @@ public class BusinessProcessController {
 		return convertBusinessProcess(businessProcess);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PutMapping(path = "{businessProcessId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public BusinessProcessDto updateBusinessProcess(
 			@PathVariable("businessProcessId") @Positive Integer businessProcessId,
@@ -64,11 +73,13 @@ public class BusinessProcessController {
 		return convertBusinessProcess(businessProcess);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@DeleteMapping(path = "{businessProcessId}")
 	public void deleteBusinessProcess(@PathVariable("businessProcessId") @Positive Integer businessProcessId) {
 		businessProcessService.delete(businessProcessId);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "businessProcessName/{businessProcessName}")
 	public BusinessProcessDto getBusinessProcess(
 			@Valid @PathVariable("businessProcessName") String businessProcessName) {
@@ -76,6 +87,7 @@ public class BusinessProcessController {
 		return convertBusinessProcess(businessProcess);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping
 	public List<BusinessProcessDto> getAllBusinessProcess() {
 		List<BusinessProcess> businessProcessList = businessProcessService.getAll();
@@ -84,18 +96,21 @@ public class BusinessProcessController {
 		return businessProcessDto;
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PutMapping(path = "link-capability/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void linkCapability(@ModelAttribute("businessProcessId") Integer businessProcessId,
 			@ModelAttribute("capabilityId") Integer capabilityId) {
 		businessProcessService.addCapability(businessProcessId, capabilityId);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@DeleteMapping(path = "unlink-capability/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void unlinkCapability(@ModelAttribute("businessProcessId") Integer businessProcessId,
 			@ModelAttribute("capabilityId") Integer capabilityId) {
 		businessProcessService.deleteCapability(businessProcessId, capabilityId);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "get-capabilities/{businessProcessId}")
 	public List<CapabilityDto> getCapabilities(@PathVariable("businessProcessId") Integer businessProcessId) {
 		Set<Capability> capabilities = businessProcessService.getAllCapabilitiesByBusinessProcessId(businessProcessId);
