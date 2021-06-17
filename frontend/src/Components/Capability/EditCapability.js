@@ -36,12 +36,18 @@ export default class EditCapability extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.updateDate = this.updateDate.bind(this);
   }
+
+  //TOGGLE ITEM MODAL
   handleItemModal() {
     this.setState({ showItemModal: !this.state.showItemModal });
   }
+
+  //TOGGLE STATUS MODAL
   handleModal() {
     this.setState({ showModal: !this.state.showModal });
   }
+
+  //UPDATE DATE AFTER ADDING A STATUS
   async updateDate() {
     await this.state.api.endpoints.status
       .getAll()
@@ -57,9 +63,12 @@ export default class EditCapability extends Component {
       });
   }
 
+  //CHANGE RATING OF RESOURCE QUALITY ON CHANGE
   ratingChanged = (newRating) => {
     this.setState({ resourceQuality: newRating });
   };
+
+  //HANDLE SUBMIT
   handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -156,57 +165,58 @@ export default class EditCapability extends Component {
       });
   }
 
+  //HANDLE INPUT CHANGE
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
 
   render() {
     return (
-      <div className='container'>
+      <div className="container">
         <br></br>
-        <nav aria-label='breadcrumb'>
-          <ol className='breadcrumb'>
-            <li className='breadcrumb-item'>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
               <Link to={`/`}>Home</Link>
             </li>
-            <li className='breadcrumb-item'>
+            <li className="breadcrumb-item">
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className='breadcrumb-item'>
+            <li className="breadcrumb-item">
               <Link
                 to={`/environment/${this.state.environmentName}/capability`}
               >
                 Capability
               </Link>
             </li>
-            <li className='breadcrumb-item'>{this.state.capabilityId}</li>
+            <li className="breadcrumb-item">{this.state.capabilityId}</li>
           </ol>
         </nav>
-        <div className='jumbotron'>
+        <div className="jumbotron">
           <h3>Edit Capability</h3>
           <form onSubmit={this.handleSubmit}>
-            <div className='row'>
-              <div className='col-sm-6'>
-                <div className='form-row'>
-                  <div className='form-group col-md'>
-                    <label htmlFor='nameCapability'>Name Capability</label>
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="form-row">
+                  <div className="form-group col-md">
+                    <label htmlFor="nameCapability">Name Capability</label>
                     <input
-                      type='text'
-                      id='capabilityName'
-                      name='capabilityName'
-                      className='form-control'
-                      placeholder='Name Capability'
+                      type="text"
+                      id="capabilityName"
+                      name="capabilityName"
+                      className="form-control"
+                      placeholder="Name Capability"
                       value={this.state.capabilityName}
                       onChange={this.handleInputChange}
                       required
                     />
                   </div>
                 </div>
-                <div className='form-row'>
-                  <div className='form-group col-md'>
-                    <label htmlFor='paceOfChange'>Parent Capability</label>
+                <div className="form-row">
+                  <div className="form-group col-md">
+                    <label htmlFor="paceOfChange">Parent Capability</label>
                     <Select
                       options={this.state.capabilities}
                       value={this.state.capabilities.filter(
@@ -214,9 +224,9 @@ export default class EditCapability extends Component {
                           capability.capabilityId ===
                           this.state.parentCapabilityId
                       )}
-                      name='parentCapability'
-                      id='parentCapability'
-                      placeholder='Add Parent Capability'
+                      name="parentCapability"
+                      id="parentCapability"
+                      placeholder="Add Parent Capability"
                       noOptionsMessage={() => "No Level 1 Capabilities"}
                       onChange={(cap) => {
                         if (cap) {
@@ -232,64 +242,64 @@ export default class EditCapability extends Component {
                     ></Select>
                   </div>
                 </div>
-                <div className='form-group'>
-                  <label htmlFor='description'>Description</label>
+                <div className="form-group">
+                  <label htmlFor="description">Description</label>
                   <textarea
-                    type='text'
-                    id='description'
-                    name='description'
-                    className='form-control'
-                    rows='5'
-                    placeholder='Description'
+                    type="text"
+                    id="description"
+                    name="description"
+                    className="form-control"
+                    rows="5"
+                    placeholder="Description"
                     value={this.state.description}
                     onChange={this.handleInputChange}
                   />
                 </div>
               </div>
-              <div className='col-sm-6'>
-                <div className='form-row'>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='paceOfChange'>Pace of Change</label>
+              <div className="col-sm-6">
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label htmlFor="paceOfChange">Pace of Change</label>
                     <select
-                      className='form-control'
-                      name='paceOfChange'
-                      placeholder='Add Pace of Change'
-                      id='paceOfChange'
+                      className="form-control"
+                      name="paceOfChange"
+                      placeholder="Add Pace of Change"
+                      id="paceOfChange"
                       value={this.state.paceOfChange}
                       onChange={this.handleInputChange}
                       required
                     >
                       <option
-                        key='-1'
-                        defaultValue='selected'
-                        hidden='hidden'
-                        value=''
+                        key="-1"
+                        defaultValue="selected"
+                        hidden="hidden"
+                        value=""
                       >
                         Select Pace of Change
                       </option>
-                      <option value='STANDARD'>Standard</option>
-                      <option value='DIFFERNTIATION'>Differentiation</option>
-                      <option value='INNOVATIVE'>Innovative</option>
+                      <option value="STANDARD">Standard</option>
+                      <option value="DIFFERNTIATION">Differentiation</option>
+                      <option value="INNOVATIVE">Innovative</option>
                     </select>
                   </div>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='informationQuality'>
+                  <div className="form-group col-md-6">
+                    <label htmlFor="informationQuality">
                       Information Quality
                     </label>
                     <select
-                      className='form-control'
-                      name='informationQuality'
-                      placeholder='Add Information Quality'
-                      id='informationQuality'
+                      className="form-control"
+                      name="informationQuality"
+                      placeholder="Add Information Quality"
+                      id="informationQuality"
                       value={this.state.informationQuality}
                       onChange={this.handleInputChange}
                       required
                     >
                       <option
-                        key='-1'
-                        defaultValue='selected'
-                        hidden='hidden'
-                        value=''
+                        key="-1"
+                        defaultValue="selected"
+                        hidden="hidden"
+                        value=""
                       >
                         Select Information Quality
                       </option>
@@ -301,48 +311,48 @@ export default class EditCapability extends Component {
                     </select>
                   </div>
                 </div>
-                <div className='form-row'>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='targetOperatingModel'>TOM</label>
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label htmlFor="targetOperatingModel">TOM</label>
                     <select
-                      className='form-control'
-                      name='targetOperatingModel'
-                      placeholder='Add targetOperatingModel'
-                      id='targetOperatingModel'
+                      className="form-control"
+                      name="targetOperatingModel"
+                      placeholder="Add targetOperatingModel"
+                      id="targetOperatingModel"
                       value={this.state.targetOperatingModel}
                       onChange={this.handleInputChange}
                       required
                     >
                       <option
-                        key='-1'
-                        defaultValue='selected'
-                        hidden='hidden'
-                        value=''
+                        key="-1"
+                        defaultValue="selected"
+                        hidden="hidden"
+                        value=""
                       >
                         Select TOM
                       </option>
-                      <option value='COORDINATION'>Coordination</option>
-                      <option value='DIVERSIFICATION'>Diversification</option>
-                      <option value='REPLICATION'>Replication</option>
-                      <option value='UNIFICATION'>Unification</option>
+                      <option value="COORDINATION">Coordination</option>
+                      <option value="DIVERSIFICATION">Diversification</option>
+                      <option value="REPLICATION">Replication</option>
+                      <option value="UNIFICATION">Unification</option>
                     </select>
                   </div>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='applicationFit'>Application Fit</label>
+                  <div className="form-group col-md-6">
+                    <label htmlFor="applicationFit">Application Fit</label>
                     <select
-                      className='form-control'
-                      name='applicationFit'
-                      placeholder='Add Application Fit'
-                      id='applicationFit'
+                      className="form-control"
+                      name="applicationFit"
+                      placeholder="Add Application Fit"
+                      id="applicationFit"
                       value={this.state.applicationFit}
                       onChange={this.handleInputChange}
                       required
                     >
                       <option
-                        key='-1'
-                        defaultValue='selected'
-                        hidden='hidden'
-                        value=''
+                        key="-1"
+                        defaultValue="selected"
+                        hidden="hidden"
+                        value=""
                       >
                         Select Application Fit
                       </option>
@@ -354,16 +364,16 @@ export default class EditCapability extends Component {
                     </select>
                   </div>
                 </div>
-                <div className='form-row'>
-                  <div className='form-group col-md-9'>
-                    <label htmlFor='statusId'>Status</label>
+                <div className="form-row">
+                  <div className="form-group col-md-9">
+                    <label htmlFor="statusId">Status</label>
                     <Select
                       value={this.state.statuses.filter(
                         (status) => status.statusId === this.state.statusId
                       )}
-                      id='statusId'
-                      name='statusId'
-                      placeholder='Validity Period'
+                      id="statusId"
+                      name="statusId"
+                      placeholder="Validity Period"
                       options={this.state.statuses}
                       required
                       onChange={(statusId) => {
@@ -380,8 +390,8 @@ export default class EditCapability extends Component {
                       </Modal.Body>
                       <Modal.Footer>
                         <button
-                          type='button'
-                          className='btn btn-secondary'
+                          type="button"
+                          className="btn btn-secondary"
                           onClick={() => this.handleModal()}
                         >
                           Close Modal
@@ -390,17 +400,17 @@ export default class EditCapability extends Component {
                     </Modal>
                   </div>
                   <button
-                    type='button'
-                    className='btn btn-secondary'
+                    type="button"
+                    className="btn btn-secondary"
                     style={{ height: 40, marginTop: 30 }}
                     onClick={() => this.handleModal()}
                   >
                     Add Status
                   </button>
                 </div>
-                <div className='form-row'>
-                  <div className='form-group col-md'>
-                    <label htmlFor='resourceQuality'>Resource Quality</label>
+                <div className="form-row">
+                  <div className="form-group col-md">
+                    <label htmlFor="resourceQuality">Resource Quality</label>
                     <ReactStars
                       count={5}
                       onChange={this.ratingChanged}
@@ -415,8 +425,8 @@ export default class EditCapability extends Component {
               </div>
             </div>
             <button
-              className='btn btn-primary'
-              type='button'
+              className="btn btn-primary"
+              type="button"
               onClick={this.handleSubmit}
             >
               Submit

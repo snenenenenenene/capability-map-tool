@@ -9,7 +9,6 @@ export default class Status extends Component {
     super(props);
     this.state = {
       api: new API(),
-
       environments: [],
       environmentName: this.props.match.params.name,
       environmentId: "",
@@ -38,12 +37,14 @@ export default class Status extends Component {
       });
   }
 
+  //REDIRECT TO EDIT PAGE
   edit(id) {
     this.props.history.push(
       `/environment/${this.state.environmentName}/status/${id}`
     );
   }
 
+  //DELETE STATUS
   fetchDeleteStatuses = async (statusId) => {
     await this.state.api.endpoints.status
       .delete({ id: statusId })
@@ -60,16 +61,17 @@ export default class Status extends Component {
       });
   };
 
+  //CONFIRM DELETE OF STATUS WITH ID STATUSID
   delete = async (statusId) => {
     toast(
       (t) => (
         <span>
-          <p className='text-center'>
+          <p className="text-center">
             Are you sure you want to remove this Status?
           </p>
-          <div className='text-center'>
+          <div className="text-center">
             <button
-              className='btn btn-primary btn-sm m-3'
+              className="btn btn-primary btn-sm m-3"
               stlye={{ width: 50, height: 30 }}
               onClick={() => {
                 toast.dismiss(t.id);
@@ -79,7 +81,7 @@ export default class Status extends Component {
               Yes!
             </button>
             <button
-              className='btn btn-secondary btn-sm m-3'
+              className="btn btn-secondary btn-sm m-3"
               stlye={{ width: 50, height: 30 }}
               onClick={() => toast.dismiss(t.id)}
             >
@@ -94,23 +96,23 @@ export default class Status extends Component {
 
   render() {
     return (
-      <div className='container'>
+      <div className="container">
         <br></br>
-        <nav aria-label='breadcrumb'>
-          <ol className='breadcrumb'>
-            <li className='breadcrumb-item'>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
               <Link to={`/`}>Home</Link>
             </li>
-            <li className='breadcrumb-item'>
+            <li className="breadcrumb-item">
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className='breadcrumb-item'>Statuses</li>
+            <li className="breadcrumb-item">Statuses</li>
           </ol>
         </nav>
         <MaterialTable
-          title='Statuses'
+          title="Statuses"
           actions={[
             {
               icon: "add",
@@ -131,16 +133,16 @@ export default class Status extends Component {
               name: "actions",
               render: (rowData) => (
                 <div>
-                  <button className='btn'>
+                  <button className="btn">
                     <i
                       onClick={this.delete.bind(this, rowData.statusId)}
-                      className='bi bi-trash'
+                      className="bi bi-trash"
                     ></i>
                   </button>
-                  <button className='btn'>
+                  <button className="btn">
                     <i
                       onClick={this.edit.bind(this, rowData.statusId)}
-                      className='bi bi-pencil'
+                      className="bi bi-pencil"
                     ></i>
                   </button>
                 </div>

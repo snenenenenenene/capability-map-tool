@@ -8,7 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -49,7 +51,7 @@ public class Environment {
         this.strategies = new ArrayList<>();
     }
 
-    public Environment(Integer environmentId, @NotBlank String environmentName) {
+    public Environment(@NotNull @Min(1) Integer environmentId, @NotBlank String environmentName) {
 		this.environmentId = environmentId;
 		this.environmentName = environmentName;
 		this.capabilities = new ArrayList<>();

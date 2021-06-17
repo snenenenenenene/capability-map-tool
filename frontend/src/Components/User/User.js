@@ -22,11 +22,12 @@ export default class User extends Component {
         toast.error("No Users Were Found");
       });
   }
-
+  //REDIRECT TO EDIT PAGE
   edit(userId) {
     this.props.history.push(`/user/${userId}`);
   }
 
+  //DELETE USER
   fetchDeleteUsers = async (userId) => {
     await this.state.api.endpoints.user
       .delete({ id: userId })
@@ -42,17 +43,17 @@ export default class User extends Component {
         toast.error("Could not Find Users");
       });
   };
-
+  //ASK ADMIN WHETHER THEY ARE SURE ABOUT REMOVING A USER
   delete = async (userId) => {
     toast(
       (t) => (
         <span>
-          <p className='text-center'>
+          <p className="text-center">
             Are you sure you want to remove this User?
           </p>
-          <div className='text-center'>
+          <div className="text-center">
             <button
-              className='btn btn-primary btn-sm m-3'
+              className="btn btn-primary btn-sm m-3"
               stlye={{ width: 50, height: 30 }}
               onClick={() => {
                 toast.dismiss(t.id);
@@ -62,7 +63,7 @@ export default class User extends Component {
               Yes!
             </button>
             <button
-              className='btn btn-secondary btn-sm m-3'
+              className="btn btn-secondary btn-sm m-3"
               stlye={{ width: 50, height: 30 }}
               onClick={() => toast.dismiss(t.id)}
             >
@@ -77,18 +78,18 @@ export default class User extends Component {
 
   render() {
     return (
-      <div className='container'>
+      <div className="container">
         <br></br>
-        <nav aria-label='breadcrumb shadow'>
-          <ol className='breadcrumb'>
-            <li className='breadcrumb-item'>
+        <nav aria-label="breadcrumb shadow">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
               <Link to={`/`}>Home</Link>
             </li>
-            <li className='breadcrumb-item'>Users</li>
+            <li className="breadcrumb-item">Users</li>
           </ol>
         </nav>
         <MaterialTable
-          title='Users'
+          title="Users"
           actions={[
             {
               icon: "add",
@@ -109,16 +110,16 @@ export default class User extends Component {
               name: "actions",
               render: (rowData) => (
                 <div>
-                  <button className='btn'>
+                  <button className="btn">
                     <i
                       onClick={this.delete.bind(this, rowData.userId)}
-                      className='bi bi-trash'
+                      className="bi bi-trash"
                     ></i>
                   </button>
-                  <button className='btn'>
+                  <button className="btn">
                     <i
                       onClick={this.edit.bind(this, rowData.userId)}
-                      className='bi bi-pencil'
+                      className="bi bi-pencil"
                     ></i>
                   </button>
                 </div>

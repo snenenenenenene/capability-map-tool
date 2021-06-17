@@ -1,6 +1,8 @@
 package com.bavostepbros.leap.controller;
 
+import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -108,10 +111,39 @@ public class UserController {
 	}
 
 	@PutMapping(path = "changePassword", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public String changePassword(@ModelAttribute("password") String password, @ModelAttribute("id") Integer id) {
-
+	public String changePassword(
+			@ModelAttribute("password") String password, 
+			@ModelAttribute("id") Integer id,			
+			@RequestHeader("Authorization") String token) {
+		String jwt = token.substring(7);
 		User user = userService.get(id);
-		userService.update(id, user.getRoleId(), user.getUsername(), password, user.getEmail());
-		return "Password saved";
+
+		String username = user.getUsername();
+		String currentUser = jwtUtility.extractUsername(jwt);
+		if(currentUser.equals(username)){
+			userService.update(id, user.getRoleId(), user.getUsername(), password, user.getEmail());
+			return "Password saved";
+		}
+		else{
+			return "Can not change someone elses password.";
+		}
 	}
+
+	@PutMapping(path = "/forgotPassword", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public String forgotPassword(
+		@ModelAttribute("email") String email) {
+		String result = "";
+		if(userService.existsByEmail(email)){
+			User user = userService.getByEmail(email);
+			String password = userService.generatePassword();
+			Integer userId = user.getUserId();
+			Integer roleId = user.getRoleId();
+			String username = user.getUsername();
+			userService.update(userId, roleId, username, password, email);
+			emailService.sendForgotPassword(email, password);
+			result = "Email sent.";
+		}
+		return result;
+	}
+
 }

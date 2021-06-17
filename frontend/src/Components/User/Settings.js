@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import * as sha1 from "js-sha1";
 import API from "../../Services/API";
 import axios from "axios";
+import * as passwordValidator from "password-validator";
 
 export default class Settings extends Component {
   constructor(props) {
@@ -42,74 +43,105 @@ export default class Settings extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("userId", this.state.user.userId);
-    formData.append("username", this.state.username);
-    formData.append("email", this.state.user.email);
-    formData.append("password", this.state.password);
-    formData.append("roleId", this.state.user.roleId);
-    await this.state.api.endpoints.user
-      .updateUser(formData)
-      .then((response) => {
-        toast.success("User Updated Successfully!");
-        this.props.history.push(`/home`);
-      })
-      .catch((error) => toast.error("Could not Update User"));
+
+    //GENERATE PASSWORD SCHEMA
+    var schema = new passwordValidator();
+    schema.is().min(8).is().max(50).has().not().spaces();
+
+    var sha = sha1(this.state.password).toUpperCase();
+    var prefix = sha.substring(0, 5);
+    var suffix = sha.substring(5, sha.length);
+    if (schema.validate(this.state.password)) {
+      //CHECK IS PASSWORD HAS BEEN BREACHED IN THE PAST USING THE HIBP API
+      axios(`https://api.pwnedpasswords.com/range/${prefix}`)
+        .then(async (response) => {
+          let hashes = response.data.split("\n");
+          let breached = false;
+          for (var hash of hashes) {
+            var h = hash.split(":");
+            if (h[0] === suffix) {
+              breached = true;
+              toast.error("The password has been breached " + h[1] + "times.");
+            }
+          }
+          if (!breached) {
+            const formData = new FormData();
+            formData.append("userId", this.state.user.userId);
+            formData.append("username", this.state.username);
+            formData.append("email", this.state.user.email);
+            formData.append("password", this.state.password);
+            formData.append("roleId", this.state.user.roleId);
+            await this.state.api.endpoints.user
+              .updateUser(formData)
+              .then(() => {
+                toast.success("User Updated Successfully!");
+                this.props.history.push(`/home`);
+              })
+              .catch((error) => toast.error("Could not Update User"));
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          toast.error("Something went Wrong...");
+        });
+    } else {
+      toast.error("Password must be at least 8 letters!");
+    }
   };
 
   render() {
     return (
-      <div className='container'>
+      <div className="container">
         <br></br>
-        <nav aria-label='breadcrumb'>
-          <ol className='breadcrumb'>
-            <li className='breadcrumb-item'>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
               <Link to={`/home`}>Home</Link>
             </li>
-            <li className='breadcrumb-item'>Settings</li>
+            <li className="breadcrumb-item">Settings</li>
           </ol>
         </nav>
-        <div className='jumbotron'>
+        <div className="jumbotron">
           <h3>User Settings</h3>
           <form onSubmit={this.handleSubmit}>
-            <div className='form-group'>
-              <label htmlFor='email' className='sr-only'>
+            <div className="form-group">
+              <label htmlFor="email" className="sr-only">
                 Email
               </label>
               <input
-                type='text'
-                id='email'
-                name='email'
-                className='form-control-plaintext'
-                placeholder='email'
+                type="text"
+                id="email"
+                name="email"
+                className="form-control-plaintext"
+                placeholder="email"
                 readonly
                 value={this.state.email}
               />
             </div>
-            <div className='form-row'>
-              <div className='form-group col-md-6'>
-                <label htmlFor='username'>Username</label>
+            <div className="form-row">
+              <div className="form-group col-md-6">
+                <label htmlFor="username">Username</label>
                 <input
-                  type='text'
-                  id='username'
-                  name='username'
-                  className='form-control'
-                  placeholder='Username'
+                  type="text"
+                  id="username"
+                  name="username"
+                  className="form-control"
+                  placeholder="Username"
                   value={this.state.username}
                   onChange={this.handleInputChange}
                   required
                 />
               </div>
             </div>
-            <div className='form-row'>
-              <div className='form-group col-md-6'>
-                <label htmlFor='password'>Password</label>
+            <div className="form-row">
+              <div className="form-group col-md-6">
+                <label htmlFor="password">Password</label>
                 <input
-                  type='password'
-                  id='password'
-                  name='password'
-                  className='form-control'
-                  placeholder='Password'
+                  type="password"
+                  id="password"
+                  name="password"
+                  className="form-control"
+                  placeholder="Password"
                   value={this.state.password}
                   onChange={this.handleInputChange}
                   required
@@ -117,8 +149,8 @@ export default class Settings extends Component {
               </div>
             </div>
             <button
-              className='btn btn-primary'
-              type='submit'
+              className="btn btn-primary"
+              type="submit"
               onClick={this.handleSubmit}
             >
               Submit

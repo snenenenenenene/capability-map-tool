@@ -18,6 +18,8 @@ public interface CapabilityService {
 			String capabilityDescription, String paceOfChange, String targetOperatingModel, Integer resourceQuality,
 			Integer informationQuality, Integer applicationFit);
 
+	Capability save (Capability capability);
+
 	Capability get(Integer id);
 
 	List<Capability> getAll();
