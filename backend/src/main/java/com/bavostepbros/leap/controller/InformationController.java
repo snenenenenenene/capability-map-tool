@@ -46,10 +46,10 @@ public class InformationController {
 	}
 	
 	@PutMapping(path = "{informationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public InformationDto addInformation(@Valid @PathVariable("informationId") Integer informationId, 
+	public InformationDto updateInformation(@Valid @PathVariable("informationId") Integer informationId,
 			@Valid @ModelAttribute("informationName") String informationName,
 			@Valid @ModelAttribute("informationDescription") String informationDescription) {
-		Information information = informationService.save(informationName, informationDescription);
+		Information information = informationService.update(informationId, informationName, informationDescription);
 		return convertInformation(information);
 	}
 	
