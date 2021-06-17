@@ -97,6 +97,7 @@ public class UserController {
 		try {
 			userService.authenticate(email, password);
 			User user = userService.getByEmail(email);
+			System.out.println("User in authenticate: " + user);
 			Iterator<Role> roles = user.getRoles().iterator();
 			Role role = roles.hasNext() ? roles.next() : roleService.getRoleByRoleName("CREATING_USER");
 			System.out.println("Role in authenticate: " + role);

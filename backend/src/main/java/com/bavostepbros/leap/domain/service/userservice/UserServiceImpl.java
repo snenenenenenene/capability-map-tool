@@ -139,7 +139,7 @@ public class UserServiceImpl implements UserService {
 	//TODO fix exception handling here or in controller?
 	@Override
 	public Authentication authenticate(String email, String password) throws AuthenticationException {
-		System.out.println(email + " " + password);
+		System.out.println("UserService: " + email + " " + password);
 		return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
 	}
 

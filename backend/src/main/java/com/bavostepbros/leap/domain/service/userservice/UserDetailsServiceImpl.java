@@ -45,12 +45,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		switch (roleService.get(role.getRoleId()).getRoleName()) {
 		case "USER_ADMIN":
 			authority = "USER_ADMIN";
+			break;
 		case "APP_ADMIN":
 			authority = "APP_ADMIN";
+			break;
 		case "VIEWING_USER":
 			authority = "VIEWING_USER";
+			break;
 		case "CREATING_USER":
 			authority = "CREATING_USER";
+			break;
 		}
 		System.out.println("authority:" + authority);
 		authorities.add(new SimpleGrantedAuthority(authority));
