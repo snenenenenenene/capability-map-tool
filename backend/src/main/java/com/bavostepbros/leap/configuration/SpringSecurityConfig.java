@@ -35,7 +35,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	private UserDetailsServiceImpl userDetailsService;
 
 	private JwtUtility jwtUtility;
-	
+
 	public SpringSecurityConfig(JwtUtility jwtUtility) {
 		this.jwtUtility = jwtUtility;
 	}
@@ -62,25 +62,23 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 			.cors().and()
 			.csrf().disable()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-			.authorizeRequests().antMatchers("/api/user/authenticate").permitAll()
-			.antMatchers("/api/**").permitAll()
-			.anyRequest().authenticated()
-			.and()
+			.authorizeRequests()
+				.antMatchers("/api/user/authenticate", "/api/user/forgotPassword").permitAll()
+				.antMatchers("/api/**").permitAll()
+				.anyRequest().authenticated().and()
 			.apply(new JwtConfigurer(jwtUtility));
 	}
-	
-	@Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registery) {
-                registery.addMapping("/**")
-                	.allowedOrigins("http://localhost:3000", "https://groep-5.project.ap.be/")
-                	.allowedMethods("GET", "POST", "PUT", "DELETE");
-            }
-        };
-    }
 
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registery) {
+				registery.addMapping("/**").allowedOrigins("http://localhost:3000", "https://groep-5.project.ap.be/")
+						.allowedMethods("GET", "POST", "PUT", "DELETE");
+			}
+		};
+	}
 
 //	@Bean
 //	CorsConfigurationSource corsConfigurationSource() {

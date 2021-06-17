@@ -6,7 +6,7 @@ import API from "../../Services/API";
 import { Modal } from "react-bootstrap";
 import Select from "react-select";
 
-export default class Project extends Component {
+export default class Info extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,20 +14,22 @@ export default class Project extends Component {
       environments: [],
       environmentName: this.props.match.params.name,
       environmentId: "",
-      projectId: "",
-      projects: [],
+      informationId: "",
+      criticality: "",
+      infos: [],
       capabilities: [],
       linkedCapabilities: [],
       showModal: false,
     };
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   async componentDidMount() {
     this.state.api.createEntity({ name: "environment" });
     this.state.api.createEntity({ name: "capability" });
-    this.state.api.createEntity({ name: "program" });
-    this.state.api.createEntity({ name: "status" });
-    this.state.api.createEntity({ name: "project" });
+    this.state.api.createEntity({ name: "information" });
+    this.state.api.createEntity({ name: "capabilityinformation" });
     await this.state.api.endpoints.environment
       .getEnvironmentByName({ name: this.state.environmentName })
       .then((response) => {
@@ -37,10 +39,10 @@ export default class Project extends Component {
         this.props.history.push("/404");
       });
 
-    await this.state.api.endpoints.project
+    await this.state.api.endpoints.information
       .getAll()
       .then((response) => {
-        this.setState({ projects: response.data });
+        this.setState({ infos: response.data });
       })
       .catch((error) => {
         this.props.history.push("/error");
@@ -64,43 +66,50 @@ export default class Project extends Component {
     this.setState({ showModal: !this.state.showModal });
   }
 
-  //SUBMIT PROJECT
-  handleSubmit = (projectId) => async (e) => {
+  //HANDLE SUBMIT
+  handleSubmit = (informationId) => async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("projectId", projectId);
+    formData.append("informationId", this.state.informationId);
     formData.append("capabilityId", this.state.capabilityId);
-    await this.state.api.endpoints.capability
-      .linkProject(formData)
-      .then(toast.success("Project Successfully Linked"))
-      .catch((error) => toast.error("Could not link Project"));
+    formData.append("criticality", this.state.criticality);
+    await this.state.api.endpoints.capabilityinformation
+      .create(formData)
+      .then(toast.success("Info Successfully Linked"))
+      .catch((error) => toast.error("Could not link Info"));
 
-    this.capabilityTable(projectId);
+    this.capabilityTable(informationId);
   };
 
-  //REDIRCET TO EDIT PAGE
-  edit(projectId) {
+  //HANDLE INPUT CHANGE
+  handleInputChange(event) {
+    this.setState({ [event.target.name]: event.target.value });
+  }
+
+  //REDIRECT TO EDIT PAGE
+  edit(informationId) {
     this.props.history.push(
-      `/environment/${this.state.environmentName}/project/${projectId}`
+      `/environment/${this.state.environmentName}/info/${informationId}`
     );
   }
 
-  //UNLINK PROJECT FROM CAPABILITY WITH ID CAPABILITYID
+  //UNLINK INFO FROM CAPABILITY WITH ID CAPABILITYID
   async unlinkCapability(capabilityId) {
-    await this.state.api.endpoints.capability
-      .unlinkProject({ capabilityId: capabilityId, id: this.state.projectId })
+    await this.state.api.endpoints.capabilityinformation
+      .unlink({ capabilityId: capabilityId, id: this.state.informationId })
       .then(toast.success("Link Successfully Deleted"))
       .catch((error) => toast.error("Could not Unlink"));
 
-    this.capabilityTable(this.state.projectId);
+    this.capabilityTable(this.state.informationId);
   }
-  //DELETE PROJECT
-  delete = async (projectId) => {
+
+  //CONFIRM DELETION OF INFO
+  delete = async (infoId) => {
     toast(
       (t) => (
         <span>
           <p className="text-center">
-            Are you sure you want to remove this project?
+            Are you sure you want to remove this info?
           </p>
           <div className="text-center">
             <button
@@ -108,7 +117,7 @@ export default class Project extends Component {
               stlye={{ width: 50, height: 30 }}
               onClick={() => {
                 toast.dismiss(t.id);
-                this.fetchDeleteProjects(projectId);
+                this.fetchDeleteInfos(infoId);
               }}
             >
               Yes!
@@ -128,9 +137,9 @@ export default class Project extends Component {
   };
 
   //FETCH CAPABILITIES AND INSERT THEM INTO HTML SELECT
-  async capabilityTable(projectId) {
-    await this.state.api.endpoints.project
-      .getCapabilities({ id: projectId })
+  async capabilityTable(informationId) {
+    await this.state.api.endpoints.capabilityinformation
+      .getAllCapabilitiesByInformationId({ id: informationId })
       .then((response) => {
         this.setState({ linkedCapabilities: response.data });
       })
@@ -138,20 +147,21 @@ export default class Project extends Component {
         toast.error("Could Not Find Capabilities");
       });
   }
-  //CONFIRM DELETION OF PROJECT WITH ID PROJECTID
-  fetchDeleteProjects = async (projectId) => {
-    await this.state.api.endpoints.project
-      .delete({ id: projectId })
-      .then((response) => toast.success("Successfully Deleted Project"))
-      .catch((error) => toast.error("Could not Delete Project"));
-    //REFRESH PROJECTS
-    await this.state.api.endpoints.project
+
+  //DELETE INFO
+  fetchDeleteInfos = async (infoId) => {
+    await this.state.api.endpoints.info
+      .delete({ id: infoId })
+      .then((response) => toast.success("Successfully Deleted Info"))
+      .catch((error) => toast.error("Could not Delete Info"));
+    //REFRESH INFO
+    await this.state.api.endpoints.information
       .getAll()
       .then((response) => {
-        this.setState({ projects: response.data });
+        this.setState({ infos: response.data });
       })
       .catch((error) => {
-        toast.error("Could not Find Projects");
+        toast.error("Could not Find Infos");
       });
   };
 
@@ -169,28 +179,27 @@ export default class Project extends Component {
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className="breadcrumb-item">Projects</li>
+            <li className="breadcrumb-item">Infos</li>
           </ol>
         </nav>
         <MaterialTable
-          title="Projects"
+          title="Infos"
           actions={[
             {
               icon: "add",
-              tooltip: "Add Project",
+              tooltip: "Add Info",
               isFreeAction: true,
               onClick: (event) => {
                 this.props.history.push(
-                  `/environment/${this.state.environmentName}/project/add`
+                  `/environment/${this.state.environmentName}/info/add`
                 );
               },
             },
           ]}
           columns={[
-            { title: "ID", field: "projectId" },
-            { title: "Name", field: "projectName" },
-            { title: "Program", field: "program.programName" },
-            { title: "Status", field: "status.validityPeriod" },
+            { title: "ID", field: "informationId" },
+            { title: "Name", field: "informationName" },
+            { title: "Description", field: "informationDescription" },
             {
               title: "Actions",
               name: "actions",
@@ -198,13 +207,13 @@ export default class Project extends Component {
                 <div>
                   <button className="btn">
                     <i
-                      onClick={this.delete.bind(this, rowData.projectId)}
+                      onClick={this.delete.bind(this, rowData.informationId)}
                       className="bi bi-trash"
                     ></i>
                   </button>
                   <button className="btn">
                     <i
-                      onClick={this.edit.bind(this, rowData.projectId)}
+                      onClick={this.edit.bind(this, rowData.informationId)}
                       className="bi bi-pencil"
                     ></i>
                   </button>
@@ -218,7 +227,7 @@ export default class Project extends Component {
               ),
             },
           ]}
-          data={this.state.projects}
+          data={this.state.infos}
           detailPanel={(rowData) => {
             return (
               <div>
@@ -234,7 +243,7 @@ export default class Project extends Component {
                         }}
                       >
                         <div className="strategyitem-title card-header text-center text-uppercase text-truncate">
-                          {capability.capabilityName}
+                          {capability.capability.capabilityName}
                         </div>
                         <div
                           className="card-body text-center"
@@ -243,7 +252,9 @@ export default class Project extends Component {
                           <button
                             className="btn btn-danger"
                             onClick={() =>
-                              this.unlinkCapability(capability.capabilityId)
+                              this.unlinkCapability(
+                                capability.capability.capabilityId
+                              )
                             }
                           >
                             UNLINK
@@ -257,17 +268,17 @@ export default class Project extends Component {
             );
           }}
           onRowClick={(event, rowData, togglePanel) => {
-            this.setState({ projectId: rowData.projectId });
-            this.capabilityTable(rowData.projectId);
+            this.setState({ informationId: rowData.informationId });
+            this.capabilityTable(rowData.informationId);
             togglePanel();
           }}
         />
         <Modal show={this.state.showModal} onHide={() => this.handleModal()}>
           <Modal.Header closeButton>
-            Link Project {this.state.projectId}
+            Link Info {this.state.informationId}
           </Modal.Header>
           <Modal.Body>
-            <form onSubmit={this.handleSubmit(this.state.projectId)}>
+            <form onSubmit={this.handleSubmit(this.state.informationId)}>
               <label htmlFor="capabilityId">Capability</label>
               <Select
                 options={this.state.capabilities}
@@ -283,6 +294,21 @@ export default class Project extends Component {
                 }}
                 placeholder="Optional"
               />
+              <label htmlFor="criticality">Criticality</label>
+              <select
+                className="form-control"
+                name="criticality"
+                id="criticality"
+                placeholder="Add Criticality"
+                onChange={this.handleInputChange}
+              >
+                <option value="NONE">None</option>
+                <option value="LOWEST">Lowest</option>
+                <option value="LOW">Low</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="HIGH">High</option>
+                <option value="HIGHEST">Highest</option>
+              </select>
               <br></br>
               <button className="btn btn-primary" type="sumbit">
                 SUBMIT

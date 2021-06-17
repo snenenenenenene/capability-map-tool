@@ -25,6 +25,7 @@ import java.util.List;
 public class CapabilityMapItemDto {
 	private Integer capabilityId;
     private String capabilityName;
+    private String description;
     private CapabilityLevel level;
     private PaceOfChange paceOfChange;
     private TargetOperatingModel targetOperatingModel;

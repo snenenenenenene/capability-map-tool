@@ -2,63 +2,58 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import API from "../../Services/API";
-export default class AddStatus extends Component {
+
+export default class AddInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
       api: new API(),
       statuses: [],
-      environments: [],
+      programs: [],
       environmentName: this.props.match.params.name,
-      validityPeriod: new Date(),
+      environmentId: "",
+      informationName: "",
+      informationDescription: "",
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleDateChange = this.handleDateChange.bind(this);
   }
-
   //HANDLE SUBMIT
   handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("validityPeriod", this.state.validityPeriod);
-    await this.state.api.endpoints.status
-      .create(formData)
-      .then((response) => toast.success("Added Status"))
-      .catch((error) => {
-        toast.error("Failed to Add Status");
-      });
-    this.props.history.push(
-      `/environment/${this.state.environmentName}/status`
+    formData.append("informationName", this.state.informationName);
+    formData.append(
+      "informationDescription",
+      this.state.informationDescription
     );
+    await this.state.api.endpoints.information
+      .create(formData)
+      .then((response) => {
+        toast.success("Info Added Successfully!");
+        this.setState({ infoId: response.data.infoId });
+        this.props.history.push(
+          `/environment/${this.state.environmentName}/info`
+        );
+      })
+      .catch((error) => toast.error("Could not Add Info"));
   };
 
   async componentDidMount() {
     this.state.api.createEntity({ name: "environment" });
-    this.state.api.createEntity({ name: "status" });
-
+    this.state.api.createEntity({ name: "information" });
     await this.state.api.endpoints.environment
       .getEnvironmentByName({ name: this.state.environmentName })
-      .then((response) =>
-        this.setState({ environmentId: response.data.environmentId })
-      )
+      .then((response) => {
+        this.setState({ environmentId: response.data.environmentId });
+      })
       .catch((error) => {
         this.props.history.push("/404");
       });
-
-    await this.state.api.endpoints.status
-      .getAll()
-      .then((response) => this.setState({ statuses: response.data }));
   }
-
   //HANDLE INPUT CHANGE
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
-  }
-
-  //HANDLE DATE CHANGE
-  handleDateChange(event) {
-    this.setState({ [event.target.name]: event.target.value.toLocaleString() });
   }
 
   render() {
@@ -76,31 +71,48 @@ export default class AddStatus extends Component {
               </Link>
             </li>
             <li className="breadcrumb-item active" aria-current="page">
-              Add Status
+              Add Info
             </li>
           </ol>
         </nav>
         <div className="jumbotron">
-          <h3>Add Status</h3>
+          <h3>Add Info</h3>
           <form onSubmit={this.handleSubmit}>
             <div className="row">
-              <div className="col-sm-6">
+              <div className="col-sm-12">
                 <div className="form-row">
-                  <div className="form-group col-md-6">
-                    <label htmlFor="validityPeriod">Validity Period</label>
+                  <div className="form-group col-sm-6">
+                    <label htmlFor="informationName">Name Info</label>
                     <input
-                      type="date"
-                      id="validityPeriod"
-                      name="validityPeriod"
+                      type="text"
+                      id="informationName"
+                      name="informationName"
                       className="form-control"
-                      placeholder="End Date"
-                      value={this.state.validityPeriod}
-                      onChange={this.handleDateChange}
+                      placeholder="Name"
+                      value={this.state.informationName}
+                      onChange={this.handleInputChange}
+                      required
                     />
                   </div>
                 </div>
               </div>
-              <div className="col-sm-6"></div>
+              <div className="col-sm">
+                <div className="form-row">
+                  <div className="form-group col-sm-6">
+                    <label htmlFor="informationDescription">Description</label>
+                    <textarea
+                      type="text"
+                      id="informationDescription"
+                      name="informationDescription"
+                      className="form-control"
+                      rows="5"
+                      placeholder="Description"
+                      value={this.state.informationDescription}
+                      onChange={this.handleInputChange}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
             <button
               className="btn btn-primary"
@@ -111,7 +123,6 @@ export default class AddStatus extends Component {
             </button>
           </form>
         </div>
-        <div></div>
       </div>
     );
   }

@@ -1,11 +1,13 @@
 package com.bavostepbros.leap.domain.service.capabilityservice;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.transaction.Transactional;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
+import com.bavostepbros.leap.domain.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +17,6 @@ import com.bavostepbros.leap.domain.customexceptions.EnumException;
 import com.bavostepbros.leap.domain.customexceptions.ForeignKeyException;
 import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
 import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
-import com.bavostepbros.leap.domain.model.BusinessProcess;
-import com.bavostepbros.leap.domain.model.Capability;
-import com.bavostepbros.leap.domain.model.Environment;
-import com.bavostepbros.leap.domain.model.Project;
-import com.bavostepbros.leap.domain.model.Resource;
-import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 import com.bavostepbros.leap.domain.model.paceofchange.PaceOfChange;
 import com.bavostepbros.leap.domain.model.targetoperatingmodel.TargetOperatingModel;
@@ -62,53 +58,42 @@ public class CapabilityServiceImpl implements CapabilityService {
 	private ResourceService resourceService;
 
 	@Override
-	public Capability save(Integer environmentId, Integer statusId, Integer parentCapabilityId, String capabilityName,
-			String capabilityDescription, String paceOfChange, String targetOperatingModel, Integer resourceQuality,
-			Integer informationQuality, Integer applicationFit) {
-		if (capabilityName == null || capabilityName.isBlank() || capabilityName.isEmpty()) {
-			throw new InvalidInputException("Invalid input.");
-		}
-		if (environmentId == null || environmentId.equals(0)) {
-			throw new ForeignKeyException("Environment ID is invalid.");
-		}
-		if (statusId == null || statusId.equals(0)) {
-			throw new ForeignKeyException("Status ID is invalid.");
-		}
-		if (existsByCapabilityName(capabilityName)) {
-			throw new DuplicateValueException("Capability name already exists.");
-		}
-		if (!statusService.existsById(statusId)) {
-			throw new ForeignKeyException("Status ID does not exists.");
-		}
-		if (!environmentService.existsById(environmentId)) {
-			throw new ForeignKeyException("Environment ID does not exists.");
-		}
+	public Capability save(
+			@NotNull @Min(1) Integer environmentId,
+			@NotNull @Min(1) Integer statusId,
+			Integer parentCapabilityId,
+			@NotBlank String capabilityName,
+			String capabilityDescription,
+			String paceOfChange,
+			String targetOperatingModel,
+			Integer resourceQuality,
+			Integer informationQuality,
+			Integer applicationFit) {
+		return save(new Capability(
+				environmentService.get(environmentId),
+				statusService.get(statusId),
+				parentCapabilityId,
+				capabilityName,
+				capabilityDescription,
+				PaceOfChange.valueOf(paceOfChange),
+				TargetOperatingModel.valueOf(targetOperatingModel),
+				resourceQuality,
+				informationQuality,
+				applicationFit
+		));
+	}
 
-		PaceOfChange pace = PaceOfChange.valueOf(paceOfChange);
-		TargetOperatingModel tom = TargetOperatingModel.valueOf(targetOperatingModel);
-		Environment environment = environmentService.get(environmentId);
-		Status status = statusService.get(statusId);
-		Capability capability = new Capability(environment, status, parentCapabilityId, capabilityName,
-				capabilityDescription, pace, tom, resourceQuality, informationQuality, applicationFit);
+	@Override
+	public Capability save (Capability capability) {
 		updateLevel(capability);
-
 		Capability savedCapability = capabilityDAL.save(capability);
-		environmentService.addCapability(environmentId, savedCapability);
+		environmentService.addCapability(capability.getEnvironment().getEnvironmentId(), savedCapability);
 		return savedCapability;
 	}
 
 	@Override
-	public Capability get(Integer id) {
-		if (id == null || id.equals(0)) {
-			throw new InvalidInputException("Capability ID is not valid.");
-		}
-		if (!existsById(id)) {
-			throw new IndexDoesNotExistException("Capability ID does not exists.");
-		}
-
-		Capability capability = capabilityDAL.findById(id).get();
-		;
-		return capability;
+	public Capability get(@NotNull @Min(1) Integer id) throws NoSuchElementException {
+		return capabilityDAL.findById(id).get();
 	}
 
 	@Override
@@ -117,42 +102,32 @@ public class CapabilityServiceImpl implements CapabilityService {
 	}
 
 	@Override
-	public Capability update(Integer capabilityId, Integer environmentId, Integer statusId, Integer parentCapabilityId,
-			String capabilityName, String capabilityDescription, String paceOfChange, String targetOperatingModel,
-			Integer resourceQuality, Integer informationQuality, Integer applicationFit) {
-		if (capabilityId == null || capabilityId.equals(0) || capabilityName == null || capabilityName.isBlank()
-				|| capabilityName.isEmpty()) {
-			throw new InvalidInputException("Invalid input.");
-		}
-		if (environmentId == null || environmentId.equals(0)) {
-			throw new ForeignKeyException("Environment ID is invalid.");
-		}
-		if (statusId == null || statusId.equals(0)) {
-			throw new ForeignKeyException("Status ID is invalid.");
-		}
-		if (!existsById(capabilityId)) {
-			throw new CapabilityException("Can not update capability if it does not exist.");
-		}
-		Capability oldCapability = capabilityDAL.findById(capabilityId).get();
-		if (capabilityName != oldCapability.getCapabilityName() && existsByCapabilityName(capabilityName)) {
-			throw new DuplicateValueException("Capability name already exists.");
-		}
-		if (!statusService.existsById(statusId)) {
-			throw new ForeignKeyException("Status ID does not exists.");
-		}
-		if (!environmentService.existsById(environmentId)) {
-			throw new ForeignKeyException("Environment ID does not exists.");
-		}
-
-		PaceOfChange pace = PaceOfChange.valueOf(paceOfChange);
-		TargetOperatingModel tom = TargetOperatingModel.valueOf(targetOperatingModel);
-		Environment environment = environmentService.get(environmentId);
-		Status status = statusService.get(statusId);
-		Capability capability = new Capability(capabilityId, environment, status, parentCapabilityId, capabilityName,
-				capabilityDescription, pace, tom, resourceQuality, informationQuality, applicationFit);
-		updateLevel(capability);
-		Capability updatedCapability = capabilityDAL.save(capability);
-		return updatedCapability;
+	public Capability update(
+			@NotNull @Min(1) Integer capabilityId,
+			@NotNull @Min(1) Integer environmentId,
+			@NotNull @Min(1) Integer statusId,
+			Integer parentCapabilityId,
+			@NotBlank String capabilityName,
+			String capabilityDescription,
+			String paceOfChange,
+			String targetOperatingModel,
+			Integer resourceQuality,
+			Integer informationQuality,
+			Integer applicationFit) {
+		// TODO duplicate name in same environment check
+			return save(new Capability(
+					capabilityId,
+					environmentService.get(environmentId),
+					statusService.get(statusId),
+					parentCapabilityId,
+					capabilityName,
+					capabilityDescription,
+					PaceOfChange.valueOf(paceOfChange),
+					TargetOperatingModel.valueOf(targetOperatingModel),
+					resourceQuality,
+					informationQuality,
+					applicationFit
+			));
 	}
 
 	// TODO try catch for out of bounds exception

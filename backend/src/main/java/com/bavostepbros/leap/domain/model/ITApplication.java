@@ -201,5 +201,5 @@ public class ITApplication {
 	public void removeTechnology(Technology technology) {
 		technologies.remove(technology);
 	}
-    
+
 }

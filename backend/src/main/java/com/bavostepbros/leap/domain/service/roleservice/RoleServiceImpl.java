@@ -9,14 +9,10 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
-import lombok.RequiredArgsConstructor;
-
-import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
-import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
-import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
-import com.bavostepbros.leap.domain.customexceptions.RoleException;
 import com.bavostepbros.leap.domain.model.Role;
 import com.bavostepbros.leap.persistence.RoleDAL;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @Transactional

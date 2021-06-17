@@ -42,19 +42,20 @@ export default class Strategy extends Component {
       });
   }
 
+  //REDIRECT TO EDIT PAGE
   edit(strategyId) {
     this.props.history.push(
       `/environment/${this.state.environmentName}/strategy/${strategyId}`
     );
   }
 
+  //DELETE STRATEGY
   fetchDeleteStrategies = async (strategyId) => {
     await this.state.api.endpoints.strategy
       .delete({ id: strategyId })
       .then((response) => toast.success("Successfully Deleted Strategy"))
       .catch((error) => toast.error("Could not Delete Strategy"));
     //REFRESH STRATEGIES
-
     await this.state.api.endpoints.strategy
       .getAll()
       .then((response) => {
@@ -65,16 +66,17 @@ export default class Strategy extends Component {
       });
   };
 
+  //CONFIRM STRAETGY DELETION
   delete = async (strategyId) => {
     toast(
       (t) => (
         <span>
-          <p className='text-center'>
+          <p className="text-center">
             Are you sure you want to remove this strategy?
           </p>
-          <div className='text-center'>
+          <div className="text-center">
             <button
-              className='btn btn-primary btn-sm m-3'
+              className="btn btn-primary btn-sm m-3"
               stlye={{ width: 50, height: 30 }}
               onClick={() => {
                 toast.dismiss(t.id);
@@ -84,7 +86,7 @@ export default class Strategy extends Component {
               Yes!
             </button>
             <button
-              className='btn btn-secondary btn-sm m-3'
+              className="btn btn-secondary btn-sm m-3"
               stlye={{ width: 50, height: 30 }}
               onClick={() => toast.dismiss(t.id)}
             >
@@ -99,19 +101,19 @@ export default class Strategy extends Component {
 
   render() {
     return (
-      <div className='container'>
+      <div className="container">
         <br></br>
-        <nav aria-label='breadcrumb'>
-          <ol className='breadcrumb'>
-            <li className='breadcrumb-item'>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
               <Link to={`/`}>Home</Link>
             </li>
-            <li className='breadcrumb-item'>
+            <li className="breadcrumb-item">
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className='breadcrumb-item'>Strategy</li>
+            <li className="breadcrumb-item">Strategy</li>
           </ol>
         </nav>
         <MaterialTable
@@ -126,16 +128,16 @@ export default class Strategy extends Component {
               name: "actions",
               render: (rowData) => (
                 <div>
-                  <button className='btn'>
+                  <button className="btn">
                     <i
                       onClick={this.delete.bind(this, rowData.strategyId)}
-                      className='bi bi-trash'
+                      className="bi bi-trash"
                     ></i>
                   </button>
-                  <button className='btn'>
+                  <button className="btn">
                     <i
                       onClick={this.edit.bind(this, rowData.strategyId)}
-                      className='bi bi-pencil'
+                      className="bi bi-pencil"
                     ></i>
                   </button>
                 </div>
@@ -143,7 +145,7 @@ export default class Strategy extends Component {
             },
           ]}
           data={this.state.strategies}
-          title='Strategies'
+          title="Strategies"
           actions={[
             {
               icon: "add",

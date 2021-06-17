@@ -13,10 +13,8 @@ export default class EditProject extends Component {
       api: new API(),
       statuses: [],
       programs: [],
-
       selectedStatus: "",
       selectedProgram: "",
-
       environmentName: this.props.match.params.name,
       environmentId: "",
       projectName: "",
@@ -31,6 +29,7 @@ export default class EditProject extends Component {
     this.updateDate = this.updateDate.bind(this);
   }
 
+  //HANDLE SUBMIT
   handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -103,60 +102,63 @@ export default class EditProject extends Component {
       });
   }
 
+  //TOGGLE ITEM MODAL
   handleItemModal() {
     this.setState({ showItemModal: !this.state.showItemModal });
   }
 
+  //HANDLE INPUT CHANGE
   handleInputChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
 
+  //UPDATE DATES AFTER ADDING NEW STATUS
   async updateDate() {
     this.componentDidMount();
   }
-
+  //TOGGLE MODAL
   handleModal() {
     this.setState({ showModal: !this.state.showModal });
   }
 
   render() {
     return (
-      <div className='container'>
+      <div className="container">
         <br></br>
-        <nav aria-label='breadcrumb'>
-          <ol className='breadcrumb'>
-            <li className='breadcrumb-item'>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
               <Link to={`/`}>Home</Link>
             </li>
-            <li className='breadcrumb-item'>
+            <li className="breadcrumb-item">
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className='breadcrumb-item'>
+            <li className="breadcrumb-item">
               <Link to={`/environment/${this.state.environmentName}/project`}>
                 Projects
               </Link>
             </li>
-            <li className='breadcrumb-item active' aria-current='page'>
+            <li className="breadcrumb-item active" aria-current="page">
               Edit Project
             </li>
           </ol>
         </nav>
-        <div className='jumbotron'>
+        <div className="jumbotron">
           <h3>Edit Project</h3>
           <form onSubmit={this.handleSubmit}>
-            <div className='row'>
-              <div className='col-sm-12'>
-                <div className='form-row'>
-                  <div className='form-group col-md-12'>
-                    <label htmlFor='projectName'>Name Project</label>
+            <div className="row">
+              <div className="col-sm-12">
+                <div className="form-row">
+                  <div className="form-group col-md-12">
+                    <label htmlFor="projectName">Name Project</label>
                     <input
-                      type='text'
-                      id='projectName'
-                      name='projectName'
-                      className='form-control'
-                      placeholder='Name Project'
+                      type="text"
+                      id="projectName"
+                      name="projectName"
+                      className="form-control"
+                      placeholder="Name Project"
                       value={this.state.projectName}
                       onChange={this.handleInputChange}
                       required
@@ -164,18 +166,18 @@ export default class EditProject extends Component {
                   </div>
                 </div>
               </div>
-              <div className='col-sm-6'>
-                <div className='form-row'>
-                  <div className='form-group col-md'>
-                    <label htmlFor='paceOfChange'>Program</label>
+              <div className="col-sm-6">
+                <div className="form-row">
+                  <div className="form-group col-md">
+                    <label htmlFor="paceOfChange">Program</label>
                     <Select
                       value={this.state.programs.filter(
                         (program) => program.programId === this.state.programId
                       )}
                       options={this.state.programs}
-                      name='program'
-                      id='program'
-                      placeholder='Add Program'
+                      name="program"
+                      id="program"
+                      placeholder="Add Program"
                       defaultValue={this.state.program}
                       onChange={(program) => {
                         this.setState({ programId: program.programId });
@@ -185,17 +187,17 @@ export default class EditProject extends Component {
                   </div>
                 </div>
               </div>
-              <div className='col-sm-6'>
-                <div className='form-row'>
-                  <div className='form-group col-md-9'>
-                    <label htmlFor='statusId'>Status</label>
+              <div className="col-sm-6">
+                <div className="form-row">
+                  <div className="form-group col-md-9">
+                    <label htmlFor="statusId">Status</label>
                     <Select
                       value={this.state.statuses.filter(
                         (status) => status.statusId === this.state.statusId
                       )}
-                      id='statusId'
-                      name='statusId'
-                      placeholder='Add Status'
+                      id="statusId"
+                      name="statusId"
+                      placeholder="Add Status"
                       options={this.state.statuses}
                       required
                       onChange={(status) => {
@@ -212,8 +214,8 @@ export default class EditProject extends Component {
                       </Modal.Body>
                       <Modal.Footer>
                         <button
-                          type='button'
-                          className='btn btn-secondary'
+                          type="button"
+                          className="btn btn-secondary"
                           onClick={() => this.handleModal()}
                         >
                           Close Modal
@@ -222,8 +224,8 @@ export default class EditProject extends Component {
                     </Modal>
                   </div>
                   <button
-                    type='button'
-                    className='btn btn-secondary'
+                    type="button"
+                    className="btn btn-secondary"
                     style={{ height: 40, marginTop: 30 }}
                     onClick={() => this.handleModal()}
                   >
@@ -233,8 +235,8 @@ export default class EditProject extends Component {
               </div>
             </div>
             <button
-              className='btn btn-primary'
-              type='button'
+              className="btn btn-primary"
+              type="button"
               onClick={this.handleSubmit}
             >
               Submit

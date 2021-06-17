@@ -6,52 +6,51 @@ import toast from "react-hot-toast";
 import Select from "react-select";
 import API from "../../Services/API";
 
-export default class AddProject extends Component {
+export default class EditInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
       api: new API(),
       statuses: [],
       programs: [],
-
       selectedStatus: "",
       selectedProgram: "",
-
       environmentName: this.props.match.params.name,
       environmentId: "",
-      projectName: "",
+      infoName: "",
+      programId: "",
+      statusId: "",
+      infoId: this.props.match.params.id,
       showModal: false,
       showItemModal: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
-    this.updateDate = this.updateDate.bind(this);
   }
-
   //HANDLE SUBMIT
   handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("projectName", this.state.projectName);
-    formData.append("programId", this.state.selectedProgram.programId);
-    formData.append("statusId", this.state.selectedStatus.statusId);
-    await this.state.api.endpoints.project
-      .create(formData)
+    formData.append("infoName", this.state.infoName);
+    formData.append("programId", this.state.programId);
+    formData.append("statusId", this.state.statusId);
+    await this.state.api.endpoints.info
+      .update(formData, this.state.infoId)
       .then((response) => {
-        toast.success("Project Added Successfully!");
-        this.setState({ projectId: response.data.projectId });
+        toast.success("Info Edited Successfully!");
+        this.setState({ infoId: response.data.infoId });
         this.props.history.push(
-          `/environment/${this.state.environmentName}/project`
+          `/environment/${this.state.environmentName}/info`
         );
       })
-      .catch((error) => toast.error("Could not Add Project"));
+      .catch((error) => toast.error("Could not Edit Info"));
   };
 
   async componentDidMount() {
     this.state.api.createEntity({ name: "environment" });
     this.state.api.createEntity({ name: "program" });
     this.state.api.createEntity({ name: "status" });
-    this.state.api.createEntity({ name: "project" });
+    this.state.api.createEntity({ name: "info" });
     await this.state.api.endpoints.environment
       .getEnvironmentByName({ name: this.state.environmentName })
       .then((response) => {
@@ -74,6 +73,7 @@ export default class AddProject extends Component {
         toast.error("Could not load Programs");
       });
     await this.state.api.endpoints.status
+
       .getAll()
       .then((response) => {
         response.data.forEach((status) => {
@@ -85,11 +85,19 @@ export default class AddProject extends Component {
       .catch((error) => {
         toast.error("Could not load Statuses");
       });
-  }
 
-  //TOGGLE ITEM MODAL
-  handleItemModal() {
-    this.setState({ showItemModal: !this.state.showItemModal });
+    await this.state.api.endpoints.info
+      .getOne({ id: this.state.infoId })
+      .then((response) => {
+        this.setState({
+          infoName: response.data.infoName,
+          statusId: response.data.status.statusId,
+          programId: response.data.program.programId,
+        });
+      })
+      .catch((error) => {
+        toast.error("Could not load Info");
+      });
   }
 
   //HANDLE INPUT CHANGE
@@ -97,7 +105,7 @@ export default class AddProject extends Component {
     this.setState({ [event.target.name]: event.target.value });
   }
 
-  //UPDATE DATES WHEN ADDING A NEW STATUS
+  //UPDATE DATES AFTER ADDING A NEW STATUS
   async updateDate() {
     this.componentDidMount();
   }
@@ -121,26 +129,31 @@ export default class AddProject extends Component {
                 {this.state.environmentName}
               </Link>
             </li>
+            <li className="breadcrumb-item">
+              <Link to={`/environment/${this.state.environmentName}/info`}>
+                Infos
+              </Link>
+            </li>
             <li className="breadcrumb-item active" aria-current="page">
-              Add Project
+              Edit Info
             </li>
           </ol>
         </nav>
         <div className="jumbotron">
-          <h3>Add Project</h3>
+          <h3>Edit Info</h3>
           <form onSubmit={this.handleSubmit}>
             <div className="row">
               <div className="col-sm-12">
                 <div className="form-row">
                   <div className="form-group col-md-12">
-                    <label htmlFor="projectName">Name Project</label>
+                    <label htmlFor="infoName">Name Info</label>
                     <input
                       type="text"
-                      id="projectName"
-                      name="projectName"
+                      id="infoName"
+                      name="infoName"
                       className="form-control"
-                      placeholder="Name Project"
-                      value={this.state.projectName}
+                      placeholder="Name Info"
+                      value={this.state.infoName}
                       onChange={this.handleInputChange}
                       required
                     />
@@ -152,14 +165,17 @@ export default class AddProject extends Component {
                   <div className="form-group col-md">
                     <label htmlFor="paceOfChange">Program</label>
                     <Select
+                      value={this.state.programs.filter(
+                        (program) => program.programId === this.state.programId
+                      )}
                       options={this.state.programs}
                       name="program"
                       id="program"
                       placeholder="Add Program"
-                      value={this.state.programId}
-                      onChange={(program) =>
-                        this.setState({ selectedProgram: program })
-                      }
+                      defaultValue={this.state.program}
+                      onChange={(program) => {
+                        this.setState({ programId: program.programId });
+                      }}
                       required
                     ></Select>
                   </div>
@@ -170,14 +186,16 @@ export default class AddProject extends Component {
                   <div className="form-group col-md-9">
                     <label htmlFor="statusId">Status</label>
                     <Select
+                      value={this.state.statuses.filter(
+                        (status) => status.statusId === this.state.statusId
+                      )}
                       id="statusId"
                       name="statusId"
-                      placeholder="Validity Period"
-                      value={this.state.statusId}
+                      placeholder="Add Status"
                       options={this.state.statuses}
                       required
-                      onChange={(statusId) => {
-                        this.setState({ selectedStatus: statusId });
+                      onChange={(status) => {
+                        this.setState({ statusId: status.statusId });
                       }}
                     ></Select>
                     <Modal show={this.state.showModal}>

@@ -8,7 +8,6 @@ export default class EditStatus extends Component {
     super(props);
     this.state = {
       api: new API(),
-
       status: {},
       environments: [],
       environmentName: this.props.match.params.name,
@@ -18,10 +17,9 @@ export default class EditStatus extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
   }
-
+  //HANDLE SUBMIT
   handleSubmit = async (e) => {
     e.preventDefault();
-    let jwt = JSON.parse(localStorage.getItem("user")).jwt;
     const formData = new FormData();
     formData.append("validityPeriod", this.state.validityPeriod);
     formData.append("statusId", this.state.statusId);
@@ -56,57 +54,58 @@ export default class EditStatus extends Component {
       );
   }
 
+  //HANDLE DATE CHANGE
   handleDateChange(event) {
     this.setState({ [event.target.name]: event.target.value.toLocaleString() });
   }
 
   render() {
     return (
-      <div className='container'>
+      <div className="container">
         <br></br>
-        <nav aria-label='breadcrumb'>
-          <ol className='breadcrumb'>
-            <li className='breadcrumb-item'>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
               <Link to={`/`}>Home</Link>
             </li>
-            <li className='breadcrumb-item'>
+            <li className="breadcrumb-item">
               <Link to={`/environment/${this.state.environmentName}`}>
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className='breadcrumb-item'>
+            <li className="breadcrumb-item">
               <Link to={`/environment/${this.state.environmentName}/status`}>
                 Status
               </Link>
             </li>
-            <li className='breadcrumb-item'>{this.state.statusId}</li>
+            <li className="breadcrumb-item">{this.state.statusId}</li>
           </ol>
         </nav>
-        <div className='jumbotron'>
+        <div className="jumbotron">
           <h3>Edit Status</h3>
           <form onSubmit={this.handleSubmit}>
-            <div className='row'>
-              <div className='col-sm-6'>
-                <div className='form-row'>
-                  <div className='form-group col-md-6'>
-                    <label htmlFor='validityPeriod'>Validity Period</label>
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label htmlFor="validityPeriod">Validity Period</label>
                     <input
-                      type='date'
-                      id='validityPeriod'
-                      name='validityPeriod'
-                      className='form-control'
-                      placeholder='End Date'
+                      type="date"
+                      id="validityPeriod"
+                      name="validityPeriod"
+                      className="form-control"
+                      placeholder="End Date"
                       value={this.state.validityPeriod}
                       onChange={this.handleDateChange}
                     />
                   </div>
                 </div>
               </div>
-              <div className='col-sm-6'></div>
+              <div className="col-sm-6"></div>
             </div>
             <button
-              className='btn btn-primary'
-              type='button'
+              className="btn btn-primary"
+              type="button"
               onClick={this.handleSubmit}
             >
               Submit

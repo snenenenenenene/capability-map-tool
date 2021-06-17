@@ -33,7 +33,7 @@ public class Status {
     private Integer statusId;
     
     @NotNull(message = "Validity period must not be null.")
-    @Column(name = "VALIDITYPERIOD", unique = true)
+    @Column(name = "VALIDITYPERIOD")
     private LocalDate validityPeriod;
     	
 	@OneToOne(mappedBy = "status") 
@@ -47,5 +47,4 @@ public class Status {
     public Status(@NotNull LocalDate validityPeriod) {
         this.validityPeriod = validityPeriod;
     }
-
 }
