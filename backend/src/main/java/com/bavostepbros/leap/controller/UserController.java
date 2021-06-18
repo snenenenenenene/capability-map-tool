@@ -57,21 +57,21 @@ public class UserController {
 
 		User user = userService.save(username, password, email);
 		emailService.sendNewUserMessage(user.getEmail(), password);
-		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail(), user.getPassword());
+		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail());
 	}
 
 	@PreAuthorize("hasAuthority('USER_ADMIN')")
 	@GetMapping("/{id}")
 	public UserDto getUserById(@ModelAttribute("id") Integer id) {
 		User user = userService.get(id);
-		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail(), user.getPassword());
+		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail());
 	}
 
 	@PreAuthorize("hasAuthority('USER_ADMIN')")
 	@GetMapping("/email/{email}")
 	public UserDto getUserByEmail(@ModelAttribute("email") String email) {
 		User user = userService.getByEmail(email);
-		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail(), user.getPassword());
+		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail());
 	}
 
 	@PreAuthorize("hasAuthority('USER_ADMIN')")
@@ -79,7 +79,7 @@ public class UserController {
 	public List<UserDto> getAllUsers() {
 		List<User> users = userService.getAll();
 		List<UserDto> usersDto = users.stream().map(user -> new UserDto(user.getUserId(),
-				user.getUsername(), user.getEmail(), user.getPassword())).collect(Collectors.toList());
+				user.getUsername(), user.getEmail())).collect(Collectors.toList());
 		return usersDto;
 	}
 
@@ -89,7 +89,7 @@ public class UserController {
 			@ModelAttribute("password") String password, @ModelAttribute("email") String email) {
 
 		User user = userService.update(userId, username, password, email);
-		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail(), user.getPassword());
+		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail());
 	}
 
 	@PreAuthorize("hasAuthority('USER_ADMIN')")
