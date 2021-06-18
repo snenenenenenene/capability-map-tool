@@ -261,7 +261,6 @@ public class CapabilityApplicationControllerTest extends ApiIntegrationTest {
 		testCapabilityApplication(capabilityApplicationSecond, capabilityApplicationDto.get(1));
 	}
 
-	@Test
 	private void testCapabilityApplication(CapabilityApplication expectedObject,
 			CapabilityApplicationDto actualObject) {
 		assertEquals(expectedObject.getCapability().getCapabilityId(), actualObject.getCapability().getCapabilityId());

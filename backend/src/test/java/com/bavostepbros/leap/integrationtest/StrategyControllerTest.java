@@ -249,7 +249,6 @@ public class StrategyControllerTest extends ApiIntegrationTest {
 			.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
-	@Test
 	private void testStrategy(Strategy expectedObject, StrategyDto actualObject) {
 		assertEquals(expectedObject.getStrategyId(), actualObject.getStrategyId());
 		assertEquals(expectedObject.getStatus().getStatusId(), actualObject.getStatus().getStatusId());

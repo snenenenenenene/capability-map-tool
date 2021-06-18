@@ -185,7 +185,6 @@ public class StatusControllerTest extends ApiIntegrationTest {
 			.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
-	@Test
 	private void testStatus(Status expectedObject, StatusDto actualObject) {
 		assertEquals(expectedObject.getStatusId(), actualObject.getStatusId());
 		assertEquals(expectedObject.getValidityPeriod(), actualObject.getValidityPeriod());

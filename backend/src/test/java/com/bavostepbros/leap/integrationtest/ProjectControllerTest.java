@@ -222,7 +222,6 @@ public class ProjectControllerTest extends ApiIntegrationTest {
 		testProject(projectSecond, projectDto);
 	}
 	
-	@Test
 	private void testProject(Project expectedObject, ProjectDto actualObject) {
 		assertEquals(expectedObject.getStatus().getStatusId(), actualObject.getStatus().getStatusId());
 		assertEquals(expectedObject.getStatus().getValidityPeriod(), actualObject.getStatus().getValidityPeriod());
