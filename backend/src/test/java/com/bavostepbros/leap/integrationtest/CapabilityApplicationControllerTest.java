@@ -77,6 +77,16 @@ public class CapabilityApplicationControllerTest extends ApiIntegrationTest {
 	private CapabilityApplication capabilityApplicationFirst;
 	private CapabilityApplication capabilityApplicationSecond;
 	private CapabilityApplication capabilityApplicationThird;
+	
+	private Integer capabilityId;
+	private Integer applicationId;
+	private Integer efficiencySupport;
+	private Integer functionalCoverage;
+	private Integer correctnessBusinessFit;
+	private Integer futurePotential;
+	private Integer completeness;
+	private Integer correctnessInformationFit;
+	private Integer availability;
 
 	@BeforeAll
 	public void authenticate() throws Exception {
@@ -106,6 +116,16 @@ public class CapabilityApplicationControllerTest extends ApiIntegrationTest {
 				.save(new CapabilityApplication(capabilitySecond, itApplicationFirst, 0, 2, 3, 4, 5, 4, 3, 2));
 		capabilityApplicationThird = capabilityApplicationDAL
 				.save(new CapabilityApplication(capabilitySecond, itApplicationSecond, 0, 5, 4, 3, 2, 1, 2, 3));
+		
+		capabilityId = capabilityApplicationFirst.getCapability().getCapabilityId();
+		applicationId = capabilityApplicationFirst.getApplication().getItApplicationId();
+		efficiencySupport = capabilityApplicationFirst.getEfficiencySupport();
+		functionalCoverage = capabilityApplicationFirst.getFunctionalCoverage();
+		correctnessBusinessFit = capabilityApplicationFirst.getCorrectnessBusinessFit();
+		futurePotential = capabilityApplicationFirst.getFuturePotential();
+		completeness = capabilityApplicationFirst.getCompleteness();
+		correctnessInformationFit = capabilityApplicationFirst.getCorrectnessInformationFit();
+		availability = capabilityApplicationFirst.getAvailability();
 	}
 
 	@AfterEach
@@ -146,16 +166,6 @@ public class CapabilityApplicationControllerTest extends ApiIntegrationTest {
 
 	@Test
 	public void should_postCapabilityApplication_whenSaveCapabilityApplication() throws Exception {
-		Integer capabilityId = capabilityFirst.getCapabilityId();
-		Integer applicationId = itApplicationSecond.getItApplicationId();
-		Integer efficiencySupport = capabilityApplicationFirst.getEfficiencySupport();
-		Integer functionalCoverage = capabilityApplicationFirst.getFunctionalCoverage();
-		Integer correctnessBusinessFit = capabilityApplicationFirst.getCorrectnessBusinessFit();
-		Integer futurePotential = capabilityApplicationFirst.getFuturePotential();
-		Integer completeness = capabilityApplicationFirst.getCompleteness();
-		Integer correctnessInformationFit = capabilityApplicationFirst.getCorrectnessInformationFit();
-		Integer availability = capabilityApplicationFirst.getAvailability();
-
 		MvcResult mvcResult = mockMvc
 				.perform(
 						post(PATH + capabilityId + "/" + applicationId).contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -179,9 +189,6 @@ public class CapabilityApplicationControllerTest extends ApiIntegrationTest {
 
 	@Test
 	public void should_getCapabilityApplication_whenGetCapabilityApplication() throws Exception {
-		Integer capabilityId = capabilityApplicationFirst.getCapability().getCapabilityId();
-		Integer applicationId = capabilityApplicationFirst.getApplication().getItApplicationId();
-
 		MvcResult mvcResult = mockMvc.perform(get(PATH + capabilityId + "/" + applicationId))
 				.andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 
@@ -194,15 +201,7 @@ public class CapabilityApplicationControllerTest extends ApiIntegrationTest {
 
 	@Test
 	public void should_putCapabilityApplication_whenUpdateCapabilityApplication() throws Exception {
-		Integer capabilityId = capabilityApplicationFirst.getCapability().getCapabilityId();
-		Integer applicationId = capabilityApplicationFirst.getApplication().getItApplicationId();
 		Integer efficiencySupport = 5;
-		Integer functionalCoverage = capabilityApplicationFirst.getFunctionalCoverage();
-		Integer correctnessBusinessFit = capabilityApplicationFirst.getCorrectnessBusinessFit();
-		Integer futurePotential = capabilityApplicationFirst.getFuturePotential();
-		Integer completeness = capabilityApplicationFirst.getCompleteness();
-		Integer correctnessInformationFit = capabilityApplicationFirst.getCorrectnessInformationFit();
-		Integer availability = capabilityApplicationFirst.getAvailability();
 
 		MvcResult mvcResult = mockMvc
 				.perform(put(PATH + capabilityId + "/" + applicationId).contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -226,9 +225,6 @@ public class CapabilityApplicationControllerTest extends ApiIntegrationTest {
 
 	@Test
 	public void should_deleteCapabilityApplication_whenDeleteCapabilityApplication() throws Exception {
-		Integer capabilityId = capabilityApplicationFirst.getCapability().getCapabilityId();
-		Integer applicationId = capabilityApplicationFirst.getApplication().getItApplicationId();
-
 		mockMvc.perform(delete(PATH + capabilityId + "/" + applicationId))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
