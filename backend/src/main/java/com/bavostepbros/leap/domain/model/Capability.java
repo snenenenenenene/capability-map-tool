@@ -15,6 +15,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -40,6 +41,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"ENVIRONMENTID", "CAPABILITYNAME"})})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Capability {
 
@@ -62,7 +64,7 @@ public class Capability {
 	private Integer parentCapabilityId;
 
 	@NotBlank(message = "Capability name is required.")
-	@Column(name = "CAPABILITYNAME", unique = true)
+	@Column(name = "CAPABILITYNAME")
 	private String capabilityName;
 
 	@Column(name = "CAPABILITYDESCRIPTION")
