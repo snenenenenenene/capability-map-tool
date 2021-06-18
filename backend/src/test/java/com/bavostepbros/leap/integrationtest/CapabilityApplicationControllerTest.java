@@ -241,13 +241,28 @@ public class CapabilityApplicationControllerTest extends ApiIntegrationTest {
 				.andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 
 		List<CapabilityApplicationDto> capabilityApplicationDto = objectMapper.readValue(
-				mvcResult.getResponse().getContentAsString(), new TypeReference<List<CapabilityApplicationDto>>() {
-				});
+				mvcResult.getResponse().getContentAsString(), new TypeReference<List<CapabilityApplicationDto>>() {});
 
 		assertNotNull(capabilityApplicationDto);
 		assertEquals(2, capabilityApplicationDto.size());
 		testCapabilityApplication(capabilityApplicationSecond, capabilityApplicationDto.get(0));
 		testCapabilityApplication(capabilityApplicationThird, capabilityApplicationDto.get(1));
+	}
+	
+	@Test
+	public void should_getCapabilityApplications_whenGetlAllByApplicationIdCapabilityApplication() throws Exception {
+		Integer applicationId = capabilityApplicationFirst.getApplication().getItApplicationId();
+
+		MvcResult mvcResult = mockMvc.perform(get(PATH + "all-capabilityApplications-by-applicationid/" + applicationId))
+				.andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+
+		List<CapabilityApplicationDto> capabilityApplicationDto = objectMapper.readValue(
+				mvcResult.getResponse().getContentAsString(), new TypeReference<List<CapabilityApplicationDto>>() {});
+
+		assertNotNull(capabilityApplicationDto);
+		assertEquals(2, capabilityApplicationDto.size());
+		testCapabilityApplication(capabilityApplicationFirst, capabilityApplicationDto.get(0));
+		testCapabilityApplication(capabilityApplicationSecond, capabilityApplicationDto.get(1));
 	}
 
 	@Test

@@ -32,7 +32,7 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
 	private CapabilityService capabilityService;
 
 	@Override
-	public BusinessProcess save(@NotBlank String businessProcessName, @NotBlank String businessProcessDescription) {
+	public BusinessProcess save(String businessProcessName, String businessProcessDescription) {
 		BusinessProcess businessProcess = new BusinessProcess(businessProcessName, businessProcessDescription);
 		return businessProcessDAL.save(businessProcess);
 	}

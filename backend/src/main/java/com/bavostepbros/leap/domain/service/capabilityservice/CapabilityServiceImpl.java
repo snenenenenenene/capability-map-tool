@@ -58,33 +58,18 @@ public class CapabilityServiceImpl implements CapabilityService {
 	private ResourceService resourceService;
 
 	@Override
-	public Capability save(
-			@NotNull @Min(1) Integer environmentId,
-			@NotNull @Min(1) Integer statusId,
-			Integer parentCapabilityId,
-			@NotBlank String capabilityName,
-			String capabilityDescription,
-			String paceOfChange,
-			String targetOperatingModel,
-			Integer resourceQuality,
-			Integer informationQuality,
+	public Capability save( Integer environmentId, Integer statusId,
+			Integer parentCapabilityId, @NotBlank String capabilityName, String capabilityDescription,
+			String paceOfChange, String targetOperatingModel, Integer resourceQuality, Integer informationQuality,
 			Integer applicationFit) {
-		return save(new Capability(
-				environmentService.get(environmentId),
-				statusService.get(statusId),
-				parentCapabilityId,
-				capabilityName,
-				capabilityDescription,
-				PaceOfChange.valueOf(paceOfChange),
-				TargetOperatingModel.valueOf(targetOperatingModel),
-				resourceQuality,
-				informationQuality,
-				applicationFit
-		));
+		return save(new Capability(environmentService.get(environmentId), statusService.get(statusId),
+				parentCapabilityId, capabilityName, capabilityDescription, PaceOfChange.valueOf(paceOfChange),
+				TargetOperatingModel.valueOf(targetOperatingModel), resourceQuality, informationQuality,
+				applicationFit));
 	}
 
 	@Override
-	public Capability save (Capability capability) {
+	public Capability save(Capability capability) {
 		updateLevel(capability);
 		Capability savedCapability = capabilityDAL.save(capability);
 		environmentService.addCapability(capability.getEnvironment().getEnvironmentId(), savedCapability);
@@ -102,32 +87,15 @@ public class CapabilityServiceImpl implements CapabilityService {
 	}
 
 	@Override
-	public Capability update(
-			@NotNull @Min(1) Integer capabilityId,
-			@NotNull @Min(1) Integer environmentId,
-			@NotNull @Min(1) Integer statusId,
-			Integer parentCapabilityId,
-			@NotBlank String capabilityName,
-			String capabilityDescription,
-			String paceOfChange,
-			String targetOperatingModel,
-			Integer resourceQuality,
-			Integer informationQuality,
-			Integer applicationFit) {
+	public Capability update(@NotNull @Min(1) Integer capabilityId, @NotNull @Min(1) Integer environmentId,
+			@NotNull @Min(1) Integer statusId, Integer parentCapabilityId, @NotBlank String capabilityName,
+			String capabilityDescription, String paceOfChange, String targetOperatingModel, Integer resourceQuality,
+			Integer informationQuality, Integer applicationFit) {
 		// TODO duplicate name in same environment check
-			return save(new Capability(
-					capabilityId,
-					environmentService.get(environmentId),
-					statusService.get(statusId),
-					parentCapabilityId,
-					capabilityName,
-					capabilityDescription,
-					PaceOfChange.valueOf(paceOfChange),
-					TargetOperatingModel.valueOf(targetOperatingModel),
-					resourceQuality,
-					informationQuality,
-					applicationFit
-			));
+		return save(new Capability(capabilityId, environmentService.get(environmentId), statusService.get(statusId),
+				parentCapabilityId, capabilityName, capabilityDescription, PaceOfChange.valueOf(paceOfChange),
+				TargetOperatingModel.valueOf(targetOperatingModel), resourceQuality, informationQuality,
+				applicationFit));
 	}
 
 	// TODO try catch for out of bounds exception

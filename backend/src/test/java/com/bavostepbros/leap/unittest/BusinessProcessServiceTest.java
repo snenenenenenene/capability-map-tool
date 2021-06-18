@@ -68,7 +68,7 @@ public class BusinessProcessServiceTest {
 		String expected = "No value present";
 
 		Exception exception = assertThrows(NoSuchElementException.class,
-				() -> businessProcessService.save(null, businessProcessDescription));
+				() -> businessProcessService.save(businessProcessName, businessProcessDescription));
 
 		assertEquals(expected, exception.getMessage());
 	}
