@@ -99,15 +99,15 @@ public class CapabilityApplicationServiceTest {
 		optionalItApplicationFirst = Optional.of(itApplicationFirst);
 		optionalCapabilityFirst = Optional.of(capabilityFirst);
 		
-		Integer capabilityId = capabilityApplicationFirst.getCapability().getCapabilityId();
-		Integer applicationId = capabilityApplicationFirst.getApplication().getItApplicationId();
-		Integer efficiencySupport = capabilityApplicationFirst.getEfficiencySupport();
-		Integer functionalCoverage = capabilityApplicationFirst.getFunctionalCoverage();
-		Integer correctnessBusinessFit = capabilityApplicationFirst.getCorrectnessBusinessFit();
-		Integer futurePotential = capabilityApplicationFirst.getFuturePotential();
-		Integer completeness = capabilityApplicationFirst.getCompleteness();
-		Integer correctnessInformationFit = capabilityApplicationFirst.getCorrectnessInformationFit();
-		Integer availability = capabilityApplicationFirst.getAvailability();
+		capabilityId = capabilityApplicationFirst.getCapability().getCapabilityId();
+		applicationId = capabilityApplicationFirst.getApplication().getItApplicationId();
+		efficiencySupport = capabilityApplicationFirst.getEfficiencySupport();
+		functionalCoverage = capabilityApplicationFirst.getFunctionalCoverage();
+		correctnessBusinessFit = capabilityApplicationFirst.getCorrectnessBusinessFit();
+		futurePotential = capabilityApplicationFirst.getFuturePotential();
+		completeness = capabilityApplicationFirst.getCompleteness();
+		correctnessInformationFit = capabilityApplicationFirst.getCorrectnessInformationFit();
+		availability = capabilityApplicationFirst.getAvailability();
 	}
 
 	@Test
