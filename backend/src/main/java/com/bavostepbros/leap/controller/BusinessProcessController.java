@@ -65,9 +65,9 @@ public class BusinessProcessController {
 	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PutMapping(path = "{businessProcessId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public BusinessProcessDto updateBusinessProcess(
-			@PathVariable("businessProcessId") @Positive Integer businessProcessId,
-			@ModelAttribute("businessProcessName") @NotBlank String businessProcessName,
-			@ModelAttribute("businessProcessDescription") @NotBlank String businessProcessDescription) {
+			@Valid @PathVariable("businessProcessId") Integer businessProcessId,
+			@Valid @ModelAttribute("businessProcessName") String businessProcessName,
+			@Valid @ModelAttribute("businessProcessDescription") String businessProcessDescription) {
 		BusinessProcess businessProcess = businessProcessService.update(businessProcessId, businessProcessName,
 				businessProcessDescription);
 		return convertBusinessProcess(businessProcess);

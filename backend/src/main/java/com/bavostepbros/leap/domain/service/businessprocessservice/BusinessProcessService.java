@@ -9,11 +9,11 @@ import com.bavostepbros.leap.domain.model.BusinessProcess;
 import com.bavostepbros.leap.domain.model.Capability;
 
 public interface BusinessProcessService {
-	BusinessProcess save(@NotBlank String businessProcessName, @NotBlank String businessProcessDescription);
+	BusinessProcess save(String businessProcessName, String businessProcessDescription);
 
 	BusinessProcess get(Integer businessProcessId);
 
-	BusinessProcess update(Integer businessProcessId, String businessProcessName, String businessProcessDescription);
+	BusinessProcess update(Integer businessProcessId, @NotBlank String businessProcessName, @NotBlank String businessProcessDescription);
 
 	void delete(Integer businessProcessId);
 

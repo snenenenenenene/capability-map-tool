@@ -44,8 +44,8 @@ public class BusinessProcess {
 		this.businessProcessDescription = businessProcessDescription;
 	}
 
-	public BusinessProcess(Integer businessProcessId, @NotBlank String businessProcessName,
-			@NotBlank String businessProcessDescription) {
+	public BusinessProcess(Integer businessProcessId, String businessProcessName,
+			String businessProcessDescription) {
 		this.businessProcessId = businessProcessId;
 		this.businessProcessName = businessProcessName;
 		this.businessProcessDescription = businessProcessDescription;

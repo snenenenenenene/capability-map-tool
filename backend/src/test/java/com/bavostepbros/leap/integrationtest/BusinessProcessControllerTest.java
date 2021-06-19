@@ -2,20 +2,25 @@ package com.bavostepbros.leap.integrationtest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import javax.validation.ConstraintViolationException;
 
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.bavostepbros.leap.domain.customexceptions.ValidationErrorResponse;
 import com.bavostepbros.leap.domain.model.BusinessProcess;
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Environment;
@@ -123,26 +128,42 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 	public void should_throwInvalidInput_whenSaveBusinessProcessInvalidName() throws Exception {
 		String newBusinessProcessName = "";
 		String newBusinessProcessDescription = businessProcessFirst.getBusinessProcessDescription();
+		String exceptionMessage = "Businessprocess name is required.";
 		
-		mockMvc.perform(post(PATH)
+		MvcResult mvcResult = mockMvc.perform(post(PATH)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("businessProcessName", newBusinessProcessName)
 				.param("businessProcessDescription", newBusinessProcessDescription)
 				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(MockMvcResultMatchers.status().isBadRequest());
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andExpect(result -> assertTrue(result.getResolvedException() instanceof ConstraintViolationException))
+			    .andReturn();
+		
+		ValidationErrorResponse violations = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), 
+				ValidationErrorResponse.class);
+		
+		assertEquals(exceptionMessage, violations.getViolations().get(0).getMessage());
 	}
 	
 	@Test
 	public void should_throwInvalidInput_whenSaveBusinessProcessInvalidDescription() throws Exception {
 		String newBusinessProcessName = "Very unique name";
 		String newBusinessProcessDescription = "";
+		String exceptionMessage = "Businessprocess description is required.";
 		
-		mockMvc.perform(post(PATH)
+		MvcResult mvcResult = mockMvc.perform(post(PATH)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("businessProcessName", newBusinessProcessName)
 				.param("businessProcessDescription", newBusinessProcessDescription)
 				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(MockMvcResultMatchers.status().isBadRequest());
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andExpect(result -> assertTrue(result.getResolvedException() instanceof ConstraintViolationException))
+			    .andReturn();
+		
+		ValidationErrorResponse violations = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), 
+				ValidationErrorResponse.class);
+		
+		assertEquals(exceptionMessage, violations.getViolations().get(0).getMessage());
 	}
 	
 	@Test
@@ -209,13 +230,21 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 		Integer businessProcessId = businessProcessFirst.getBusinessProcessId();
 		String newBusinessProcessName = "";
 		String businessProcessDescription = businessProcessFirst.getBusinessProcessDescription();
+		String exceptionMessage = "Businessprocess name is required.";
 		
-		mockMvc.perform(put(PATH + businessProcessId)
+		MvcResult mvcResult = mockMvc.perform(put(PATH + businessProcessId)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("businessProcessName", newBusinessProcessName)
 				.param("businessProcessDescription", businessProcessDescription)
 				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(MockMvcResultMatchers.status().isBadRequest());
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andExpect(result -> assertTrue(result.getResolvedException() instanceof ConstraintViolationException))
+				.andReturn();
+		
+		ValidationErrorResponse violations = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), 
+				ValidationErrorResponse.class);
+		
+		assertEquals(exceptionMessage, violations.getViolations().get(0).getMessage());
 	}
 	
 	@Test
@@ -223,13 +252,21 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 		Integer businessProcessId = businessProcessFirst.getBusinessProcessId();
 		String newBusinessProcessName = "Update test";
 		String businessProcessDescription = "";
+		String exceptionMessage = "Businessprocess description is required.";
 		
-		mockMvc.perform(put(PATH + businessProcessId)
+		MvcResult mvcResult = mockMvc.perform(put(PATH + businessProcessId)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("businessProcessName", newBusinessProcessName)
 				.param("businessProcessDescription", businessProcessDescription)
 				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(MockMvcResultMatchers.status().isBadRequest());
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andExpect(result -> assertTrue(result.getResolvedException() instanceof ConstraintViolationException))
+				.andReturn();
+		
+		ValidationErrorResponse violations = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), 
+				ValidationErrorResponse.class);
+		
+		assertEquals(exceptionMessage, violations.getViolations().get(0).getMessage());
 	}
 	
 	@Test
