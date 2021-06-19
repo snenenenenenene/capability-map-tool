@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,9 +97,10 @@ public class BusinessProcessController {
 
 	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PutMapping(path = "link-capability/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public void linkCapability(@ModelAttribute("businessProcessId") Integer businessProcessId,
+	public BusinessProcessDto linkCapability(@ModelAttribute("businessProcessId") Integer businessProcessId,
 			@ModelAttribute("capabilityId") Integer capabilityId) {
-		businessProcessService.addCapability(businessProcessId, capabilityId);
+		BusinessProcess businessProcess = businessProcessService.addCapability(businessProcessId, capabilityId);
+		return convertBusinessProcess(businessProcess);
 	}
 
 	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")

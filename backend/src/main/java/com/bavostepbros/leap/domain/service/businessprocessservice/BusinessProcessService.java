@@ -3,8 +3,6 @@ package com.bavostepbros.leap.domain.service.businessprocessservice;
 import java.util.List;
 import java.util.Set;
 
-import javax.validation.constraints.NotBlank;
-
 import com.bavostepbros.leap.domain.model.BusinessProcess;
 import com.bavostepbros.leap.domain.model.Capability;
 
@@ -13,7 +11,7 @@ public interface BusinessProcessService {
 
 	BusinessProcess get(Integer businessProcessId);
 
-	BusinessProcess update(Integer businessProcessId, @NotBlank String businessProcessName, @NotBlank String businessProcessDescription);
+	BusinessProcess update(Integer businessProcessId, String businessProcessName, String businessProcessDescription);
 
 	void delete(Integer businessProcessId);
 
@@ -21,7 +19,7 @@ public interface BusinessProcessService {
 
 	List<BusinessProcess> getAll();
 	
-	void addCapability(Integer businessProcessId, Integer capabilityId);
+	BusinessProcess addCapability(Integer businessProcessId, Integer capabilityId);
 
 	void deleteCapability(Integer businessProcessId, Integer capabilityId);
 

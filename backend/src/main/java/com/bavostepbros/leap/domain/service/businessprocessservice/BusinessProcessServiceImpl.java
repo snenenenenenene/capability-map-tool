@@ -5,11 +5,9 @@ import java.util.Optional;
 import java.util.Set;
 
 import javax.transaction.Transactional;
-import javax.validation.constraints.NotBlank;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.bavostepbros.leap.domain.model.BusinessProcess;
@@ -70,18 +68,19 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
 	}
 
 	@Override
-	public void addCapability(Integer businessProcessId, Integer capabilityId) {
+	public BusinessProcess addCapability(Integer businessProcessId, Integer capabilityId) {
 		BusinessProcess businessProcess = get(businessProcessId);
 		Capability capability = capabilityService.get(capabilityId);
 		businessProcess.addCapability(capability);
-		return;
+		return businessProcessDAL.save(businessProcess);
 	}
 
 	@Override
 	public void deleteCapability(Integer businessProcessId, Integer capabilityId) {
 		BusinessProcess businessProcess = get(businessProcessId);
 		Capability capability = capabilityService.get(capabilityId);
-		businessProcess.addCapability(capability);
+		businessProcess.removeCapability(capability);
+		businessProcessDAL.save(businessProcess);
 		return;
 	}
 
