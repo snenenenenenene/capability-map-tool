@@ -106,7 +106,7 @@ public class BusinessProcessServiceTest {
 		
 		assertNotNull(businessProcess);
 		assertTrue(businessProcess instanceof BusinessProcess);
-		testbusinessProcess(businessProcessFirst, businessProcess);
+		testBusinessProcess(businessProcessFirst, businessProcess);
 	}
 	
 	@Test 
@@ -127,7 +127,7 @@ public class BusinessProcessServiceTest {
 		
 		assertNotNull(businessProcess);
 		assertTrue(businessProcess instanceof BusinessProcess);
-		testbusinessProcess(businessProcessFirst, businessProcess);
+		testBusinessProcess(businessProcessFirst, businessProcess);
 	}
 	
 	@Test 
@@ -138,7 +138,7 @@ public class BusinessProcessServiceTest {
 		
 		assertNotNull(businessProcess);
 		assertTrue(businessProcess instanceof BusinessProcess);
-		testbusinessProcess(businessProcessFirst, businessProcess);
+		testBusinessProcess(businessProcessFirst, businessProcess);
 	}
 	
 	@Test 
@@ -166,7 +166,7 @@ public class BusinessProcessServiceTest {
 		
 		assertNotNull(businessProcess);
 		assertTrue(businessProcess instanceof BusinessProcess);
-		testbusinessProcess(businessProcessFirst, businessProcess);
+		testBusinessProcess(businessProcessFirst, businessProcess);
 	}
 	
 	@Test 
@@ -177,8 +177,8 @@ public class BusinessProcessServiceTest {
 		
 		assertNotNull(businessProcess);
 		assertEquals(businessProcessList.size(), businessProcess.size());
-		testbusinessProcess(businessProcessFirst, businessProcess.get(0));
-		testbusinessProcess(businessProcessSecond, businessProcess.get(1));
+		testBusinessProcess(businessProcessFirst, businessProcess.get(0));
+		testBusinessProcess(businessProcessSecond, businessProcess.get(1));
 	}
 	
 	@Test 
@@ -191,7 +191,7 @@ public class BusinessProcessServiceTest {
 		
 		assertNotNull(businessProcess);
 		assertTrue(businessProcess instanceof BusinessProcess);
-		testbusinessProcess(businessProcessFirst, businessProcess);
+		testBusinessProcess(businessProcessFirst, businessProcess);
 	}
 	
 	@Test 
@@ -217,7 +217,7 @@ public class BusinessProcessServiceTest {
 		assertEquals(capabilities.size() - 1, capabilitiesResult.size());
 	}
 	
-	private void testbusinessProcess(BusinessProcess expectedObject, BusinessProcess actualObject) {
+	private void testBusinessProcess(BusinessProcess expectedObject, BusinessProcess actualObject) {
 		assertEquals(expectedObject.getBusinessProcessId(), actualObject.getBusinessProcessId());
 		assertEquals(expectedObject.getBusinessProcessName(), actualObject.getBusinessProcessName());
 		assertEquals(expectedObject.getBusinessProcessDescription(), actualObject.getBusinessProcessDescription());

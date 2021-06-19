@@ -20,7 +20,7 @@ public interface ResourceService {
 	
 	List<Resource> getAll();
 	
-	void addCapability(Integer resourceId, Integer capabilityId);
+	Resource addCapability(Integer resourceId, Integer capabilityId);
 
 	void deleteCapability(Integer resourceId, Integer capabilityId);
 

@@ -88,9 +88,10 @@ public class ResourceController {
 	
 	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PutMapping(path = "link-capability/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public void linkCapability(@ModelAttribute("resourceId") Integer resourceId, 
+	public ResourceDto linkCapability(@ModelAttribute("resourceId") Integer resourceId, 
 			@ModelAttribute("capabilityId") Integer capabilityId) {
-		resourceService.addCapability(resourceId, capabilityId);
+		Resource resource = resourceService.addCapability(resourceId, capabilityId);
+		return convertResource(resource);
 	}
 	
 	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")

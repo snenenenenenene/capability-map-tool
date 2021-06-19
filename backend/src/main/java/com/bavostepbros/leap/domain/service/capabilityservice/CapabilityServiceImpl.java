@@ -11,8 +11,6 @@ import com.bavostepbros.leap.domain.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bavostepbros.leap.domain.customexceptions.CapabilityException;
-import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
 import com.bavostepbros.leap.domain.customexceptions.EnumException;
 import com.bavostepbros.leap.domain.customexceptions.ForeignKeyException;
 import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
@@ -225,7 +223,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 	}
 
 	@Override
-	public List<Project> getAllProjectsByCapabilityId(Integer capabilityId) {
+	public Set<Project> getAllProjectsByCapabilityId(Integer capabilityId) {
 		Capability capability = get(capabilityId);
 		return capability.getProjects();
 	}
@@ -269,7 +267,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 	}
 
 	@Override
-	public List<Resource> getAllResourceByResourceId(Integer capabilityId) {
+	public Set<Resource> getAllResourceByResourceId(Integer capabilityId) {
 		Capability capability = get(capabilityId);
 		return capability.getResources();
 	}

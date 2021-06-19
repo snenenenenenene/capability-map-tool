@@ -246,7 +246,7 @@ public class CapabilityController {
 	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "get-projects/{capabilityId}")
 	public List<ProjectDto> getCapabilities(@PathVariable("capabilityId") Integer capabilityId) {
-		List<Project> projects = capabilityService.getAllProjectsByCapabilityId(capabilityId);
+		Set<Project> projects = capabilityService.getAllProjectsByCapabilityId(capabilityId);
 		List<ProjectDto> projectsDto = projects.stream().map(project -> convertProject(project))
 				.collect(Collectors.toList());
 		return projectsDto;
@@ -312,7 +312,7 @@ public class CapabilityController {
 	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "get-resources/{capabilityId}")
 	public List<ResourceDto> getResource(@PathVariable("capabilityId") Integer capabilityId) {
-		List<Resource> resources = capabilityService.getAllResourceByResourceId(capabilityId);
+		Set<Resource> resources = capabilityService.getAllResourceByResourceId(capabilityId);
 		List<ResourceDto> resourcesDto = resources.stream().map(resource -> convertResource(resource))
 				.collect(Collectors.toList());
 		return resourcesDto;

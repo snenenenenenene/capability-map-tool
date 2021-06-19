@@ -107,7 +107,7 @@ public class Capability {
 		joinColumns = { @JoinColumn(name = "CAPABILITYID") },
 		inverseJoinColumns = {@JoinColumn(name = "PROJECTID") },
 		uniqueConstraints = { @UniqueConstraint(columnNames = {"CAPABILITYID", "PROJECTID"})})
-	private List<Project> projects;
+	private Set<Project> projects = new HashSet<>();
 
 	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "CAPABILITY_BUSINESSPROCESS",
@@ -121,7 +121,7 @@ public class Capability {
 		joinColumns = { @JoinColumn(name = "CAPABILITYID") },
 		inverseJoinColumns = { @JoinColumn(name = "RESOURCEID") },
 		uniqueConstraints = { @UniqueConstraint(columnNames = {"CAPABILITYID", "RESOURCEID"})})
-	private List<Resource> resources;
+	private Set<Resource> resources = new HashSet<>();
 
 	public Capability(Environment environment, Status status, Integer parentCapabilityId, @NotBlank String capabilityName,
 			String capabilityDescription, PaceOfChange paceOfChange, TargetOperatingModel targetOperatingModel,
@@ -186,9 +186,9 @@ public class Capability {
 
 
 	/**
-	 * @return List<Project>
+	 * @return Set<Project>
 	 */
-	public List<Project> getProjects() {
+	public Set<Project> getProjects() {
 		return projects;
 	}
 
@@ -238,9 +238,9 @@ public class Capability {
 
 
 	/**
-	 * @return List<Resource>
+	 * @return Set<Resource>
 	 */
-	public List<Resource> getResources() {
+	public Set<Resource> getResources() {
 		return resources;
 	}
 
