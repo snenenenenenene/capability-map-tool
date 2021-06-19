@@ -12,6 +12,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -62,19 +63,19 @@ public class BusinessProcessServiceTest {
 		assertNotNull(optionalBusinessProcessFirst);
 	}
 	
-	@Test 
-	void should_throwNoSuchElementException_whenSavedInputNameIsInvalid() {
-		String businessProcessName = "";
-		String expected = "No value present";
-
-		Exception exception = assertThrows(NoSuchElementException.class,
-				() -> businessProcessService.save(businessProcessName, businessProcessDescription));
-
-		assertEquals(expected, exception.getMessage());
-	}
+//	@Test 
+//	void should_throwNoSuchElementException_whenSavedInputNameIsInvalid() {
+//		String businessProcessName = "";
+//		String expected = "No value present";
+//
+//		Exception exception = assertThrows(NoSuchElementException.class,
+//				() -> businessProcessService.save(businessProcessName, businessProcessDescription));
+//
+//		assertEquals(expected, exception.getMessage());
+//	}
 	
 	@Test 
-	void should_returnBusinessProcess_whenBusinessProcessIsSaved() {
+	void should_returnBusinessProcess_whenSaveBusinessProcess() {
 		BDDMockito.given(businessProcessDAL.save(BDDMockito.any(BusinessProcess.class))).willReturn(businessProcessFirst);
 		
 		BusinessProcess businessProcess = businessProcessService.save(businessProcessName, businessProcessDescription);
@@ -82,6 +83,78 @@ public class BusinessProcessServiceTest {
 		assertNotNull(businessProcess);
 		assertTrue(businessProcess instanceof BusinessProcess);
 		testbusinessProcess(businessProcessFirst, businessProcess);
+	}
+	
+	@Test 
+	void should_throwNullPointerException_whenGetBusinessProcessByIdInvalidId() {
+		String expectedErrorMessage = "Businessprocess does not exist.";
+		
+		Exception exception = assertThrows(NullPointerException.class, 
+				() -> businessProcessService.get(businessProcessId));
+		
+		assertEquals(expectedErrorMessage, exception.getMessage());
+	}
+	
+	@Test 
+	void should_returnBusinessProcess_whenGetBusinessProcessById() {
+		BDDMockito.given(businessProcessDAL.findById(businessProcessId)).willReturn(optionalBusinessProcessFirst);
+		
+		BusinessProcess businessProcess = businessProcessService.get(businessProcessId);
+		
+		assertNotNull(businessProcess);
+		assertTrue(businessProcess instanceof BusinessProcess);
+		testbusinessProcess(businessProcessFirst, businessProcess);
+	}
+	
+	@Test 
+	void should_returnBusinessProcess_whenUpdateBusinessProcess() {
+		BDDMockito.given(businessProcessDAL.save(BDDMockito.any(BusinessProcess.class))).willReturn(businessProcessFirst);
+		
+		BusinessProcess businessProcess = businessProcessService.update(businessProcessId, businessProcessName, businessProcessDescription);
+		
+		assertNotNull(businessProcess);
+		assertTrue(businessProcess instanceof BusinessProcess);
+		testbusinessProcess(businessProcessFirst, businessProcess);
+	}
+	
+	@Test 
+	void should_verify_whenDeleteBusinessProcess() {
+		businessProcessService.delete(businessProcessId);
+		
+		Mockito.verify(businessProcessDAL, Mockito.times(1)).deleteById(Mockito.eq(businessProcessId));
+	}
+	
+	@Test 
+	void should_throwNullPointerException_whenGetBusinessProcessByNameInvalidName() {
+		String expectedErrorMessage = "Businessprocess does not exist.";
+		
+		Exception exception = assertThrows(NullPointerException.class, 
+				() -> businessProcessService.getBusinessProcessByName(businessProcessName));
+		
+		assertEquals(expectedErrorMessage, exception.getMessage());
+	}
+	
+	@Test 
+	void should_returnBusinessProcess_whenGetBusinessProcessByName() {
+		BDDMockito.given(businessProcessDAL.findByBusinessProcessName(businessProcessName)).willReturn(optionalBusinessProcessFirst);
+		
+		BusinessProcess businessProcess = businessProcessService.getBusinessProcessByName(businessProcessName);
+		
+		assertNotNull(businessProcess);
+		assertTrue(businessProcess instanceof BusinessProcess);
+		testbusinessProcess(businessProcessFirst, businessProcess);
+	}
+	
+	@Test 
+	void should_returnBusinessProcessList_whenGetAllBusinessProcess() {
+		BDDMockito.given(businessProcessDAL.findAll()).willReturn(businessProcessList);
+		
+		List<BusinessProcess> businessProcess = businessProcessService.getAll();
+		
+		assertNotNull(businessProcess);
+		assertEquals(businessProcessList.size(), businessProcess.size());
+		testbusinessProcess(businessProcessFirst, businessProcess.get(0));
+		testbusinessProcess(businessProcessSecond, businessProcess.get(1));
 	}
 	
 	private void testbusinessProcess(BusinessProcess expectedObject, BusinessProcess actualObject) {
