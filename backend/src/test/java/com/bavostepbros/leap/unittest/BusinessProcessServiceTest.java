@@ -142,7 +142,7 @@ public class BusinessProcessServiceTest {
 	}
 	
 	@Test 
-	void should_verify_whenDeleteBusinessProcess() {
+	void should_verifyDeleted_whenDeleteBusinessProcess() {
 		businessProcessService.delete(businessProcessId);
 		
 		Mockito.verify(businessProcessDAL, Mockito.times(1)).deleteById(Mockito.eq(businessProcessId));
