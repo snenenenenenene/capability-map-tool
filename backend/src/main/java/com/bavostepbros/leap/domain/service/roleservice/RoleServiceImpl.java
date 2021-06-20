@@ -28,7 +28,7 @@ public class RoleServiceImpl implements RoleService {
 		save("VIEWING_USER", 4);
 	}
 
-	private RoleDAL roleDAL;
+	private final RoleDAL roleDAL;
 
 	@Override
 	public Role save(String roleName, Integer weight) {

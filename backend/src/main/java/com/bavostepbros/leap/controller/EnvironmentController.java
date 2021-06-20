@@ -162,13 +162,15 @@ public class EnvironmentController {
 
 	/**
 	 * @param environmentId
+	 * @param level
 	 * @return CapabilityMapDto
 	 */
 	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "capabilitymap/{environmentId}")
-	public CapabilityMapDto getCapabilityMap(@PathVariable("environmentId") Integer environmentId) {
+	public CapabilityMapDto getCapabilityMap(@PathVariable("environmentId") Integer environmentId,
+			@PathVariable("level") Integer level) {
 		try {
-			return constructMap(envService.get(environmentId));
+			return constructMap(envService.get(environmentId), level);
 		} catch (Exception e) {
 			return new CapabilityMapDto();
 		}
@@ -203,7 +205,7 @@ public class EnvironmentController {
 	 * @param environment
 	 * @return CapabilityMapDto
 	 */
-	private CapabilityMapDto constructMap(Environment environment) {
+	private CapabilityMapDto constructMap(Environment environment, Integer level) {
 		List<StrategyDto> strategiesDto = new ArrayList<StrategyDto>();
 		if (environment.getStrategies() != null) {
 			strategiesDto = environment.getStrategies().stream().map(strategy -> convertStrategy(strategy))
@@ -212,7 +214,7 @@ public class EnvironmentController {
 
 		return new CapabilityMapDto(environment.getEnvironmentId(), environment.getEnvironmentName(),
 				environment.getCapabilities().stream()
-						.filter(i -> i.getParentCapabilityId().equals(0))
+						.filter(i -> i.getParentCapabilityId().equals(0) || i.getParentCapabilityId() > level)
 						.map(i -> constructCapabilityTree(i, environment.getCapabilities()))
 						.collect(Collectors.toList()),
 				strategiesDto);
