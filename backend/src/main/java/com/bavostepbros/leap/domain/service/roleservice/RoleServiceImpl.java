@@ -7,7 +7,6 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bavostepbros.leap.domain.model.Role;
@@ -29,7 +28,6 @@ public class RoleServiceImpl implements RoleService {
 		save("VIEWING_USER", 4);
 	}
 
-	@Autowired
 	private RoleDAL roleDAL;
 
 	@Override
