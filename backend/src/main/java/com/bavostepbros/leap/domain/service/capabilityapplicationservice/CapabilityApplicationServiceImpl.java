@@ -1,6 +1,7 @@
 package com.bavostepbros.leap.domain.service.capabilityapplicationservice;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -46,7 +47,10 @@ public class CapabilityApplicationServiceImpl implements CapabilityApplicationSe
 	public CapabilityApplication get(Integer capabilityId, Integer applicationId) {
 		Capability capability = capabilityService.get(capabilityId);
 		ITApplication itApplication = itApplicationService.get(applicationId);
-		return capabilityApplicationDAL.findByCapabilityAndApplication(capability, itApplication).get();
+		Optional<CapabilityApplication> capabilityApplication = capabilityApplicationDAL
+				.findByCapabilityAndApplication(capability, itApplication);
+		capabilityApplication.orElseThrow(() -> new NullPointerException("CapabilityApplication does not exist."));
+		return capabilityApplication.get();
 	}
 
 	@Override

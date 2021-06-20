@@ -2,14 +2,17 @@ package com.bavostepbros.leap.unittest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -60,13 +63,15 @@ public class CapabilityApplicationServiceTest {
 	private ITApplication itApplicationFirst;
 	private ITApplication itApplicationSecond;
 	private Environment environmentFirst;
-	private Environment environmenSecond;
+	private Environment environmentSecond;
 	private Capability capabilityFirst;
 	private Capability capabilitySecond;
 	private CapabilityApplication capabilityApplicationFirst;
 	private CapabilityApplication capabilityApplicationSecond;
+	private List<CapabilityApplication> capabilityApplications;
 	private Optional<ITApplication> optionalItApplicationFirst;
 	private Optional<Capability> optionalCapabilityFirst;
+	private Optional<CapabilityApplication> optionalCapabilityApplicationFirst;
 
 	private Integer capabilityId;
 	private Integer applicationId;
@@ -89,15 +94,17 @@ public class CapabilityApplicationServiceTest {
 		itApplicationSecond = new ITApplication(2, statusSecond, "application 2", "1.20.1", LocalDate.of(2021, 01, 20),
 				LocalDate.of(2025, 05, 20), 2, 3, 4, 5, 4, 3, 2, 1, "EUR", 1000.0, 4, 70.0, 100.0, TimeValue.INVEST);
 		environmentFirst = new Environment(1, "Environment test");
-		environmenSecond = new Environment(2, "Environment test");
+		environmentSecond = new Environment(2, "Environment test");
 		capabilityFirst = new Capability(1, environmentFirst, statusFirst, 0, "Capability 1", "Description 1",
 				PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 9, 8);
 		capabilitySecond = new Capability(2, environmentFirst, statusFirst, capabilityFirst.getCapabilityId(),
 				"Capability 2", "Description 2", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 9, 8);
 		capabilityApplicationFirst = new CapabilityApplication(capabilityFirst, itApplicationFirst, 1, 2, 3, 4, 5, 6, 7, 8);
 		capabilityApplicationSecond = new CapabilityApplication(capabilitySecond, itApplicationSecond, 2, 3, 4, 5, 6, 7, 8, 9);
+		capabilityApplications = List.of(capabilityApplicationFirst, capabilityApplicationSecond);
 		optionalItApplicationFirst = Optional.of(itApplicationFirst);
 		optionalCapabilityFirst = Optional.of(capabilityFirst);
+		optionalCapabilityApplicationFirst = Optional.of(capabilityApplicationFirst);
 		
 		capabilityId = capabilityApplicationFirst.getCapability().getCapabilityId();
 		applicationId = capabilityApplicationFirst.getApplication().getItApplicationId();
@@ -121,13 +128,15 @@ public class CapabilityApplicationServiceTest {
 		assertNotNull(itApplicationFirst);
 		assertNotNull(itApplicationSecond);
 		assertNotNull(environmentFirst);
-		assertNotNull(environmenSecond);
+		assertNotNull(environmentSecond);
 		assertNotNull(capabilityFirst);
 		assertNotNull(capabilitySecond);
 		assertNotNull(capabilityApplicationFirst);
 		assertNotNull(capabilityApplicationSecond);
+		assertNotNull(capabilityApplications);
 		assertNotNull(optionalItApplicationFirst);
 		assertNotNull(optionalCapabilityFirst);
+		assertNotNull(optionalCapabilityApplicationFirst);
 	}
 
 	@Test
@@ -144,6 +153,87 @@ public class CapabilityApplicationServiceTest {
 		assertNotNull(capabilityApplication);
 		assertTrue(capabilityApplication instanceof CapabilityApplication);
 		testbusinessProcess(capabilityApplicationFirst, capabilityApplication);
+	}
+	
+	@Test 
+	void should_throwNullPointerException_whenGetBusinessProcessByIdInvalidId() {
+		BDDMockito.given(capabilityDAL.findById(BDDMockito.anyInt())).willReturn(optionalCapabilityFirst);
+		BDDMockito.given(itApplicationDAL.findById(BDDMockito.anyInt())).willReturn(optionalItApplicationFirst);
+		String expectedErrorMessage = "CapabilityApplication does not exist.";
+		
+		Exception exception = assertThrows(NullPointerException.class, 
+				() -> capabilityApplicationService.get(capabilityId, applicationId));
+		
+		assertEquals(expectedErrorMessage, exception.getMessage());
+	}
+	
+	@Test
+	void should_returnCapabilityApplication_whenGetCapabilityApplicationById() {
+		BDDMockito.given(capabilityDAL.findById(BDDMockito.anyInt())).willReturn(optionalCapabilityFirst);
+		BDDMockito.given(itApplicationDAL.findById(BDDMockito.anyInt())).willReturn(optionalItApplicationFirst);
+		BDDMockito.given(capabilityApplicationDAL.findByCapabilityAndApplication(BDDMockito.any(Capability.class), BDDMockito.any(ITApplication.class)))
+				.willReturn(optionalCapabilityApplicationFirst);
+
+		CapabilityApplication capabilityApplication = capabilityApplicationService.get(capabilityId, applicationId);
+		
+		assertNotNull(capabilityApplication);
+		assertTrue(capabilityApplication instanceof CapabilityApplication);
+		testbusinessProcess(capabilityApplicationFirst, capabilityApplication);
+	}
+	
+	@Test
+	void should_returnCapabilityApplication_whenUpdateCapabilityApplication() {
+		BDDMockito.given(capabilityDAL.findById(BDDMockito.anyInt())).willReturn(optionalCapabilityFirst);
+		BDDMockito.given(itApplicationDAL.findById(BDDMockito.anyInt())).willReturn(optionalItApplicationFirst);
+		BDDMockito.given(capabilityApplicationDAL.save(BDDMockito.any(CapabilityApplication.class)))
+				.willReturn(capabilityApplicationFirst);
+
+		CapabilityApplication capabilityApplication = capabilityApplicationService.update(capabilityId, applicationId,
+				efficiencySupport, functionalCoverage, correctnessBusinessFit, futurePotential, completeness,
+				correctnessInformationFit, availability);
+		
+		assertNotNull(capabilityApplication);
+		assertTrue(capabilityApplication instanceof CapabilityApplication);
+		testbusinessProcess(capabilityApplicationFirst, capabilityApplication);
+	}
+	
+	@Test 
+	void should_verify_whenDeleteBusinessProcess() {
+		BDDMockito.given(capabilityDAL.findById(BDDMockito.anyInt())).willReturn(optionalCapabilityFirst);
+		BDDMockito.given(itApplicationDAL.findById(BDDMockito.anyInt())).willReturn(optionalItApplicationFirst);
+		
+		capabilityApplicationService.delete(capabilityId, applicationId);
+		
+		Mockito.verify(capabilityApplicationDAL, Mockito.times(1)).deleteByCapabilityAndApplication(
+				BDDMockito.any(Capability.class), BDDMockito.any(ITApplication.class));
+	}
+	
+	@Test
+	void should_returnCapabilityApplication_whenGetCapabilityApplicationsByCapability() {
+		BDDMockito.given(capabilityDAL.findById(BDDMockito.anyInt())).willReturn(optionalCapabilityFirst);
+		BDDMockito.given(capabilityApplicationDAL.findByCapability(BDDMockito.any(Capability.class)))
+				.willReturn(capabilityApplications);
+
+		List<CapabilityApplication> capabilityApplicationsResult = capabilityApplicationService.getCapabilityApplicationsByCapability(capabilityId);
+		
+		assertNotNull(capabilityApplicationsResult);
+		assertEquals(capabilityApplications.size(), capabilityApplicationsResult.size());
+		testbusinessProcess(capabilityApplicationFirst, capabilityApplicationsResult.get(0));
+		testbusinessProcess(capabilityApplicationSecond, capabilityApplicationsResult.get(1));
+	}
+	
+	@Test
+	void should_returnCapabilityApplication_whenGetCapabilityApplicationsByApplication() {
+		BDDMockito.given(itApplicationDAL.findById(BDDMockito.anyInt())).willReturn(optionalItApplicationFirst);
+		BDDMockito.given(capabilityApplicationDAL.findByApplication(BDDMockito.any(ITApplication.class)))
+				.willReturn(capabilityApplications);
+
+		List<CapabilityApplication> capabilityApplicationsResult = capabilityApplicationService.getCapabilityApplicationsByApplication(applicationId);
+		
+		assertNotNull(capabilityApplicationsResult);
+		assertEquals(capabilityApplications.size(), capabilityApplicationsResult.size());
+		testbusinessProcess(capabilityApplicationFirst, capabilityApplicationsResult.get(0));
+		testbusinessProcess(capabilityApplicationSecond, capabilityApplicationsResult.get(1));
 	}
 	
 	private void testbusinessProcess(CapabilityApplication expectedObject, CapabilityApplication actualObject) {
