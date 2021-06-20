@@ -58,7 +58,7 @@ public class BusinessProcess {
 	}
 	
 	public void removeCapability(Capability capability) {
-		capabilities.add(capability);
+		capabilities.remove(capability);
 		capability.getBusinessProcess().remove(this);
 		return;
 	}

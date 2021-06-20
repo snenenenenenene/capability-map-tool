@@ -100,9 +100,10 @@ public class ProjectController {
 	
 	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PutMapping(path = "link-capability/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public void linkCapability(@ModelAttribute("projectId") Integer projectId, 
+	public ProjectDto linkCapability(@ModelAttribute("projectId") Integer projectId, 
 			@ModelAttribute("capabilityId") Integer capabilityId) {
-		projectService.addCapability(projectId, capabilityId);
+		Project project = projectService.addCapability(projectId, capabilityId);
+		return convertProject(project);
 	}
 	
 	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
