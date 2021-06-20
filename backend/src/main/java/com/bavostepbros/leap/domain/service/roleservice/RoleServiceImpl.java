@@ -35,12 +35,11 @@ public class RoleServiceImpl implements RoleService {
 		return roleDAL.save(new Role(roleName, weight));
 	}
 
-
-	//TODO perform checks
 	@Override
 	public Role get(Integer id) {
-		Role role = roleDAL.findById(id).get();
-		return role;
+		Optional<Role> optionalRole = roleDAL.findById(id);
+		optionalRole.orElseThrow(() -> new NullPointerException("Role does not exists."));
+		return optionalRole.get();
 	}
 	
 	@Override

@@ -87,12 +87,14 @@ public class BusinessProcessServiceTest {
 		assertNotNull(capabilityService);
 		assertNotNull(businessProcessDAL);
 		assertNotNull(capabilityDAL);
+		
 		assertNotNull(businessProcessFirst);
 		assertNotNull(businessProcessSecond);
 		assertNotNull(businessProcessList);
 		assertNotNull(capabilities);
 		assertNotNull(statusFirst);
 		assertNotNull(environmentFirst);
+		
 		assertNotNull(capabilityFirst);
 		assertNotNull(capabilitySecond);
 		assertNotNull(optionalBusinessProcessFirst);
