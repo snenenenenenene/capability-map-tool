@@ -91,11 +91,11 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public void addCapability(Integer projectId, Integer capabilityId) {
+	public Project addCapability(Integer projectId, Integer capabilityId) {
 		Project project = get(projectId);
 		Capability capability = capabilityService.get(capabilityId);
 		project.addCapability(capability);
-		return;
+		return projectDAL.save(project);
 	}
 
 	@Override
@@ -103,6 +103,7 @@ public class ProjectServiceImpl implements ProjectService {
 		Project project = get(projectId);
 		Capability capability = capabilityService.get(capabilityId);
 		project.removeCapability(capability);
+		projectDAL.save(project);
 		return;
 	}
 

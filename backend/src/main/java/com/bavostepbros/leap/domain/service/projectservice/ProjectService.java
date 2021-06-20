@@ -21,7 +21,7 @@ public interface ProjectService {
 
 	Project getProjectByName(String projectName);
 
-	void addCapability(Integer projectId, Integer capabilityId);
+	Project addCapability(Integer projectId, Integer capabilityId);
 
 	void deleteCapability(Integer projectId, Integer capabilityId);
 

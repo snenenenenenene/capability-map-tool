@@ -195,7 +195,7 @@ public class BusinessProcessServiceTest {
 	}
 	
 	@Test 
-	void should_verify_whenDeleteCapability() {
+	void should_verifyDeleted_whenDeleteCapability() {
 		BDDMockito.given(businessProcessDAL.findById(businessProcessId)).willReturn(optionalBusinessProcessFirst);
 		BDDMockito.given(capabilityDAL.findById(capabilityFirst.getCapabilityId())).willReturn(optionalCapabilityFirst);
 		

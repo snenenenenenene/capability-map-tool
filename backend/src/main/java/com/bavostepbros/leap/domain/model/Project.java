@@ -1,5 +1,6 @@
 package com.bavostepbros.leap.domain.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -46,7 +47,7 @@ public class Project {
 	private Status status;
 	
 	@ManyToMany(mappedBy = "projects")
-	private Set<Capability> capabilities;
+	private Set<Capability> capabilities = new HashSet<>();
 	
 	public Project(String projectName, Program program, Status status) {
 		this.projectName = projectName;
