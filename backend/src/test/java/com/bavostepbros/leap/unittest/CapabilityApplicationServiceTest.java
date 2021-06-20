@@ -28,8 +28,6 @@ import com.bavostepbros.leap.domain.model.paceofchange.PaceOfChange;
 import com.bavostepbros.leap.domain.model.targetoperatingmodel.TargetOperatingModel;
 import com.bavostepbros.leap.domain.model.timevalue.TimeValue;
 import com.bavostepbros.leap.domain.service.capabilityapplicationservice.CapabilityApplicationService;
-import com.bavostepbros.leap.domain.service.capabilityservice.CapabilityService;
-import com.bavostepbros.leap.domain.service.itapplicationservice.ITApplicationService;
 import com.bavostepbros.leap.persistence.CapabilityApplicationDAL;
 import com.bavostepbros.leap.persistence.CapabilityDAL;
 import com.bavostepbros.leap.persistence.ITApplicationDAL;
@@ -40,12 +38,6 @@ public class CapabilityApplicationServiceTest {
 
 	@Autowired
 	private CapabilityApplicationService capabilityApplicationService;
-
-	@Autowired
-	private ITApplicationService itApplicationService;
-	
-	@Autowired
-	private CapabilityService capabilityService;
 
 	@MockBean
 	private CapabilityApplicationDAL capabilityApplicationDAL;
@@ -152,11 +144,11 @@ public class CapabilityApplicationServiceTest {
 		
 		assertNotNull(capabilityApplication);
 		assertTrue(capabilityApplication instanceof CapabilityApplication);
-		testbusinessProcess(capabilityApplicationFirst, capabilityApplication);
+		testCapabilityApplication(capabilityApplicationFirst, capabilityApplication);
 	}
 	
 	@Test 
-	void should_throwNullPointerException_whenGetBusinessProcessByIdInvalidId() {
+	void should_throwNullPointerException_whenGetCapabilityApplicationByIdInvalidId() {
 		BDDMockito.given(capabilityDAL.findById(BDDMockito.anyInt())).willReturn(optionalCapabilityFirst);
 		BDDMockito.given(itApplicationDAL.findById(BDDMockito.anyInt())).willReturn(optionalItApplicationFirst);
 		String expectedErrorMessage = "CapabilityApplication does not exist.";
@@ -178,7 +170,7 @@ public class CapabilityApplicationServiceTest {
 		
 		assertNotNull(capabilityApplication);
 		assertTrue(capabilityApplication instanceof CapabilityApplication);
-		testbusinessProcess(capabilityApplicationFirst, capabilityApplication);
+		testCapabilityApplication(capabilityApplicationFirst, capabilityApplication);
 	}
 	
 	@Test
@@ -194,11 +186,11 @@ public class CapabilityApplicationServiceTest {
 		
 		assertNotNull(capabilityApplication);
 		assertTrue(capabilityApplication instanceof CapabilityApplication);
-		testbusinessProcess(capabilityApplicationFirst, capabilityApplication);
+		testCapabilityApplication(capabilityApplicationFirst, capabilityApplication);
 	}
 	
 	@Test 
-	void should_verify_whenDeleteBusinessProcess() {
+	void should_verifyDeleted_whenDeleteCapabilityApplication() {
 		BDDMockito.given(capabilityDAL.findById(BDDMockito.anyInt())).willReturn(optionalCapabilityFirst);
 		BDDMockito.given(itApplicationDAL.findById(BDDMockito.anyInt())).willReturn(optionalItApplicationFirst);
 		
@@ -218,8 +210,8 @@ public class CapabilityApplicationServiceTest {
 		
 		assertNotNull(capabilityApplicationsResult);
 		assertEquals(capabilityApplications.size(), capabilityApplicationsResult.size());
-		testbusinessProcess(capabilityApplicationFirst, capabilityApplicationsResult.get(0));
-		testbusinessProcess(capabilityApplicationSecond, capabilityApplicationsResult.get(1));
+		testCapabilityApplication(capabilityApplicationFirst, capabilityApplicationsResult.get(0));
+		testCapabilityApplication(capabilityApplicationSecond, capabilityApplicationsResult.get(1));
 	}
 	
 	@Test
@@ -232,11 +224,11 @@ public class CapabilityApplicationServiceTest {
 		
 		assertNotNull(capabilityApplicationsResult);
 		assertEquals(capabilityApplications.size(), capabilityApplicationsResult.size());
-		testbusinessProcess(capabilityApplicationFirst, capabilityApplicationsResult.get(0));
-		testbusinessProcess(capabilityApplicationSecond, capabilityApplicationsResult.get(1));
+		testCapabilityApplication(capabilityApplicationFirst, capabilityApplicationsResult.get(0));
+		testCapabilityApplication(capabilityApplicationSecond, capabilityApplicationsResult.get(1));
 	}
 	
-	private void testbusinessProcess(CapabilityApplication expectedObject, CapabilityApplication actualObject) {
+	private void testCapabilityApplication(CapabilityApplication expectedObject, CapabilityApplication actualObject) {
 		assertEquals(expectedObject.getCapability().getCapabilityId(), actualObject.getCapability().getCapabilityId());
 		assertEquals(expectedObject.getApplication().getItApplicationId(), actualObject.getApplication().getItApplicationId());
 		assertEquals(expectedObject.getEfficiencySupport(), actualObject.getEfficiencySupport());
