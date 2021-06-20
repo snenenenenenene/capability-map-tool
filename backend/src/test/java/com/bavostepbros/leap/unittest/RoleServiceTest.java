@@ -2,12 +2,14 @@ package com.bavostepbros.leap.unittest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -62,6 +64,17 @@ public class RoleServiceTest {
 		assertNotNull(roleName);
 		assertNotNull(roleWeight);
 	}
+	
+//	@Test 
+//	void should_returnBusinessProcess_whenSaveBusinessProcess() {
+//		BDDMockito.given(roleDAL.save(BDDMockito.any(Role.class))).willReturn(roleFirst);
+//		
+//		Role role = roleService.save(roleName, roleWeight);
+//		
+//		assertNotNull(role);
+//		assertTrue(role instanceof Role);
+//		testRole(roleFirst, role);
+//	}
 	
 	private void testRole(Role expectedObject, Role actualObject) {
 		assertEquals(expectedObject.getRoleId(), actualObject.getRoleId());
