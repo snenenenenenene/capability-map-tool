@@ -201,7 +201,7 @@ public class CapabilityApplicationServiceTest {
 	}
 	
 	@Test
-	void should_returnCapabilityApplication_whenGetCapabilityApplicationsByCapability() {
+	void should_returnCapabilityApplications_whenGetCapabilityApplicationsByCapability() {
 		BDDMockito.given(capabilityDAL.findById(BDDMockito.anyInt())).willReturn(optionalCapabilityFirst);
 		BDDMockito.given(capabilityApplicationDAL.findByCapability(BDDMockito.any(Capability.class)))
 				.willReturn(capabilityApplications);
@@ -215,7 +215,7 @@ public class CapabilityApplicationServiceTest {
 	}
 	
 	@Test
-	void should_returnCapabilityApplication_whenGetCapabilityApplicationsByApplication() {
+	void should_returnCapabilityApplications_whenGetCapabilityApplicationsByApplication() {
 		BDDMockito.given(itApplicationDAL.findById(BDDMockito.anyInt())).willReturn(optionalItApplicationFirst);
 		BDDMockito.given(capabilityApplicationDAL.findByApplication(BDDMockito.any(ITApplication.class)))
 				.willReturn(capabilityApplications);

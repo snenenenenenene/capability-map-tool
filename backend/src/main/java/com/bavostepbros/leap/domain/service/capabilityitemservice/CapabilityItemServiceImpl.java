@@ -1,15 +1,13 @@
 package com.bavostepbros.leap.domain.service.capabilityitemservice;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bavostepbros.leap.domain.customexceptions.EnumException;
-import com.bavostepbros.leap.domain.customexceptions.ForeignKeyException;
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.CapabilityItem;
 import com.bavostepbros.leap.domain.model.StrategyItem;
@@ -36,17 +34,6 @@ public class CapabilityItemServiceImpl implements CapabilityItemService {
 	
 	@Override
 	public CapabilityItem save(Integer capabilityId, Integer itemId, String strategicImportance) {
-		if (capabilityId == null || capabilityId.equals(0)) {
-			throw new ForeignKeyException("Capability ID is invalid.");
-		}
-		if (itemId == null || itemId.equals(0)) {
-			throw new ForeignKeyException("StrategyItem ID is invalid.");
-		}
-		if (Arrays.stream(StrategicImportance.values())
-				.noneMatch((stratImportance) -> stratImportance.name().equals(strategicImportance))) {
-			throw new EnumException("StrategicImportance is not valid.");
-		}
-				
 		StrategicImportance importance = StrategicImportance.valueOf(strategicImportance);
 		Capability capability = capabilityService.get(capabilityId);
 		StrategyItem strategyItem = strategyItemService.get(itemId);
@@ -56,32 +43,15 @@ public class CapabilityItemServiceImpl implements CapabilityItemService {
 
 	@Override
 	public CapabilityItem get(Integer capabilityId, Integer itemId) {
-		if (capabilityId == null || capabilityId.equals(0)) {
-			throw new ForeignKeyException("Capability ID is invalid.");
-		}
-		if (itemId == null || itemId.equals(0)) {
-			throw new ForeignKeyException("StrategyItem ID is invalid.");
-		}
-		
 		Capability capability = capabilityService.get(capabilityId);
 		StrategyItem strategyItem = strategyItemService.get(itemId);
-		CapabilityItem capabilityItem = capabilityItemDAL.findByCapabilityAndStrategyItem(capability, strategyItem).get();
-		return capabilityItem;
+		Optional<CapabilityItem> capabilityItem = capabilityItemDAL.findByCapabilityAndStrategyItem(capability, strategyItem);
+		capabilityItem.orElseThrow(() -> new NullPointerException("CapabilityItem does not exist."));
+		return capabilityItem.get();
 	}
 
 	@Override
 	public CapabilityItem update(Integer capabilityId, Integer itemId, String strategicImportance) {
-		if (capabilityId == null || capabilityId.equals(0)) {
-			throw new ForeignKeyException("Capability ID is invalid.");
-		}
-		if (itemId == null || itemId.equals(0)) {
-			throw new ForeignKeyException("StrategyItem ID is invalid.");
-		}
-		if (Arrays.stream(StrategicImportance.values())
-				.noneMatch((stratImportance) -> stratImportance.name().equals(strategicImportance))) {
-			throw new EnumException("StrategicImportance is not valid.");
-		}
-		
 		StrategicImportance importance = StrategicImportance.valueOf(strategicImportance);
 		Capability capability = capabilityService.get(capabilityId);
 		StrategyItem strategyItem = strategyItemService.get(itemId);
@@ -91,13 +61,6 @@ public class CapabilityItemServiceImpl implements CapabilityItemService {
 
 	@Override
 	public void delete(Integer capabilityId, Integer itemId) {
-		if (capabilityId == null || capabilityId.equals(0)) {
-			throw new ForeignKeyException("Capability ID is invalid.");
-		}
-		if (itemId == null || itemId.equals(0)) {
-			throw new ForeignKeyException("StrategyItem ID is invalid.");
-		}
-		
 		Capability capability = capabilityService.get(capabilityId);
 		StrategyItem strategyItem = strategyItemService.get(itemId);
 		capabilityItemDAL.deleteByCapabilityAndStrategyItem(capability, strategyItem);
@@ -105,10 +68,6 @@ public class CapabilityItemServiceImpl implements CapabilityItemService {
 
 	@Override
 	public List<CapabilityItem> getCapabilityItemsByStrategyItem(Integer itemId) {
-		if (itemId == null || itemId.equals(0)) {
-			throw new ForeignKeyException("StrategyItem ID is invalid.");
-		}
-		
 		StrategyItem strategyItem = strategyItemService.get(itemId);
 		return capabilityItemDAL.findByStrategyItem(strategyItem);
 	}
