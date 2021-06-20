@@ -59,6 +59,9 @@ public class ProgramServiceTest {
 		assertNotNull(programSecond);
 		assertNotNull(programs);
 		assertNotNull(optionalProgramFirst);
+		
+		assertNotNull(programId);
+		assertNotNull(programName);
 	}
 	
 	@Test 
