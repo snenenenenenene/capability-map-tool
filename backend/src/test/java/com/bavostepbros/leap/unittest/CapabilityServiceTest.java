@@ -498,7 +498,7 @@ public class CapabilityServiceTest {
 		Set<Project> projectResult = capabilityService.getAllProjectsByCapabilityId(capabilityId);
 		
 		assertNotNull(projectResult);
-		assertEquals(businessProcess.size(), projectResult.size());
+		assertEquals(projects.size(), projectResult.size());
 	}
 	
 	@Test 
@@ -533,7 +533,7 @@ public class CapabilityServiceTest {
 		Set<Resource> resourceResult = capabilityService.getAllResourceByResourceId(capabilityId);
 		
 		assertNotNull(resourceResult);
-		assertEquals(businessProcess.size(), resourceResult.size());
+		assertEquals(resources.size(), resourceResult.size());
 	}
 	
 	private void testCapability(Capability expectedObject, Capability actualObject) {
