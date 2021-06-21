@@ -135,8 +135,7 @@ public class UserController {
 		if(currentUser.equals(username)){
 			userService.update(id, user.getUsername(), password, user.getEmail());
 			return "Password saved";
-		}
-		else{
+		} else {
 			return "Can not change someone elses password.";
 		}
 	}

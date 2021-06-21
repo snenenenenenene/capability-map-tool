@@ -3,25 +3,31 @@ package com.bavostepbros.leap.controller;
 import com.bavostepbros.leap.LeapApplication;
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Environment;
+import com.bavostepbros.leap.domain.model.Status;
+import com.bavostepbros.leap.domain.model.paceofchange.PaceOfChange;
+import com.bavostepbros.leap.domain.model.targetoperatingmodel.TargetOperatingModel;
 import com.bavostepbros.leap.domain.service.capabilityservice.CapabilityService;
 import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
 import com.bavostepbros.leap.domain.service.statusservice.StatusService;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api")
 public class Templatecontroller {
 
     @Autowired
@@ -33,49 +39,49 @@ public class Templatecontroller {
     @Autowired
     StatusService statusService;
 
-    private ObjectMapper mapper = new ObjectMapper();
-
+    String TEMPLATEDIR = "../../../capability-map-templates/";
 
     @PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
     @GetMapping(path = "template/{templateName}")
-    public String loadTemplate(
+    public void loadTemplate(
             @PathVariable("templateName") String templateName) {
         try {
-            // lOAD TEMPLATE
-            String templateDir = "../../../capability-map-templates/";
-            File file = new ClassPathResource(templateDir + templateName + ".json", LeapApplication.class).getFile();
+            File file = new ClassPathResource(TEMPLATEDIR + templateName + ".json", LeapApplication.class).getFile();
+            String contentString = new String(Files.readAllBytes(file.toPath()));
+            JSONObject json = new JSONObject(contentString);
 
-//            InputStream content = Files.newInputStream(file.toPath());
-            String contents = new String(Files.readAllBytes(file.toPath()));
+            Environment environment = environmentService.save(json.getString("environmentName"));
 
-            // new environment
-            environmentService.save("Template 1");
-            // new status
-            statusService.save(LocalDate.of(1, 1, 1));
-            // SAVE ALL CAPS
-            TypeReference<HashMap<String, String>> typeRef
-                    = new TypeReference<HashMap<String, String>>() {};
-            Map<String, String> map = mapper.readValue(contents, typeRef);
-//
-//            loadCapabilities(map).forEach(
-//                    i -> capabilityService.save(i)
-//            );
+            Status status = statusService.save(LocalDate.of(1, 1, 1));
 
-
-
-        } catch (FileNotFoundException e) {
+            JSONArray capabilities = json.getJSONArray("capabilities");
+            loadCapabilities(capabilities, 0, environment, status);
+        } catch (IOException e) {
             //TODO fix catches
             System.out.println("sioepke");
-        } catch (IOException e) {
-            System.out.println("sebonki" + e.getMessage());
         }
-        return null;
     }
 
-//    private List<Capability> loadCapabilities(Map<String, String> contents) {
-//
-//    }
-
-//    private Capability loadCapability(JsonElement)
-
+    private void loadCapabilities(JSONArray capabilities, Integer parentId,  Environment environment, Status status) {
+        final int length = capabilities.length();
+        for (int index = 0; index < length; index++) {
+            final JSONObject capabilityData = capabilities.getJSONObject(index);
+            Capability capability = new Capability(
+                    capabilityData.getInt("capabilityId"),
+                    environment,
+                    status,
+                    parentId,
+                    capabilityData.getString("capabilityName"),
+                    null,
+                    PaceOfChange.STANDARD,
+                    TargetOperatingModel.COORDINATION,
+                    1,
+                    null,
+                    null
+            );
+            capabilityService.save(capability);
+            JSONArray children = capabilityData.getJSONArray("children");
+            if (!children.isEmpty()) loadCapabilities(children, capability.getCapabilityId(), environment, status);
+        }
+    }
 }
