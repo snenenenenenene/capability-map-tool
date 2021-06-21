@@ -46,19 +46,19 @@ public interface CapabilityService {
 
 	List<Capability> getCapabilitiesByParentIdAndLevel(Integer parentId, String level);
 
-	void addProject(Integer capabilityId, Integer projectId);
+	Capability addProject(Integer capabilityId, Integer projectId);
 
 	void deleteProject(Integer capabilityId, Integer projectId);
 
 	Set<Project> getAllProjectsByCapabilityId(Integer capabilityId);
 
-	void addBusinessProcess(Integer capabilityId, Integer businessProcessId);
+	Capability addBusinessProcess(Integer capabilityId, Integer businessProcessId);
 
 	void deleteBusinessProcess(Integer capabilityId, Integer businessProcessId);
 
 	Set<BusinessProcess> getAllBusinessProcessByCapabilityId(Integer capabilityId);
 
-	void addResource(Integer capabilityId, Integer resourceId);
+	Capability addResource(Integer capabilityId, Integer resourceId);
 
 	void deleteResource(Integer capabilityId, Integer resourceId);
 

@@ -9,10 +9,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,8 +22,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import com.bavostepbros.leap.domain.customexceptions.EnumException;
+import com.bavostepbros.leap.domain.model.BusinessProcess;
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Environment;
+import com.bavostepbros.leap.domain.model.Program;
+import com.bavostepbros.leap.domain.model.Project;
+import com.bavostepbros.leap.domain.model.Resource;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 import com.bavostepbros.leap.domain.model.paceofchange.PaceOfChange;
@@ -29,8 +35,12 @@ import com.bavostepbros.leap.domain.model.targetoperatingmodel.TargetOperatingMo
 import com.bavostepbros.leap.domain.service.capabilityservice.CapabilityService;
 import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
 import com.bavostepbros.leap.domain.service.statusservice.StatusService;
+import com.bavostepbros.leap.persistence.BusinessProcessDAL;
 import com.bavostepbros.leap.persistence.CapabilityDAL;
 import com.bavostepbros.leap.persistence.EnvironmentDAL;
+import com.bavostepbros.leap.persistence.ProgramDAL;
+import com.bavostepbros.leap.persistence.ProjectDAL;
+import com.bavostepbros.leap.persistence.ResourceDAL;
 import com.bavostepbros.leap.persistence.StatusDAL;
 
 /**
@@ -59,6 +69,18 @@ public class CapabilityServiceTest {
 
 	@MockBean
 	private EnvironmentDAL environmentDAL;
+	
+	@MockBean
+	private BusinessProcessDAL businessProcessDAL;
+	
+	@MockBean
+	private ProjectDAL projectDAL;
+	
+	@MockBean
+	private ProgramDAL programDAL;
+	
+	@MockBean
+	private ResourceDAL resourceDAL;
 
 	@SpyBean
 	private CapabilityService spyCapabilityService;
@@ -73,10 +95,20 @@ public class CapabilityServiceTest {
 	private Capability capabilitySecond;
 	private Status status;
 	private Environment environment;
+	private BusinessProcess businessProcessFirst;
+	private Program programFirst;
+	private Project projectFirst;
+	private Resource resourceFirst;
 	private List<Capability> capabilities;
+	private Set<BusinessProcess> businessProcess;
+	private Set<Project> projects;
+	private Set<Resource> resources;
 	private Optional<Status> optionalStatus;
-	private Optional<Capability> optionalCapability;
+	private Optional<Capability> optionalCapabilityFirst;
 	private Optional<Environment> optionalEnvironment;
+	private Optional<BusinessProcess> optionalBusinessProcessFirst;
+	private Optional<Project> optionalProjectFirst;
+	private Optional<Resource> optionalResourceFirst;
 	
 	private Integer capabilityId;
 	private Integer parentCapabilityId;
@@ -99,10 +131,20 @@ public class CapabilityServiceTest {
 		capabilitySecond = new Capability(2, environment, status, capabilityFirst.getCapabilityId(), "Capability 2",
 				"Description 2", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 9, 8);
 		capabilityService.updateLevel(capabilityFirst);
+		businessProcessFirst = new BusinessProcess(1, "BP 1", "Description 1");
+		programFirst = new Program(1, "Program 1");
+		projectFirst = new Project(1, "Project 1", programFirst, status);
+		resourceFirst = new Resource(1, "Resource 1", "Good description 1", 20.0);
 		capabilities = List.of(capabilityFirst, capabilitySecond);
+		businessProcess = Set.of(businessProcessFirst);
+		projects = Set.of(projectFirst);
+		resources = Set.of(resourceFirst);
 		optionalStatus = Optional.of(status);
-		optionalCapability = Optional.of(capabilityFirst);
+		optionalCapabilityFirst = Optional.of(capabilityFirst);
 		optionalEnvironment = Optional.of(environment);
+		optionalBusinessProcessFirst = Optional.of(businessProcessFirst);
+		optionalProjectFirst = Optional.of(projectFirst);
+		optionalResourceFirst = Optional.of(resourceFirst);
 		
 		capabilityId = capabilityFirst.getCapabilityId();
 		parentCapabilityId = capabilityFirst.getParentCapabilityId();
@@ -132,7 +174,7 @@ public class CapabilityServiceTest {
 		assertNotNull(capabilities);
 		assertNotNull(optionalStatus);
 		assertNotNull(optionalEnvironment);
-		assertNotNull(optionalCapability);
+		assertNotNull(optionalCapabilityFirst);
 		
 		assertNotNull(capabilityId);
 		assertNotNull(parentCapabilityId);
@@ -176,7 +218,7 @@ public class CapabilityServiceTest {
 	@Test //10
 	void should_retrieveValidCapability_whenGetCapability() {
 		BDDMockito.doReturn(true).when(spyCapabilityService).existsById(capabilityId);
-		BDDMockito.given(capabilityDAL.findById(capabilityId)).willReturn(optionalCapability);
+		BDDMockito.given(capabilityDAL.findById(capabilityId)).willReturn(optionalCapabilityFirst);
 		
 		Capability fetchedCapability = capabilityService.get(capabilityId);
 
@@ -246,29 +288,31 @@ public class CapabilityServiceTest {
 //		testCapability(capabilityFirst, fetchedCapability);
 //	}
 
-	@Test //25
-	void should_retrieveValidEnvironment_whenGetCapabilitiesByEnvironmentIdDoesExistAndIsValid() {
-		BDDMockito.doReturn(true).when(spyEnvironmentService).existsById(environmentId);
-		BDDMockito.given(environmentDAL.findById(environmentId)).willReturn(optionalEnvironment);
-		Environment fetchedEnvironment = environmentService.get(environmentId);
-
-		assertNotNull(fetchedEnvironment);
-		assertTrue(fetchedEnvironment instanceof Environment);
-		assertEquals(capabilityFirst.getEnvironment().getEnvironmentId(), fetchedEnvironment.getEnvironmentId());
-		assertEquals(capabilityFirst.getEnvironment().getEnvironmentName(), fetchedEnvironment.getEnvironmentName());
+	@Test 
+	void should_throwNullPointerException_whenGetCapabilitiesByEnvironmentIdInvalidEnvironmentId() {
+		BDDMockito.given(environmentDAL.findById(BDDMockito.anyInt())).willReturn(Optional.empty());
+		String expectedErrorMessage = "Environment does not exist.";
+		
+		Exception exception = assertThrows(NullPointerException.class, 
+				() -> capabilityService.getCapabilitiesByEnvironment(environmentId));
+		
+		assertEquals(expectedErrorMessage, exception.getMessage());
 	}
-
-	@Test //26
-	void should_retrieveValidCapabilities_whenGetCapabilitiesByEnvironmentIdDoesExistAndIsValid() {
+	
+	@Test 
+	void should_returnCapabilities_whenGetCapabilitiesByEnvironment() {
 		BDDMockito.given(environmentDAL.findById(BDDMockito.anyInt())).willReturn(optionalEnvironment);
 		BDDMockito.given(capabilityDAL.findByEnvironment(BDDMockito.any(Environment.class))).willReturn(capabilities);
-		List<Capability> fetchedCapablities = capabilityService.getCapabilitiesByEnvironment(environmentId);
-
-		assertNotNull(fetchedCapablities);
-		assertEquals(capabilities.size(), fetchedCapablities.size());
+		
+		List<Capability> capabilityResults = capabilityService.getCapabilitiesByEnvironment(environmentId);
+		
+		assertNotNull(capabilityResults);
+		assertEquals(capabilities.size(), capabilityResults.size());
+		testCapability(capabilityFirst, capabilityResults.get(0));
+		testCapability(capabilitySecond, capabilityResults.get(1));
 	}
 
-	@Test //28
+	@Test
 	void should_throwEnumException_whenGetCapabilitiesByLevelInputIsInvalid() {
 		String level = "FOUR";
 		String expected = "CapabilityLevel is not valid.";
@@ -278,7 +322,7 @@ public class CapabilityServiceTest {
 		assertEquals(exception.getMessage(), expected);
 	}
 
-	@Test //29
+	@Test 
 	void should_retrieveValidCapabilities_whenGetCapabilitiesByLevel() {
 		String level = "ONE";
 		CapabilityLevel capabilityLevel = capabilityFirst.getLevel();
@@ -309,28 +353,24 @@ public class CapabilityServiceTest {
 		String level = "FOUR";
 		String expected = "CapabilityLevel is not valid.";
 
-		BDDMockito.doReturn(true).when(spyCapabilityService).existsById(parentId);
-
 		Exception exception = assertThrows(EnumException.class,
 				() -> capabilityService.getCapabilitiesByParentIdAndLevel(parentId, level));
 
 		assertEquals(exception.getMessage(), expected);
 	}
 
-//	@Test
-//	void should_retrieveValidCapabilities_whenGetCapabilitiesByParentIdAndLevel() {
-//		Integer parentId = capabilitySecond.getParentCapabilityId();
-//		String level = capabilitySecond.getLevel().toString();
-//		CapabilityLevel capabilityLevel = capabilitySecond.getLevel();
-//
-//		BDDMockito.doReturn(true).when(spyCapabilityService).existsById(parentId);
-//
-//		BDDMockito.given(capabilityDAL.findByParentCapabilityIdAndLevel(parentId, capabilityLevel)).willReturn(capabilities);
-//		List<Capability> fetchedCapablities = capabilityService.getCapabilitiesByParentIdAndLevel(parentId, level);
-//
-//		assertNotNull(fetchedCapablities);
-//		assertEquals(capabilities.size(), fetchedCapablities.size());
-//	}
+	@Test
+	void should_retrieveValidCapabilities_whenGetCapabilitiesByParentIdAndLevel() {
+		Integer parentId = capabilityFirst.getParentCapabilityId();
+		String level = "ONE";
+		CapabilityLevel capabilityLevel = capabilityFirst.getLevel();		
+		BDDMockito.given(capabilityDAL.findByParentCapabilityIdAndLevel(parentId, capabilityLevel)).willReturn(capabilities);
+		
+		List<Capability> fetchedCapablities = capabilityService.getCapabilitiesByParentIdAndLevel(parentId, level);
+
+		assertNotNull(fetchedCapablities);
+		assertEquals(capabilities.size(), fetchedCapablities.size());
+	}
 
 	@Test //37
 	void should_ReturnFalse_whenCapabilityDoesNotExistById() {
@@ -353,7 +393,7 @@ public class CapabilityServiceTest {
 	@Test //39
 	void should_ReturnTrue_whenCapabilityDoesExistByCapabilityName() {
 		BDDMockito.given(capabilityDAL.findByCapabilityName(BDDMockito.any(String.class)))
-				.willReturn(optionalCapability);
+				.willReturn(optionalCapabilityFirst);
 
 		boolean result = capabilityService.existsByCapabilityName(capabilityFirst.getCapabilityName());
 
@@ -382,13 +422,118 @@ public class CapabilityServiceTest {
 	@Test
 	void should_retrieveValidCapability_whenGetCapabilityByName() {
 		BDDMockito.doReturn(true).when(spyCapabilityService).existsById(capabilityId);
-		BDDMockito.given(capabilityDAL.findByCapabilityName(capabilityName)).willReturn(optionalCapability);
+		BDDMockito.given(capabilityDAL.findByCapabilityName(capabilityName)).willReturn(optionalCapabilityFirst);
 		
 		Capability fetchedCapability = capabilityService.getCapabilityByCapabilityName(capabilityName);
 
 		assertNotNull(fetchedCapability);
 		assertTrue(fetchedCapability instanceof Capability);
 		testCapability(capabilityFirst, fetchedCapability);
+	}
+	
+	@Test 
+	void should_returnCapability_whenAddBusinessProcess() {
+		BDDMockito.given(businessProcessDAL.findById(BDDMockito.anyInt())).willReturn(optionalBusinessProcessFirst);
+		BDDMockito.given(capabilityDAL.findById(capabilityFirst.getCapabilityId())).willReturn(optionalCapabilityFirst);
+		BDDMockito.given(capabilityDAL.save(BDDMockito.any(Capability.class))).willReturn(capabilityFirst);
+		
+		Capability capability = capabilityService.addBusinessProcess(capabilityId, businessProcessFirst.getBusinessProcessId());
+		
+		assertNotNull(capability);
+		assertTrue(capability instanceof Capability);
+		testCapability(capabilityFirst, capability);
+	}
+	
+	@Test 
+	void should_verifyDeleted_whenDeleteBusinessProcess() {
+		BDDMockito.given(businessProcessDAL.findById(BDDMockito.anyInt())).willReturn(optionalBusinessProcessFirst);
+		BDDMockito.given(capabilityDAL.findById(capabilityFirst.getCapabilityId())).willReturn(optionalCapabilityFirst);
+		
+		capabilityService.deleteBusinessProcess(capabilityId, businessProcessFirst.getBusinessProcessId());
+		
+		Mockito.verify(capabilityDAL, Mockito.times(1)).save(capabilityFirst);
+	}
+	
+	@Test 
+	void should_returnCapabilities_whenGetAllBusinessProcessByCapabilityId() {
+		BDDMockito.given(businessProcessDAL.findById(BDDMockito.anyInt())).willReturn(optionalBusinessProcessFirst);
+		BDDMockito.given(capabilityDAL.findById(capabilityFirst.getCapabilityId())).willReturn(optionalCapabilityFirst);
+		capabilityService.addBusinessProcess(capabilityId, businessProcessFirst.getBusinessProcessId());
+		
+		Set<BusinessProcess> businessProcessResult = capabilityService.getAllBusinessProcessByCapabilityId(capabilityId);
+		
+		assertNotNull(businessProcessResult);
+		assertEquals(businessProcess.size(), businessProcessResult.size());
+	}
+	
+	@Test 
+	void should_returnCapability_whenAddProject() {
+		BDDMockito.given(projectDAL.findById(BDDMockito.anyInt())).willReturn(optionalProjectFirst);
+		BDDMockito.given(capabilityDAL.findById(capabilityFirst.getCapabilityId())).willReturn(optionalCapabilityFirst);
+		BDDMockito.given(capabilityDAL.save(BDDMockito.any(Capability.class))).willReturn(capabilityFirst);
+		
+		Capability capability = capabilityService.addProject(capabilityId, projectFirst.getProjectId());
+		
+		assertNotNull(capability);
+		assertTrue(capability instanceof Capability);
+		testCapability(capabilityFirst, capability);
+	}
+	
+	@Test 
+	void should_verifyDeleted_whenDeleteProject() {
+		BDDMockito.given(projectDAL.findById(BDDMockito.anyInt())).willReturn(optionalProjectFirst);
+		BDDMockito.given(capabilityDAL.findById(capabilityFirst.getCapabilityId())).willReturn(optionalCapabilityFirst);
+		
+		capabilityService.deleteProject(capabilityId, projectFirst.getProjectId());
+		
+		Mockito.verify(capabilityDAL, Mockito.times(1)).save(capabilityFirst);
+	}
+	
+	@Test 
+	void should_returnCapabilities_whenGetAllProjectsByCapabilityId() {
+		BDDMockito.given(projectDAL.findById(BDDMockito.anyInt())).willReturn(optionalProjectFirst);
+		BDDMockito.given(capabilityDAL.findById(capabilityFirst.getCapabilityId())).willReturn(optionalCapabilityFirst);
+		capabilityService.addProject(capabilityId, projectFirst.getProjectId());
+		
+		Set<Project> projectResult = capabilityService.getAllProjectsByCapabilityId(capabilityId);
+		
+		assertNotNull(projectResult);
+		assertEquals(businessProcess.size(), projectResult.size());
+	}
+	
+	@Test 
+	void should_returnCapability_whenAddResource() {
+		BDDMockito.given(resourceDAL.findById(BDDMockito.anyInt())).willReturn(optionalResourceFirst);
+		BDDMockito.given(capabilityDAL.findById(capabilityFirst.getCapabilityId())).willReturn(optionalCapabilityFirst);
+		BDDMockito.given(capabilityDAL.save(BDDMockito.any(Capability.class))).willReturn(capabilityFirst);
+		
+		Capability capability = capabilityService.addResource(capabilityId, resourceFirst.getResourceId());
+		
+		assertNotNull(capability);
+		assertTrue(capability instanceof Capability);
+		testCapability(capabilityFirst, capability);
+	}
+	
+	@Test 
+	void should_verifyDeleted_whenDeleteResource() {
+		BDDMockito.given(resourceDAL.findById(BDDMockito.anyInt())).willReturn(optionalResourceFirst);
+		BDDMockito.given(capabilityDAL.findById(capabilityFirst.getCapabilityId())).willReturn(optionalCapabilityFirst);
+		
+		capabilityService.deleteResource(capabilityId, resourceFirst.getResourceId());
+		
+		Mockito.verify(capabilityDAL, Mockito.times(1)).save(capabilityFirst);
+	}
+	
+	@Test 
+	void should_returnCapabilities_whenGetAllResourcesByCapabilityId() {
+		BDDMockito.given(resourceDAL.findById(BDDMockito.anyInt())).willReturn(optionalResourceFirst);
+		BDDMockito.given(capabilityDAL.findById(capabilityFirst.getCapabilityId())).willReturn(optionalCapabilityFirst);
+		capabilityService.addResource(capabilityId, resourceFirst.getResourceId());
+		
+		Set<Resource> resourceResult = capabilityService.getAllResourceByResourceId(capabilityId);
+		
+		assertNotNull(resourceResult);
+		assertEquals(businessProcess.size(), resourceResult.size());
 	}
 	
 	private void testCapability(Capability expectedObject, Capability actualObject) {
