@@ -10,5 +10,6 @@ import com.bavostepbros.leap.domain.model.StrategyItem;
 
 public interface StrategyItemDAL extends JpaRepository<StrategyItem, Integer> {
 	Optional<StrategyItem> findByStrategyItemName(String strategyItemName);
+
 	List<StrategyItem> findByStrategy(Strategy strategy);
 }

@@ -34,11 +34,6 @@ import com.bavostepbros.leap.persistence.EnvironmentDAL;
 import com.bavostepbros.leap.persistence.StatusDAL;
 import com.bavostepbros.leap.persistence.StrategyDAL;
 
-/**
- *
- * @author Bavo Van Meel
- *
- */
 @AutoConfigureMockMvc
 @SpringBootTest
 public class StrategyServiceTest {

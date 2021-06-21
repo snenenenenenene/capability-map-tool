@@ -312,7 +312,6 @@ public class ProjectServiceTest {
 		Set<Capability> capabilitiesResult = projectService.getAllCapabilitiesByProjectId(projectId);
 		
 		assertNotNull(capabilitiesResult);
-		// -1 because we test only 1 linked capability here
 		assertEquals(capabilities.size() - 1, capabilitiesResult.size());
 	}
 	

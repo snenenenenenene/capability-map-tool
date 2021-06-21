@@ -7,11 +7,6 @@ import javax.validation.constraints.NotNull;
 
 import com.bavostepbros.leap.domain.model.Status;
 
-/**
-*
-* @author Bavo Van Meel
-*
-*/
 public interface StatusService {
 	Status save(LocalDate validityPeriod);
 	Status get(Integer id);

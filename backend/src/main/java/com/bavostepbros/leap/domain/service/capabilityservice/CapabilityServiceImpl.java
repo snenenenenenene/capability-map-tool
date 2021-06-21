@@ -31,11 +31,6 @@ import com.bavostepbros.leap.persistence.EnvironmentDAL;
 
 import lombok.RequiredArgsConstructor;
 
-/**
- *
- * @author Bavo Van Meel
- *
- */
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -110,7 +105,6 @@ public class CapabilityServiceImpl implements CapabilityService {
 			Integer statusId, Integer parentCapabilityId, String capabilityName,
 			String capabilityDescription, String paceOfChange, String targetOperatingModel, Integer resourceQuality,
 			Double informationQuality, Double applicationFit) {
-		// TODO duplicate name in same environment check
 		Capability capability = new Capability(capabilityId, environmentService.get(environmentId), statusService.get(statusId),
 				parentCapabilityId, capabilityName, capabilityDescription, PaceOfChange.valueOf(paceOfChange),
 				TargetOperatingModel.valueOf(targetOperatingModel), resourceQuality, informationQuality,
@@ -119,7 +113,6 @@ public class CapabilityServiceImpl implements CapabilityService {
 		return capability;
 	}
 
-	// TODO try catch for out of bounds exception
 	@Override
 	public void updateLevel(Capability capability) {
 		if (capability.getParentCapabilityId() == 0)
@@ -128,7 +121,6 @@ public class CapabilityServiceImpl implements CapabilityService {
 			capability.setLevel(capabilityDAL.getOne(capability.getParentCapabilityId()).getLevel().next());
 	}
 
-	// TODO write unit tests!
 	@Override
 	public void delete(Integer id) {
 		Capability capability = get(id);

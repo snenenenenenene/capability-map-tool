@@ -283,7 +283,7 @@ public class CapabilityControllerTest extends ApiIntegrationTest {
 		Integer environmentId = environmentFirst.getEnvironmentId();
 		Integer statusId = statusFirst.getStatusId();
 		Integer parentCapabilityId = 0;
-		String capabilityName = "Update test";
+		String capabilityName = capabilityFirst.getCapabilityName();
 		String level = "THREE";
 		String paceOfChange = PaceOfChange.DIFFERENTIATION.toString();
 		String targetOperatingModel = TargetOperatingModel.COORDINATION.toString();
@@ -305,10 +305,8 @@ public class CapabilityControllerTest extends ApiIntegrationTest {
 		CapabilityDto resultCapability = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
 				CapabilityDto.class);
 
-		Capability capability = capabilityService.getCapabilityByCapabilityName(capabilityName);
-
 		assertNotNull(resultCapability);
-		testCapability(capability, resultCapability);
+		testCapability(capabilityFirst, resultCapability);
 	}
 
 	@Test

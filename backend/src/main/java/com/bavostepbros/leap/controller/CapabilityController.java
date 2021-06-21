@@ -32,12 +32,6 @@ import com.bavostepbros.leap.domain.service.capabilityservice.CapabilityService;
 
 import lombok.RequiredArgsConstructor;
 
-/**
- *
- * @author Bavo Van Meel
- *
- */
-// @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/capability/")
@@ -45,9 +39,6 @@ public class CapabilityController {
 
 	@Autowired
 	private CapabilityService capabilityService;
-
-	// Add catch for status/environment not found
-	// TODO Add catch for status/environment not found
 
 	/**
 	 * @param @ModelAttribute("environmentId"
@@ -227,7 +218,6 @@ public class CapabilityController {
 	/**
 	 * @param @PathVariable("capabilityId"
 	 */
-	// TODO add test
 	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@DeleteMapping(path = "unlink-project/{capabilityId}/{projectId}")
 	public void unlinkProject(@PathVariable("capabilityId") Integer capabilityId,

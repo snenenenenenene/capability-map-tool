@@ -10,8 +10,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import javax.validation.ConstraintViolationException;
-
 import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,11 +32,6 @@ import com.bavostepbros.leap.domain.model.targetoperatingmodel.TargetOperatingMo
 import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
 import com.bavostepbros.leap.persistence.EnvironmentDAL;
 
-/**
- *
- * @author Bavo Van Meel
- *
- */
 @AutoConfigureMockMvc
 @SpringBootTest
 public class EnvironmentServiceTest {
@@ -97,30 +90,6 @@ public class EnvironmentServiceTest {
 		assertNotNull(optionalEnvironment);
 	}
 
-	@Test
-	void should_throwInvalidInputException_whenSavedInputIsInvalid() {
-		String falseEnvironmentName = "";
-		String expected = "Invalid input.";
-
-		assertThrows(ConstraintViolationException.class,
-				() -> environmentService.save(falseEnvironmentName));
-
-		// assertEquals(exception.getMessage(), expected);
-	}
-
-//	@Test
-//	void should_throwConstraintViolationException_whenSavedEnvironmentNameExists() {
-//		String environmentName = environment.getEnvironmentName();
-//		String expected = "No value present";
-//
-//		BDDMockito.given(environmentDAL.save(BDDMockito.any(Environment.class))).willThrow(ConstraintViolationException.class);
-//
-//		Exception exception = assertThrows(ConstraintViolationException.class,
-//				() -> environmentService.save(environmentName));
-//
-//		assertEquals(expected, exception.getMessage());
-//	}
-
 	@Test //3
 	void should_saveEnvironment_whenEnvironmentIsSaved() {
 		String environmentName = environment.getEnvironmentName();
@@ -162,7 +131,7 @@ public class EnvironmentServiceTest {
 	void should_throwConstraintViolationException_whenGetEnvironmentByNameIsEmpty() {
 		String falseEnvironmentName = "";
 
-		assertThrows(ConstraintViolationException.class,
+		assertThrows(NullPointerException.class,
 				() -> environmentService.getByEnvironmentName(falseEnvironmentName));
 	}
 
@@ -199,15 +168,6 @@ public class EnvironmentServiceTest {
 
 		assertNotNull(fetchedEnvironments);
 		assertEquals(environments.size(), fetchedEnvironments.size());
-	}
-
-	@Test
-	void should_throwInvalidInputException_whenUpdateNameIsInvalid() {
-		String falseEnvironmentName = "";
-		Integer id = environment.getEnvironmentId();
-
-		assertThrows(ConstraintViolationException.class,
-				() -> environmentService.update(id, falseEnvironmentName));
 	}
 
 	@Test //14

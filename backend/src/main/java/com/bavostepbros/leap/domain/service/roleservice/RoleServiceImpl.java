@@ -19,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
 
-	//TODO put in application.properties
 	@PostConstruct
 	private void init() {
 		save("USER_ADMIN", 1);

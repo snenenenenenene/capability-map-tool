@@ -8,11 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.Strategy;
 
-/**
-*
-* @author Lenny Bontenakel, Bavo Van Meel
-*
-*/
 public interface StrategyDAL extends JpaRepository<Strategy, Integer> {
 	Optional<Strategy> findByStrategyName(String strategyName);
 	List<Strategy> findByEnvironment(Environment environment);

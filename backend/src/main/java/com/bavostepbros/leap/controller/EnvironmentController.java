@@ -55,18 +55,12 @@ import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentServic
 import lombok.RequiredArgsConstructor;
 
 
-/**
- *
- * @author Bavo Van Meel
- *
- */
 @RestController
 @RequiredArgsConstructor
 @Validated
 @RequestMapping("/api/environment/")
 public class EnvironmentController {
 
-	//TODO fix constructor injection
 	@Autowired
 	private EnvironmentService envService;
 
@@ -156,8 +150,6 @@ public class EnvironmentController {
 	public void deleteEnvironment(@PathVariable("environmentId") Integer environmentId) {
 		envService.delete(environmentId);
 	}
-
-	// TODO fix exception catch
 
 	/**
 	 * @param environmentId

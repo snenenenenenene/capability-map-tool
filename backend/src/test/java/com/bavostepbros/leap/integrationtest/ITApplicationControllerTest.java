@@ -357,17 +357,6 @@ public class ITApplicationControllerTest extends ApiIntegrationTest {
 		assertEquals(itApplicationSecond.getTechnologies(), technologies);
 	}
 	
-	@Test
-	public void should_returnTrue_whenHasTechnology() throws Exception {
-		Integer itApplicationId = itApplicationSecond.getItApplicationId();
-		Integer technologyId = technologySecond.getTechnologyId();		
-		itApplicationService.addTechnology(itApplicationId, technologyId);
-		
-		mockMvc.perform(get(
-				PATH + "has-technology/" + itApplicationId + "/" + technologyId))
-				.andExpect(MockMvcResultMatchers.status().isOk());
-	}
-	
 	private void testItApplication(ITApplication expectedObject, ITApplicationDto actualObject) {
 		assertEquals(expectedObject.getItApplicationId(), actualObject.getItApplicationId());
 		assertEquals(expectedObject.getStatus().getStatusId(), actualObject.getStatus().getStatusId());

@@ -21,11 +21,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
-*
-* @author Bavo Van Meel
-*
-*/
 @Entity
 @Getter
 @Setter
