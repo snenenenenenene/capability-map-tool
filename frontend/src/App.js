@@ -57,6 +57,7 @@ class App extends Component {
       username: "",
       user: {},
       environmentName: "",
+      jwt: "",
     };
     this.logout = this.logout.bind(this);
   }
@@ -65,35 +66,33 @@ class App extends Component {
     if (localStorage.getItem("user")) {
       let user = JSON.parse(localStorage.getItem("user"));
       this.setState({ authenticated: user.authenticated });
-
+      this.setState({ jwt: JSON.parse(localStorage.getItem("user")).jwt });
       this.state.api.createEntity({ name: "user" });
       await this.state.api.endpoints.user
         .getUser()
         .then((response) => {
-          let jwt = JSON.parse(localStorage.getItem("user")).jwt;
-
           localStorage.setItem(
             "user",
             JSON.stringify({
               email: response.data.email,
               userId: response.data.userId,
               username: response.data.username,
-              roleId: response.data.roleDto.roleId,
+              roleId: response.data.roleDto[0].roleId,
               authenticated: true,
-              jwt: jwt,
+              jwt: this.state.jwt,
             })
           );
           this.setState({ user: JSON.parse(localStorage.getItem("user")) });
         })
         .catch((error) => {
           if (error.response.status === 403) {
-            localStorage.removeItem("user");
-            localStorage.removeItem("environment");
-            this.props.history.push("/");
-            window.location.reload();
-            return;
+            // localStorage.removeItem("user");
+            // localStorage.removeItem("environment");
+            // this.props.history.push("/");
+            // window.location.reload();
+            // return;
           }
-          toast.error("Could not Load User");
+          // toast.error("Could not Load User");
         });
     }
   }
