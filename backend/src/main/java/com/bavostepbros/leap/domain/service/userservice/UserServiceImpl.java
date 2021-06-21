@@ -18,10 +18,6 @@ import com.bavostepbros.leap.domain.model.Role;
 import com.bavostepbros.leap.domain.model.User;
 import com.bavostepbros.leap.domain.service.roleservice.RoleService;
 import com.bavostepbros.leap.persistence.UserDAL;
-import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
-import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
-import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
-import com.bavostepbros.leap.domain.customexceptions.UserException;
 
 @Service
 @Transactional
@@ -53,49 +49,17 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User save(String username, String password, String email) {
-		if (username == null 
-			|| username.isBlank() 
-			|| username.isEmpty() 
-			|| email == null 
-			|| email.isEmpty() 
-			|| email.isBlank() 
-			|| password == null 
-			|| password.isEmpty() 
-			|| password.isBlank()) {
-			throw new InvalidInputException("Invalid input.");
-		}
-    	if (!existsByUsername(username)) {
-			throw new DuplicateValueException("Username already exists.");
-		}
-		if(existsByEmail(email)) {
-			throw new DuplicateValueException("Email already exists.");
-		}
-//		if(!roleService.existsById(roleId)) {
-//			throw new ForeignKeyException("Role ID is invalid.");
-//		}
     	return userDAL.save(new User(username, passwordEncoder.encode(password), email));
 	}
 
 	@Override
 	public User get(Integer id) {
-		if (id == null || id.equals(0)){
-			throw new InvalidInputException("User ID is not valid.");
-		}
-		if (!existsById(id)){
-			throw new IndexDoesNotExistException("User ID does not exist.");
-		}
 		return userDAL.findById(id).get();
 	}
 
 	
 	@Override
 	public User getByEmail(String email) {
-		if (email == null || email.isBlank() || email.isEmpty() || !existsByEmail(email)) {
-			throw new InvalidInputException("Invalid input.");
-		}
-		if(!existsByEmail(email)){
-			throw new UserException("Email does not exist.");
-		}
 		return userDAL.findByEmail(email);
 	}
 	
@@ -106,45 +70,17 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public User update(Integer userId, String username, String password, String email) {
-		if (userId == null ||
-				userId.equals(0) ||
-				username == null ||
-				username.isBlank() ||
-				username.isEmpty() ||
-				password == null ||
-				password.isBlank() ||
-				password.isEmpty() ||
-				email == null ||
-				email.isBlank() ||
-				email.isEmpty()){
-			throw new InvalidInputException("Invalid input.");
-		}
-		if (!existsById(userId)){
-			throw new UserException("Can not update user if it does not exist.");
-		}
-
-//		if (!roleService.existsById(roleId)) {
-//			throw new ForeignKeyException("Role ID does not exist.");
-//		}
 		return userDAL.save(new User(userId, username, passwordEncoder.encode(password), email));
 	}
 
 	@Override
 	public void delete(Integer id) {
-		if (id == null || id.equals(0)) {
-			throw new InvalidInputException("User ID does not exist.");
-		}
-		if (!existsById(id)) {
-			throw new IndexDoesNotExistException("User ID does not exist.");
-		}
-
 		userDAL.deleteById(id);
 	}	
 
 	//TODO fix exception handling here or in controller?
 	@Override
 	public Authentication authenticate(String email, String password) throws AuthenticationException {
-		System.out.println("UserService: " + email + " " + password);
 		return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
 	}
 

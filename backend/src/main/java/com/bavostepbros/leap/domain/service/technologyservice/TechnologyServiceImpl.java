@@ -8,10 +8,6 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bavostepbros.leap.domain.customexceptions.DuplicateValueException;
-import com.bavostepbros.leap.domain.customexceptions.IndexDoesNotExistException;
-import com.bavostepbros.leap.domain.customexceptions.InvalidInputException;
-import com.bavostepbros.leap.domain.customexceptions.TechnologyException;
 import com.bavostepbros.leap.domain.model.Technology;
 import com.bavostepbros.leap.persistence.TechnologyDAL;
 
