@@ -68,18 +68,19 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
 	}
 
 	@Override
-	public void addCapability(Integer businessProcessId, Integer capabilityId) {
+	public BusinessProcess addCapability(Integer businessProcessId, Integer capabilityId) {
 		BusinessProcess businessProcess = get(businessProcessId);
 		Capability capability = capabilityService.get(capabilityId);
 		businessProcess.addCapability(capability);
-		return;
+		return businessProcessDAL.save(businessProcess);
 	}
 
 	@Override
 	public void deleteCapability(Integer businessProcessId, Integer capabilityId) {
 		BusinessProcess businessProcess = get(businessProcessId);
 		Capability capability = capabilityService.get(capabilityId);
-		businessProcess.addCapability(capability);
+		businessProcess.removeCapability(capability);
+		businessProcessDAL.save(businessProcess);
 		return;
 	}
 

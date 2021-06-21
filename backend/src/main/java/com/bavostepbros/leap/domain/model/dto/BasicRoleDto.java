@@ -9,8 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
-    Integer userId;
-    String username;
-    String email;
+public class BasicRoleDto {
+	private Integer roleId;
+	private String roleName;
 }

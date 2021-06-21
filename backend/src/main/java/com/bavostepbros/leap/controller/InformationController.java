@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,7 @@ public class InformationController {
 	@Autowired
 	private InformationService informationService;
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public InformationDto addInformation(@Valid @ModelAttribute("informationName") String informationName,
 			@Valid @ModelAttribute("informationDescription") String informationDescription) {
@@ -39,12 +41,14 @@ public class InformationController {
 		return convertInformation(information);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "{informationId}")
 	public InformationDto getInformation(@Valid @PathVariable("informationId") Integer informationId) {
 		Information information = informationService.get(informationId);
 		return convertInformation(information);
 	}
 	
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PutMapping(path = "{informationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public InformationDto updateInformation(@Valid @PathVariable("informationId") Integer informationId,
 			@Valid @ModelAttribute("informationName") String informationName,
@@ -53,17 +57,20 @@ public class InformationController {
 		return convertInformation(information);
 	}
 	
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@DeleteMapping(path = "{informationId}")
 	public void deleteInformation(@Valid @PathVariable("informationId") Integer informationId) {
 		informationService.delete(informationId);
 	}
 	
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "informationName/{informationName}")
 	public InformationDto getInformation(@Valid @PathVariable("informationName") String informationName) {
 		Information information = informationService.getInformationByName(informationName);
 		return convertInformation(information);
 	}
 	
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping
 	public List<InformationDto> getAllInformation() {
 		List<Information> informationList = informationService.getAll();

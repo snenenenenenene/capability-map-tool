@@ -265,7 +265,6 @@ public class StrategyItemControllerTest extends ApiIntegrationTest {
 		testStrategyItem(strategyItemThirth, resultStrategyItems.get(1));
 	}
 	
-	@Test
 	private void testStrategyItem(StrategyItem expectedObject, StrategyItemDto actualObject) {
 		assertEquals(expectedObject.getStrategy().getStrategyId(), actualObject.getStrategy().getStrategyId());
 		assertEquals(expectedObject.getStrategy().getEnvironment().getEnvironmentId(), actualObject.getStrategy().getEnvironment().getEnvironmentId());

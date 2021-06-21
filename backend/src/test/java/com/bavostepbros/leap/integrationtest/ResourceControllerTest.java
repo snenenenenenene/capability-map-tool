@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,19 +21,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Environment;
-import com.bavostepbros.leap.domain.model.Program;
-import com.bavostepbros.leap.domain.model.Project;
+import com.bavostepbros.leap.domain.model.Resource;
 import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.dto.CapabilityDto;
-import com.bavostepbros.leap.domain.model.dto.ProjectDto;
+import com.bavostepbros.leap.domain.model.dto.ResourceDto;
 import com.bavostepbros.leap.domain.model.paceofchange.PaceOfChange;
 import com.bavostepbros.leap.domain.model.targetoperatingmodel.TargetOperatingModel;
 import com.bavostepbros.leap.domain.service.capabilityservice.CapabilityService;
-import com.bavostepbros.leap.domain.service.projectservice.ProjectService;
+import com.bavostepbros.leap.domain.service.resourceservice.ResourceService;
 import com.bavostepbros.leap.persistence.CapabilityDAL;
 import com.bavostepbros.leap.persistence.EnvironmentDAL;
-import com.bavostepbros.leap.persistence.ProgramDAL;
-import com.bavostepbros.leap.persistence.ProjectDAL;
+import com.bavostepbros.leap.persistence.ResourceDAL;
 import com.bavostepbros.leap.persistence.StatusDAL;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,23 +40,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ProjectControllerTest extends ApiIntegrationTest {
+public class ResourceControllerTest extends ApiIntegrationTest {
 	
 	@Autowired
-    private MockMvc mockMvc;
-	
+	private MockMvc mockMvc;
+
 	@Autowired
 	private ObjectMapper objectMapper;
 	
 	@Autowired
+	private ResourceDAL resourceDAL;
+	
+	@Autowired
 	private StatusDAL statusDAL;
-	
-	@Autowired
-	private ProgramDAL programDAL;
-	
-	@Autowired
-	private ProjectDAL projectDAL;
-	
+
 	@Autowired
 	private EnvironmentDAL environmentDAL;
 	
@@ -68,36 +62,30 @@ public class ProjectControllerTest extends ApiIntegrationTest {
 	
 	@Autowired
 	private CapabilityService capabilityService;
-	
+
 	@Autowired
-	private ProjectService projectService;
+	private ResourceService resourceService;
 	
+	static final String PATH = "/api/resource/";
+	
+	private Resource resourceFirst;
+	private Resource resourceSecond;
 	private Status statusFirst;
 	private Status statusSecond;
-	private Program programFirst;
-	private Program programSecond;
-	private Project projectFirst;
-	private Project projectSecond;
-	private Project projectThirth;
 	private Environment environmentFirst;
 	private Environment environmentSecond;
 	private Capability capabilityFirst;
 	private Capability capabilitySecond;
 	
-	static final String PATH = "/api/project/";
-
 	@BeforeAll
 	public void authenticate() throws Exception { super.authenticate(); }
-
+	
 	@BeforeEach
 	public void init() {
-		statusFirst = statusDAL.save(new Status(1, LocalDate.of(2021, 05, 15)));
-		statusSecond = statusDAL.save(new Status(2, LocalDate.of(2021, 05, 20)));
-		programFirst = programDAL.save(new Program(1, "Program 1"));
-		programSecond = programDAL.save(new Program(2, "Program 2"));
-		projectFirst = projectDAL.save(new Project(1, "Project 1", programFirst, statusFirst));
-		projectSecond = projectDAL.save(new Project(2, "Project 2", programFirst, statusFirst));
-		projectThirth = projectDAL.save(new Project(3, "Project 3", programSecond, statusSecond));
+		resourceFirst = resourceDAL.save(new Resource(1, "Resource 1", "Description 1", 20.0));
+		resourceSecond = resourceDAL.save(new Resource(2, "Resource 2", "Description 2", 40.0));
+		statusFirst = statusDAL.save(new Status(1, LocalDate.of(2021, 5, 15)));
+		statusSecond = statusDAL.save(new Status(2, LocalDate.of(2021, 5, 20)));
 		environmentFirst = environmentDAL.save(new Environment(1, "Test 1"));
 		environmentSecond = environmentDAL.save(new Environment(2, "Test 2"));
 		capabilityFirst = capabilityDAL.save(new Capability(1, environmentFirst, statusFirst, 0, "Capability 1",
@@ -107,164 +95,137 @@ public class ProjectControllerTest extends ApiIntegrationTest {
 				new Capability(2, environmentSecond, statusSecond, capabilityFirst.getCapabilityId(), "Capability 2",
 						"Description 2", PaceOfChange.INNOVATIVE, TargetOperatingModel.DIVERSIFICATION, 1, 1, 1));
 		capabilityService.updateLevel(capabilitySecond);
-		projectService.addCapability(projectSecond.getProjectId(), capabilitySecond.getCapabilityId());
-	}
-	
-	@AfterEach
-	public void close() {
-		statusDAL.delete(statusFirst);
-		statusDAL.delete(statusSecond);
-		programDAL.delete(programFirst);
-		programDAL.delete(programSecond);
-		projectDAL.delete(projectFirst);
-		projectDAL.delete(projectSecond);
-		projectDAL.delete(projectThirth);
+		resourceService.addCapability(resourceSecond.getResourceId(), capabilitySecond.getCapabilityId());
 	}
 	
 	@Test
 	void should_notBeNull() {
+		assertNotNull(resourceDAL);
 		assertNotNull(statusDAL);
-		assertNotNull(programDAL);
-		assertNotNull(projectDAL);
 		assertNotNull(environmentDAL);
 		assertNotNull(capabilityDAL);
 		assertNotNull(capabilityService);
+		assertNotNull(resourceService);
 		
+		assertNotNull(resourceFirst);
+		assertNotNull(resourceSecond);
 		assertNotNull(statusFirst);
 		assertNotNull(statusSecond);
-		assertNotNull(programFirst);
-		assertNotNull(programSecond);
-		assertNotNull(projectFirst);
-		assertNotNull(projectSecond);
-		assertNotNull(projectThirth);
+		assertNotNull(environmentFirst);
+		assertNotNull(environmentSecond);
+		assertNotNull(capabilityFirst);
+		assertNotNull(capabilitySecond);
 	}
 	
 	@Test
-	public void should_postProject_whenSaveProject() throws Exception {	
-		String projectName = "abc";
-		Integer programId = programSecond.getProgramId();
-		Integer statusId = statusSecond.getStatusId();
+	public void should_returnResource_whenSaveResource() throws Exception {
+		String resourceName = "Post test";
+		String resourceDescription = resourceFirst.getResourceDescription();
+		Double fullTimeEquivalentYearlyValue = resourceFirst.getFullTimeEquivalentYearlyValue();
 		
 		MvcResult mvcResult = mockMvc.perform(post(PATH)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-				.param("projectName", projectName)
-				.param("programId", programId.toString())
-				.param("statusId", statusId.toString())
+				.param("resourceName", resourceName)
+				.param("resourceDescription", resourceDescription)
+				.param("fullTimeEquivalentYearlyValue", fullTimeEquivalentYearlyValue.toString())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
-		ProjectDto projectDto = objectMapper.readValue(
-				mvcResult.getResponse().getContentAsString(), ProjectDto.class);
+		ResourceDto resourceDto = objectMapper.readValue(
+				mvcResult.getResponse().getContentAsString(), ResourceDto.class);
 		
-		Project project = projectService.getProjectByName(projectName);
+		Resource resource = resourceService.getResourceByName(resourceName);
 		
-		assertNotNull(projectDto);
-		testProject(project, projectDto);
+		assertNotNull(resourceDto);
+		testResource(resource, resourceDto);
 	}
 	
 	@Test
-	public void should_getProject_whenGetProjectById() throws Exception {
-		Integer projectId = projectFirst.getProjectId();
+	public void should_returnResource_whenGetResourceById() throws Exception {
+		Integer resourceId = resourceFirst.getResourceId();
 		
-		MvcResult mvcResult = mockMvc.perform(get(PATH + projectId))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + resourceId))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
-		ProjectDto projectDto = objectMapper.readValue(
-				mvcResult.getResponse().getContentAsString(), ProjectDto.class);
+		ResourceDto resourceDto = objectMapper.readValue(
+				mvcResult.getResponse().getContentAsString(), ResourceDto.class);
 		
-		assertNotNull(projectDto);
-		testProject(projectFirst, projectDto);
+		assertNotNull(resourceDto);
+		testResource(resourceFirst, resourceDto);
 	}
 	
 	@Test
-	public void should_putProject_whenUpdateProject() throws Exception {	
-		Integer projectId = projectFirst.getProjectId();
-		String projectName = "def";
-		Integer programId = projectFirst.getProgram().getProgramId();
-		Integer statusId = projectFirst.getStatus().getStatusId();
+	public void should_returnResource_whenUpdateResource() throws Exception {
+		Integer resourceId = resourceFirst.getResourceId();
+		String resourceName = "Update test";
+		String resourceDescription = resourceFirst.getResourceDescription();
+		Double fullTimeEquivalentYearlyValue = resourceFirst.getFullTimeEquivalentYearlyValue();
 		
-		MvcResult mvcResult = mockMvc.perform(put(PATH + projectId)
+		MvcResult mvcResult = mockMvc.perform(put(PATH + resourceId)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-				.param("projectName", projectName)
-				.param("programId", programId.toString())
-				.param("statusId", statusId.toString())
+				.param("resourceName", resourceName)
+				.param("resourceDescription", resourceDescription)
+				.param("fullTimeEquivalentYearlyValue", fullTimeEquivalentYearlyValue.toString())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
-		ProjectDto projectDto = objectMapper.readValue(
-				mvcResult.getResponse().getContentAsString(), ProjectDto.class);
+		ResourceDto resourceDto = objectMapper.readValue(
+				mvcResult.getResponse().getContentAsString(), ResourceDto.class);
 		
-		Project project = projectService.getProjectByName(projectName);
+		Resource resource = resourceService.getResourceByName(resourceName);
 		
-		assertNotNull(projectDto);
-		testProject(project, projectDto);
+		assertNotNull(resourceDto);
+		testResource(resource, resourceDto);
 	}
 	
 	@Test
-	public void should_deleteProject_whenDeleteProject() throws Exception {
-		Integer projectId = projectFirst.getProjectId();
+	public void should_returnOk_whenDeleteResource() throws Exception {
+		Integer resourceId = resourceFirst.getResourceId();
 		
-		mockMvc.perform(delete(PATH + projectId))
+		mockMvc.perform(delete(PATH + resourceId))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
 	@Test
-	public void should_getProjects_whenGetAllProjects() throws Exception {
+	public void should_returnResource_whenGetResourceByName() throws Exception {
+		String resourceName = resourceFirst.getResourceName();
+		
+		MvcResult mvcResult = mockMvc.perform(get(PATH + "resourcename/" + resourceName))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn();
+		
+		ResourceDto resourceDto = objectMapper.readValue(
+				mvcResult.getResponse().getContentAsString(), ResourceDto.class);
+		
+		assertNotNull(resourceDto);
+		testResource(resourceFirst, resourceDto);
+	}
+	
+	@Test
+	public void should_returnResources_whenGetAllResource() throws Exception {
 		MvcResult mvcResult = mockMvc.perform(get(PATH))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
-		List<ProjectDto> projectDtos = objectMapper.readValue(
-				mvcResult.getResponse().getContentAsString(), new TypeReference<List<ProjectDto>>() {});
+		List<ResourceDto> resourceDto = objectMapper.readValue(
+				mvcResult.getResponse().getContentAsString(), new TypeReference<List<ResourceDto>>() {});
 		
-		assertNotNull(projectDtos);
-		testProject(projectFirst, projectDtos.get(0));
-		testProject(projectSecond, projectDtos.get(1));
-		testProject(projectThirth, projectDtos.get(2));
-	}
-	
-	@Test
-	public void should_getProjects_whenGetAllProjectsByProgramId() throws Exception {
-		Integer programId = projectFirst.getProgram().getProgramId();
-		
-		MvcResult mvcResult = mockMvc.perform(get(PATH + "get-all-projects-by-programid/" + programId))
-				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andReturn();
-		
-		List<ProjectDto> projectDtos = objectMapper.readValue(
-				mvcResult.getResponse().getContentAsString(), new TypeReference<List<ProjectDto>>() {});
-		
-		assertNotNull(projectDtos);
-		testProject(projectFirst, projectDtos.get(0));
-		testProject(projectSecond, projectDtos.get(1));
-	}
-	
-	@Test
-	public void should_getProject_whenGetProjectByName() throws Exception {
-		String projectName = projectSecond.getProjectName();
-		
-		MvcResult mvcResult = mockMvc.perform(get(PATH + "projectname/" + projectName))
-				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andReturn();
-		
-		ProjectDto projectDto = objectMapper.readValue(
-				mvcResult.getResponse().getContentAsString(), ProjectDto.class);
-		
-		assertNotNull(projectDto);
-		testProject(projectSecond, projectDto);
+		assertNotNull(resourceDto);
+		testResource(resourceFirst, resourceDto.get(0));
+		testResource(resourceSecond, resourceDto.get(1));
 	}
 	
 	@Test
 	public void should_returnOk_whenLinkCapability() throws Exception {
-		Integer projectId = projectFirst.getProjectId();
+		Integer resourceId = resourceFirst.getResourceId();
 		Integer capabilityId = capabilityFirst.getCapabilityId();
 		
 		mockMvc.perform(put(PATH + "link-capability/")
 			.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-			.param("projectId", projectId.toString())
+			.param("resourceId", resourceId.toString())
 			.param("capabilityId", capabilityId.toString())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(MockMvcResultMatchers.status().isOk());
@@ -272,22 +233,22 @@ public class ProjectControllerTest extends ApiIntegrationTest {
 	
 	@Test
 	public void should_returnOk_whenUnlinkCapability() throws Exception {
-		Integer projectId = projectFirst.getProjectId();
+		Integer resourceId = resourceFirst.getResourceId();
 		Integer capabilityId = capabilityFirst.getCapabilityId();
 		
 		mockMvc.perform(delete(PATH + "unlink-capability/")
 			.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-			.param("projectId", projectId.toString())
+			.param("resourceId", resourceId.toString())
 			.param("capabilityId", capabilityId.toString())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
 	@Test
-	public void should_getAllCapabilities_whenGetAllCapabilitiesByProjectId() throws Exception {
-		Integer projectId = projectSecond.getProjectId();
+	public void should_getAllCapabilities_whenGetAllCapabilitiesByResourceId() throws Exception {
+		Integer resourceId = resourceSecond.getResourceId();
 		
-		MvcResult mvcResult = mockMvc.perform(get(PATH + "get-capabilities/" + projectId))
+		MvcResult mvcResult = mockMvc.perform(get(PATH + "get-capabilities/" + resourceId))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		
@@ -298,15 +259,11 @@ public class ProjectControllerTest extends ApiIntegrationTest {
 		testCapability(capabilitySecond, resultCapabilities.get(0));
 	}
 	
-	private void testProject(Project expectedObject, ProjectDto actualObject) {
-		assertEquals(expectedObject.getStatus().getStatusId(), actualObject.getStatus().getStatusId());
-		assertEquals(expectedObject.getStatus().getValidityPeriod(), actualObject.getStatus().getValidityPeriod());
-		
-		assertEquals(expectedObject.getProgram().getProgramId(), actualObject.getProgram().getProgramId());
-		assertEquals(expectedObject.getProgram().getProgramName(), actualObject.getProgram().getProgramName());
-		
-		assertEquals(expectedObject.getProjectId(), actualObject.getProjectId());
-		assertEquals(expectedObject.getProjectName(), actualObject.getProjectName());
+	private void testResource(Resource expectedObject, ResourceDto actualObject) {
+		assertEquals(expectedObject.getResourceId(), actualObject.getResourceId());
+		assertEquals(expectedObject.getResourceName(), actualObject.getResourceName());
+		assertEquals(expectedObject.getResourceDescription(), actualObject.getResourceDescription());
+		assertEquals(expectedObject.getFullTimeEquivalentYearlyValue(), actualObject.getFullTimeEquivalentYearlyValue());
 	}
 	
 	private void testCapability(Capability expectedObject, CapabilityDto actualObject) {
@@ -315,10 +272,8 @@ public class ProjectControllerTest extends ApiIntegrationTest {
 				actualObject.getEnvironment().getEnvironmentId());
 		assertEquals(expectedObject.getEnvironment().getEnvironmentName(),
 				actualObject.getEnvironment().getEnvironmentName());
-		
 		assertEquals(expectedObject.getStatus().getStatusId(), actualObject.getStatus().getStatusId());
 		assertEquals(expectedObject.getStatus().getValidityPeriod(), actualObject.getStatus().getValidityPeriod());
-		
 		assertEquals(expectedObject.getParentCapabilityId(), actualObject.getParentCapabilityId());
 		assertEquals(expectedObject.getCapabilityName(), actualObject.getCapabilityName());
 		assertEquals(expectedObject.getLevel(), actualObject.getLevel());

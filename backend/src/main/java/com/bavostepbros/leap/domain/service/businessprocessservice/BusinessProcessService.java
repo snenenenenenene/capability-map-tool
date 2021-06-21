@@ -19,7 +19,7 @@ public interface BusinessProcessService {
 
 	List<BusinessProcess> getAll();
 	
-	void addCapability(Integer businessProcessId, Integer capabilityId);
+	BusinessProcess addCapability(Integer businessProcessId, Integer capabilityId);
 
 	void deleteCapability(Integer businessProcessId, Integer capabilityId);
 

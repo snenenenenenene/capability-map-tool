@@ -1,5 +1,9 @@
 package com.bavostepbros.leap.controller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,11 +20,16 @@ import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapDto;
 import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapItemDto;
 
 import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.ITApplication;
@@ -63,63 +72,63 @@ public class EnvironmentController {
 	@Autowired
 	private EnvironmentService envService;
 
-
 	/**
 	 * @param environmentName
 	 * @return EnvironmentDto
 	 */
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public EnvironmentDto addEnvironment(@ModelAttribute("environmentName") @Valid String environmentName) {
 		Environment environment = envService.save(environmentName);
 		return convertEnvironment(environment);
 	}
 
-
 	/**
 	 * @param environmentId
 	 * @return EnvironmentDto
 	 */
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "{environmentId}")
 	public EnvironmentDto getEnvironmentById(@PathVariable("environmentId") Integer environmentId) {
 		Environment environment = envService.get(environmentId);
 		return convertEnvironment(environment);
 	}
 
-
 	/**
 	 * @param environmentName
 	 * @return EnvironmentDto
 	 */
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "environmentname/{environmentname}")
 	public EnvironmentDto getEnvironmentByEnvironmentName(@PathVariable("environmentname") String environmentName) {
 		Environment environment = envService.getByEnvironmentName(environmentName);
 		return convertEnvironment(environment);
 	}
-
-
+	
 	/**
 	 * @param environmentId
 	 * @return boolean
 	 */
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "exists-by-id/{environmentId}")
 	public boolean doesEnvironmentExistsById(@ModelAttribute("environmentId") Integer environmentId) {
 		return envService.existsById(environmentId);
 	}
 
-
 	/**
 	 * @param environmentName
 	 * @return boolean
 	 */
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "exists-by-environmentname/{environmentname}")
 	public boolean doesEnvironmentNameExists(@PathVariable("environmentname") String environmentName) {
 		return envService.existsByEnvironmentName(environmentName);
 	}
 
-
 	/**
 	 * @return List<EnvironmentDto>
 	 */
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping
 	public List<EnvironmentDto> getAllEnvironments() {
 		List<Environment> environments = envService.getAll();
@@ -128,11 +137,11 @@ public class EnvironmentController {
 		return environmentsDto;
 	}
 
-
 	/**
 	 * @param @PathVariable("environmentId"
 	 * @return EnvironmentDto
 	 */
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PutMapping(path = "{environmentId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public EnvironmentDto updateEnvironment(@PathVariable("environmentId") Integer environmentId,
 			@ModelAttribute("environmentName") String environmentName) {
@@ -140,28 +149,50 @@ public class EnvironmentController {
 		return convertEnvironment(environment);
 	}
 
-
 	/**
 	 * @param environmentId
 	 */
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@DeleteMapping(path = "{environmentId}")
 	public void deleteEnvironment(@PathVariable("environmentId") Integer environmentId) {
 		envService.delete(environmentId);
 	}
 
-
 	// TODO fix exception catch
 
 	/**
 	 * @param environmentId
+	 * @param level
 	 * @return CapabilityMapDto
 	 */
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "capabilitymap/{environmentId}")
-	public CapabilityMapDto getCapabilityMap(@PathVariable("environmentId") Integer environmentId) {
+	public CapabilityMapDto getCapabilityMap(@PathVariable("environmentId") Integer environmentId,
+			@PathVariable("level") Integer level) {
 		try {
-			return constructMap(envService.get(environmentId));
+			return constructMap(envService.get(environmentId), level);
 		} catch (Exception e) {
 			return new CapabilityMapDto();
+		}
+	}
+
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
+	@PostMapping(path = "upload-csv-file")
+	public void uploadCsvFile(
+			@ModelAttribute("file") MultipartFile file,
+			@ModelAttribute("environmentId") Integer environmentId) {
+		if(!file.isEmpty()) {
+			try(Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+				CsvToBean<Capability> csvToBean = new CsvToBeanBuilder<Capability>(reader)
+						.withIgnoreLeadingWhiteSpace(true)
+						.build();
+
+				List<Capability> capabilities = csvToBean.parse();
+				envService.addCapabilities(environmentId, capabilities);
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -174,7 +205,7 @@ public class EnvironmentController {
 	 * @param environment
 	 * @return CapabilityMapDto
 	 */
-	private CapabilityMapDto constructMap(Environment environment) {
+	private CapabilityMapDto constructMap(Environment environment, Integer level) {
 		List<StrategyDto> strategiesDto = new ArrayList<StrategyDto>();
 		if (environment.getStrategies() != null) {
 			strategiesDto = environment.getStrategies().stream().map(strategy -> convertStrategy(strategy))
@@ -183,7 +214,7 @@ public class EnvironmentController {
 
 		return new CapabilityMapDto(environment.getEnvironmentId(), environment.getEnvironmentName(),
 				environment.getCapabilities().stream()
-						.filter(i -> i.getParentCapabilityId().equals(0))
+						.filter(i -> i.getParentCapabilityId().equals(0) || i.getParentCapabilityId() > level)
 						.map(i -> constructCapabilityTree(i, environment.getCapabilities()))
 						.collect(Collectors.toList()),
 				strategiesDto);

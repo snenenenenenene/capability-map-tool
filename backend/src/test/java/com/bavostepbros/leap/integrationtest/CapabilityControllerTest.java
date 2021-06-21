@@ -318,7 +318,6 @@ public class CapabilityControllerTest extends ApiIntegrationTest {
 		mockMvc.perform(delete(PATH + capabilityId)).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
-	@Test
 	private void testCapability(Capability expectedObject, CapabilityDto actualObject) {
 		assertEquals(expectedObject.getCapabilityId(), actualObject.getCapabilityId());
 		assertEquals(expectedObject.getEnvironment().getEnvironmentId(),

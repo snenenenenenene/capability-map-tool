@@ -150,7 +150,6 @@ public class TechnologyControllerTest extends ApiIntegrationTest {
 		testTechnology(technologySecond, technologies.get(1));
 	}
 	
-	@Test
 	private void testTechnology(Technology expectedObject, TechnologyDto actualObject) {
 		assertEquals(expectedObject.getTechnologyId(), actualObject.getTechnologyId());
 		assertEquals(expectedObject.getTechnologyName(), actualObject.getTechnologyName());

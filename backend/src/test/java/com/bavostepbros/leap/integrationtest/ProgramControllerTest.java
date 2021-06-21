@@ -182,7 +182,6 @@ public class ProgramControllerTest extends ApiIntegrationTest {
 		testProgram(programFirst, programDto);
 	}
 	
-	@Test
 	private void testProgram(Program expectedObject, ProgramDto actualObject) {
 		assertEquals(expectedObject.getProgramId(), actualObject.getProgramId());
 		assertEquals(expectedObject.getProgramName(), actualObject.getProgramName());

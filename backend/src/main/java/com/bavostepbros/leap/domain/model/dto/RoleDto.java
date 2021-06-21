@@ -12,5 +12,6 @@ import lombok.Setter;
 public class RoleDto {
 	private Integer roleId;
 	private String roleName;
+	private Integer weight;
 }
 

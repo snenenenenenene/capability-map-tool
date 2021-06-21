@@ -67,11 +67,11 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 
 	@Override
-	public void addCapability(Integer resourceId, Integer capabilityId) {
+	public Resource addCapability(Integer resourceId, Integer capabilityId) {
 		Resource resource = get(resourceId);
 		Capability capability = capabilityService.get(capabilityId);
 		resource.addCapability(capability);
-		return;
+		return resourceDAL.save(resource);
 	}
 
 	@Override
@@ -79,6 +79,7 @@ public class ResourceServiceImpl implements ResourceService {
 		Resource resource = get(resourceId);
 		Capability capability = capabilityService.get(capabilityId);
 		resource.removeCapability(capability);
+		resourceDAL.save(resource);
 		return;
 	}
 

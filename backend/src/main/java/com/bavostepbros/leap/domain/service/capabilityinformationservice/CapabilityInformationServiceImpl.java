@@ -1,6 +1,7 @@
 package com.bavostepbros.leap.domain.service.capabilityinformationservice;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -44,7 +45,9 @@ public class CapabilityInformationServiceImpl implements CapabilityInformationSe
 	public CapabilityInformation get(Integer capabilityId, Integer informationId) {
 		Capability capability = capabilityService.get(capabilityId);
 		Information information = informationService.get(informationId);
-		return capabilityInformationDAL.findByCapabilityAndInformation(capability, information).get();
+		Optional<CapabilityInformation> capabilityInformation = capabilityInformationDAL.findByCapabilityAndInformation(capability, information);
+		capabilityInformation.orElseThrow(() -> new NullPointerException("CapabilityInformation does not exist."));
+		return capabilityInformation.get();
 	}
 
 	@Override

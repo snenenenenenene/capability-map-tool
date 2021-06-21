@@ -39,12 +39,12 @@ public class BusinessProcess {
 	@ManyToMany(mappedBy = "businessProcess")
 	private Set<Capability> capabilities = new HashSet<>();
 
-	public BusinessProcess(@NotBlank String businessProcessName, String businessProcessDescription) {
+	public BusinessProcess(@NotBlank String businessProcessName, @NotBlank String businessProcessDescription) {
 		this.businessProcessName = businessProcessName;
 		this.businessProcessDescription = businessProcessDescription;
 	}
 
-	public BusinessProcess(Integer businessProcessId, @NotBlank String businessProcessName,
+	public BusinessProcess(Integer businessProcessId, String businessProcessName,
 			String businessProcessDescription) {
 		this.businessProcessId = businessProcessId;
 		this.businessProcessName = businessProcessName;
@@ -58,7 +58,7 @@ public class BusinessProcess {
 	}
 	
 	public void removeCapability(Capability capability) {
-		capabilities.add(capability);
+		capabilities.remove(capability);
 		capability.getBusinessProcess().remove(this);
 		return;
 	}

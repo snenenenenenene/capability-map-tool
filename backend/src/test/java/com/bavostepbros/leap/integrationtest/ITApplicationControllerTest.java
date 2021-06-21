@@ -368,7 +368,6 @@ public class ITApplicationControllerTest extends ApiIntegrationTest {
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
-	@Test
 	private void testItApplication(ITApplication expectedObject, ITApplicationDto actualObject) {
 		assertEquals(expectedObject.getItApplicationId(), actualObject.getItApplicationId());
 		assertEquals(expectedObject.getStatus().getStatusId(), actualObject.getStatus().getStatusId());

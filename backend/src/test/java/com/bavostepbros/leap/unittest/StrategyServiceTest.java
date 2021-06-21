@@ -428,7 +428,7 @@ public class StrategyServiceTest {
 
 		assertEquals(expected, exception.getMessage());
 	}
-
+	
 	@Test 
 	void should_retrieveValidStrategy_whenGetByNameIsValidAndExists() {
 		BDDMockito.given(strategyDAL.findByStrategyName(strategyName)).willReturn(optionalStrategy);

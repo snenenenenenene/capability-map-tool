@@ -186,7 +186,6 @@ public class EnvironmentControllerTestApi extends ApiIntegrationTest {
 				.andExpect(MockMvcResultMatchers.status().isOk());	
 	}
 	
-	@Test
 	private void testEnvironment(Environment expectedObject, EnvironmentDto actualObject) {
 		assertEquals(expectedObject.getEnvironmentId(), actualObject.getEnvironmentId());
 		assertEquals(expectedObject.getEnvironmentName(), actualObject.getEnvironmentName());

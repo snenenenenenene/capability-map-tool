@@ -2,11 +2,18 @@ package com.bavostepbros.leap.integrationtest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import org.junit.jupiter.api.*;
+import javax.validation.ConstraintViolationException;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +23,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.bavostepbros.leap.domain.customexceptions.ValidationErrorResponse;
 import com.bavostepbros.leap.domain.model.BusinessProcess;
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Environment;
@@ -123,26 +131,42 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 	public void should_throwInvalidInput_whenSaveBusinessProcessInvalidName() throws Exception {
 		String newBusinessProcessName = "";
 		String newBusinessProcessDescription = businessProcessFirst.getBusinessProcessDescription();
+		String exceptionMessage = "Businessprocess name is required.";
 		
-		mockMvc.perform(post(PATH)
+		MvcResult mvcResult = mockMvc.perform(post(PATH)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("businessProcessName", newBusinessProcessName)
 				.param("businessProcessDescription", newBusinessProcessDescription)
 				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(MockMvcResultMatchers.status().isBadRequest());
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andExpect(result -> assertTrue(result.getResolvedException() instanceof ConstraintViolationException))
+			    .andReturn();
+		
+		ValidationErrorResponse violations = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), 
+				ValidationErrorResponse.class);
+		
+		assertEquals(exceptionMessage, violations.getViolations().get(0).getMessage());
 	}
 	
 	@Test
 	public void should_throwInvalidInput_whenSaveBusinessProcessInvalidDescription() throws Exception {
 		String newBusinessProcessName = "Very unique name";
 		String newBusinessProcessDescription = "";
+		String exceptionMessage = "Businessprocess description is required.";
 		
-		mockMvc.perform(post(PATH)
+		MvcResult mvcResult = mockMvc.perform(post(PATH)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("businessProcessName", newBusinessProcessName)
 				.param("businessProcessDescription", newBusinessProcessDescription)
 				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(MockMvcResultMatchers.status().isBadRequest());
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andExpect(result -> assertTrue(result.getResolvedException() instanceof ConstraintViolationException))
+			    .andReturn();
+		
+		ValidationErrorResponse violations = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), 
+				ValidationErrorResponse.class);
+		
+		assertEquals(exceptionMessage, violations.getViolations().get(0).getMessage());
 	}
 	
 	@Test
@@ -188,48 +212,6 @@ public class BusinessProcessControllerTest extends ApiIntegrationTest {
 		
 		assertNotNull(businessProcessDto);
 		testBusinessProcess(businessProcessFirst, businessProcessDto);
-	}
-	
-	@Test
-	public void should_throwInvalidInput_whenUpdateBusinessProcessInvalidId() throws Exception {
-		Integer businessProcessId = 0;
-		String newBusinessProcessName = "Update test";
-		String businessProcessDescription = businessProcessFirst.getBusinessProcessDescription();
-		
-		mockMvc.perform(put(PATH + businessProcessId)
-				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-				.param("businessProcessName", newBusinessProcessName)
-				.param("businessProcessDescription", businessProcessDescription)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(MockMvcResultMatchers.status().isBadRequest());
-	}
-	
-	@Test
-	public void should_throwInvalidInput_whenUpdateBusinessProcessInvalidName() throws Exception {
-		Integer businessProcessId = businessProcessFirst.getBusinessProcessId();
-		String newBusinessProcessName = "";
-		String businessProcessDescription = businessProcessFirst.getBusinessProcessDescription();
-		
-		mockMvc.perform(put(PATH + businessProcessId)
-				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-				.param("businessProcessName", newBusinessProcessName)
-				.param("businessProcessDescription", businessProcessDescription)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(MockMvcResultMatchers.status().isBadRequest());
-	}
-	
-	@Test
-	public void should_throwInvalidInput_whenUpdateBusinessProcessInvalidDescription() throws Exception {
-		Integer businessProcessId = businessProcessFirst.getBusinessProcessId();
-		String newBusinessProcessName = "Update test";
-		String businessProcessDescription = "";
-		
-		mockMvc.perform(put(PATH + businessProcessId)
-				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-				.param("businessProcessName", newBusinessProcessName)
-				.param("businessProcessDescription", businessProcessDescription)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 	
 	@Test

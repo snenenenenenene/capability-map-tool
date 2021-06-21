@@ -50,7 +50,7 @@ public interface CapabilityService {
 
 	void deleteProject(Integer capabilityId, Integer projectId);
 
-	List<Project> getAllProjectsByCapabilityId(Integer capabilityId);
+	Set<Project> getAllProjectsByCapabilityId(Integer capabilityId);
 
 	void addBusinessProcess(Integer capabilityId, Integer businessProcessId);
 
@@ -62,5 +62,5 @@ public interface CapabilityService {
 
 	void deleteResource(Integer capabilityId, Integer resourceId);
 
-	List<Resource> getAllResourceByResourceId(Integer capabilityId);
+	Set<Resource> getAllResourceByResourceId(Integer capabilityId);
 }

@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -35,6 +36,7 @@ public class ResourceController {
 	@Autowired
 	private ResourceService resourceService;
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResourceDto addResource(@NotBlank @ModelAttribute("resourceName") String resourceName,
 			@NotBlank @ModelAttribute("resourceDescription") String resourceDescription,
@@ -43,12 +45,14 @@ public class ResourceController {
 		return convertResource(resource);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "{resourceId}")
 	public ResourceDto getResource(@PathVariable("resourceId") Integer resourceId) {
 		Resource resource = resourceService.get(resourceId);
 		return convertResource(resource);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PutMapping(path = "{resourceId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResourceDto updateResource(@PathVariable("resourceId") Integer resourceId,
 			@NotBlank @ModelAttribute("resourceName") String resourceName,
@@ -59,17 +63,20 @@ public class ResourceController {
 		return convertResource(resource);
 	}
 	
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@DeleteMapping(path = "{resourceId}")
 	public void deleteResource(@PathVariable("resourceId") Integer resourceId) {
 		resourceService.delete(resourceId);
 	}
 	
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "resourcename/{resourceName}")
 	public ResourceDto getResourceByName(@NotBlank @PathVariable("resourceName") String resourceName) {
 		Resource resource = resourceService.getResourceByName(resourceName);
 		return convertResource(resource);
 	}
 	
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping
 	public List<ResourceDto> getAllResources() {
 		List<Resource> resources = resourceService.getAll();
@@ -79,18 +86,22 @@ public class ResourceController {
 		return resourcesDto;
 	}
 	
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PutMapping(path = "link-capability/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public void linkCapability(@ModelAttribute("resourceId") Integer resourceId, 
+	public ResourceDto linkCapability(@ModelAttribute("resourceId") Integer resourceId, 
 			@ModelAttribute("capabilityId") Integer capabilityId) {
-		resourceService.addCapability(resourceId, capabilityId);
+		Resource resource = resourceService.addCapability(resourceId, capabilityId);
+		return convertResource(resource);
 	}
 	
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@DeleteMapping(path = "unlink-capability/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void unlinkCapability(@ModelAttribute("resourceId") Integer resourceId, 
 			@ModelAttribute("capabilityId") Integer capabilityId) {
 		resourceService.deleteCapability(resourceId, capabilityId);
 	}
 	
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "get-capabilities/{resourceId}")
 	public List<CapabilityDto> getCapabilities(@PathVariable("resourceId") Integer resourceId) {
 		Set<Capability> capabilities = resourceService.getAllCapabilitiesByResourceId(resourceId);

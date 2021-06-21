@@ -1,5 +1,6 @@
 package com.bavostepbros.leap.domain.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -41,9 +42,9 @@ public class Resource {
 	private Double fullTimeEquivalentYearlyValue;
 	
 	@ManyToMany(mappedBy = "resources")
-	private Set<Capability> capabilities;
+	private Set<Capability> capabilities = new HashSet<>();
 
-	public Resource(Integer resourceId, @NotBlank String resourceName, @NotBlank String resourceDescription,
+	public Resource(Integer resourceId, String resourceName, String resourceDescription,
 			Double fullTimeEquivalentYearlyValue) {
 		this.resourceId = resourceId;
 		this.resourceName = resourceName;
@@ -51,7 +52,7 @@ public class Resource {
 		this.fullTimeEquivalentYearlyValue = fullTimeEquivalentYearlyValue;
 	}
 
-	public Resource(@NotBlank String resourceName, @NotBlank String resourceDescription,
+	public Resource(String resourceName, String resourceDescription,
 			Double fullTimeEquivalentYearlyValue) {
 		this.resourceName = resourceName;
 		this.resourceDescription = resourceDescription;

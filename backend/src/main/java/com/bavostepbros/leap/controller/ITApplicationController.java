@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +36,7 @@ public class ITApplicationController {
 	@Autowired
 	private ITApplicationService itApplicationService;
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ITApplicationDto addITApplication(@ModelAttribute("statusId") Integer statusID,
 			@ModelAttribute("name") String name, @ModelAttribute("version") String version,
@@ -61,12 +63,14 @@ public class ITApplicationController {
 		return convertItApplication(itApplication);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "{itApplicationId}")
 	public ITApplicationDto getITApplicationById(@PathVariable("itApplicationId") Integer itApplicationId) {
 		ITApplication itApplication = itApplicationService.get(itApplicationId);
 		return convertItApplication(itApplication);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PutMapping(path = "{itApplicationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ITApplicationDto updateITApplication(@PathVariable("itApplicationId") Integer itApplicationId,
 			@ModelAttribute("statusId") Integer statusID, @ModelAttribute("name") String name,
@@ -94,27 +98,32 @@ public class ITApplicationController {
 		return convertItApplication(itApplication);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@DeleteMapping(path = "{itApplicationId}")
 	public void deleteItApplication(@PathVariable("itApplicationId") Integer itApplicationId) {
 		itApplicationService.delete(itApplicationId);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "exists-by-id/{itApplicationId}")
 	public boolean doesItApplicationExistsById(@PathVariable("itApplicationId") Integer itApplicationId) {
 		return itApplicationService.existsById(itApplicationId);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "exists-by-name/{itApplicationName}")
 	public boolean doesItApplicationExistsById(@PathVariable("itApplicationName") String itApplicationName) {
 		return itApplicationService.existsByName(itApplicationName);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "itapplicationname/{itApplicationName}")
 	public ITApplicationDto getITApplicationByName(@PathVariable("itApplicationName") String itApplicationName) {
 		ITApplication itApplication = itApplicationService.getItApplicationByName(itApplicationName);
 		return convertItApplication(itApplication);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping
 	public List<ITApplicationDto> getAllITApplications() {
 		List<ITApplication> itApplications = itApplicationService.getAll();
@@ -123,16 +132,19 @@ public class ITApplicationController {
 		return itApplicationsDto;
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "all-currencies")
 	public List<String> getAllCurrencies() {
 		return itApplicationService.getAllCurrencies();
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "all-timevalues")
 	public List<String> getAllTimeValues() {
 		return itApplicationService.getAllTimeValues();
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PutMapping(path = "link-technology/{itApplicationId}/{technologyId}")
 	public void linkTechnology(@PathVariable("itApplicationId") Integer itApplicationId,
 			@PathVariable("technologyId") Integer technologyId) {
@@ -140,6 +152,7 @@ public class ITApplicationController {
 		return;
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@DeleteMapping(path = "unlink-technology/{itApplicationId}/{technologyId}")
 	public void deleteTechnology(@PathVariable("itApplicationId") Integer itApplicationId,
 			@PathVariable("technologyId") Integer technologyId) {

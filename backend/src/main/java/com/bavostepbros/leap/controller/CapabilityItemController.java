@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -33,6 +34,7 @@ public class CapabilityItemController {
 	@Autowired
 	private CapabilityItemService capabilityItemService;
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public CapabilityItemDto addCapabilityItem(@ModelAttribute("capabilityId") Integer capabilityId,
 			@ModelAttribute("itemId") Integer itemId,
@@ -42,6 +44,7 @@ public class CapabilityItemController {
 		return convertCapabilityItem(capabilityItem);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "{capabilityId}/{itemId}")
 	public CapabilityItemDto getCapabilityItem(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("itemId") Integer itemId) {
@@ -50,6 +53,7 @@ public class CapabilityItemController {
 		return convertCapabilityItem(capabilityItem);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@PutMapping(path = "{capabilityId}/{itemId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public CapabilityItemDto updateCapabilityItem(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("itemId") Integer itemId, @ModelAttribute("strategicImportance") String strategicImportance) {
@@ -58,12 +62,14 @@ public class CapabilityItemController {
 		return convertCapabilityItem(capabilityItem);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@DeleteMapping(path = "{capabilityId}/{itemId}")
 	public void deleteCapability(@PathVariable("capabilityId") Integer capabilityId,
 			@PathVariable("itemId") Integer itemId) {
 		capabilityItemService.delete(capabilityId, itemId);
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "all-capabilityitems-by-strategyitemid/{itemId}")
 	public List<CapabilityItemDto> getAllCapabilityItemsByStrategyId(@PathVariable("itemId") Integer itemId) {
 
@@ -74,6 +80,7 @@ public class CapabilityItemController {
 		return capabilityItemsDto;
 	}
 
+	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@GetMapping(path = "all-capabilityitems-by-capabilityid/{capabilityId}")
 	public List<CapabilityItemDto> getAllCapabilityItemsByCapabilityId(
 			@PathVariable("capabilityId") Integer capabilityId) {
