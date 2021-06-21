@@ -159,7 +159,7 @@ public class ResourceControllerTest extends ApiIntegrationTest {
 	@Test
 	public void should_returnResource_whenUpdateResource() throws Exception {
 		Integer resourceId = resourceFirst.getResourceId();
-		String resourceName = "Post test";
+		String resourceName = "Update test";
 		String resourceDescription = resourceFirst.getResourceDescription();
 		Double fullTimeEquivalentYearlyValue = resourceFirst.getFullTimeEquivalentYearlyValue();
 		
