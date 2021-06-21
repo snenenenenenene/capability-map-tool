@@ -1,5 +1,7 @@
 package com.bavostepbros.leap.domain.model.dto;
 
+import java.util.Set;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,5 +15,5 @@ public class UserDto {
     Integer userId;
     String username;
     String email;
-    BasicRoleDto roleDto;
+    Set<RoleDto> roleDto;
 }

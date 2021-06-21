@@ -25,6 +25,7 @@ import com.bavostepbros.leap.domain.service.projectservice.ProjectService;
 import com.bavostepbros.leap.domain.service.resourceservice.ResourceService;
 import com.bavostepbros.leap.domain.service.statusservice.StatusService;
 import com.bavostepbros.leap.persistence.CapabilityDAL;
+import com.bavostepbros.leap.persistence.EnvironmentDAL;
 
 import lombok.RequiredArgsConstructor;
 
@@ -40,6 +41,9 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 	@Autowired
 	private CapabilityDAL capabilityDAL;
+	
+	@Autowired
+	private EnvironmentDAL environmentDAL;
 
 	@Autowired
 	private EnvironmentService environmentService;
@@ -125,8 +129,9 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 	@Override
 	public List<Capability> getCapabilitiesByEnvironment(Integer environmentId) {
-		Environment environment = environmentService.get(environmentId);
-		List<Capability> capabilities = capabilityDAL.findByEnvironment(environment);
+		Optional<Environment> environment = environmentDAL.findById(environmentId);
+		environment.orElseThrow(() -> new NullPointerException("Environment does not exist."));
+		List<Capability> capabilities = capabilityDAL.findByEnvironment(environment.get());
 		return capabilities;
 	}
 
@@ -176,11 +181,11 @@ public class CapabilityServiceImpl implements CapabilityService {
 	}
 
 	@Override
-	public void addProject(Integer capabilityId, Integer projectId) {
+	public Capability addProject(Integer capabilityId, Integer projectId) {
 		Capability capability = get(capabilityId);
 		Project project = projectService.get(projectId);
 		capability.addProject(project);
-		return;
+		return capabilityDAL.save(capability);
 	}
 
 	@Override
@@ -188,6 +193,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 		Capability capability = get(capabilityId);
 		Project project = projectService.get(projectId);
 		capability.removeProject(project);
+		capabilityDAL.save(capability);
 		return;
 	}
 
@@ -198,11 +204,11 @@ public class CapabilityServiceImpl implements CapabilityService {
 	}
 
 	@Override
-	public void addBusinessProcess(Integer capabilityId, Integer businessProcessId) {
+	public Capability addBusinessProcess(Integer capabilityId, Integer businessProcessId) {
 		Capability capability = get(capabilityId);
 		BusinessProcess businessProcess = businessProcessService.get(businessProcessId);
 		capability.addBusinessProcess(businessProcess);
-		return;
+		return capabilityDAL.save(capability);
 	}
 
 	@Override
@@ -210,6 +216,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 		Capability capability = get(capabilityId);
 		BusinessProcess businessProcess = businessProcessService.get(businessProcessId);
 		capability.removeBusinessProcess(businessProcess);
+		capabilityDAL.save(capability);
 		return;
 	}
 
@@ -220,11 +227,11 @@ public class CapabilityServiceImpl implements CapabilityService {
 	}
 
 	@Override
-	public void addResource(Integer capabilityId, Integer resourceId) {
+	public Capability addResource(Integer capabilityId, Integer resourceId) {
 		Capability capability = get(capabilityId);
 		Resource resource = resourceService.get(resourceId);
 		capability.addResource(resource);
-		return;
+		return capabilityDAL.save(capability);
 	}
 
 	@Override
@@ -232,6 +239,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 		Capability capability = get(capabilityId);
 		Resource resource = resourceService.get(resourceId);
 		capability.removeResource(resource);
+		capabilityDAL.save(capability);
 		return;
 	}
 

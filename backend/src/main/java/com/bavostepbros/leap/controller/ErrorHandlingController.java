@@ -1,5 +1,7 @@
 package com.bavostepbros.leap.controller;
 
+import java.util.NoSuchElementException;
+
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
@@ -57,6 +59,15 @@ public class ErrorHandlingController {
 	ResponseEntity<ValidationErrorResponse> onNullPointerException(NullPointerException e) {
 		ValidationErrorResponse error = new ValidationErrorResponse();
 		error.getViolations().add(new Violation("NullPointerException", e.getMessage()));
+		return new ResponseEntity<ValidationErrorResponse>(error, HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(NoSuchElementException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	ResponseEntity<ValidationErrorResponse> onNoSuchElementException(NoSuchElementException e) {
+		ValidationErrorResponse error = new ValidationErrorResponse();
+		error.getViolations().add(new Violation("NoSuchElementException", e.getMessage()));
 		return new ResponseEntity<ValidationErrorResponse>(error, HttpStatus.BAD_REQUEST);
 	}
 
