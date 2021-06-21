@@ -119,7 +119,7 @@ export default class StrategyItem extends Component {
       (t) => (
         <span>
           <p className="text-center">
-            Are you sure you want to remove this strategyItem?
+            Are you sure you want to remove this Strategy Item?
           </p>
           <div className="text-center">
             <button

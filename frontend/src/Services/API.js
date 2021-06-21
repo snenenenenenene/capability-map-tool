@@ -86,7 +86,7 @@ export default class API {
       axios.put(`${resourceURL}/link-businessprocess/`, toCreate, config);
 
     endpoints.importCSV = (toCreate) =>
-      axios.post(`${resourceURL}/upload-csv-file`, toCreate, config);
+      axios.post(`${resourceURL}`, toCreate, config);
     endpoints.getUser = ({ query } = {}) =>
       axios.get(`${resourceURL}/email/${this.email}`, config);
 

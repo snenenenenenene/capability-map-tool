@@ -18,6 +18,7 @@ export default class CapabilityMap extends Component {
       pdfExportComponent: React.createRef(),
       capabilityPdfExportComponent: React.createRef(),
       capabilityMapZoom: 70,
+      capabilityMapLayerLevel: 3,
     };
   }
 
@@ -123,7 +124,16 @@ export default class CapabilityMap extends Component {
 
   //MAP CAPABILITIES TO THEIR HTML COUNTERPARTS
   capabilityMapping(capabilities) {
+    let today = new Date().toISOString().slice(0, 10);
     return capabilities.map((capability, i) => {
+      let itemColour;
+      if (capability.status.validityPeriod < today) {
+        itemColour = "#fff4ed80";
+      } else if (capability.status.validityPeriod === today) {
+        itemColour = "#fff6d680";
+      } else if (capability.status.validityPeriod > today) {
+        itemColour = "#fff";
+      }
       return (
         <div
           className="card capability-card"
@@ -135,7 +145,10 @@ export default class CapabilityMap extends Component {
           >
             {capability.capabilityName}
           </div>
-          <div class="card-body zoomTarget">
+          <div
+            class="card-body zoomTarget"
+            style={{ backgroundColor: itemColour }}
+          >
             {this.strategyItemExists(capability)}
             <div className="row">
               <div className="card-deck justify-content-center mx-auto">
@@ -151,6 +164,7 @@ export default class CapabilityMap extends Component {
 
   async componentDidMount() {
     this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "csv" });
     await this.state.api.endpoints.environment
       .getEnvironmentByName({ name: this.state.environmentName })
       .then((response) =>
@@ -175,6 +189,24 @@ export default class CapabilityMap extends Component {
   //HANDLE ZOOM WHEN CLICKING THE MINIMIZE OR MAXIMIZE BUTTONS
   zoomHandler(zoom) {
     this.setState({ capabilityMapZoom: this.state.capabilityMapZoom + zoom });
+  }
+
+  capabilityMapLayerLevelHandler(level) {
+    // console.log("level: " + level);
+    // console.log("level before: " + this.state.capabilityMapLayerLevel);
+    // if (this.state.capabilityMapLayerLevel < 1) {
+    //   this.setState({ capabilityMapLayerLevel: 1 });
+    //   console.log(this.state.capabilityMapLayerLevel);
+    // } else if (this.state.capabilityMapLayerLevel > 3) {
+    //   this.setState({ capabilityMapLayerLevel: 3 });
+    //   console.log("max: " + this.state.capabilityMapLayerLevel);
+    // } else {
+    console.log(this.state.capabilityMapLayerLevel + level);
+    this.setState({
+      capabilityMapLayerLevel: this.state.capabilityMapLayerLevel + level,
+    });
+    // console.log(this.state.capabilityMapLayerLevel);
+    // }
   }
 
   //RENDER STRATEGY ITEMS AND ADD COLOURS BASED ON THEIR STRATEGIC IMPORTANCE
@@ -355,11 +387,14 @@ export default class CapabilityMap extends Component {
   //HANDLE UPLOADING CSV
   handleFileUpload = async (event) => {
     const formData = new FormData();
-    formData.append("file", event.target.value);
+    formData.append("file", event.target.files[0]);
     formData.append("environmentId", this.state.environmentId);
-    await this.state.api.endpoints.environment
+    await this.state.api.endpoints.csv
       .importCSV(formData)
-      .then((response) => this.componentDidMount())
+      .then((response) => {
+        toast.success("CSV Imported");
+        this.componentDidMount();
+      })
       .catch((error) => toast.error("Could not Import Map"));
   };
 
@@ -421,7 +456,25 @@ export default class CapabilityMap extends Component {
         <div className="zoom-dock">
           <div>
             <button
-              value="soep"
+              value="levelup"
+              className="zoom-button"
+              onClick={() => this.capabilityMapLayerLevelHandler(+1)}
+            >
+              <i class="bi bi-chevron-up"></i>
+            </button>
+          </div>
+          <div>
+            <button
+              value="leveldown"
+              className="zoom-button"
+              onClick={() => this.capabilityMapLayerLevelHandler(-1)}
+            >
+              <i class="bi bi-chevron-down"></i>
+            </button>
+          </div>
+          <div>
+            <button
+              value="zoomout"
               className="zoom-button"
               onClick={() => this.zoomHandler(+10)}
             >
@@ -430,7 +483,7 @@ export default class CapabilityMap extends Component {
           </div>
           <div>
             <button
-              value="soep"
+              value="zoomout"
               className="zoom-button"
               onClick={() => this.zoomHandler(-10)}
             >
@@ -459,9 +512,7 @@ export default class CapabilityMap extends Component {
                 ref={this.state.capabilityPdfExportComponent}
                 paperSize="auto"
                 margin={40}
-                fileName={`${this.state.capability.capabilityName} - ${
-                  this.state.environmentName
-                } - ${new Date().getDate()}`}
+                fileName={`${this.state.capability.capabilityName} - ${this.state.environmentName}`}
                 author="LEAP"
               >
                 <div className="mx-auto justify-content-center">
