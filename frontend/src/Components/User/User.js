@@ -104,7 +104,7 @@ export default class User extends Component {
             { title: "ID", field: "userId" },
             { title: "Name", field: "username" },
             { title: "Email", field: "email" },
-            { title: "Role", field: "roleId" },
+            { title: "Role", field: "roleDto.roleName" },
             {
               title: "Actions",
               name: "actions",

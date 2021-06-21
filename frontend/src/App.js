@@ -78,7 +78,7 @@ class App extends Component {
               email: response.data.email,
               userId: response.data.userId,
               username: response.data.username,
-              roleId: response.data.roleId,
+              roleId: response.data.roleDto.roleId,
               authenticated: true,
               jwt: jwt,
             })
@@ -121,7 +121,7 @@ class App extends Component {
 
   //DISPLAY USER-ADMIN SETTINGS ONLY FOR USER-ADMINS
   adminSettings() {
-    if (this.state.user.roleId === 2) {
+    if (this.state.user.roleId === 1) {
       return (
         <Link to="/user">
           <li className="dropdown-item">User List</li>
@@ -132,7 +132,7 @@ class App extends Component {
   }
   //MAKE ROUTES ACCESSIBLE TO USER-ADMINS ONLY
   adminRoutes() {
-    if (this.state.user.roleId === 2) {
+    if (this.state.user.roleId === 1) {
       return (
         <Switch>
           <Route exact path="/user" component={User} />

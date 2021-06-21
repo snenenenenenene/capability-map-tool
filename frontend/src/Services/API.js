@@ -97,6 +97,8 @@ export default class API {
       axios.get(`${resourceURL}/exists-by-environmentname/${name}`, config);
     endpoints.create = (toCreate) =>
       axios.post(`${resourceURL}/`, toCreate, config);
+    endpoints.loadTemplate = ({ query } = {}) =>
+      axios.post(`${resourceURL}/template/template1`, config);
     endpoints.update = (toUpdate, id) =>
       axios.put(`${resourceURL}/${id}`, toUpdate, config);
     endpoints.delete = ({ id }) => axios.delete(`${resourceURL}/${id}`, config);
@@ -117,8 +119,8 @@ export default class API {
         `${resourceURL}/unlink-businessprocess/${capabilityId}/${id}`,
         config
       );
-    endpoints.generateCapabilityMap = ({ id }) =>
-      axios.get(`${resourceURL}/capabilitymap/${id}`, config);
+    endpoints.generateCapabilityMap = ({ id, level }) =>
+      axios.get(`${resourceURL}/capabilitymap/${id}/${level}`, config);
     endpoints.getAllCapabilitiesByEnvironmentId = ({ id }) =>
       axios.get(
         `${resourceURL}/all-capabilities-by-environmentid/${id}`,

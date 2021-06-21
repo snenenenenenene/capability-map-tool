@@ -26,7 +26,6 @@ export default class AddUser extends Component {
     const formData = new FormData();
     formData.append("username", this.state.username);
     formData.append("email", this.state.email);
-    formData.append("password", sha1("newUser"));
     formData.append("roleId", this.state.roleId);
     await this.state.api.endpoints.user
       .create(formData)
