@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.bavostepbros.leap.domain.model.dto.BasicRoleDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -57,30 +58,34 @@ public class UserController {
 
 		User user = userService.save(username, password, email);
 		emailService.sendNewUserMessage(user.getEmail(), password);
-		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail());
+		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail(),
+				new BasicRoleDto(user.getHighestAuthority().getRoleId(), user.getHighestAuthority().getRoleName()));
 	}
 
 	@PreAuthorize("hasAuthority('USER_ADMIN')")
 	@GetMapping("/{id}")
 	public UserDto getUserById(@ModelAttribute("id") Integer id) {
 		User user = userService.get(id);
-		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail());
+		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail(),
+				new BasicRoleDto(user.getHighestAuthority().getRoleId(), user.getHighestAuthority().getRoleName()));
 	}
 
 	@PreAuthorize("hasAuthority('USER_ADMIN')")
 	@GetMapping("/email/{email}")
 	public UserDto getUserByEmail(@ModelAttribute("email") String email) {
 		User user = userService.getByEmail(email);
-		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail());
+		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail(),
+				new BasicRoleDto(user.getHighestAuthority().getRoleId(), user.getHighestAuthority().getRoleName()));
 	}
 
 	@PreAuthorize("hasAuthority('USER_ADMIN')")
 	@GetMapping()
 	public List<UserDto> getAllUsers() {
 		List<User> users = userService.getAll();
-		List<UserDto> usersDto = users.stream().map(user -> new UserDto(user.getUserId(),
-				user.getUsername(), user.getEmail())).collect(Collectors.toList());
-		return usersDto;
+		return users.stream().map(user -> new UserDto(user.getUserId(),
+				user.getUsername(), user.getEmail(),
+				new BasicRoleDto(user.getHighestAuthority().getRoleId(), user.getHighestAuthority().getRoleName())))
+				.collect(Collectors.toList());
 	}
 
 	@PreAuthorize("hasAuthority('USER_ADMIN')")
@@ -89,7 +94,8 @@ public class UserController {
 			@ModelAttribute("password") String password, @ModelAttribute("email") String email) {
 
 		User user = userService.update(userId, username, password, email);
-		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail());
+		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail(),
+				new BasicRoleDto(user.getHighestAuthority().getRoleId(), user.getHighestAuthority().getRoleName()));
 	}
 
 	@PreAuthorize("hasAuthority('USER_ADMIN')")

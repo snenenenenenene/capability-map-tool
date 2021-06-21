@@ -1,5 +1,6 @@
 package com.bavostepbros.leap.domain.model;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -70,7 +71,11 @@ public class User {
 		roles.add(role);
 		role.getUsers().remove(this);
 	}
-	
+
+	public Role getHighestAuthority() {
+        return roles.stream().max(Comparator.comparing(Role::getWeight)).get();
+    }
+
 	public Set<Role> getRoles() {
 //		System.out.println("Roles in user " + roles.size());
 //		roles.forEach(r -> System.out.println("Roles in user " + r.getRoleName()));
