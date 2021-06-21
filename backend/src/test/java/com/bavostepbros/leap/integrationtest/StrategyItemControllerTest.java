@@ -26,7 +26,6 @@ import com.bavostepbros.leap.domain.model.Strategy;
 import com.bavostepbros.leap.domain.model.StrategyItem;
 import com.bavostepbros.leap.domain.model.dto.StrategyItemDto;
 import com.bavostepbros.leap.domain.service.strategyitemservice.StrategyItemService;
-import com.bavostepbros.leap.integrationtest.testconfiguration.RequestFactory;
 import com.bavostepbros.leap.persistence.EnvironmentDAL;
 import com.bavostepbros.leap.persistence.StatusDAL;
 import com.bavostepbros.leap.persistence.StrategyDAL;

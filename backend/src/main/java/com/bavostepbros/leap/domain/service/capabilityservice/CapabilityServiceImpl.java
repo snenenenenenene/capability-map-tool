@@ -1,17 +1,21 @@
 package com.bavostepbros.leap.domain.service.capabilityservice;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import javax.transaction.Transactional;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
-import com.bavostepbros.leap.domain.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bavostepbros.leap.domain.customexceptions.EnumException;
+import com.bavostepbros.leap.domain.model.BusinessProcess;
+import com.bavostepbros.leap.domain.model.Capability;
+import com.bavostepbros.leap.domain.model.Environment;
+import com.bavostepbros.leap.domain.model.Project;
+import com.bavostepbros.leap.domain.model.Resource;
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 import com.bavostepbros.leap.domain.model.paceofchange.PaceOfChange;
 import com.bavostepbros.leap.domain.model.targetoperatingmodel.TargetOperatingModel;
@@ -54,9 +58,10 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 	@Override
 	public Capability save( Integer environmentId, Integer statusId,
-			Integer parentCapabilityId, @NotBlank String capabilityName, String capabilityDescription,
+			Integer parentCapabilityId, String capabilityName, String capabilityDescription,
 			String paceOfChange, String targetOperatingModel, Integer resourceQuality, Integer informationQuality,
 			Integer applicationFit) {
+		
 		return save(new Capability(environmentService.get(environmentId), statusService.get(statusId),
 				parentCapabilityId, capabilityName, capabilityDescription, PaceOfChange.valueOf(paceOfChange),
 				TargetOperatingModel.valueOf(targetOperatingModel), resourceQuality, informationQuality,
@@ -72,8 +77,10 @@ public class CapabilityServiceImpl implements CapabilityService {
 	}
 
 	@Override
-	public Capability get(@NotNull @Min(1) Integer id) throws NoSuchElementException {
-		return capabilityDAL.findById(id).get();
+	public Capability get(Integer id) {
+		Optional<Capability> capability = capabilityDAL.findById(id);
+		capability.orElseThrow(() -> new NullPointerException("Capability does not exist."));
+		return capability.get();
 	}
 
 	@Override
@@ -82,8 +89,8 @@ public class CapabilityServiceImpl implements CapabilityService {
 	}
 
 	@Override
-	public Capability update(@NotNull @Min(1) Integer capabilityId, @NotNull @Min(1) Integer environmentId,
-			@NotNull @Min(1) Integer statusId, Integer parentCapabilityId, @NotBlank String capabilityName,
+	public Capability update(Integer capabilityId, Integer environmentId,
+			Integer statusId, Integer parentCapabilityId, String capabilityName,
 			String capabilityDescription, String paceOfChange, String targetOperatingModel, Integer resourceQuality,
 			Integer informationQuality, Integer applicationFit) {
 		// TODO duplicate name in same environment check
@@ -161,10 +168,11 @@ public class CapabilityServiceImpl implements CapabilityService {
 		return !capabilityDAL.findByCapabilityName(capabilityName).isEmpty();
 	}
 
-	// TODO write unit tests for this one!
 	@Override
 	public Capability getCapabilityByCapabilityName(String capabilityName) {
-		return capabilityDAL.findByCapabilityName(capabilityName).get();
+		Optional<Capability> capability = capabilityDAL.findByCapabilityName(capabilityName);
+		capability.orElseThrow(() -> new NullPointerException("Capability does not exist."));
+		return capability.get();
 	}
 
 	@Override
