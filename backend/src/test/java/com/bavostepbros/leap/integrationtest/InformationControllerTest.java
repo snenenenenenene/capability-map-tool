@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,6 +56,12 @@ public class InformationControllerTest extends ApiIntegrationTest {
 	public void init() {
 		informationFirst = informationDAL.save(new Information(1, "Information 1", "Description 1"));
 		informationSecond = informationDAL.save(new Information(2, "Information 2", "Description 2"));
+	}
+	
+	@AfterEach
+	public void close() {
+		informationDAL.delete(informationFirst);
+		informationDAL.delete(informationSecond);
 	}
 	
 	@Test
