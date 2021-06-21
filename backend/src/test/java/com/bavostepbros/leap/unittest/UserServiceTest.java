@@ -108,7 +108,7 @@ public class UserServiceTest {
 		BDDMockito.given(roleDAL.findById(BDDMockito.anyInt())).willReturn(optionalRole);
 		BDDMockito.given(userDAL.save(BDDMockito.any(User.class))).willReturn(user);
 		
-		User result = userService.save(username, password, email);
+		User result = userService.save(username, password, email, roleId);
 		
 		assertNotNull(result);
 		assertTrue(result instanceof User);
@@ -160,7 +160,7 @@ public class UserServiceTest {
 		String expected = "Role ID does not exist.";
 		
 		Exception exception = assertThrows(NullPointerException.class,
-				() -> userService.update(userId, username, password, email));
+				() -> userService.update(userId, username, password, email, userId));
 
 		assertEquals(expected, exception.getMessage());
 	}
@@ -174,7 +174,7 @@ public class UserServiceTest {
 //		BDDMockito.doReturn(false).when(spyRoleService).existsById(roleId);
 		
 		Exception exception = assertThrows(NullPointerException.class,
-				() -> userService.save(username, password, email));
+				() -> userService.save(username, password, email, userId));
 
 		assertEquals(expected, exception.getMessage());
 	}
@@ -190,7 +190,7 @@ public class UserServiceTest {
 		BDDMockito.given(roleDAL.findById(BDDMockito.anyInt())).willReturn(optionalRole);
 		BDDMockito.given(userDAL.save(user)).willReturn(user);
 		
-		User fetchedUser = userService.update(userId, username, password, email);
+		User fetchedUser = userService.update(userId, username, password, email, userId);
 		
 		assertNotNull(fetchedUser);
 		assertTrue(fetchedUser instanceof User);
