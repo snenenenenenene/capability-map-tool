@@ -65,6 +65,9 @@ public class JwtUtility implements Serializable {
 		return getClaimsFromToken(jwt).getExpiration();
 	}
 
+//	public Role extractRole(String jwt) { return getClaimsFromToken(jwt).}
+
+
 	public Boolean isExpired(String jwt) {
 		return extractExpirationDate(jwt).before(new Date());
 	}
