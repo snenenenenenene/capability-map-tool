@@ -74,8 +74,6 @@ public class EnvironmentController {
 	@Autowired
 	private EnvironmentService envService;
 
-	@Autowired
-	private ResourceLoader resourceLoader;
 
 	/**
 	 * @param environmentName
@@ -181,23 +179,6 @@ public class EnvironmentController {
 		}
 	}
 
-	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
-	@GetMapping(path = "template/{templateName}")
-	public String getTemplate(
-			@PathVariable("templateName") String templateName) {
-		try {
-			String templateDir = "../../../capability-map-templates/";
-			File file = new ClassPathResource(templateDir + templateName + ".json", LeapApplication.class).getFile();
-			return new String(Files.readAllBytes(file.toPath()));
-		} catch (FileNotFoundException e) {
-			//TODO fix catches
-			System.out.println("sioepke");
-		} catch (IOException e) {
-			System.out.println("sebonki" + e.getMessage());
-		}
-		return null;
-	}
-
 
 	private EnvironmentDto convertEnvironment(Environment environment) {
 		return new EnvironmentDto(environment.getEnvironmentId(), environment.getEnvironmentName());
@@ -217,8 +198,10 @@ public class EnvironmentController {
 
 		return new CapabilityMapDto(environment.getEnvironmentId(), environment.getEnvironmentName(),
 				environment.getCapabilities().stream()
-						.filter(i -> i.getParentCapabilityId().equals(0) || i.getParentCapabilityId() > level)
-						.map(i -> constructCapabilityTree(i, environment.getCapabilities()))
+						.filter(i -> i.getParentCapabilityId().equals(0))
+						.map(i -> constructCapabilityTree(i, environment.getCapabilities().stream()
+							.filter(ii -> ii.getLevel().getLevel() <= level)
+							.collect(Collectors.toList())))
 						.collect(Collectors.toList()),
 				strategiesDto);
 	}
@@ -435,7 +418,8 @@ public class EnvironmentController {
 				capability.getLevel(), capability.getPaceOfChange(), capability.getTargetOperatingModel(),
 				capability.getResourceQuality(), capability.getInformationQuality(), capability.getApplicationFit(),
 				convertBasicStatus(capability.getStatus()),
-				pool.stream().filter(i -> i.getParentCapabilityId().equals(capability.getCapabilityId()))
+				pool.stream()
+						.filter(i -> i.getParentCapabilityId().equals(capability.getCapabilityId()))
 						.map(i -> constructCapabilityTree(i, pool)).collect(Collectors.toList()),
 				capabilityItemsDto, projectsDto, businessProcessDto, capabilityInformationDto, resourceDto,
 				capabilityApplicationDto);
