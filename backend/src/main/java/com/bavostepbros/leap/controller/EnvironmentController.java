@@ -182,7 +182,7 @@ public class EnvironmentController {
 	}
 
 	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
-	@PostMapping(path = "template/{templateName}")
+	@GetMapping(path = "template/{templateName}")
 	public String getTemplate(
 			@PathVariable("templateName") String templateName) {
 		try {
@@ -190,7 +190,7 @@ public class EnvironmentController {
 			File file = new ClassPathResource(templateDir + templateName + ".json", LeapApplication.class).getFile();
 			return new String(Files.readAllBytes(file.toPath()));
 		} catch (FileNotFoundException e) {
-			//TODO fix catches
+	plate endpoint		//TODO fix catches
 			System.out.println("sioepke");
 		} catch (IOException e) {
 			System.out.println("sebonki" + e.getMessage());
