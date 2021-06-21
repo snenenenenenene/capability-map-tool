@@ -1,7 +1,9 @@
 package com.bavostepbros.leap.controller;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bavostepbros.leap.configuration.jwtconfig.JwtUtility;
 import com.bavostepbros.leap.domain.model.Role;
 import com.bavostepbros.leap.domain.model.User;
+import com.bavostepbros.leap.domain.model.dto.RoleDto;
 import com.bavostepbros.leap.domain.model.dto.UserDto;
 import com.bavostepbros.leap.domain.service.emailservice.EmailService;
 import com.bavostepbros.leap.domain.service.roleservice.RoleService;
@@ -52,26 +55,27 @@ public class UserController {
 
 	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public UserDto addUser(@ModelAttribute("username") String username, @ModelAttribute("email") String email) {
+	public UserDto addUser(@ModelAttribute("username") String username, @ModelAttribute("roleId") Integer roleId, 
+			@ModelAttribute("email") String email) {
 		String password = userService.generatePassword();
 
-		User user = userService.save(username, password, email);
+		User user = userService.save(username, password, email, roleId);
 		emailService.sendNewUserMessage(user.getEmail(), password);
-		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail());
+		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail(), convertRoles(user.getRoles()));
 	}
 
 	@PreAuthorize("hasAuthority('USER_ADMIN')")
 	@GetMapping("/{id}")
 	public UserDto getUserById(@ModelAttribute("id") Integer id) {
 		User user = userService.get(id);
-		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail());
+		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail(), convertRoles(user.getRoles()));
 	}
 
 	@PreAuthorize("hasAuthority('USER_ADMIN')")
 	@GetMapping("/email/{email}")
 	public UserDto getUserByEmail(@ModelAttribute("email") String email) {
 		User user = userService.getByEmail(email);
-		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail());
+		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail(), convertRoles(user.getRoles()));
 	}
 
 	@PreAuthorize("hasAuthority('USER_ADMIN')")
@@ -79,17 +83,18 @@ public class UserController {
 	public List<UserDto> getAllUsers() {
 		List<User> users = userService.getAll();
 		List<UserDto> usersDto = users.stream().map(user -> new UserDto(user.getUserId(),
-				user.getUsername(), user.getEmail())).collect(Collectors.toList());
+				user.getUsername(), user.getEmail(), convertRoles(user.getRoles()))).collect(Collectors.toList());
 		return usersDto;
 	}
 
 	@PreAuthorize("hasAuthority('USER_ADMIN')")
 	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public UserDto updateUser(@ModelAttribute("userId") Integer userId, @ModelAttribute("username") String username,
+	public UserDto updateUser(@ModelAttribute("roleId") Integer roleId, 
+			@ModelAttribute("userId") Integer userId, @ModelAttribute("username") String username,
 			@ModelAttribute("password") String password, @ModelAttribute("email") String email) {
 
-		User user = userService.update(userId, username, password, email);
-		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail());
+		User user = userService.update(userId, username, password, email, roleId);
+		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail(), convertRoles(user.getRoles()));
 	}
 
 	@PreAuthorize("hasAuthority('USER_ADMIN')")
@@ -126,8 +131,9 @@ public class UserController {
 
 		String username = user.getUsername();
 		String currentUser = jwtUtility.extractUsername(jwt);
-		if(currentUser.equals(username)){
-			userService.update(id, user.getUsername(), password, user.getEmail());
+		if(currentUser.equals(username)) {
+			Integer roleId = user.getRoles().iterator().next().getRoleId();
+			userService.update(id, user.getUsername(), password, user.getEmail(), roleId);
 			return "Password saved";
 		}
 		else{
@@ -144,11 +150,20 @@ public class UserController {
 			String password = userService.generatePassword();
 			Integer userId = user.getUserId();
 			String username = user.getUsername();
-			userService.update(userId, username, password, email);
+			Integer roleId = user.getRoles().iterator().next().getRoleId();
+			userService.update(userId, username, password, email, roleId);
 			emailService.sendForgotPassword(email, password);
 			result = "Email sent.";
 		}
 		return result;
+	}
+	
+	private Set<RoleDto> convertRoles(Set<Role> roles) {
+		Set<RoleDto> roleDtos = new HashSet<>();
+		for (Role role : roles) {
+			roleDtos.add(new RoleDto(role.getRoleId(), role.getRoleName(), role.getWeight()));
+		}
+		return roleDtos;
 	}
 
 }
