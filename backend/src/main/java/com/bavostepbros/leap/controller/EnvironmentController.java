@@ -171,7 +171,7 @@ public class EnvironmentController {
 	 * @return CapabilityMapDto
 	 */
 	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
-	@GetMapping(path = "capabilitymap/{environmentId}")
+	@GetMapping(path = "capabilitymap/{environmentId}/{level}")
 	public CapabilityMapDto getCapabilityMap(@PathVariable("environmentId") Integer environmentId,
 			@PathVariable("level") Integer level) {
 		try {
