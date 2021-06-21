@@ -50,6 +50,20 @@ export default class NewEnvironment extends Component {
             environmentName: this.state.environmentName,
           })
         );
+      })
+      .catch((error) => {
+        toast.error("Something went Wrong");
+      });
+    this.state.api.endpoints.environment
+      .createTemplate(formData)
+      .then((response) => {
+        toast.success("Template Successfully Imported!");
+        localStorage.setItem(
+          "environment",
+          JSON.stringify({
+            environmentName: this.state.environmentName,
+          })
+        );
         this.props.history.push(`environment/${this.state.environmentName}`);
       })
       .catch((error) => {
@@ -109,7 +123,7 @@ export default class NewEnvironment extends Component {
           });
       })
       .catch((error) => {
-        toast.error("Failed to Connect to Environments");
+        toast.error(error.response.data.error);
       });
   };
 

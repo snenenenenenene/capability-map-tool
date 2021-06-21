@@ -287,10 +287,7 @@ class App extends Component {
                           <li className="dropdown-item">Logout</li>
                         </Link>
                         <hr></hr>
-                        <li
-                          className="dropdown-item my-auto"
-                          style={{ marginBottom: 5 }}
-                        >
+                        <li className="my-auto" style={{ marginBottom: 5 }}>
                           {this.state.user.username}
                         </li>
                       </ul>
