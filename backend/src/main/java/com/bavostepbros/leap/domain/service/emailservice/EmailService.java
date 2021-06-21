@@ -1,10 +1,5 @@
 package com.bavostepbros.leap.domain.service.emailservice;
 
-import java.io.IOException;
-import java.util.Map;
-
-import javax.mail.MessagingException;
-
 // import freemarker.template.TemplateException;
 
 public interface EmailService {

@@ -1,36 +1,29 @@
 package com.bavostepbros.leap.controller;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.bavostepbros.leap.domain.model.BusinessProcess;
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.CapabilityApplication;
 import com.bavostepbros.leap.domain.model.CapabilityInformation;
 import com.bavostepbros.leap.domain.model.CapabilityItem;
-
-import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapDto;
-import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapItemDto;
-
-import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
-
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.ITApplication;
 import com.bavostepbros.leap.domain.model.Information;
@@ -55,6 +48,11 @@ import com.bavostepbros.leap.domain.model.dto.StatusDto;
 import com.bavostepbros.leap.domain.model.dto.StrategyDto;
 import com.bavostepbros.leap.domain.model.dto.StrategyItemDto;
 import com.bavostepbros.leap.domain.model.dto.TechnologyDto;
+import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapDto;
+import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapItemDto;
+import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
+
+import lombok.RequiredArgsConstructor;
 
 
 /**
@@ -71,6 +69,7 @@ public class EnvironmentController {
 	//TODO fix constructor injection
 	@Autowired
 	private EnvironmentService envService;
+
 
 	/**
 	 * @param environmentName
@@ -166,7 +165,7 @@ public class EnvironmentController {
 	 * @return CapabilityMapDto
 	 */
 	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
-	@GetMapping(path = "capabilitymap/{environmentId}")
+	@GetMapping(path = "capabilitymap/{environmentId}/{level}")
 	public CapabilityMapDto getCapabilityMap(@PathVariable("environmentId") Integer environmentId,
 			@PathVariable("level") Integer level) {
 		try {
@@ -176,25 +175,6 @@ public class EnvironmentController {
 		}
 	}
 
-	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
-	@PostMapping(path = "upload-csv-file")
-	public void uploadCsvFile(
-			@ModelAttribute("file") MultipartFile file,
-			@ModelAttribute("environmentId") Integer environmentId) {
-		if(!file.isEmpty()) {
-			try(Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
-				CsvToBean<Capability> csvToBean = new CsvToBeanBuilder<Capability>(reader)
-						.withIgnoreLeadingWhiteSpace(true)
-						.build();
-
-				List<Capability> capabilities = csvToBean.parse();
-				envService.addCapabilities(environmentId, capabilities);
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
 
 	private EnvironmentDto convertEnvironment(Environment environment) {
 		return new EnvironmentDto(environment.getEnvironmentId(), environment.getEnvironmentName());
@@ -214,8 +194,10 @@ public class EnvironmentController {
 
 		return new CapabilityMapDto(environment.getEnvironmentId(), environment.getEnvironmentName(),
 				environment.getCapabilities().stream()
-						.filter(i -> i.getParentCapabilityId().equals(0) || i.getParentCapabilityId() > level)
-						.map(i -> constructCapabilityTree(i, environment.getCapabilities()))
+						.filter(i -> i.getParentCapabilityId().equals(0))
+						.map(i -> constructCapabilityTree(i, environment.getCapabilities().stream()
+							.filter(ii -> ii.getLevel().getLevel() <= level)
+							.collect(Collectors.toList())))
 						.collect(Collectors.toList()),
 				strategiesDto);
 	}
@@ -432,7 +414,8 @@ public class EnvironmentController {
 				capability.getLevel(), capability.getPaceOfChange(), capability.getTargetOperatingModel(),
 				capability.getResourceQuality(), capability.getInformationQuality(), capability.getApplicationFit(),
 				convertBasicStatus(capability.getStatus()),
-				pool.stream().filter(i -> i.getParentCapabilityId().equals(capability.getCapabilityId()))
+				pool.stream()
+						.filter(i -> i.getParentCapabilityId().equals(capability.getCapabilityId()))
 						.map(i -> constructCapabilityTree(i, pool)).collect(Collectors.toList()),
 				capabilityItemsDto, projectsDto, businessProcessDto, capabilityInformationDto, resourceDto,
 				capabilityApplicationDto);

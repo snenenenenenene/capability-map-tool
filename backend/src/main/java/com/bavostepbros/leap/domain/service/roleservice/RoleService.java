@@ -1,7 +1,6 @@
 package com.bavostepbros.leap.domain.service.roleservice;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.bavostepbros.leap.domain.model.Role;
 

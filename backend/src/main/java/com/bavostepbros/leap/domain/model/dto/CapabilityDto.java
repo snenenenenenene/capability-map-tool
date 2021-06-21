@@ -4,7 +4,6 @@ import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 import com.bavostepbros.leap.domain.model.paceofchange.PaceOfChange;
 import com.bavostepbros.leap.domain.model.targetoperatingmodel.TargetOperatingModel;
 
-import com.opencsv.bean.CsvBindByName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +24,7 @@ public class CapabilityDto {
 	private PaceOfChange paceOfChange;
 	private TargetOperatingModel targetOperatingModel;
 	private Integer resourceQuality;
-	private Integer informationQuality;
-	private Integer applicationFit;
+	private Double informationQuality;
+	private Double applicationFit;
 	
 }

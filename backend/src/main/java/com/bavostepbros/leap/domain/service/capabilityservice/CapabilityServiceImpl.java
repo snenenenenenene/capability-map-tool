@@ -1,17 +1,22 @@
 package com.bavostepbros.leap.domain.service.capabilityservice;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import javax.transaction.Transactional;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
-import com.bavostepbros.leap.domain.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bavostepbros.leap.domain.customexceptions.EnumException;
+import com.bavostepbros.leap.domain.model.BusinessProcess;
+import com.bavostepbros.leap.domain.model.Capability;
+import com.bavostepbros.leap.domain.model.CapabilityApplication;
+import com.bavostepbros.leap.domain.model.Environment;
+import com.bavostepbros.leap.domain.model.Project;
+import com.bavostepbros.leap.domain.model.Resource;
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 import com.bavostepbros.leap.domain.model.paceofchange.PaceOfChange;
 import com.bavostepbros.leap.domain.model.targetoperatingmodel.TargetOperatingModel;
@@ -20,7 +25,9 @@ import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentServic
 import com.bavostepbros.leap.domain.service.projectservice.ProjectService;
 import com.bavostepbros.leap.domain.service.resourceservice.ResourceService;
 import com.bavostepbros.leap.domain.service.statusservice.StatusService;
+import com.bavostepbros.leap.persistence.CapabilityApplicationDAL;
 import com.bavostepbros.leap.persistence.CapabilityDAL;
+import com.bavostepbros.leap.persistence.EnvironmentDAL;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,6 +43,9 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 	@Autowired
 	private CapabilityDAL capabilityDAL;
+	
+	@Autowired
+	private EnvironmentDAL environmentDAL;
 
 	@Autowired
 	private EnvironmentService environmentService;
@@ -51,16 +61,22 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 	@Autowired
 	private ResourceService resourceService;
+	
+	@Autowired
+	private CapabilityApplicationDAL capabilityApplicationDAL;
 
 	@Override
 	public Capability save( Integer environmentId, Integer statusId,
-			Integer parentCapabilityId, @NotBlank String capabilityName, String capabilityDescription,
-			String paceOfChange, String targetOperatingModel, Integer resourceQuality, Integer informationQuality,
-			Integer applicationFit) {
-		return save(new Capability(environmentService.get(environmentId), statusService.get(statusId),
+			Integer parentCapabilityId, String capabilityName, String capabilityDescription,
+			String paceOfChange, String targetOperatingModel, Integer resourceQuality, Double informationQuality,
+			Double applicationFit) {
+		
+		Capability capability = save(new Capability(environmentService.get(environmentId), statusService.get(statusId),
 				parentCapabilityId, capabilityName, capabilityDescription, PaceOfChange.valueOf(paceOfChange),
 				TargetOperatingModel.valueOf(targetOperatingModel), resourceQuality, informationQuality,
 				applicationFit));
+		calculateValues(capability.getCapabilityId());
+		return capability;
 	}
 
 	@Override
@@ -72,25 +88,35 @@ public class CapabilityServiceImpl implements CapabilityService {
 	}
 
 	@Override
-	public Capability get(@NotNull @Min(1) Integer id) throws NoSuchElementException {
-		return capabilityDAL.findById(id).get();
+	public Capability get(Integer id) {
+		Optional<Capability> capability = capabilityDAL.findById(id);
+		capability.orElseThrow(() -> new NullPointerException("Capability does not exist."));
+		Capability cap = capability.get();
+		calculateValues(cap.getCapabilityId());
+		return cap;
 	}
 
 	@Override
 	public List<Capability> getAll() {
-		return capabilityDAL.findAll();
+		List<Capability> capabilities = capabilityDAL.findAll();
+		for (Capability capability : capabilities) {
+			calculateValues(capability.getCapabilityId());
+		}
+		return capabilities;
 	}
 
 	@Override
-	public Capability update(@NotNull @Min(1) Integer capabilityId, @NotNull @Min(1) Integer environmentId,
-			@NotNull @Min(1) Integer statusId, Integer parentCapabilityId, @NotBlank String capabilityName,
+	public Capability update(Integer capabilityId, Integer environmentId,
+			Integer statusId, Integer parentCapabilityId, String capabilityName,
 			String capabilityDescription, String paceOfChange, String targetOperatingModel, Integer resourceQuality,
-			Integer informationQuality, Integer applicationFit) {
+			Double informationQuality, Double applicationFit) {
 		// TODO duplicate name in same environment check
-		return save(new Capability(capabilityId, environmentService.get(environmentId), statusService.get(statusId),
+		Capability capability = new Capability(capabilityId, environmentService.get(environmentId), statusService.get(statusId),
 				parentCapabilityId, capabilityName, capabilityDescription, PaceOfChange.valueOf(paceOfChange),
 				TargetOperatingModel.valueOf(targetOperatingModel), resourceQuality, informationQuality,
-				applicationFit));
+				applicationFit);
+		calculateValues(capability.getCapabilityId());
+		return capability;
 	}
 
 	// TODO try catch for out of bounds exception
@@ -118,8 +144,12 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 	@Override
 	public List<Capability> getCapabilitiesByEnvironment(Integer environmentId) {
-		Environment environment = environmentService.get(environmentId);
-		List<Capability> capabilities = capabilityDAL.findByEnvironment(environment);
+		Optional<Environment> environment = environmentDAL.findById(environmentId);
+		environment.orElseThrow(() -> new NullPointerException("Environment does not exist."));
+		List<Capability> capabilities = capabilityDAL.findByEnvironment(environment.get());
+		for (Capability capability : capabilities) {
+			calculateValues(capability.getCapabilityId());
+		}
 		return capabilities;
 	}
 
@@ -131,12 +161,18 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 		CapabilityLevel capabilityLevel = CapabilityLevel.valueOf(level);
 		List<Capability> capabilities = capabilityDAL.findByLevel(capabilityLevel);
+		for (Capability capability : capabilities) {
+			calculateValues(capability.getCapabilityId());
+		}
 		return capabilities;
 	}
 
 	@Override
 	public List<Capability> getCapabilityChildren(Integer parentId) {
 		List<Capability> capabilities = capabilityDAL.findByParentCapabilityId(parentId);
+		for (Capability capability : capabilities) {
+			calculateValues(capability.getCapabilityId());
+		}
 		return capabilities;
 	}
 
@@ -148,6 +184,9 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 		CapabilityLevel capabilityLevel = CapabilityLevel.valueOf(level);
 		List<Capability> capabilities = capabilityDAL.findByParentCapabilityIdAndLevel(parentId, capabilityLevel);
+		for (Capability capability : capabilities) {
+			calculateValues(capability.getCapabilityId());
+		}
 		return capabilities;
 	}
 
@@ -161,18 +200,21 @@ public class CapabilityServiceImpl implements CapabilityService {
 		return !capabilityDAL.findByCapabilityName(capabilityName).isEmpty();
 	}
 
-	// TODO write unit tests for this one!
 	@Override
 	public Capability getCapabilityByCapabilityName(String capabilityName) {
-		return capabilityDAL.findByCapabilityName(capabilityName).get();
+		Optional<Capability> capability = capabilityDAL.findByCapabilityName(capabilityName);
+		capability.orElseThrow(() -> new NullPointerException("Capability does not exist."));
+		Capability cap = capability.get();
+		calculateValues(cap.getCapabilityId());
+		return cap;
 	}
 
 	@Override
-	public void addProject(Integer capabilityId, Integer projectId) {
+	public Capability addProject(Integer capabilityId, Integer projectId) {
 		Capability capability = get(capabilityId);
 		Project project = projectService.get(projectId);
 		capability.addProject(project);
-		return;
+		return capabilityDAL.save(capability);
 	}
 
 	@Override
@@ -180,6 +222,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 		Capability capability = get(capabilityId);
 		Project project = projectService.get(projectId);
 		capability.removeProject(project);
+		capabilityDAL.save(capability);
 		return;
 	}
 
@@ -190,11 +233,11 @@ public class CapabilityServiceImpl implements CapabilityService {
 	}
 
 	@Override
-	public void addBusinessProcess(Integer capabilityId, Integer businessProcessId) {
+	public Capability addBusinessProcess(Integer capabilityId, Integer businessProcessId) {
 		Capability capability = get(capabilityId);
 		BusinessProcess businessProcess = businessProcessService.get(businessProcessId);
 		capability.addBusinessProcess(businessProcess);
-		return;
+		return capabilityDAL.save(capability);
 	}
 
 	@Override
@@ -202,6 +245,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 		Capability capability = get(capabilityId);
 		BusinessProcess businessProcess = businessProcessService.get(businessProcessId);
 		capability.removeBusinessProcess(businessProcess);
+		capabilityDAL.save(capability);
 		return;
 	}
 
@@ -212,11 +256,11 @@ public class CapabilityServiceImpl implements CapabilityService {
 	}
 
 	@Override
-	public void addResource(Integer capabilityId, Integer resourceId) {
+	public Capability addResource(Integer capabilityId, Integer resourceId) {
 		Capability capability = get(capabilityId);
 		Resource resource = resourceService.get(resourceId);
 		capability.addResource(resource);
-		return;
+		return capabilityDAL.save(capability);
 	}
 
 	@Override
@@ -224,6 +268,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 		Capability capability = get(capabilityId);
 		Resource resource = resourceService.get(resourceId);
 		capability.removeResource(resource);
+		capabilityDAL.save(capability);
 		return;
 	}
 
@@ -231,6 +276,30 @@ public class CapabilityServiceImpl implements CapabilityService {
 	public Set<Resource> getAllResourceByResourceId(Integer capabilityId) {
 		Capability capability = get(capabilityId);
 		return capability.getResources();
+	}
+	
+	public void calculateValues(Integer capabilityId) {
+		Optional<Capability> cap = capabilityDAL.findById(capabilityId);
+		cap.orElseThrow(() -> new NullPointerException("Capability does not exist"));
+		Capability capability = cap.get();
+		List<CapabilityApplication> capabilityApplications = capabilityApplicationDAL.findByCapability(capability);
+		Double avgInf = 0.0;
+		Double avgApp = 0.0;
+		
+		for (CapabilityApplication capApp : capabilityApplications) {
+			avgInf += (capApp.getCompleteness() + capApp.getCorrectnessInformationFit() +
+					capApp.getAvailability()) / 3 * capApp.getImportance();
+		}
+		
+		for (CapabilityApplication capApp : capabilityApplications) {
+			avgApp += (capApp.getEfficiencySupport() + capApp.getFunctionalCoverage() +
+					capApp.getCorrectnessBusinessFit() + capApp.getFuturePotential()) 
+					/ 3 * capApp.getImportance();
+		}
+		
+		capability.setInformationQuality(avgInf);
+		capability.setApplicationFit(avgApp);
+		capabilityDAL.save(capability);
 	}
 
 }

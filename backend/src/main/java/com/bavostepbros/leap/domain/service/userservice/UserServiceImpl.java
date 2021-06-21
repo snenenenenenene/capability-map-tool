@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.bavostepbros.leap.domain.model.Role;
 import com.bavostepbros.leap.domain.model.User;
 import com.bavostepbros.leap.domain.service.roleservice.RoleService;
+import com.bavostepbros.leap.persistence.RoleDAL;
 import com.bavostepbros.leap.persistence.UserDAL;
 
 @Service
@@ -36,20 +37,17 @@ public class UserServiceImpl implements UserService {
 
 	@PostConstruct
 	private void init() {
-		User user = save("super_admin", "super_admin", "super_admin");
-		Role role = roleService.getRoleByRoleName("USER_ADMIN");
-		user.addRole(role);
-		userDAL.save(user);
-				
-		User viewingUser = save("viewing_user", "viewing_user", "viewing_user");
-		Role viewingRole = roleService.getRoleByRoleName("VIEWING_USER");
-		viewingUser.addRole(viewingRole);
-		userDAL.save(viewingUser);
+		User user = save("super_admin", "super_admin", "super_admin", 1);				
+		User viewingUser = save("viewing_user", "viewing_user", "viewing_user", 4);
 	}
 
 	@Override
-	public User save(String username, String password, String email) {
-    	return userDAL.save(new User(username, passwordEncoder.encode(password), email));
+	public User save(String username, String password, String email, Integer roleId) {
+		User user = userDAL.save(new User(username, passwordEncoder.encode(password), email));
+		Role role = roleService.get(roleId);
+		user.addRole(role);
+		userDAL.save(user);
+    	return user;
 	}
 
 	@Override
@@ -69,8 +67,12 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public User update(Integer userId, String username, String password, String email) {
-		return userDAL.save(new User(userId, username, passwordEncoder.encode(password), email));
+	public User update(Integer userId, String username, String password, String email, Integer roleId) {
+		User user = userDAL.save(new User(userId, username, passwordEncoder.encode(password), email));
+		Role role = roleService.get(roleId);
+		user.addRole(role);
+		userDAL.save(user);
+    	return user;
 	}
 
 	@Override

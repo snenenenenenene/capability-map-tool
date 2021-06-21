@@ -64,7 +64,7 @@ public class ResourceServiceTest {
 		statusFirst = new Status(1, LocalDate.of(2021, 5, 9));
 		environmentFirst = new Environment(1, "Environment test");
 		capabilityFirst = new Capability(1, environmentFirst, statusFirst, 0, "Capability 1", "Description 1",
-				PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 9, 8);
+				PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 2.0, 3.0);
 		resources = List.of(resourceFirst, resourceSecond);
 		capabilities = Set.of(capabilityFirst);
 		optionalResourceFirst = Optional.of(resourceFirst);

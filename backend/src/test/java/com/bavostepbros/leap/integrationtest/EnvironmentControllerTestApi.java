@@ -3,6 +3,7 @@ package com.bavostepbros.leap.integrationtest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
@@ -21,10 +22,17 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Environment;
+import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.dto.EnvironmentDto;
+import com.bavostepbros.leap.domain.model.paceofchange.PaceOfChange;
+import com.bavostepbros.leap.domain.model.targetoperatingmodel.TargetOperatingModel;
+import com.bavostepbros.leap.domain.service.capabilityservice.CapabilityService;
 import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
+import com.bavostepbros.leap.persistence.CapabilityDAL;
 import com.bavostepbros.leap.persistence.EnvironmentDAL;
+import com.bavostepbros.leap.persistence.StatusDAL;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -44,10 +52,20 @@ public class EnvironmentControllerTestApi extends ApiIntegrationTest {
 	private EnvironmentDAL environmentDAL;
 	
 	@Autowired
+	private StatusDAL statusDAL;
+	
+	@Autowired
+	private CapabilityDAL capabilityDAL;
+	
+	@Autowired
 	private EnvironmentService environmentService;
 	
 	private Environment environmentFirst;
 	private Environment environmentSecond;
+	private Status statusFirst;
+	private Status statusSecond;
+	private Capability capabilityFirst;
+	private Capability capabilitySecond;
 	
 	static final String PATH = "/api/environment/";
 	
@@ -60,20 +78,38 @@ public class EnvironmentControllerTestApi extends ApiIntegrationTest {
 	public void init() {
 		environmentFirst = environmentDAL.save(new Environment(1, "Test 1"));
 		environmentSecond = environmentDAL.save(new Environment(2, "Test 2"));
+		statusFirst = statusDAL.save(new Status(1, LocalDate.of(2021, 05, 15)));
+		statusSecond = statusDAL.save(new Status(2, LocalDate.of(2021, 05, 20)));
+		capabilityFirst = capabilityDAL.save(new Capability(1, environmentFirst, statusFirst, 1, "Capability 1",
+				"Description 1", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 1, 2.0, 3.0));
+		capabilitySecond = capabilityDAL.save(
+				new Capability(2, environmentFirst, statusFirst, capabilityFirst.getCapabilityId(), "Capability 2",
+						"Description 2", PaceOfChange.INNOVATIVE, TargetOperatingModel.DIVERSIFICATION, 1, 2.0, 3.0));
 	}
 	
 	@AfterEach
 	public void close() {
 		environmentDAL.delete(environmentFirst);
 		environmentDAL.delete(environmentSecond);
+		statusDAL.delete(statusFirst);
+		statusDAL.delete(statusSecond);
+		capabilityDAL.delete(capabilityFirst);
+		capabilityDAL.delete(capabilitySecond);
 	}
 	
 	@Test
 	void should_notBeNull() {
 		assertNotNull(environmentService);
 		assertNotNull(environmentDAL);
+		assertNotNull(statusDAL);
+		assertNotNull(capabilityDAL);
+		
 		assertNotNull(environmentFirst);
 		assertNotNull(environmentSecond);
+		assertNotNull(statusFirst);
+		assertNotNull(statusSecond);
+		assertNotNull(capabilityFirst);
+		assertNotNull(capabilitySecond);
 	}
 	
 	@Test
@@ -177,6 +213,23 @@ public class EnvironmentControllerTestApi extends ApiIntegrationTest {
 		assertNotNull(resultEnvironment);
 		testEnvironment(environment, resultEnvironment);
 	}
+	
+//	@Test
+//	public void should_returnCapabilityMap_whenGetCapabilityMap() throws Exception {
+//		Integer environmentId = environmentFirst.getEnvironmentId();
+//		Integer level = 3;
+//		capabilityService.updateLevel(capabilityFirst);
+//		
+//		MvcResult mvcResult = mockMvc.perform(get(PATH + "capabilitymap/" + environmentId + "/" + level))
+//			.andExpect(MockMvcResultMatchers.status().isOk())
+//			.andReturn();
+//		
+//		CapabilityMapDto resultEnvironment = objectMapper.readValue(
+//				mvcResult.getResponse().getContentAsString(), CapabilityMapDto.class);
+//		
+//		assertNotNull(resultEnvironment);
+//		// testEnvironment(environmentFirst, resultEnvironment);
+//	}
 	
 	@Test
 	public void should_deleteEnvironment_whenDeleteEnvironment() throws Exception {

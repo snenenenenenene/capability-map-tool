@@ -100,10 +100,10 @@ public class CapabilityItemControllerTest extends ApiIntegrationTest {
 		environmentFirst = environmentDAL.save(new Environment(1, "Test 1"));
 		environmentSecond = environmentDAL.save(new Environment(2, "Test 2"));
 		capabilityFirst = capabilityDAL.save(new Capability(1, environmentFirst, statusFirst, 1, "Capability 1",
-				"Description 1", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 1, 1, 1));
+				"Description 1", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 1, 2.0, 3.0));
 		capabilitySecond = capabilityDAL.save(
 				new Capability(2, environmentFirst, statusFirst, capabilityFirst.getCapabilityId(), "Capability 2",
-						"Description 2", PaceOfChange.INNOVATIVE, TargetOperatingModel.DIVERSIFICATION, 1, 1, 1));
+						"Description 2", PaceOfChange.INNOVATIVE, TargetOperatingModel.DIVERSIFICATION, 1, 2.0, 3.0));
 		strategyFirst = strategyDAL.save(new Strategy(1, statusFirst, "Strategy 1", LocalDate.of(2021, 05, 15),
 				LocalDate.of(2021, 05, 20), environmentFirst));
 		strategySecond = strategyDAL.save(new Strategy(2, statusSecond, "Strategy 2", LocalDate.of(2021, 05, 15),

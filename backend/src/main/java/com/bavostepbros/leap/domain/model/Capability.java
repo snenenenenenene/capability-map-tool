@@ -88,10 +88,10 @@ public class Capability {
 	private Integer resourceQuality;
 
 	@Column(name = "INFORMATIONQUALITY")
-	private Integer informationQuality;
+	private Double informationQuality;
 
 	@Column(name = "APPLICATIONFIT")
-	private Integer applicationFit;
+	private Double applicationFit;
 
 	@OneToMany(mappedBy = "capability")
 	private List<CapabilityItem> capabilityItems;
@@ -123,9 +123,9 @@ public class Capability {
 		uniqueConstraints = { @UniqueConstraint(columnNames = {"CAPABILITYID", "RESOURCEID"})})
 	private Set<Resource> resources = new HashSet<>();
 
-	public Capability(Environment environment, Status status, Integer parentCapabilityId, @NotBlank String capabilityName,
+	public Capability(Environment environment, Status status, Integer parentCapabilityId, String capabilityName,
 			String capabilityDescription, PaceOfChange paceOfChange, TargetOperatingModel targetOperatingModel,
-			Integer resourceQuality, Integer informationQuality, Integer applicationFit) {
+			Integer resourceQuality, Double informationQuality, Double applicationFit) {
 		this.environment = environment;
 		this.status = status;
 		this.parentCapabilityId = parentCapabilityId;
@@ -139,9 +139,9 @@ public class Capability {
 	}
 
 	public Capability(Integer capabilityId, Environment environment, Status status, Integer parentCapabilityId,
-			@NotBlank String capabilityName, String capabilityDescription, PaceOfChange paceOfChange,
-			TargetOperatingModel targetOperatingModel, Integer resourceQuality, Integer informationQuality,
-			Integer applicationFit) {
+			String capabilityName, String capabilityDescription, PaceOfChange paceOfChange,
+			TargetOperatingModel targetOperatingModel, Integer resourceQuality, Double informationQuality,
+			Double applicationFit) {
 		this.capabilityId = capabilityId;
 		this.environment = environment;
 		this.status = status;

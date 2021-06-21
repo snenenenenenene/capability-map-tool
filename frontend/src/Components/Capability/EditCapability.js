@@ -278,7 +278,7 @@ export default class EditCapability extends Component {
                         Select Pace of Change
                       </option>
                       <option value="STANDARD">Standard</option>
-                      <option value="DIFFERNTIATION">Differentiation</option>
+                      <option value="DIFFERENTIATION">Differentiation</option>
                       <option value="INNOVATIVE">Innovative</option>
                     </select>
                   </div>
@@ -376,8 +376,8 @@ export default class EditCapability extends Component {
                       placeholder="Validity Period"
                       options={this.state.statuses}
                       required
-                      onChange={(statusId) => {
-                        this.setState({ statusId: statusId });
+                      onChange={(status) => {
+                        this.setState({ statusId: status.statusId });
                       }}
                     ></Select>
                     <Modal show={this.state.showModal}>

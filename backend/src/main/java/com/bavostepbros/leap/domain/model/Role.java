@@ -9,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,9 +29,11 @@ public class Role {
     @Column(name = "ROLEID")
     private Integer roleId;
     
+    @NotBlank(message = "Role name is required.")
     @Column(name = "ROLENAME")
     private String roleName;
     
+    @NotNull(message = "Role weight is required.")
     @Column(name = "WEIGHT", unique = true)
     private Integer weight;
     

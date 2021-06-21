@@ -4,15 +4,14 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
-import javax.validation.constraints.NotBlank;
 
-import com.bavostepbros.leap.domain.model.Capability;
-import com.bavostepbros.leap.domain.model.Strategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Environment;
+import com.bavostepbros.leap.domain.model.Strategy;
 import com.bavostepbros.leap.persistence.EnvironmentDAL;
 
 import lombok.RequiredArgsConstructor;
@@ -37,7 +36,7 @@ public class EnvironmentServiceImpl implements EnvironmentService {
      * @return Environment
      */
     @Override
-    public Environment save(@NotBlank String environmentName) {
+    public Environment save(String environmentName) {
     	Environment environment = new Environment(environmentName);
         return environmentDAL.save(environment);
     }
@@ -60,7 +59,7 @@ public class EnvironmentServiceImpl implements EnvironmentService {
      * @return Environment
      */
     @Override
-    public Environment getByEnvironmentName(@NotBlank String environmentName) {
+    public Environment getByEnvironmentName(String environmentName) {
         Optional<Environment> environment = environmentDAL.findByEnvironmentName(environmentName);
         environment.orElseThrow(() -> new NullPointerException("Environment does not exist."));
         return environment.get();
@@ -82,7 +81,7 @@ public class EnvironmentServiceImpl implements EnvironmentService {
      * @return Environment
      */
     @Override
-    public Environment update(Integer environmentId, @NotBlank String environmentName) {
+    public Environment update(Integer environmentId, String environmentName) {
     	Environment environment = new Environment(environmentId, environmentName);
         return environmentDAL.save(environment);
     }
