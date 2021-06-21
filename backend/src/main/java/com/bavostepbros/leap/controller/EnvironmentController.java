@@ -1,15 +1,16 @@
 package com.bavostepbros.leap.controller;
 
-import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import com.bavostepbros.leap.LeapApplication;
 import com.bavostepbros.leap.domain.model.BusinessProcess;
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.CapabilityApplication;
@@ -20,16 +21,17 @@ import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapDto;
 import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapItemDto;
 
 import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.core.io.Resource;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.ResourceUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.ITApplication;
@@ -71,6 +73,9 @@ public class EnvironmentController {
 	//TODO fix constructor injection
 	@Autowired
 	private EnvironmentService envService;
+
+	@Autowired
+	private ResourceLoader resourceLoader;
 
 	/**
 	 * @param environmentName
@@ -177,24 +182,22 @@ public class EnvironmentController {
 	}
 
 	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
-	@PostMapping(path = "upload-csv-file")
-	public void uploadCsvFile(
-			@ModelAttribute("file") MultipartFile file,
-			@ModelAttribute("environmentId") Integer environmentId) {
-		if(!file.isEmpty()) {
-			try(Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
-				CsvToBean<Capability> csvToBean = new CsvToBeanBuilder<Capability>(reader)
-						.withIgnoreLeadingWhiteSpace(true)
-						.build();
-
-				List<Capability> capabilities = csvToBean.parse();
-				envService.addCapabilities(environmentId, capabilities);
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+	@PostMapping(path = "template/{templateName}")
+	public String getTemplate(
+			@PathVariable("templateName") String templateName) {
+		try {
+			String templateDir = "../../../capability-map-templates/";
+			File file = new ClassPathResource(templateDir + templateName + ".json", LeapApplication.class).getFile();
+			return new String(Files.readAllBytes(file.toPath()));
+		} catch (FileNotFoundException e) {
+			//TODO fix catches
+			System.out.println("sioepke");
+		} catch (IOException e) {
+			System.out.println("sebonki" + e.getMessage());
 		}
+		return null;
 	}
+
 
 	private EnvironmentDto convertEnvironment(Environment environment) {
 		return new EnvironmentDto(environment.getEnvironmentId(), environment.getEnvironmentName());
