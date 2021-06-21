@@ -111,11 +111,11 @@ public class CapabilityApplicationControllerTest extends ApiIntegrationTest {
 				LocalDate.of(2021, 01, 20), LocalDate.of(2025, 05, 20), 2, 3, 4, 5, 4, 3, 2, 1, "EUR", 1000.0, 4, 70.0,
 				100.0, TimeValue.TOLERATE));
 		capabilityApplicationFirst = capabilityApplicationDAL
-				.save(new CapabilityApplication(capabilityFirst, itApplicationFirst, 0, 1, 2, 3, 4, 5, 4, 3));
+				.save(new CapabilityApplication(capabilityFirst, itApplicationFirst, 1.0, 1, 2, 3, 4, 5, 4, 3));
 		capabilityApplicationSecond = capabilityApplicationDAL
-				.save(new CapabilityApplication(capabilitySecond, itApplicationFirst, 0, 2, 3, 4, 5, 4, 3, 2));
+				.save(new CapabilityApplication(capabilitySecond, itApplicationFirst, 0.50, 2, 3, 4, 5, 4, 3, 2));
 		capabilityApplicationThird = capabilityApplicationDAL
-				.save(new CapabilityApplication(capabilitySecond, itApplicationSecond, 0, 5, 4, 3, 2, 1, 2, 3));
+				.save(new CapabilityApplication(capabilitySecond, itApplicationSecond, 0.50, 5, 4, 3, 2, 1, 2, 3));
 		
 		capabilityId = capabilityApplicationFirst.getCapability().getCapabilityId();
 		applicationId = capabilityApplicationFirst.getApplication().getItApplicationId();

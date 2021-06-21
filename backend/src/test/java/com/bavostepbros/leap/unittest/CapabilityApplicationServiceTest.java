@@ -91,8 +91,8 @@ public class CapabilityApplicationServiceTest {
 				PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 9, 8);
 		capabilitySecond = new Capability(2, environmentFirst, statusFirst, capabilityFirst.getCapabilityId(),
 				"Capability 2", "Description 2", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 9, 8);
-		capabilityApplicationFirst = new CapabilityApplication(capabilityFirst, itApplicationFirst, 1, 2, 3, 4, 5, 6, 7, 8);
-		capabilityApplicationSecond = new CapabilityApplication(capabilitySecond, itApplicationSecond, 2, 3, 4, 5, 6, 7, 8, 9);
+		capabilityApplicationFirst = new CapabilityApplication(capabilityFirst, itApplicationFirst, 0.40, 2, 3, 4, 5, 6, 7, 8);
+		capabilityApplicationSecond = new CapabilityApplication(capabilitySecond, itApplicationSecond, 0.60, 3, 4, 5, 6, 7, 8, 9);
 		capabilityApplications = List.of(capabilityApplicationFirst, capabilityApplicationSecond);
 		optionalItApplicationFirst = Optional.of(itApplicationFirst);
 		optionalCapabilityFirst = Optional.of(capabilityFirst);
