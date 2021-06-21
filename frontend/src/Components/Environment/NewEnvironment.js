@@ -55,7 +55,7 @@ export default class NewEnvironment extends Component {
         toast.error("Something went Wrong");
       });
     this.state.api.endpoints.environment
-      .createTemplate(formData)
+      .loadTemplate()
       .then((response) => {
         toast.success("Template Successfully Imported!");
         localStorage.setItem(

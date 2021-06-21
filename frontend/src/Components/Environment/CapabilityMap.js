@@ -177,7 +177,10 @@ export default class CapabilityMap extends Component {
       });
 
     await this.state.api.endpoints.environment
-      .generateCapabilityMap({ id: this.state.environmentId })
+      .generateCapabilityMap({
+        id: this.state.environmentId,
+        level: this.state.capabilityMapLayerLevel,
+      })
       .then((response) => {
         this.setState({ capabilities: response.data.capabilities });
       })
@@ -192,21 +195,17 @@ export default class CapabilityMap extends Component {
   }
 
   capabilityMapLayerLevelHandler(level) {
-    // console.log("level: " + level);
-    // console.log("level before: " + this.state.capabilityMapLayerLevel);
-    // if (this.state.capabilityMapLayerLevel < 1) {
-    //   this.setState({ capabilityMapLayerLevel: 1 });
-    //   console.log(this.state.capabilityMapLayerLevel);
-    // } else if (this.state.capabilityMapLayerLevel > 3) {
-    //   this.setState({ capabilityMapLayerLevel: 3 });
-    //   console.log("max: " + this.state.capabilityMapLayerLevel);
-    // } else {
-    console.log(this.state.capabilityMapLayerLevel + level);
-    this.setState({
-      capabilityMapLayerLevel: this.state.capabilityMapLayerLevel + level,
-    });
-    // console.log(this.state.capabilityMapLayerLevel);
-    // }
+    if (this.state.capabilityMapLayerLevel < 1) {
+      this.setState({ capabilityMapLayerLevel: 1 });
+    } else if (this.state.capabilityMapLayerLevel > 3) {
+      this.setState({ capabilityMapLayerLevel: 3 });
+    } else {
+      console.log(this.state.capabilityMapLayerLevel + level);
+      this.setState({
+        capabilityMapLayerLevel: this.state.capabilityMapLayerLevel + level,
+      });
+      this.componentDidMount();
+    }
   }
 
   //RENDER STRATEGY ITEMS AND ADD COLOURS BASED ON THEIR STRATEGIC IMPORTANCE
