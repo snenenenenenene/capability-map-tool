@@ -50,5 +50,14 @@ public class ErrorHandlingController {
 		}
 		return new ResponseEntity<ValidationErrorResponse>(error, HttpStatus.BAD_REQUEST);
 	}
+	
+	@ExceptionHandler(NullPointerException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	ResponseEntity<ValidationErrorResponse> onNullPointerException(NullPointerException e) {
+		ValidationErrorResponse error = new ValidationErrorResponse();
+		error.getViolations().add(new Violation("NullPointerException", e.getMessage()));
+		return new ResponseEntity<ValidationErrorResponse>(error, HttpStatus.BAD_REQUEST);
+	}
 
 }
