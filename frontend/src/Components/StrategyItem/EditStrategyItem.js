@@ -49,7 +49,8 @@ export default class EditStrategy extends Component {
     this.state.api.createEntity({ name: "environment" });
     this.state.api.createEntity({ name: "status" });
     this.state.api.createEntity({ name: "strategy" });
-    this.state.api.createEntity({ name: "capabiliy" });
+    this.state.api.createEntity({ name: "strategyitem" });
+    this.state.api.createEntity({ name: "capability" });
 
     await this.state.api.endpoints.environment
       .getEnvironmentByName({ name: this.state.environmentName })
@@ -81,7 +82,7 @@ export default class EditStrategy extends Component {
       });
 
     await this.state.api.endpoints.strategyitem
-      .getOne({ id: this.state.strategyItemId })
+      .getOne({ id: this.state.itemId })
       .then((response) =>
         this.setState({
           capabilityId: response.data.capabilityId,

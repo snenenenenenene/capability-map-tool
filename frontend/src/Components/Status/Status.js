@@ -54,7 +54,7 @@ export default class Status extends Component {
     await this.state.api.endpoints.status
       .getAll()
       .then((response) => {
-        this.setState({ capabilities: response.data });
+        this.setState({ statuses: response.data });
       })
       .catch((error) => {
         toast.error("Could not Find Statuses");

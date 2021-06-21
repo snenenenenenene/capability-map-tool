@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Modal } from "react-bootstrap";
-import StatusQuickAdd from "../Status/StatusQuickAdd";
 import toast from "react-hot-toast";
-import Select from "react-select";
 import API from "../../Services/API";
 
 export default class EditInfo extends Component {
@@ -11,16 +8,11 @@ export default class EditInfo extends Component {
     super(props);
     this.state = {
       api: new API(),
-      statuses: [],
-      programs: [],
-      selectedStatus: "",
-      selectedProgram: "",
       environmentName: this.props.match.params.name,
       environmentId: "",
-      infoName: "",
-      programId: "",
-      statusId: "",
-      infoId: this.props.match.params.id,
+      informationName: "",
+      informationId: this.props.match.params.id,
+      informationDescription: "",
       showModal: false,
       showItemModal: false,
     };
@@ -31,14 +23,15 @@ export default class EditInfo extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("infoName", this.state.infoName);
-    formData.append("programId", this.state.programId);
-    formData.append("statusId", this.state.statusId);
-    await this.state.api.endpoints.info
-      .update(formData, this.state.infoId)
+    formData.append("informationName", this.state.informationName);
+    formData.append(
+      "informationDescription",
+      this.state.informationDescription
+    );
+    await this.state.api.endpoints.information
+      .update(formData, this.state.informationId)
       .then((response) => {
-        toast.success("Info Edited Successfully!");
-        this.setState({ infoId: response.data.infoId });
+        toast.success("Information Edited Successfully!");
         this.props.history.push(
           `/environment/${this.state.environmentName}/info`
         );
@@ -48,9 +41,7 @@ export default class EditInfo extends Component {
 
   async componentDidMount() {
     this.state.api.createEntity({ name: "environment" });
-    this.state.api.createEntity({ name: "program" });
-    this.state.api.createEntity({ name: "status" });
-    this.state.api.createEntity({ name: "info" });
+    this.state.api.createEntity({ name: "information" });
     await this.state.api.endpoints.environment
       .getEnvironmentByName({ name: this.state.environmentName })
       .then((response) => {
@@ -60,43 +51,16 @@ export default class EditInfo extends Component {
         this.props.history.push("/404");
       });
 
-    await this.state.api.endpoints.program
-      .getAll()
-      .then((response) => {
-        response.data.forEach((program) => {
-          program.label = program.programName;
-          program.value = program.programId;
-        });
-        this.setState({ programs: response.data });
-      })
-      .catch((error) => {
-        toast.error("Could not load Programs");
-      });
-    await this.state.api.endpoints.status
-
-      .getAll()
-      .then((response) => {
-        response.data.forEach((status) => {
-          status.label = status.validityPeriod;
-          status.value = status.statusId;
-        });
-        this.setState({ statuses: response.data });
-      })
-      .catch((error) => {
-        toast.error("Could not load Statuses");
-      });
-
-    await this.state.api.endpoints.info
-      .getOne({ id: this.state.infoId })
+    await this.state.api.endpoints.information
+      .getOne({ id: this.state.informationId })
       .then((response) => {
         this.setState({
-          infoName: response.data.infoName,
-          statusId: response.data.status.statusId,
-          programId: response.data.program.programId,
+          informationName: response.data.informationName,
+          informationDescription: response.data.informationDescription,
         });
       })
       .catch((error) => {
-        toast.error("Could not load Info");
+        toast.error("Could not load Information");
       });
   }
 
@@ -131,11 +95,11 @@ export default class EditInfo extends Component {
             </li>
             <li className="breadcrumb-item">
               <Link to={`/environment/${this.state.environmentName}/info`}>
-                Infos
+                Information
               </Link>
             </li>
             <li className="breadcrumb-item active" aria-current="page">
-              Edit Info
+              {this.state.informationId}
             </li>
           </ol>
         </nav>
@@ -145,86 +109,36 @@ export default class EditInfo extends Component {
             <div className="row">
               <div className="col-sm-12">
                 <div className="form-row">
-                  <div className="form-group col-md-12">
-                    <label htmlFor="infoName">Name Info</label>
+                  <div className="form-group col-sm-6">
+                    <label htmlFor="informationName">Name Info</label>
                     <input
                       type="text"
-                      id="infoName"
-                      name="infoName"
+                      id="informationName"
+                      name="informationName"
                       className="form-control"
-                      placeholder="Name Info"
-                      value={this.state.infoName}
+                      placeholder="Name"
+                      value={this.state.informationName}
                       onChange={this.handleInputChange}
                       required
                     />
                   </div>
                 </div>
               </div>
-              <div className="col-sm-6">
+              <div className="col-sm">
                 <div className="form-row">
-                  <div className="form-group col-md">
-                    <label htmlFor="paceOfChange">Program</label>
-                    <Select
-                      value={this.state.programs.filter(
-                        (program) => program.programId === this.state.programId
-                      )}
-                      options={this.state.programs}
-                      name="program"
-                      id="program"
-                      placeholder="Add Program"
-                      defaultValue={this.state.program}
-                      onChange={(program) => {
-                        this.setState({ programId: program.programId });
-                      }}
-                      required
-                    ></Select>
+                  <div className="form-group col-sm-6">
+                    <label htmlFor="informationDescription">Description</label>
+                    <textarea
+                      type="text"
+                      id="informationDescription"
+                      name="informationDescription"
+                      className="form-control"
+                      rows="5"
+                      placeholder="Description"
+                      value={this.state.informationDescription}
+                      onChange={this.handleInputChange}
+                    />
                   </div>
-                </div>
-              </div>
-              <div className="col-sm-6">
-                <div className="form-row">
-                  <div className="form-group col-md-9">
-                    <label htmlFor="statusId">Status</label>
-                    <Select
-                      value={this.state.statuses.filter(
-                        (status) => status.statusId === this.state.statusId
-                      )}
-                      id="statusId"
-                      name="statusId"
-                      placeholder="Add Status"
-                      options={this.state.statuses}
-                      required
-                      onChange={(status) => {
-                        this.setState({ statusId: status.statusId });
-                      }}
-                    ></Select>
-                    <Modal show={this.state.showModal}>
-                      <Modal.Header>Add Status</Modal.Header>
-                      <Modal.Body>
-                        <StatusQuickAdd
-                          environmentName={this.state.environmentName}
-                          updateDate={this.updateDate}
-                        />
-                      </Modal.Body>
-                      <Modal.Footer>
-                        <button
-                          type="button"
-                          className="btn btn-secondary"
-                          onClick={() => this.handleModal()}
-                        >
-                          Close Modal
-                        </button>
-                      </Modal.Footer>
-                    </Modal>
-                  </div>
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    style={{ height: 40, marginTop: 30 }}
-                    onClick={() => this.handleModal()}
-                  >
-                    Add Status
-                  </button>
                 </div>
               </div>
             </div>

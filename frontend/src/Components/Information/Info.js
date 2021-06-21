@@ -104,7 +104,7 @@ export default class Info extends Component {
   }
 
   //CONFIRM DELETION OF INFO
-  delete = async (infoId) => {
+  delete = async (informationId) => {
     toast(
       (t) => (
         <span>
@@ -117,7 +117,7 @@ export default class Info extends Component {
               stlye={{ width: 50, height: 30 }}
               onClick={() => {
                 toast.dismiss(t.id);
-                this.fetchDeleteInfos(infoId);
+                this.fetchDeleteInfos(informationId);
               }}
             >
               Yes!
@@ -149,11 +149,11 @@ export default class Info extends Component {
   }
 
   //DELETE INFO
-  fetchDeleteInfos = async (infoId) => {
-    await this.state.api.endpoints.info
-      .delete({ id: infoId })
-      .then((response) => toast.success("Successfully Deleted Info"))
-      .catch((error) => toast.error("Could not Delete Info"));
+  fetchDeleteInfos = async (informationId) => {
+    await this.state.api.endpoints.information
+      .delete({ id: informationId })
+      .then((response) => toast.success("Successfully Deleted Information"))
+      .catch((error) => toast.error("Could not Delete Information"));
     //REFRESH INFO
     await this.state.api.endpoints.information
       .getAll()
@@ -161,7 +161,7 @@ export default class Info extends Component {
         this.setState({ infos: response.data });
       })
       .catch((error) => {
-        toast.error("Could not Find Infos");
+        toast.error("Could not Find Information");
       });
   };
 
@@ -179,11 +179,11 @@ export default class Info extends Component {
                 {this.state.environmentName}
               </Link>
             </li>
-            <li className="breadcrumb-item">Infos</li>
+            <li className="breadcrumb-item">Information</li>
           </ol>
         </nav>
         <MaterialTable
-          title="Infos"
+          title="Information"
           actions={[
             {
               icon: "add",
