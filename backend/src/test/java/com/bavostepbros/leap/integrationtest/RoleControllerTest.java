@@ -15,13 +15,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bavostepbros.leap.domain.customexceptions.ValidationErrorResponse;
 import com.bavostepbros.leap.domain.model.Role;
+import com.bavostepbros.leap.domain.model.dto.RoleDto;
 import com.bavostepbros.leap.domain.service.roleservice.RoleService;
 import com.bavostepbros.leap.persistence.RoleDAL;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -87,14 +90,15 @@ public class RoleControllerTest extends ApiIntegrationTest {
 	}
 	
 	@Test
+	@WithMockUser(username = "super_admin", password = "super_admin", authorities = "USER_ADMIN")
 	public void should_throwInvalidInput_whenSaveRoleInvalidName() throws Exception {
 		String roleName = "";
 		String exceptionMessage = "Role name is required.";
 		
-		MvcResult mvcResult = mockMvc.perform(post(PATH)
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(PATH)
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 				.param("roleName", roleName)
-				.param("roleWeight", roleWeight.toString())
+				.param("weight", roleWeight.toString())
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isBadRequest())
 				.andExpect(result -> assertTrue(result.getResolvedException() instanceof ConstraintViolationException))
@@ -104,5 +108,33 @@ public class RoleControllerTest extends ApiIntegrationTest {
 				ValidationErrorResponse.class);
 		
 		assertEquals(exceptionMessage, violations.getViolations().get(0).getMessage());
+	}
+	
+//	@Test
+//	@WithMockUser(username = "super_admin", password = "super_admin", authorities = "USER_ADMIN")
+//	public void should_postRole_whenSaveRole() throws Exception {
+//		String roleName = "A test";
+//		
+//		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(PATH)
+//				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+//				.param("roleName", roleName)
+//				.param("weight", roleWeight.toString())
+//				.accept(MediaType.APPLICATION_JSON))
+//				.andExpect(MockMvcResultMatchers.status().isOk())
+//			    .andReturn();
+//		
+//		RoleDto roleDto = objectMapper.readValue(
+//				mvcResult.getResponse().getContentAsString(), RoleDto.class);
+//		
+//		Role role = roleService.getRoleByRoleName(roleName);
+//		
+//		assertNotNull(roleDto);
+//		testRole(role, roleDto);
+//	}
+	
+	private void testRole(Role expectedObject, RoleDto actualObject) {
+		assertEquals(expectedObject.getRoleId(), actualObject.getRoleId());
+		assertEquals(expectedObject.getRoleName(), actualObject.getRoleName());
+		assertEquals(expectedObject.getWeight(), actualObject.getWeight());
 	}
 }

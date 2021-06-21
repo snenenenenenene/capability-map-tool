@@ -29,7 +29,7 @@ public class Role {
     @Column(name = "ROLEID")
     private Integer roleId;
     
-    @NotBlank(message = "Role name name is required.")
+    @NotBlank(message = "Role name is required.")
     @Column(name = "ROLENAME")
     private String roleName;
     
