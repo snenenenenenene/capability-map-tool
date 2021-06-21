@@ -82,9 +82,9 @@ public class ProjectServiceTest {
 		projectSecond = new Project(2, "Project 2", programSecond, statusSecond);
 		environmentFirst = new Environment(1, "Environment test");
 		capabilityFirst = new Capability(1, environmentFirst, statusFirst, 0, "Capability 1", "Description 1",
-				PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 9, 8);
+				PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 2.0, 3.0);
 		capabilitySecond = new Capability(2, environmentFirst, statusFirst, capabilityFirst.getCapabilityId(), "Capability 2",
-				"Description 2", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 9, 8);
+				"Description 2", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 2.0, 3.0);
 		projects = List.of(projectFirst, projectSecond);
 		capabilities = Set.of(capabilityFirst, capabilitySecond);
 		optionalProgramFirst = Optional.of(programFirst);

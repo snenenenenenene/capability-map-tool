@@ -79,15 +79,15 @@ public class CapabilityControllerTest extends ApiIntegrationTest {
 		environmentFirst = environmentDAL.save(new Environment(1, "Test 1"));
 		environmentSecond = environmentDAL.save(new Environment(2, "Test 2"));
 		capabilityFirst = capabilityDAL.save(new Capability(1, environmentFirst, statusFirst, 0, "Capability 1",
-				"Description 1", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 1, 1, 1));
+				"Description 1", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 1, 2.0, 3.0));
 		capabilityService.updateLevel(capabilityFirst);
 		capabilitySecond = capabilityDAL.save(
 				new Capability(2, environmentFirst, statusFirst, capabilityFirst.getCapabilityId(), "Capability 2",
-						"Description 2", PaceOfChange.INNOVATIVE, TargetOperatingModel.DIVERSIFICATION, 1, 1, 1));
+						"Description 2", PaceOfChange.INNOVATIVE, TargetOperatingModel.DIVERSIFICATION, 1, 2.0, 3.0));
 		capabilityService.updateLevel(capabilitySecond);
 		capabilityThird = capabilityDAL
 				.save(new Capability(3, environmentSecond, statusSecond, capabilityFirst.getCapabilityId(),
-						"Capability 3", "Description 3", PaceOfChange.STANDARD, TargetOperatingModel.REPLICATION, 1, 1, 1));
+						"Capability 3", "Description 3", PaceOfChange.STANDARD, TargetOperatingModel.REPLICATION, 1, 2.0, 3.0));
 		capabilityService.updateLevel(capabilityThird);
 	}
 

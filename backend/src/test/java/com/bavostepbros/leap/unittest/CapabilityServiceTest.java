@@ -117,8 +117,8 @@ public class CapabilityServiceTest {
 	private String paceOfChange;
 	private String targetOperatingModel;
 	private Integer resourceQuality;
-	private Integer informationQuality;
-	private Integer applicationFit;
+	private Double informationQuality;
+	private Double applicationFit;
 	private Integer statusId;
 	private Integer environmentId;
 
@@ -127,9 +127,9 @@ public class CapabilityServiceTest {
 		status = new Status(1, LocalDate.of(2021, 5, 9));
 		environment = new Environment(1, "Environment test");
 		capabilityFirst = new Capability(1, environment, status, 0, "Capability 1", "Description 1",
-				PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 9, 8);
+				PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 2.0, 3.0);
 		capabilitySecond = new Capability(2, environment, status, capabilityFirst.getCapabilityId(), "Capability 2",
-				"Description 2", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 9, 8);
+				"Description 2", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 2.0, 3.0);
 		capabilityService.updateLevel(capabilityFirst);
 		businessProcessFirst = new BusinessProcess(1, "BP 1", "Description 1");
 		programFirst = new Program(1, "Program 1");

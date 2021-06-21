@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.bavostepbros.leap.domain.customexceptions.EnumException;
 import com.bavostepbros.leap.domain.model.BusinessProcess;
 import com.bavostepbros.leap.domain.model.Capability;
+import com.bavostepbros.leap.domain.model.CapabilityApplication;
 import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.Project;
 import com.bavostepbros.leap.domain.model.Resource;
@@ -24,6 +25,7 @@ import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentServic
 import com.bavostepbros.leap.domain.service.projectservice.ProjectService;
 import com.bavostepbros.leap.domain.service.resourceservice.ResourceService;
 import com.bavostepbros.leap.domain.service.statusservice.StatusService;
+import com.bavostepbros.leap.persistence.CapabilityApplicationDAL;
 import com.bavostepbros.leap.persistence.CapabilityDAL;
 import com.bavostepbros.leap.persistence.EnvironmentDAL;
 
@@ -59,17 +61,22 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 	@Autowired
 	private ResourceService resourceService;
+	
+	@Autowired
+	private CapabilityApplicationDAL capabilityApplicationDAL;
 
 	@Override
 	public Capability save( Integer environmentId, Integer statusId,
 			Integer parentCapabilityId, String capabilityName, String capabilityDescription,
-			String paceOfChange, String targetOperatingModel, Integer resourceQuality, Integer informationQuality,
-			Integer applicationFit) {
+			String paceOfChange, String targetOperatingModel, Integer resourceQuality, Double informationQuality,
+			Double applicationFit) {
 		
-		return save(new Capability(environmentService.get(environmentId), statusService.get(statusId),
+		Capability capability = save(new Capability(environmentService.get(environmentId), statusService.get(statusId),
 				parentCapabilityId, capabilityName, capabilityDescription, PaceOfChange.valueOf(paceOfChange),
 				TargetOperatingModel.valueOf(targetOperatingModel), resourceQuality, informationQuality,
 				applicationFit));
+		calculateValues(capability.getCapabilityId());
+		return capability;
 	}
 
 	@Override
@@ -84,24 +91,32 @@ public class CapabilityServiceImpl implements CapabilityService {
 	public Capability get(Integer id) {
 		Optional<Capability> capability = capabilityDAL.findById(id);
 		capability.orElseThrow(() -> new NullPointerException("Capability does not exist."));
-		return capability.get();
+		Capability cap = capability.get();
+		calculateValues(cap.getCapabilityId());
+		return cap;
 	}
 
 	@Override
 	public List<Capability> getAll() {
-		return capabilityDAL.findAll();
+		List<Capability> capabilities = capabilityDAL.findAll();
+		for (Capability capability : capabilities) {
+			calculateValues(capability.getCapabilityId());
+		}
+		return capabilities;
 	}
 
 	@Override
 	public Capability update(Integer capabilityId, Integer environmentId,
 			Integer statusId, Integer parentCapabilityId, String capabilityName,
 			String capabilityDescription, String paceOfChange, String targetOperatingModel, Integer resourceQuality,
-			Integer informationQuality, Integer applicationFit) {
+			Double informationQuality, Double applicationFit) {
 		// TODO duplicate name in same environment check
-		return save(new Capability(capabilityId, environmentService.get(environmentId), statusService.get(statusId),
+		Capability capability = new Capability(capabilityId, environmentService.get(environmentId), statusService.get(statusId),
 				parentCapabilityId, capabilityName, capabilityDescription, PaceOfChange.valueOf(paceOfChange),
 				TargetOperatingModel.valueOf(targetOperatingModel), resourceQuality, informationQuality,
-				applicationFit));
+				applicationFit);
+		calculateValues(capability.getCapabilityId());
+		return capability;
 	}
 
 	// TODO try catch for out of bounds exception
@@ -132,6 +147,9 @@ public class CapabilityServiceImpl implements CapabilityService {
 		Optional<Environment> environment = environmentDAL.findById(environmentId);
 		environment.orElseThrow(() -> new NullPointerException("Environment does not exist."));
 		List<Capability> capabilities = capabilityDAL.findByEnvironment(environment.get());
+		for (Capability capability : capabilities) {
+			calculateValues(capability.getCapabilityId());
+		}
 		return capabilities;
 	}
 
@@ -143,12 +161,18 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 		CapabilityLevel capabilityLevel = CapabilityLevel.valueOf(level);
 		List<Capability> capabilities = capabilityDAL.findByLevel(capabilityLevel);
+		for (Capability capability : capabilities) {
+			calculateValues(capability.getCapabilityId());
+		}
 		return capabilities;
 	}
 
 	@Override
 	public List<Capability> getCapabilityChildren(Integer parentId) {
 		List<Capability> capabilities = capabilityDAL.findByParentCapabilityId(parentId);
+		for (Capability capability : capabilities) {
+			calculateValues(capability.getCapabilityId());
+		}
 		return capabilities;
 	}
 
@@ -160,6 +184,9 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 		CapabilityLevel capabilityLevel = CapabilityLevel.valueOf(level);
 		List<Capability> capabilities = capabilityDAL.findByParentCapabilityIdAndLevel(parentId, capabilityLevel);
+		for (Capability capability : capabilities) {
+			calculateValues(capability.getCapabilityId());
+		}
 		return capabilities;
 	}
 
@@ -177,7 +204,9 @@ public class CapabilityServiceImpl implements CapabilityService {
 	public Capability getCapabilityByCapabilityName(String capabilityName) {
 		Optional<Capability> capability = capabilityDAL.findByCapabilityName(capabilityName);
 		capability.orElseThrow(() -> new NullPointerException("Capability does not exist."));
-		return capability.get();
+		Capability cap = capability.get();
+		calculateValues(cap.getCapabilityId());
+		return cap;
 	}
 
 	@Override
@@ -247,6 +276,30 @@ public class CapabilityServiceImpl implements CapabilityService {
 	public Set<Resource> getAllResourceByResourceId(Integer capabilityId) {
 		Capability capability = get(capabilityId);
 		return capability.getResources();
+	}
+	
+	public void calculateValues(Integer capabilityId) {
+		Optional<Capability> cap = capabilityDAL.findById(capabilityId);
+		cap.orElseThrow(() -> new NullPointerException("Capability does not exist"));
+		Capability capability = cap.get();
+		List<CapabilityApplication> capabilityApplications = capabilityApplicationDAL.findByCapability(capability);
+		Double avgInf = 0.0;
+		Double avgApp = 0.0;
+		
+		for (CapabilityApplication capApp : capabilityApplications) {
+			avgInf += (capApp.getCompleteness() + capApp.getCorrectnessInformationFit() +
+					capApp.getAvailability()) / 3 * capApp.getImportance();
+		}
+		
+		for (CapabilityApplication capApp : capabilityApplications) {
+			avgApp += (capApp.getEfficiencySupport() + capApp.getFunctionalCoverage() +
+					capApp.getCorrectnessBusinessFit() + capApp.getFuturePotential()) 
+					/ 3 * capApp.getImportance();
+		}
+		
+		capability.setInformationQuality(avgInf);
+		capability.setApplicationFit(avgApp);
+		capabilityDAL.save(capability);
 	}
 
 }

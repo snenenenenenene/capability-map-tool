@@ -73,9 +73,9 @@ public class EnvironmentServiceTest {
 		environment = new Environment(1, "Environment test");
 		status = new Status(1, LocalDate.of(2021, 5, 9));
 		capabilityFirst = new Capability(1, environment, status, 0, "Capability 1", "Description 1",
-				PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 9, 8);
+				PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 2.0, 3.0);
 		capabilitySecond = new Capability(1, environment, status, capabilityFirst.getCapabilityId(), "Capability 1",
-				"Description 1", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 9, 8);
+				"Description 1", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 2.0, 3.0);
 		strategy = new Strategy(1, status, "Strategy name", LocalDate.of(2021, 8, 10), LocalDate.of(2021, 8, 10),
 				environment);
 		environments = List.of(new Environment(1, "Test 1"), new Environment(2, "Test 2"));

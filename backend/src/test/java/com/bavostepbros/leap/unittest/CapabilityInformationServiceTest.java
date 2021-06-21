@@ -73,9 +73,9 @@ public class CapabilityInformationServiceTest {
 		environmentFirst = new Environment(1, "Environment test");
 		environmentSecond = new Environment(2, "Environment test");
 		capabilityFirst = new Capability(1, environmentFirst, statusFirst, 0, "Capability 1", "Description 1",
-				PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 9, 8);
+				PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 2.0, 3.0);
 		capabilitySecond = new Capability(2, environmentFirst, statusSecond, capabilityFirst.getCapabilityId(),
-				"Capability 2", "Description 2", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 9, 8);
+				"Capability 2", "Description 2", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 2.0, 3.0);
 		informationFirst = new Information(1, "Information 1", "Description 1");
 		informationSecond = new Information(2, "Information 2", "Description 2");
 		capabilityInformationFirst = new CapabilityInformation(capabilityFirst, informationFirst, StrategicImportance.HIGHEST);
