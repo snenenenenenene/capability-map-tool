@@ -50,7 +50,10 @@ public class Templatecontroller {
             String contentString = new String(Files.readAllBytes(file.toPath()));
             JSONObject json = new JSONObject(contentString);
 
-            Environment environment = environmentService.save(json.getString("environmentName"));
+            String environmentName = json.getString("environmentName");
+            while (environmentService.existsByEnvironmentName(environmentName))
+                environmentName = environmentName.concat("_");
+            Environment environment = environmentService.save(environmentName);
 
             Status status = statusService.save(LocalDate.of(1, 1, 1));
 
@@ -66,8 +69,7 @@ public class Templatecontroller {
         final int length = capabilities.length();
         for (int index = 0; index < length; index++) {
             final JSONObject capabilityData = capabilities.getJSONObject(index);
-            Capability capability = new Capability(
-                    capabilityData.getInt("capabilityId"),
+            Capability savedCapability = capabilityService.save(new Capability(
                     environment,
                     status,
                     parentId,
@@ -78,10 +80,9 @@ public class Templatecontroller {
                     1,
                     null,
                     null
-            );
-            capabilityService.save(capability);
+            ));
             JSONArray children = capabilityData.getJSONArray("children");
-            if (!children.isEmpty()) loadCapabilities(children, capability.getCapabilityId(), environment, status);
+            if (!children.isEmpty()) loadCapabilities(children, savedCapability.getCapabilityId(), environment, status);
         }
     }
 }
