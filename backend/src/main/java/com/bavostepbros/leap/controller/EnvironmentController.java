@@ -190,7 +190,7 @@ public class EnvironmentController {
 			File file = new ClassPathResource(templateDir + templateName + ".json", LeapApplication.class).getFile();
 			return new String(Files.readAllBytes(file.toPath()));
 		} catch (FileNotFoundException e) {
-	plate endpoint		//TODO fix catches
+			//TODO fix catches
 			System.out.println("sioepke");
 		} catch (IOException e) {
 			System.out.println("sebonki" + e.getMessage());
