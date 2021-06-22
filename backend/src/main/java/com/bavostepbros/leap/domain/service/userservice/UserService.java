@@ -13,6 +13,8 @@ public interface UserService {
 
 	User getByEmail(String email);
 
+	User getByName(String name);
+
 	List<User> getAll();
 
 	User update(Integer userId, String username, String password, String email, Integer roleId);

@@ -57,8 +57,7 @@ public class CapabilityController {
 			@ModelAttribute("resourceQuality") Integer resourceQuality) {
 
 		Capability capability = capabilityService.save(environmentId, statusId, parentCapabilityId, capabilityName,
-				capabilityDescription, paceOfChange, targetOperatingModel, resourceQuality, 0.0,
-				0.0);
+				capabilityDescription, paceOfChange, targetOperatingModel, resourceQuality);
 		return convertCapability(capability);
 	}
 
@@ -188,8 +187,7 @@ public class CapabilityController {
 			@ModelAttribute("resourceQuality") Integer resourceQuality) {
 
 		Capability capability = capabilityService.update(capabilityId, environmentId, statusId, parentCapabilityId,
-				capabilityName, capabilityDescription, paceOfChange, targetOperatingModel, resourceQuality,
-				0.0, 0.0);
+				capabilityName, capabilityDescription, paceOfChange, targetOperatingModel, resourceQuality);
 		return convertCapability(capability);
 	}
 

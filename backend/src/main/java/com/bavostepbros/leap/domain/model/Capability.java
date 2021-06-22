@@ -36,7 +36,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"ENVIRONMENTID", "CAPABILITYNAME"})})
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "ENVIRONMENTID", "CAPABILITYNAME" }) })
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Capability {
 
@@ -97,25 +97,24 @@ public class Capability {
 	@OneToMany(mappedBy = "capability")
 	private List<CapabilityInformation> capabilityInformation;
 
-	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@JoinTable(name = "CAPABILITY_PROJECT",
-		joinColumns = { @JoinColumn(name = "CAPABILITYID") },
-		inverseJoinColumns = {@JoinColumn(name = "PROJECTID") },
-		uniqueConstraints = { @UniqueConstraint(columnNames = {"CAPABILITYID", "PROJECTID"})})
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinTable(name = "CAPABILITY_PROJECT", joinColumns = { @JoinColumn(name = "CAPABILITYID") }, inverseJoinColumns = {
+			@JoinColumn(name = "PROJECTID") }, uniqueConstraints = {
+					@UniqueConstraint(columnNames = { "CAPABILITYID", "PROJECTID" }) })
 	private Set<Project> projects = new HashSet<>();
 
-	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@JoinTable(name = "CAPABILITY_BUSINESSPROCESS",
-		joinColumns = { @JoinColumn(name = "CAPABILITYID") },
-		inverseJoinColumns = { @JoinColumn(name = "BUSINESSPROCESSID") },
-		uniqueConstraints = { @UniqueConstraint(columnNames = {"CAPABILITYID", "BUSINESSPROCESSID"})})
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinTable(name = "CAPABILITY_BUSINESSPROCESS", joinColumns = {
+			@JoinColumn(name = "CAPABILITYID") }, inverseJoinColumns = {
+					@JoinColumn(name = "BUSINESSPROCESSID") }, uniqueConstraints = {
+							@UniqueConstraint(columnNames = { "CAPABILITYID", "BUSINESSPROCESSID" }) })
 	private Set<BusinessProcess> businessProcess = new HashSet<>();
 
-	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@JoinTable(name = "CAPABILITY_RESOURCE",
-		joinColumns = { @JoinColumn(name = "CAPABILITYID") },
-		inverseJoinColumns = { @JoinColumn(name = "RESOURCEID") },
-		uniqueConstraints = { @UniqueConstraint(columnNames = {"CAPABILITYID", "RESOURCEID"})})
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinTable(name = "CAPABILITY_RESOURCE", joinColumns = {
+			@JoinColumn(name = "CAPABILITYID") }, inverseJoinColumns = {
+					@JoinColumn(name = "RESOURCEID") }, uniqueConstraints = {
+							@UniqueConstraint(columnNames = { "CAPABILITYID", "RESOURCEID" }) })
 	private Set<Resource> resources = new HashSet<>();
 
 	public Capability(Environment environment, Status status, Integer parentCapabilityId, String capabilityName,
@@ -150,6 +149,33 @@ public class Capability {
 		this.applicationFit = applicationFit;
 	}
 
+	public Capability(Environment environment, Status status, Integer parentCapabilityId,
+			String capabilityName, String capabilityDescription, PaceOfChange paceOfChange,
+			TargetOperatingModel targetOperatingModel, Integer resourceQuality) {
+		this.environment = environment;
+		this.status = status;
+		this.parentCapabilityId = parentCapabilityId;
+		this.capabilityName = capabilityName;
+		this.capabilityDescription = capabilityDescription;
+		this.paceOfChange = paceOfChange;
+		this.targetOperatingModel = targetOperatingModel;
+		this.resourceQuality = resourceQuality;
+	}
+	
+	public Capability(Integer capabilityId, Environment environment, Status status, Integer parentCapabilityId,
+			String capabilityName, String capabilityDescription, PaceOfChange paceOfChange,
+			TargetOperatingModel targetOperatingModel, Integer resourceQuality) {
+		this.capabilityId = capabilityId;
+		this.environment = environment;
+		this.status = status;
+		this.parentCapabilityId = parentCapabilityId;
+		this.capabilityName = capabilityName;
+		this.capabilityDescription = capabilityDescription;
+		this.paceOfChange = paceOfChange;
+		this.targetOperatingModel = targetOperatingModel;
+		this.resourceQuality = resourceQuality;
+	}
+
 	public Capability(Integer capabilityId, Environment environment, Status status, Integer parentCapabilityId) {
 		this.capabilityId = capabilityId;
 		this.environment = environment;
@@ -161,7 +187,6 @@ public class Capability {
 		this.resourceQuality = 1;
 	}
 
-
 	/**
 	 * @param project
 	 */
@@ -169,7 +194,6 @@ public class Capability {
 		projects.add(project);
 		project.getCapabilities().add(this);
 	}
-
 
 	/**
 	 * @param project
@@ -179,14 +203,12 @@ public class Capability {
 		project.getCapabilities().remove(this);
 	}
 
-
 	/**
 	 * @return Set<Project>
 	 */
 	public Set<Project> getProjects() {
 		return projects;
 	}
-
 
 	/**
 	 * @param businessProcessItem
@@ -196,7 +218,6 @@ public class Capability {
 		businessProcessItem.getCapabilities().add(this);
 	}
 
-
 	/**
 	 * @param businessProcessItem
 	 */
@@ -205,14 +226,12 @@ public class Capability {
 		businessProcessItem.getCapabilities().remove(this);
 	}
 
-
 	/**
 	 * @return Set<BusinessProcess>
 	 */
 	public Set<BusinessProcess> getBusinessProcess() {
 		return businessProcess;
 	}
-
 
 	/**
 	 * @param resource
@@ -222,7 +241,6 @@ public class Capability {
 		resource.getCapabilities().add(this);
 	}
 
-
 	/**
 	 * @param resource
 	 */
@@ -230,7 +248,6 @@ public class Capability {
 		resources.remove(resource);
 		resource.getCapabilities().remove(this);
 	}
-
 
 	/**
 	 * @return Set<Resource>

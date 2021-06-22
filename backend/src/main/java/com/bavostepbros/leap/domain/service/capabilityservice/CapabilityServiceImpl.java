@@ -63,15 +63,12 @@ public class CapabilityServiceImpl implements CapabilityService {
 	@Override
 	public Capability save( Integer environmentId, Integer statusId,
 			Integer parentCapabilityId, String capabilityName, String capabilityDescription,
-			String paceOfChange, String targetOperatingModel, Integer resourceQuality, Double informationQuality,
-			Double applicationFit) {
+			String paceOfChange, String targetOperatingModel, Integer resourceQuality) {
 		
 		Capability capability = save(new Capability(environmentService.get(environmentId), statusService.get(statusId),
 				parentCapabilityId, capabilityName, capabilityDescription, PaceOfChange.valueOf(paceOfChange),
-				TargetOperatingModel.valueOf(targetOperatingModel), resourceQuality, informationQuality,
-				applicationFit));
-		calculateValues(capability.getCapabilityId());
-		return capability;
+				TargetOperatingModel.valueOf(targetOperatingModel), resourceQuality));
+		return calculateValues(capability.getCapabilityId());
 	}
 
 	@Override
@@ -87,30 +84,27 @@ public class CapabilityServiceImpl implements CapabilityService {
 		Optional<Capability> capability = capabilityDAL.findById(id);
 		capability.orElseThrow(() -> new NullPointerException("Capability does not exist."));
 		Capability cap = capability.get();
-		calculateValues(cap.getCapabilityId());
+		// calculateValues(cap.getCapabilityId());
 		return cap;
 	}
 
 	@Override
 	public List<Capability> getAll() {
 		List<Capability> capabilities = capabilityDAL.findAll();
-		for (Capability capability : capabilities) {
-			calculateValues(capability.getCapabilityId());
-		}
+//		for (Capability capability : capabilities) {
+//			calculateValues(capability.getCapabilityId());
+//		}
 		return capabilities;
 	}
 
 	@Override
 	public Capability update(Integer capabilityId, Integer environmentId,
 			Integer statusId, Integer parentCapabilityId, String capabilityName,
-			String capabilityDescription, String paceOfChange, String targetOperatingModel, Integer resourceQuality,
-			Double informationQuality, Double applicationFit) {
+			String capabilityDescription, String paceOfChange, String targetOperatingModel, Integer resourceQuality) {
 		Capability capability = new Capability(capabilityId, environmentService.get(environmentId), statusService.get(statusId),
 				parentCapabilityId, capabilityName, capabilityDescription, PaceOfChange.valueOf(paceOfChange),
-				TargetOperatingModel.valueOf(targetOperatingModel), resourceQuality, informationQuality,
-				applicationFit);
-		calculateValues(capability.getCapabilityId());
-		return capability;
+				TargetOperatingModel.valueOf(targetOperatingModel), resourceQuality);
+		return calculateValues(capability.getCapabilityId());
 	}
 
 	@Override
@@ -139,9 +133,9 @@ public class CapabilityServiceImpl implements CapabilityService {
 		Optional<Environment> environment = environmentDAL.findById(environmentId);
 		environment.orElseThrow(() -> new NullPointerException("Environment does not exist."));
 		List<Capability> capabilities = capabilityDAL.findByEnvironment(environment.get());
-		for (Capability capability : capabilities) {
-			calculateValues(capability.getCapabilityId());
-		}
+//		for (Capability capability : capabilities) {
+//			calculateValues(capability.getCapabilityId());
+//		}
 		return capabilities;
 	}
 
@@ -153,18 +147,18 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 		CapabilityLevel capabilityLevel = CapabilityLevel.valueOf(level);
 		List<Capability> capabilities = capabilityDAL.findByLevel(capabilityLevel);
-		for (Capability capability : capabilities) {
-			calculateValues(capability.getCapabilityId());
-		}
+//		for (Capability capability : capabilities) {
+//			calculateValues(capability.getCapabilityId());
+//		}
 		return capabilities;
 	}
 
 	@Override
 	public List<Capability> getCapabilityChildren(Integer parentId) {
 		List<Capability> capabilities = capabilityDAL.findByParentCapabilityId(parentId);
-		for (Capability capability : capabilities) {
-			calculateValues(capability.getCapabilityId());
-		}
+//		for (Capability capability : capabilities) {
+//			calculateValues(capability.getCapabilityId());
+//		}
 		return capabilities;
 	}
 
@@ -176,9 +170,9 @@ public class CapabilityServiceImpl implements CapabilityService {
 
 		CapabilityLevel capabilityLevel = CapabilityLevel.valueOf(level);
 		List<Capability> capabilities = capabilityDAL.findByParentCapabilityIdAndLevel(parentId, capabilityLevel);
-		for (Capability capability : capabilities) {
-			calculateValues(capability.getCapabilityId());
-		}
+//		for (Capability capability : capabilities) {
+//			calculateValues(capability.getCapabilityId());
+//		}
 		return capabilities;
 	}
 
@@ -197,7 +191,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 		Optional<Capability> capability = capabilityDAL.findByCapabilityName(capabilityName);
 		capability.orElseThrow(() -> new NullPointerException("Capability does not exist."));
 		Capability cap = capability.get();
-		calculateValues(cap.getCapabilityId());
+		// calculateValues(cap.getCapabilityId());
 		return cap;
 	}
 
@@ -270,7 +264,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 		return capability.getResources();
 	}
 	
-	public void calculateValues(Integer capabilityId) {
+	public Capability calculateValues(Integer capabilityId) {
 		Optional<Capability> cap = capabilityDAL.findById(capabilityId);
 		cap.orElseThrow(() -> new NullPointerException("Capability does not exist"));
 		Capability capability = cap.get();
@@ -292,6 +286,7 @@ public class CapabilityServiceImpl implements CapabilityService {
 		capability.setInformationQuality(avgInf);
 		capability.setApplicationFit(avgApp);
 		capabilityDAL.save(capability);
+		return capability;
 	}
 
 }

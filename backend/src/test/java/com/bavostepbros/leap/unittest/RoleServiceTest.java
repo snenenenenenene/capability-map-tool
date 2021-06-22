@@ -139,7 +139,7 @@ public class RoleServiceTest {
         Exception exception = assertThrows(NullPointerException.class, 
                 () -> roleService.update(id, roleName, weight));
         
-        assertEquals(exception.getMessage(), expected);
+        assertEquals(exception.getMessage(), expected);  
     }
 
     @Test

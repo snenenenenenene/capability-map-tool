@@ -1,24 +1,5 @@
 package com.bavostepbros.leap.unittest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
-
 import com.bavostepbros.leap.domain.customexceptions.EnumException;
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Environment;
@@ -28,13 +9,23 @@ import com.bavostepbros.leap.domain.model.targetoperatingmodel.TargetOperatingMo
 import com.bavostepbros.leap.domain.service.capabilityservice.CapabilityService;
 import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
 import com.bavostepbros.leap.domain.service.statusservice.StatusService;
-import com.bavostepbros.leap.persistence.BusinessProcessDAL;
 import com.bavostepbros.leap.persistence.CapabilityDAL;
 import com.bavostepbros.leap.persistence.EnvironmentDAL;
-import com.bavostepbros.leap.persistence.ProgramDAL;
-import com.bavostepbros.leap.persistence.ProjectDAL;
-import com.bavostepbros.leap.persistence.ResourceDAL;
 import com.bavostepbros.leap.persistence.StatusDAL;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -57,27 +48,9 @@ public class CapabilityServiceTest {
 
 	@MockBean
 	private EnvironmentDAL environmentDAL;
-	
-	@MockBean
-	private BusinessProcessDAL businessProcessDAL;
-	
-	@MockBean
-	private ProjectDAL projectDAL;
-	
-	@MockBean
-	private ProgramDAL programDAL;
-	
-	@MockBean
-	private ResourceDAL resourceDAL;
 
 	@SpyBean
 	private CapabilityService spyCapabilityService;
-
-	@SpyBean
-	private StatusService spyStatusService;
-
-	@SpyBean
-	private EnvironmentService spyEnvironmentService;
 
 	private Capability capabilityFirst;
 	private Capability capabilitySecond;

@@ -31,6 +31,7 @@ import com.bavostepbros.leap.domain.model.dto.UserDto;
 import com.bavostepbros.leap.domain.service.emailservice.EmailService;
 import com.bavostepbros.leap.domain.service.roleservice.RoleService;
 import com.bavostepbros.leap.domain.service.userservice.UserService;
+import com.bavostepbros.leap.persistence.UserDAL;
 
 import lombok.RequiredArgsConstructor;
 
@@ -45,9 +46,9 @@ public class UserController {
 
 	@Autowired
 	private EmailService emailService;
-
+	
 	@Autowired
-	private RoleService roleService;
+    private RoleService roleService;
 
 	@Autowired
 	private JwtUtility jwtUtility;
@@ -131,7 +132,8 @@ public class UserController {
 	}
 
 	@PutMapping(path = "/forgotPassword", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public String forgotPassword(@ModelAttribute("email") String email) {
+	public String forgotPassword(
+		@ModelAttribute("email") String email) {
 		String result = "";
 		if (userService.existsByEmail(email)) {
 			User user = userService.getByEmail(email);
