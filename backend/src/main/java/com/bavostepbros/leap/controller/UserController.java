@@ -86,7 +86,7 @@ public class UserController {
 	}
 
 	@PreAuthorize("hasAuthority('USER_ADMIN')")
-	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public UserDto updateUser(@ModelAttribute("roleId") Integer roleId, 
 			@ModelAttribute("userId") Integer userId, @ModelAttribute("username") String username,
 			@ModelAttribute("password") String password, @ModelAttribute("email") String email) {
@@ -124,10 +124,10 @@ public class UserController {
 			@ModelAttribute("id") Integer id,			
 			@RequestHeader("Authorization") String token) {
 		String jwt = token.substring(7);
-		User user = userService.get(id);
-
-		String username = user.getUsername();
 		String currentUser = jwtUtility.extractUsername(jwt);
+		User user = userService.get(id);
+		String username = user.getUsername();
+
 		if(currentUser.equals(username)) {
 			Integer roleId = user.getRoles().iterator().next().getRoleId();
 			userService.update(id, user.getUsername(), password, user.getEmail(), roleId);
