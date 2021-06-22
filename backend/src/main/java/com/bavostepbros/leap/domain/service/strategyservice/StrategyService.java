@@ -5,11 +5,6 @@ import com.bavostepbros.leap.domain.model.Strategy;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- *
- * @author Lenny Bontenakel, Bavo Van Meel
- *
- */
 public interface StrategyService {
 	Strategy save(Integer statusId, String strategyName, LocalDate timeFrameStart, LocalDate timeFrameEnd,
 			Integer environmentId);

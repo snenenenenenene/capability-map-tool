@@ -68,9 +68,9 @@ public class BusinessProcessServiceTest {
 		statusFirst = new Status(1, LocalDate.of(2021, 5, 9));
 		environmentFirst = new Environment(1, "Environment test");
 		capabilityFirst = new Capability(1, environmentFirst, statusFirst, 0, "Capability 1", "Description 1",
-				PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 9, 8);
+				PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 2.0, 3.0);
 		capabilitySecond = new Capability(2, environmentFirst, statusFirst, capabilityFirst.getCapabilityId(), "Capability 2",
-				"Description 2", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 9, 8);
+				"Description 2", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 2.0, 3.0);
 		businessProcessList = List.of(businessProcessFirst, businessProcessSecond);
 		capabilities = Set.of(capabilityFirst, capabilitySecond);
 		optionalBusinessProcessFirst = Optional.of(businessProcessFirst);
@@ -215,7 +215,6 @@ public class BusinessProcessServiceTest {
 		Set<Capability> capabilitiesResult = businessProcessService.getAllCapabilitiesByBusinessProcessId(businessProcessId);
 		
 		assertNotNull(capabilitiesResult);
-		// -1 because we test only 1 linked capability here
 		assertEquals(capabilities.size() - 1, capabilitiesResult.size());
 	}
 	

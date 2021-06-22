@@ -1,38 +1,29 @@
 package com.bavostepbros.leap.controller;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import com.bavostepbros.leap.LeapApplication;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.bavostepbros.leap.domain.model.BusinessProcess;
 import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.CapabilityApplication;
 import com.bavostepbros.leap.domain.model.CapabilityInformation;
 import com.bavostepbros.leap.domain.model.CapabilityItem;
-
-import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapDto;
-import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapItemDto;
-
-import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
-
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.core.io.Resource;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.util.ResourceUtils;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
 import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.ITApplication;
 import com.bavostepbros.leap.domain.model.Information;
@@ -57,20 +48,19 @@ import com.bavostepbros.leap.domain.model.dto.StatusDto;
 import com.bavostepbros.leap.domain.model.dto.StrategyDto;
 import com.bavostepbros.leap.domain.model.dto.StrategyItemDto;
 import com.bavostepbros.leap.domain.model.dto.TechnologyDto;
+import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapDto;
+import com.bavostepbros.leap.domain.model.dto.capabilitymap.CapabilityMapItemDto;
+import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
+
+import lombok.RequiredArgsConstructor;
 
 
-/**
- *
- * @author Bavo Van Meel
- *
- */
 @RestController
 @RequiredArgsConstructor
 @Validated
 @RequestMapping("/api/environment/")
 public class EnvironmentController {
 
-	//TODO fix constructor injection
 	@Autowired
 	private EnvironmentService envService;
 
@@ -160,8 +150,6 @@ public class EnvironmentController {
 	public void deleteEnvironment(@PathVariable("environmentId") Integer environmentId) {
 		envService.delete(environmentId);
 	}
-
-	// TODO fix exception catch
 
 	/**
 	 * @param environmentId

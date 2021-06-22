@@ -30,8 +30,8 @@ public class CapabilityMapItemDto {
     private PaceOfChange paceOfChange;
     private TargetOperatingModel targetOperatingModel;
     private Integer resourceQuality;
-    private Integer informationQuality;
-    private Integer applicationFit;
+    private Double informationQuality;
+    private Double applicationFit;
     private StatusDto status;
     private List<CapabilityMapItemDto> children;
     private List<CapabilityItemDto> capabilityItems;

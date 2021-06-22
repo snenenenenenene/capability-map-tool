@@ -24,7 +24,7 @@ public class CapabilityDto {
 	private PaceOfChange paceOfChange;
 	private TargetOperatingModel targetOperatingModel;
 	private Integer resourceQuality;
-	private Integer informationQuality;
-	private Integer applicationFit;
+	private Double informationQuality;
+	private Double applicationFit;
 	
 }

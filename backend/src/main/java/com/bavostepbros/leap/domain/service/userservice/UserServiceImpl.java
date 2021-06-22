@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import com.bavostepbros.leap.domain.model.Role;
 import com.bavostepbros.leap.domain.model.User;
 import com.bavostepbros.leap.domain.service.roleservice.RoleService;
-import com.bavostepbros.leap.persistence.RoleDAL;
 import com.bavostepbros.leap.persistence.UserDAL;
 
 @Service
@@ -76,11 +75,21 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public User update(Integer userId, String username, String email, Integer roleId) {
+		User user = get(userId);
+		String password = user.getPassword();
+		User savedUser = userDAL.save(new User(userId, username, passwordEncoder.encode(password), email));
+		Role role = roleService.get(roleId);
+		savedUser.addRole(role);
+		userDAL.save(savedUser);
+    	return savedUser;
+	}
+
+	@Override
 	public void delete(Integer id) {
 		userDAL.deleteById(id);
 	}	
 
-	//TODO fix exception handling here or in controller?
 	@Override
 	public Authentication authenticate(String email, String password) throws AuthenticationException {
 		return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
@@ -105,8 +114,8 @@ public class UserServiceImpl implements UserService {
 	public String generatePassword(){
 		String generatedPassword;
 
-		int lowerLimit = 48; // numeral '0'
-  	    int higherLimit = 122; // letter 'z'
+		int lowerLimit = 48; 
+  	    int higherLimit = 122; 
 	    int passwordLength = 10;
 	    Random random = new Random();
 

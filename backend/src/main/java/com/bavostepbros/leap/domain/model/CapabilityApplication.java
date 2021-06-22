@@ -34,10 +34,8 @@ public class CapabilityApplication {
     @EqualsAndHashCode.Include
     private ITApplication application;
 	
-	@Min(value = 0, message = "Importance must be between 0 and 100, inclusive.")
-    @Max(value = 100, message = "Importance must be between 0 and 100, inclusive.")
 	@Column(name = "IMPORTANCE")
-    private Integer importance;
+    private Double importance;
 	
 	@NotNull(message = "Efficiency support must not be null.")
 	@Min(value = 1, message = "Efficiency support must be between 1 and 5, inclusive.")
@@ -81,7 +79,7 @@ public class CapabilityApplication {
 	@Column(name = "AVAILABILITY")
     private Integer availability;
 
-	public CapabilityApplication(Capability capability, ITApplication application, Integer importance,
+	public CapabilityApplication(Capability capability, ITApplication application, Double importance,
 			Integer efficiencySupport, Integer functionalCoverage, Integer correctnessBusinessFit,
 			Integer futurePotential, Integer completeness, Integer correctnessInformationFit, Integer availability) {
 		this.capability = capability;

@@ -37,10 +37,12 @@ public class CapabilityApplicationServiceImpl implements CapabilityApplicationSe
 			Integer correctnessInformationFit, Integer availability) {
 		Capability capability = capabilityService.get(capabilityId);
 		ITApplication itApplication = itApplicationService.get(applicationId);
-		CapabilityApplication capabilityApplication = new CapabilityApplication(capability, itApplication, 0, 
+		CapabilityApplication capabilityApplication = new CapabilityApplication(capability, itApplication, 0.0, 
 				efficiencySupport, functionalCoverage, correctnessBusinessFit, futurePotential, completeness,
 				correctnessInformationFit, availability);
-		return capabilityApplicationDAL.save(capabilityApplication);
+		CapabilityApplication capabilityApplicationSaved = capabilityApplicationDAL.save(capabilityApplication);
+		calculateImportance(capabilityId);
+		return capabilityApplicationSaved;
 	}
 
 	@Override
@@ -59,10 +61,12 @@ public class CapabilityApplicationServiceImpl implements CapabilityApplicationSe
 			Integer correctnessInformationFit, Integer availability) {
 		Capability capability = capabilityService.get(capabilityId);
 		ITApplication itApplication = itApplicationService.get(applicationId);
-		CapabilityApplication capabilityApplication = new CapabilityApplication(capability, itApplication, 0, 
+		CapabilityApplication capabilityApplication = new CapabilityApplication(capability, itApplication, 0.0, 
 				efficiencySupport, functionalCoverage, correctnessBusinessFit, futurePotential, completeness,
 				correctnessInformationFit, availability);
-		return capabilityApplicationDAL.save(capabilityApplication);
+		CapabilityApplication capabilityApplicationSaved = capabilityApplicationDAL.save(capabilityApplication);
+		calculateImportance(capabilityId);
+		return capabilityApplicationSaved;
 	}
 
 	@Override
@@ -70,6 +74,7 @@ public class CapabilityApplicationServiceImpl implements CapabilityApplicationSe
 		Capability capability = capabilityService.get(capabilityId);
 		ITApplication itApplication = itApplicationService.get(applicationId);
 		capabilityApplicationDAL.deleteByCapabilityAndApplication(capability, itApplication);
+		calculateImportance(capabilityId);
 		return;
 	}
 
@@ -83,6 +88,27 @@ public class CapabilityApplicationServiceImpl implements CapabilityApplicationSe
 	public List<CapabilityApplication> getCapabilityApplicationsByApplication(Integer applicationId) {
 		ITApplication itApplication = itApplicationService.get(applicationId);
 		return capabilityApplicationDAL.findByApplication(itApplication);
+	}
+	
+	private void calculateImportance(Integer capabilityId) {
+		List<CapabilityApplication> capabilityApplications = getCapabilityApplicationsByCapability(capabilityId);
+		Double total = 0.0;
+		
+		for (CapabilityApplication capApp : capabilityApplications) {
+			total += (capApp.getEfficiencySupport() + capApp.getFunctionalCoverage() + 
+					capApp.getCorrectnessBusinessFit() + capApp.getFuturePotential() + 
+					capApp.getCompleteness() + capApp.getCorrectnessInformationFit() + 
+					capApp.getAvailability());
+		}
+		
+		for (CapabilityApplication capApp : capabilityApplications) {
+			Integer capAppTotal = (capApp.getEfficiencySupport() + capApp.getFunctionalCoverage() + 
+					capApp.getCorrectnessBusinessFit() + capApp.getFuturePotential() + 
+					capApp.getCompleteness() + capApp.getCorrectnessInformationFit() + 
+					capApp.getAvailability());
+			capApp.setImportance(capAppTotal / total);
+			capabilityApplicationDAL.save(capApp);
+		}
 	}
 
 }

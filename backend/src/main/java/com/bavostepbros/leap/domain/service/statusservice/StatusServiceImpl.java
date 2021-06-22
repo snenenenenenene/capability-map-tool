@@ -14,11 +14,6 @@ import com.bavostepbros.leap.persistence.StatusDAL;
 
 import lombok.RequiredArgsConstructor;
 
-/**
-*
-* @author Bavo Van Meel
-*
-*/
 @Service
 @Transactional
 @RequiredArgsConstructor

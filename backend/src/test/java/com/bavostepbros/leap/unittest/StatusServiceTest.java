@@ -28,11 +28,6 @@ import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.service.statusservice.StatusService;
 import com.bavostepbros.leap.persistence.StatusDAL;
 
-/**
-*
-* @author Bavo Van Meel
-*
-*/
 @AutoConfigureMockMvc
 @SpringBootTest
 public class StatusServiceTest {

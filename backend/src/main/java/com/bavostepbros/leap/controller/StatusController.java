@@ -26,12 +26,6 @@ import com.bavostepbros.leap.domain.service.statusservice.StatusService;
 
 import lombok.RequiredArgsConstructor;
 
-/**
-*
-* @author Bavo Van Meel
-*
-*/
-// @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
 @Validated

@@ -32,12 +32,6 @@ import com.bavostepbros.leap.domain.service.capabilityservice.CapabilityService;
 
 import lombok.RequiredArgsConstructor;
 
-/**
- *
- * @author Bavo Van Meel
- *
- */
-// @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/capability/")
@@ -45,9 +39,6 @@ public class CapabilityController {
 
 	@Autowired
 	private CapabilityService capabilityService;
-
-	// Add catch for status/environment not found
-	// TODO Add catch for status/environment not found
 
 	/**
 	 * @param @ModelAttribute("environmentId"
@@ -63,13 +54,11 @@ public class CapabilityController {
 			@ModelAttribute("capabilityDescription") String capabilityDescription,
 			@ModelAttribute("paceOfChange") String paceOfChange,
 			@ModelAttribute("targetOperatingModel") String targetOperatingModel,
-			@ModelAttribute("resourceQuality") Integer resourceQuality,
-			@ModelAttribute("informationQuality") Integer informationQuality,
-			@ModelAttribute("applicationFit") Integer applicationFit) {
+			@ModelAttribute("resourceQuality") Integer resourceQuality) {
 
 		Capability capability = capabilityService.save(environmentId, statusId, parentCapabilityId, capabilityName,
-				capabilityDescription, paceOfChange, targetOperatingModel, resourceQuality, informationQuality,
-				applicationFit);
+				capabilityDescription, paceOfChange, targetOperatingModel, resourceQuality, 0.0,
+				0.0);
 		return convertCapability(capability);
 	}
 
@@ -196,13 +185,11 @@ public class CapabilityController {
 			@ModelAttribute("level") String level,
 		  	@ModelAttribute("paceOfChange") String paceOfChange,
 			@ModelAttribute("targetOperatingModel") String targetOperatingModel,
-			@ModelAttribute("resourceQuality") Integer resourceQuality,
-			@ModelAttribute("informationQuality") Integer informationQuality,
-			@ModelAttribute("applicationFit") Integer applicationFit) {
+			@ModelAttribute("resourceQuality") Integer resourceQuality) {
 
 		Capability capability = capabilityService.update(capabilityId, environmentId, statusId, parentCapabilityId,
 				capabilityName, capabilityDescription, paceOfChange, targetOperatingModel, resourceQuality,
-				informationQuality, applicationFit);
+				0.0, 0.0);
 		return convertCapability(capability);
 	}
 
@@ -231,7 +218,6 @@ public class CapabilityController {
 	/**
 	 * @param @PathVariable("capabilityId"
 	 */
-	// TODO add test
 	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER')")
 	@DeleteMapping(path = "unlink-project/{capabilityId}/{projectId}")
 	public void unlinkProject(@PathVariable("capabilityId") Integer capabilityId,

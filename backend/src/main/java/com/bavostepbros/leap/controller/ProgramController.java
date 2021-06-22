@@ -79,16 +79,6 @@ public class ProgramController {
 	}
 	
 	private ProgramDto convertProgram(Program program) {
-		/*
-		 * List<ProjectDto> projectsDto = new ArrayList<ProjectDto>(); if
-		 * (program.getProjects() != null) { projectsDto =
-		 * program.getProjects().stream() .map(project -> new
-		 * ProjectDto(project.getProjectId(), project.getProjectName(), new
-		 * ProgramDto(project.getProgram().getProgramId(),
-		 * project.getProgram().getProgramName()), new
-		 * StatusDto(project.getStatus().getStatusId(),
-		 * project.getStatus().getValidityPeriod()))) .collect(Collectors.toList()); }
-		 */
 		return new ProgramDto(program.getProgramId(), program.getProgramName());
 	}
 }
