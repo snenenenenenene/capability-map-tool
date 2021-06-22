@@ -28,7 +28,6 @@ public class JwtUtility implements Serializable {
 	@Autowired
 	private UserDetailsService userDetailsService;
 
-	// TODO put in aplication.properties
 	private String SECRETKEY = "leap-groep-5";
 	private final long VALIDITYTIME = 12 * 3600000; // 12 hours
 

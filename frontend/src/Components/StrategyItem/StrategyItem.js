@@ -50,7 +50,7 @@ export default class StrategyItem extends Component {
       });
 
     await this.state.api.endpoints.capability
-      .getAll()
+      .getCapabilitiesByEnvironment({ id: this.state.environmentId })
       .then((response) => {
         response.data.forEach((capability) => {
           capability.label = capability.capabilityName;

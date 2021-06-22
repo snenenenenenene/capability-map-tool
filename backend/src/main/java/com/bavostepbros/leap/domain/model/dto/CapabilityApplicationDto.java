@@ -12,7 +12,7 @@ import lombok.Setter;
 public class CapabilityApplicationDto {
 	private CapabilityDto capability;
 	private ITApplicationDto application;
-	private Integer importance;
+	private Double importance;
 	private Integer efficiencySupport;
 	private Integer functionalCoverage;
 	private Integer correctnessBusinessFit;
@@ -21,7 +21,7 @@ public class CapabilityApplicationDto {
 	private Integer correctnessInformationFit;
 	private Integer availability;
 	
-	public CapabilityApplicationDto(ITApplicationDto application, Integer importance, Integer efficiencySupport,
+	public CapabilityApplicationDto(ITApplicationDto application, Double importance, Integer efficiencySupport,
 			Integer functionalCoverage, Integer correctnessBusinessFit, Integer futurePotential, Integer completeness,
 			Integer correctnessInformationFit, Integer availability) {
 		this.application = application;

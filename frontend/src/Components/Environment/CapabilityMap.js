@@ -41,7 +41,6 @@ export default class CapabilityMap extends Component {
           <div class="card-deck justify-content-center mx-auto">
             {this.renderStrategyItems(capability)}
           </div>
-          <hr></hr>
         </div>
       );
     }
@@ -140,16 +139,13 @@ export default class CapabilityMap extends Component {
           id={`capability-${capability.level}`}
         >
           <div
-            className="capability-title card-header text-center text-uppercase text-truncate"
+            className="capability-title card-header text-center text-uppercase"
             onClick={() => this.handleCapabilityClick(capability)}
           >
             {capability.capabilityName}
           </div>
-          <div
-            class="card-body zoomTarget"
-            style={{ backgroundColor: itemColour }}
-          >
-            {this.strategyItemExists(capability)}
+          {this.strategyItemExists(capability)}
+          <div className="card-body" style={{ backgroundColor: itemColour }}>
             <div className="row">
               <div className="card-deck justify-content-center mx-auto">
                 {this.capabilityMapping(capability.children)}
@@ -240,7 +236,7 @@ export default class CapabilityMap extends Component {
             <div className="text-center" style={{ margin: 5 }}>
               {capabilityItem.strategyItem.strategyItemName}
               <div
-                className="card strat-item mx-auto"
+                className="card strat-item mx-auto text-truncate"
                 style={{
                   backgroundColor: itemColour,
                   width: 1 + "vw",

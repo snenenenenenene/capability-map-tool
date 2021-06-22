@@ -17,12 +17,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- *
- * @author Lenny Bontenakel, Bavo Van Meel
- *
- */
-// @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/strategy/")

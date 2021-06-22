@@ -43,8 +43,11 @@ export default class API {
     const resourceURL = `${this.url}/${name}`;
 
     //USER
+    endpoints.changePassword = (toCreate) =>
+      axios.put(`${resourceURL}/changePassword`, toCreate, config);
+
     endpoints.updateUser = (toUpdate) =>
-      axios.put(`${resourceURL}/`, toUpdate, config);
+      axios.put(`${resourceURL}`, toUpdate, config);
     endpoints.forgotPassword = (toUpdate) =>
       axios.put(`${resourceURL}/forgotPassword`, toUpdate);
 
@@ -55,6 +58,11 @@ export default class API {
     endpoints.getOne = ({ id }) => axios.get(`${resourceURL}/${id}`, config);
     endpoints.getCapabilities = ({ id }) =>
       axios.get(`${resourceURL}/get-capabilities/${id}`, config);
+    endpoints.getCapabilitiesByEnvironment = ({ id }) =>
+      axios.get(
+        `${resourceURL}/all-capabilities-by-environmentid/${id}`,
+        config
+      );
     endpoints.linkProject = (toCreate) =>
       axios.put(`${resourceURL}/link-project/`, toCreate, config);
     endpoints.linkCapabilityApplication = ({
@@ -98,7 +106,7 @@ export default class API {
     endpoints.create = (toCreate) =>
       axios.post(`${resourceURL}/`, toCreate, config);
     endpoints.loadTemplate = ({ query } = {}) =>
-      axios.post(`${resourceURL}/template/template1`, config);
+      axios.get(`${resourceURL}/template1`, config);
     endpoints.update = (toUpdate, id) =>
       axios.put(`${resourceURL}/${id}`, toUpdate, config);
     endpoints.delete = ({ id }) => axios.delete(`${resourceURL}/${id}`, config);

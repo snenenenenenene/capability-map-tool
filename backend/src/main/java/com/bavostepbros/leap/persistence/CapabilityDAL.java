@@ -9,11 +9,6 @@ import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.capabilitylevel.CapabilityLevel;
 
-/**
- *
- * @author Bavo Van Meel
- *
- */
 public interface CapabilityDAL extends JpaRepository<Capability, Integer> {
 	Optional<Capability> findByCapabilityName(String capabilityName);
 

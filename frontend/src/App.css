@@ -138,41 +138,64 @@ html {
   font-size: 1vw;
   border-color: rgba(255, 123, 0, 0.603);
   border-width: 1px;
-  /* box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.4); */
   margin-bottom: 30px;
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.131);
+  text-overflow: clip;
 }
 
 #capability-TWO {
   background-color: rgba(236, 236, 236, 0.247);
-  margin: 3px;
+  margin: 2.5px;
   min-width: 200px;
   min-height: 200px;
   width: 400px;
   max-width: 400px;
   z-index: 200;
-  font-size: 0.8vw;
+  font-size: 0.72vw;
   border-style: solid;
   border-color: rgba(255, 81, 0, 0.603);
   border-width: 1px;
+  text-overflow: clip;
 }
 
 #capability-THREE {
   background-color: rgba(228, 228, 228, 0.234);
   margin: 2.5px;
-  min-width: 100px;
-  font-size: 0.6vw;
+  min-width: 107px;
+  font-size: 0.65vw;
   min-height: 100px;
   max-width: 90px;
-  max-height: 90px;
+  max-height: 180px;
   z-index: 300;
   border-style: solid;
   border-color: rgba(255, 0, 0, 0.603);
   border-width: 1px;
+  overflow: hidden;
+}
+
+.stratitemtext {
+  max-width: 6ch;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+::-moz-selection {
+  color: #fff;
+  background: #ff754f;
+}
+
+::selection {
+  color: #fff;
+  background: #ff754f;
 }
 
 div .capability-title {
   background-color: rgba(253, 99, 57, 0.281);
+  max-height: 70px;
+  min-height: 70px;
+  word-break: keep-all;
+  overflow: hidden;
 }
 
 .inputfile {

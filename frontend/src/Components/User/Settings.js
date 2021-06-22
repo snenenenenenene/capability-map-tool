@@ -67,21 +67,17 @@ export default class Settings extends Component {
           if (!breached) {
             const formData = new FormData();
             formData.append("userId", this.state.user.userId);
-            formData.append("username", this.state.username);
-            formData.append("email", this.state.user.email);
             formData.append("password", this.state.password);
-            formData.append("roleId", this.state.user.roleId);
             await this.state.api.endpoints.user
-              .updateUser(formData)
+              .changePassword(formData)
               .then(() => {
-                toast.success("User Updated Successfully!");
+                toast.success("Password Changed Successfully!");
                 this.props.history.push(`/home`);
               })
-              .catch((error) => toast.error("Could not Update User"));
+              .catch((error) => toast.error("Could not Change Password"));
           }
         })
         .catch((error) => {
-          console.log(error);
           toast.error("Something went Wrong...");
         });
     } else {
@@ -125,7 +121,8 @@ export default class Settings extends Component {
                   type="text"
                   id="username"
                   name="username"
-                  className="form-control"
+                  readonly
+                  className="form-control-plaintext"
                   placeholder="Username"
                   value={this.state.username}
                   onChange={this.handleInputChange}

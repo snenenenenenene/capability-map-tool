@@ -77,8 +77,6 @@ public class User {
     }
 
 	public Set<Role> getRoles() {
-//		System.out.println("Roles in user " + roles.size());
-//		roles.forEach(r -> System.out.println("Roles in user " + r.getRoleName()));
 		return roles;
 	}
 

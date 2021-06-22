@@ -46,7 +46,7 @@ export default class Project extends Component {
         this.props.history.push("/error");
       });
     await this.state.api.endpoints.capability
-      .getAll()
+      .getCapabilitiesByEnvironment({ id: this.state.environmentId })
       .then((response) => {
         response.data.forEach((capability) => {
           capability.label = capability.capabilityName;

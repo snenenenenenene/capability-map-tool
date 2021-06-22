@@ -53,7 +53,6 @@ public class CsvController {
             String[] currLine;
             while ((currLine = csvReader.readNext()) != null) {
                 try {
-                    //TODO parse headers for indexes/ independent ordering
                     capabilityService.save(new Capability(
                             Integer.parseInt(currLine[0]),
                             environment,

@@ -8,15 +8,10 @@ import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Project;
 import com.bavostepbros.leap.domain.model.Resource;
 
-/**
- *
- * @author Bavo Van Meel
- *
- */
 public interface CapabilityService {
 	Capability save(Integer environmentId, Integer statusId, Integer parentCapabilityId, String capabilityName,
 			String capabilityDescription, String paceOfChange, String targetOperatingModel, Integer resourceQuality,
-			Integer informationQuality, Integer applicationFit);
+			Double informationQuality, Double applicationFit);
 
 	Capability save (Capability capability);
 
@@ -26,7 +21,7 @@ public interface CapabilityService {
 
 	Capability update(Integer capabilityId, Integer environmentId, Integer statusId, Integer parentCapabilityId,
 			String capabilityName, String capabilityDescription, String paceOfChange, String targetOperatingModel,
-			Integer resourceQuality, Integer informationQuality, Integer applicationFit);
+			Integer resourceQuality, Double informationQuality, Double applicationFit);
 
 	void updateLevel(Capability capability);
 

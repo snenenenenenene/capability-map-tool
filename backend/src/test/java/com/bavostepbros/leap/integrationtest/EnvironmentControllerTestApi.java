@@ -28,7 +28,6 @@ import com.bavostepbros.leap.domain.model.Status;
 import com.bavostepbros.leap.domain.model.dto.EnvironmentDto;
 import com.bavostepbros.leap.domain.model.paceofchange.PaceOfChange;
 import com.bavostepbros.leap.domain.model.targetoperatingmodel.TargetOperatingModel;
-import com.bavostepbros.leap.domain.service.capabilityservice.CapabilityService;
 import com.bavostepbros.leap.domain.service.environmentservice.EnvironmentService;
 import com.bavostepbros.leap.persistence.CapabilityDAL;
 import com.bavostepbros.leap.persistence.EnvironmentDAL;
@@ -68,8 +67,6 @@ public class EnvironmentControllerTestApi extends ApiIntegrationTest {
 	private Capability capabilitySecond;
 	
 	static final String PATH = "/api/environment/";
-	
-	// private static final Logger logger = LoggerFactory.getLogger(EnvironmentControllerIntegrationTest.class);
 
 	@BeforeAll
 	public void authenticate() throws Exception { super.authenticate(); }
@@ -81,10 +78,10 @@ public class EnvironmentControllerTestApi extends ApiIntegrationTest {
 		statusFirst = statusDAL.save(new Status(1, LocalDate.of(2021, 05, 15)));
 		statusSecond = statusDAL.save(new Status(2, LocalDate.of(2021, 05, 20)));
 		capabilityFirst = capabilityDAL.save(new Capability(1, environmentFirst, statusFirst, 1, "Capability 1",
-				"Description 1", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 1, 1, 1));
+				"Description 1", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 1, 2.0, 3.0));
 		capabilitySecond = capabilityDAL.save(
 				new Capability(2, environmentFirst, statusFirst, capabilityFirst.getCapabilityId(), "Capability 2",
-						"Description 2", PaceOfChange.INNOVATIVE, TargetOperatingModel.DIVERSIFICATION, 1, 1, 1));
+						"Description 2", PaceOfChange.INNOVATIVE, TargetOperatingModel.DIVERSIFICATION, 1, 2.0, 3.0));
 	}
 	
 	@AfterEach
@@ -213,23 +210,6 @@ public class EnvironmentControllerTestApi extends ApiIntegrationTest {
 		assertNotNull(resultEnvironment);
 		testEnvironment(environment, resultEnvironment);
 	}
-	
-//	@Test
-//	public void should_returnCapabilityMap_whenGetCapabilityMap() throws Exception {
-//		Integer environmentId = environmentFirst.getEnvironmentId();
-//		Integer level = 3;
-//		capabilityService.updateLevel(capabilityFirst);
-//		
-//		MvcResult mvcResult = mockMvc.perform(get(PATH + "capabilitymap/" + environmentId + "/" + level))
-//			.andExpect(MockMvcResultMatchers.status().isOk())
-//			.andReturn();
-//		
-//		CapabilityMapDto resultEnvironment = objectMapper.readValue(
-//				mvcResult.getResponse().getContentAsString(), CapabilityMapDto.class);
-//		
-//		assertNotNull(resultEnvironment);
-//		// testEnvironment(environmentFirst, resultEnvironment);
-//	}
 	
 	@Test
 	public void should_deleteEnvironment_whenDeleteEnvironment() throws Exception {

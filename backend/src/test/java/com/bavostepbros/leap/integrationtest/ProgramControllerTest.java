@@ -72,22 +72,6 @@ public class ProgramControllerTest extends ApiIntegrationTest {
 		assertNotNull(programSecond);
 	}
 	
-	/*
-	 * @Test public void
-	 * should_throwInvalidInputIfProgramNameIsInvalid_whenSaveProgram() throws
-	 * Exception { String programName = "";
-	 * 
-	 * mockMvc.perform(MockMvcRequestBuilders.post(PATH)
-	 * .contentType(MediaType.MULTIPART_FORM_DATA_VALUE) .param("programName",
-	 * programName) .accept(MediaType.APPLICATION_JSON))
-	 * .andExpect(MockMvcResultMatchers.status().isInternalServerError())
-	 * .andExpect(result -> assertEquals("Program name is required",
-	 * result.getResolvedException().getMessage())) .andReturn();
-	 * 
-	 * // assertEquals(mvcResult.getResolvedException().getMessage(),
-	 * "Program name is required"); }
-	 */
-	
 	@Test
 	public void should_postProgram_whenSaveProgram() throws Exception {	
 		String programName = "abc";

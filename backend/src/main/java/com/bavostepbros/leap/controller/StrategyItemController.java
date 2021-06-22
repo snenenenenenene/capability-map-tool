@@ -24,7 +24,6 @@ import com.bavostepbros.leap.domain.service.strategyitemservice.StrategyItemServ
 
 import lombok.RequiredArgsConstructor;
 
-//@CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/strategyitem/")

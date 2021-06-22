@@ -52,8 +52,6 @@ public class UserController {
 	@Autowired
 	private JwtUtility jwtUtility;
 
-	// private static Logger log = LoggerFactory.getLogger(UserController.class);
-
 	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public UserDto addUser(@ModelAttribute("username") String username, @ModelAttribute("roleId") Integer roleId,
@@ -89,12 +87,10 @@ public class UserController {
 	}
 
 	@PreAuthorize("hasAuthority('USER_ADMIN')")
-	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public UserDto updateUser(@ModelAttribute("roleId") Integer roleId, @ModelAttribute("userId") Integer userId,
-			@ModelAttribute("username") String username, @ModelAttribute("password") String password,
-			@ModelAttribute("email") String email) {
-
-		User user = userService.update(userId, username, password, email, roleId);
+			@ModelAttribute("username") String username, @ModelAttribute("email") String email) {
+		User user = userService.update(userId, username, email, roleId);
 		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail(), convertRoles(user.getRoles()));
 	}
 
@@ -104,7 +100,6 @@ public class UserController {
 		userService.delete(id);
 	}
 
-	// TODO remove password from response and userDTO
 	@PostMapping(value = "/authenticate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<String> authenticate(@ModelAttribute("email") String email,
 			@ModelAttribute("password") String password) {

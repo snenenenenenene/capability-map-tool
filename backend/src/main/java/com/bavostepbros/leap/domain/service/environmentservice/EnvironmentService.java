@@ -6,11 +6,6 @@ import com.bavostepbros.leap.domain.model.Capability;
 import com.bavostepbros.leap.domain.model.Environment;
 import com.bavostepbros.leap.domain.model.Strategy;
 
-/**
- *
- * @author Bavo Van Meel
- *
- */
 public interface EnvironmentService {
 	Environment save(String environmentName);
 

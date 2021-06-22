@@ -88,11 +88,11 @@ public class CapabilityApplicationServiceTest {
 		environmentFirst = new Environment(1, "Environment test");
 		environmentSecond = new Environment(2, "Environment test");
 		capabilityFirst = new Capability(1, environmentFirst, statusFirst, 0, "Capability 1", "Description 1",
-				PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 9, 8);
+				PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 2.0, 3.0);
 		capabilitySecond = new Capability(2, environmentFirst, statusFirst, capabilityFirst.getCapabilityId(),
-				"Capability 2", "Description 2", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 9, 8);
-		capabilityApplicationFirst = new CapabilityApplication(capabilityFirst, itApplicationFirst, 1, 2, 3, 4, 5, 6, 7, 8);
-		capabilityApplicationSecond = new CapabilityApplication(capabilitySecond, itApplicationSecond, 2, 3, 4, 5, 6, 7, 8, 9);
+				"Capability 2", "Description 2", PaceOfChange.DIFFERENTIATION, TargetOperatingModel.COORDINATION, 10, 2.0, 3.0);
+		capabilityApplicationFirst = new CapabilityApplication(capabilityFirst, itApplicationFirst, 0.40, 2, 3, 4, 5, 6, 7, 8);
+		capabilityApplicationSecond = new CapabilityApplication(capabilitySecond, itApplicationSecond, 0.60, 3, 4, 5, 6, 7, 8, 9);
 		capabilityApplications = List.of(capabilityApplicationFirst, capabilityApplicationSecond);
 		optionalItApplicationFirst = Optional.of(itApplicationFirst);
 		optionalCapabilityFirst = Optional.of(capabilityFirst);
