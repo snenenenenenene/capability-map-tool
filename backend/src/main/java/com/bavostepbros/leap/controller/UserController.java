@@ -30,6 +30,7 @@ import com.bavostepbros.leap.domain.model.dto.UserDto;
 import com.bavostepbros.leap.domain.service.emailservice.EmailService;
 import com.bavostepbros.leap.domain.service.roleservice.RoleService;
 import com.bavostepbros.leap.domain.service.userservice.UserService;
+import com.bavostepbros.leap.persistence.UserDAL;
 
 import lombok.RequiredArgsConstructor;
 
@@ -89,9 +90,8 @@ public class UserController {
 	@PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public UserDto updateUser(@ModelAttribute("roleId") Integer roleId, 
 			@ModelAttribute("userId") Integer userId, @ModelAttribute("username") String username,
-			@ModelAttribute("password") String password, @ModelAttribute("email") String email) {
-
-		User user = userService.update(userId, username, password, email, roleId);
+			 @ModelAttribute("email") String email) {
+		User user = userService.update(userId, username, email, roleId);
 		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail(), convertRoles(user.getRoles()));
 	}
 

@@ -75,6 +75,17 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public User update(Integer userId, String username, String email, Integer roleId) {
+		User user = get(userId);
+		String password = user.getPassword();
+		User savedUser = userDAL.save(new User(userId, username, passwordEncoder.encode(password), email));
+		Role role = roleService.get(roleId);
+		savedUser.addRole(role);
+		userDAL.save(savedUser);
+    	return savedUser;
+	}
+
+	@Override
 	public void delete(Integer id) {
 		userDAL.deleteById(id);
 	}	
