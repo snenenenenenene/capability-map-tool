@@ -38,42 +38,16 @@ export default class NewEnvironment extends Component {
 
   //GENERATE TEMPLATE WHEN CLICKING IN HTML
   generateTemplate() {
-    const formData = new FormData();
-    formData.append("environmentName", this.state.environmentName);
-    this.state.api.endpoints.environment
-      .create(formData)
-      .then((response) => {
-        toast.success("Environment Successfully Created!");
-        localStorage.setItem(
-          "environment",
-          JSON.stringify({
-            environmentName: this.state.environmentName,
-          })
-        );
-      })
-      .catch((error) => {
-        toast.error("Something went Wrong");
-      });
-    this.state.api.endpoints.environment
+    const toastLoading = toast.loading("Loading Template...");
+    this.state.api.endpoints.template
       .loadTemplate()
       .then((response) => {
+        toast.dismiss(toastLoading);
         toast.success("Template Successfully Imported!");
-        localStorage.setItem(
-          "environment",
-          JSON.stringify({
-            environmentName: this.state.environmentName,
-          })
-        );
-        this.props.history.push(`environment/${this.state.environmentName}`);
+        this.componentDidMount();
       })
       .catch((error) => {
-        if (error.response.status === 403) {
-          localStorage.removeItem("user");
-          localStorage.removeItem("environment");
-          this.props.history.push("/");
-          window.location.reload();
-          return;
-        }
+        toast.error("Something Went Wrong...");
         this.props.history.push("/404");
       });
   }
@@ -134,6 +108,7 @@ export default class NewEnvironment extends Component {
 
   async componentDidMount() {
     this.state.api.createEntity({ name: "environment" });
+    this.state.api.createEntity({ name: "template" });
     await this.state.api.endpoints.environment
       .getAll()
       .then((response) => this.setState({ environments: response.data }))

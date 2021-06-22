@@ -122,7 +122,7 @@ public class UserController {
 	}
 
 	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
-	@PutMapping(path = "changePassword", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PutMapping(path = "/changePassword", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public String changePassword(@ModelAttribute("password") String password, @ModelAttribute("id") Integer id,
 			@RequestHeader("Authorization") String token) {
 		String jwt = token.substring(7);
