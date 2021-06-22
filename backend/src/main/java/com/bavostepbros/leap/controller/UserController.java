@@ -89,8 +89,11 @@ public class UserController {
 
 	@PreAuthorize("hasAuthority('USER_ADMIN')")
 	@PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public UserDto updateUser(@ModelAttribute("roleId") Integer roleId, @ModelAttribute("userId") Integer userId,
-			@ModelAttribute("username") String username, @ModelAttribute("email") String email) {
+	public UserDto updateUser(
+			@ModelAttribute("roleId") Integer roleId,
+			@ModelAttribute("userId") Integer userId,
+			@ModelAttribute("username") String username,
+			@ModelAttribute("email") String email) {
 		User user = userService.update(userId, username, email, roleId);
 		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail(), convertRoles(user.getRoles()));
 	}
