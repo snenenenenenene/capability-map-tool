@@ -14,6 +14,7 @@ import com.bavostepbros.leap.domain.model.ITApplication;
 import com.bavostepbros.leap.domain.service.capabilityservice.CapabilityService;
 import com.bavostepbros.leap.domain.service.itapplicationservice.ITApplicationService;
 import com.bavostepbros.leap.persistence.CapabilityApplicationDAL;
+import com.bavostepbros.leap.persistence.CapabilityDAL;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,6 +31,9 @@ public class CapabilityApplicationServiceImpl implements CapabilityApplicationSe
 	
 	@Autowired
 	private ITApplicationService itApplicationService;
+	
+	@Autowired
+	private CapabilityDAL capabilityDAL;
 	
 	@Override
 	public CapabilityApplication save(Integer capabilityId, Integer applicationId, Integer efficiencySupport,
@@ -91,6 +95,9 @@ public class CapabilityApplicationServiceImpl implements CapabilityApplicationSe
 	}
 	
 	private void calculateImportance(Integer capabilityId) {
+		Optional<Capability> cap = capabilityDAL.findById(capabilityId);
+		cap.orElseThrow(() -> new NullPointerException("Capability does not exist"));
+		Capability capability = cap.get();
 		List<CapabilityApplication> capabilityApplications = getCapabilityApplicationsByCapability(capabilityId);
 		Double total = 0.0;
 		
@@ -109,6 +116,24 @@ public class CapabilityApplicationServiceImpl implements CapabilityApplicationSe
 			capApp.setImportance(capAppTotal / total);
 			capabilityApplicationDAL.save(capApp);
 		}
+		
+		Double avgInf = 0.0;
+		Double avgApp = 0.0;
+		
+		for (CapabilityApplication capApp : capabilityApplications) {
+			avgInf += (capApp.getCompleteness() + capApp.getCorrectnessInformationFit() +
+					capApp.getAvailability()) / 3 * capApp.getImportance();
+		}
+		
+		for (CapabilityApplication capApp : capabilityApplications) {
+			avgApp += (capApp.getEfficiencySupport() + capApp.getFunctionalCoverage() +
+					capApp.getCorrectnessBusinessFit() + capApp.getFuturePotential()) 
+					/ 3 * capApp.getImportance();
+		}
+		
+		capability.setInformationQuality(avgInf);
+		capability.setApplicationFit(avgApp);
+		capabilityDAL.save(capability);
 	}
 
 }
