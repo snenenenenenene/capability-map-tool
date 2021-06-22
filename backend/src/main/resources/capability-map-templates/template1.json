@@ -1,1695 +1,402 @@
 {
-    "environmentId": 1,
-    "environmentName": "Test 1",
+    "environmentName": "Template 1",
     "capabilities": [
         {
             "capabilityId": 1,
             "capabilityName": "Club strategy Management",
-            "description": null,
-            "level": "ONE",
-            "paceOfChange": "STANDARD",
-            "targetOperatingModel": "COORDINATION",
-            "resourceQuality": 1,
-            "informationQuality": null,
-            "applicationFit": null,
-            "status": {
-                "statusId": 1,
-                "validityPeriod": "0001-12-31"
-            },
             "children": [
                 {
                     "capabilityId": 2,
                     "capabilityName": "Strategy Development",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
-                    "children": [],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    "children": []
                 },
                 {
                     "capabilityId": 3,
                     "capabilityName": "Competition analysis",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
                     "children": [
                         {
                             "capabilityId": 4,
                             "capabilityName": "Own Market Analysis",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 5,
                             "capabilityName": "Other competitor analysis",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                           "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         }
-                    ],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    ]
                 },
                 {
                     "capabilityId": 6,
                     "capabilityName": "Trends and market watch and analysis",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
-                    "children": [],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    "children": []
                 },
                 {
                     "capabilityId": 7,
                     "capabilityName": "Innovation Management",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
-                    "children": [],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    "children": []
                 },
                 {
                     "capabilityId": 8,
                     "capabilityName": "Brand strategy development",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
                     "children": [
                         {
                             "capabilityId": 9,
                             "capabilityName": "Core values definition",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 10,
                             "capabilityName": "Brand experience analysis",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         }
-                    ],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    ]
                 },
                 {
                     "capabilityId": 11,
                     "capabilityName": "Portfolio management",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
-                    "children": [],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    "children": []
                 }
-            ],
-            "capabilityItems": [],
-            "projects": [],
-            "businessprocess": [],
-            "capabilityInformation": [],
-            "resources": [],
-            "capabilityApplications": []
+            ]
         },
         {
             "capabilityId": 12,
             "capabilityName": "Products and Services development & management",
-            "description": null,
-            "level": "ONE",
-            "paceOfChange": "STANDARD",
-            "targetOperatingModel": "COORDINATION",
-            "resourceQuality": 1,
-            "informationQuality": null,
-            "applicationFit": null,
-            "status": {
-                "statusId": 1,
-                "validityPeriod": "0001-12-31"
-            },
             "children": [
                 {
                     "capabilityId": 13,
                     "capabilityName": "New merchandise development",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
-                    "children": [],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    "children": []
                 },
                 {
                     "capabilityId": 14,
                     "capabilityName": "New Sponsorship/Partnership offering development",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
-                    "children": [],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    "children": []
                 },
                 {
                     "capabilityId": 15,
                     "capabilityName": "New B2B offering development",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
-                    "children": [],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    "children": []
                 },
                 {
                     "capabilityId": 16,
                     "capabilityName": "Touchpoint development & management",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
-                    "children": [],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    "children": []
                 },
                 {
                     "capabilityId": 17,
                     "capabilityName": "New B2C Ticketing development",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
-                    "children": [],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    "children": []
                 }
-            ],
-            "capabilityItems": [],
-            "projects": [],
-            "businessprocess": [],
-            "capabilityInformation": [],
-            "resources": [],
-            "capabilityApplications": []
+            ]
         },
         {
             "capabilityId": 18,
             "capabilityName": "Marketing and sales management",
-            "description": null,
-            "level": "ONE",
-            "paceOfChange": "STANDARD",
-            "targetOperatingModel": "COORDINATION",
-            "resourceQuality": 1,
-            "informationQuality": null,
-            "applicationFit": null,
-            "status": {
-                "statusId": 1,
-                "validityPeriod": "0001-12-31"
-            },
             "children": [
                 {
                     "capabilityId": 19,
                     "capabilityName": "Marketing management",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
                     "children": [
                         {
                             "capabilityId": 20,
                             "capabilityName": "Marketing strategy and development",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 21,
                             "capabilityName": "Marketing of merchandise",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 22,
                             "capabilityName": "Marketing of B2C ticket options",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 23,
                             "capabilityName": "Marketing of B2B ticket options",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 24,
                             "capabilityName": "Marketing of B2B hospitality and arrangements",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 25,
                             "capabilityName": "Marketing of gameday products and services",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 26,
                             "capabilityName": "Marketing of B2B sponsorship programs",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         }
-                    ],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    ]
                 },
                 {
                     "capabilityId": 27,
                     "capabilityName": "Brand strategy implementation",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
                     "children": [
                         {
                             "capabilityId": 28,
                             "capabilityName": "Branding strategy development",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 29,
                             "capabilityName": "Historic achievements/Legends",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 30,
                             "capabilityName": "Youth dream development",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         }
-                    ],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    ]
                 },
                 {
                     "capabilityId": 31,
                     "capabilityName": "Sales Management",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
                     "children": [
                         {
                             "capabilityId": 32,
                             "capabilityName": "Sales strategy development",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 33,
                             "capabilityName": "Managing omnichannel sales",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 34,
                             "capabilityName": "Customer & account management",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 35,
                             "capabilityName": "Sales order & contract management",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 36,
                             "capabilityName": "Partners and alliances management",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         }
-                    ],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    ]
                 }
-            ],
-            "capabilityItems": [],
-            "projects": [],
-            "businessprocess": [],
-            "capabilityInformation": [],
-            "resources": [],
-            "capabilityApplications": []
+            ]
         },
         {
             "capabilityId": 37,
             "capabilityName": "Product delivery & material management",
-            "description": null,
-            "level": "ONE",
-            "paceOfChange": "STANDARD",
-            "targetOperatingModel": "COORDINATION",
-            "resourceQuality": 1,
-            "informationQuality": null,
-            "applicationFit": null,
-            "status": {
-                "statusId": 1,
-                "validityPeriod": "0001-12-31"
-            },
             "children": [
                 {
                     "capabilityId": 38,
                     "capabilityName": "Supplier management",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
-                    "children": [],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    "children": []
                 },
                 {
                     "capabilityId": 39,
                     "capabilityName": "Digital currency/cashless & cash payments",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
-                    "children": [],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    "children": []
                 },
                 {
                     "capabilityId": 40,
                     "capabilityName": "Sustainable solutions management",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
-                    "children": [],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    "children": []
                 },
                 {
                     "capabilityId": 41,
                     "capabilityName": "Virtual interactivity & connectivity off-site",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
-                    "children": [],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    "children": []
                 },
                 {
                     "capabilityId": 42,
                     "capabilityName": "Procurement",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
                     "children": [
                         {
                             "capabilityId": 43,
                             "capabilityName": "Manage tenders",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 44,
                             "capabilityName": "Manage purchase orders",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 43,
                             "capabilityName": "Manage framework arrangements",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         }
-                    ],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    ]
                 },
                 {
                     "capabilityId": 44,
                     "capabilityName": "Inbound logistics & stock",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
                     "children": [
                         {
                             "capabilityId": 45,
                             "capabilityName": "Goods receipt validation",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 46,
                             "capabilityName": "Manage materials for sales",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 47,
                             "capabilityName": "Manage materials/consumables for internal use",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         }
-                    ],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    ]
                 },
                 {
                     "capabilityId": 48,
                     "capabilityName": "Merchandise delivery",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
                     "children": [
                         {
                             "capabilityId": 49,
                             "capabilityName": "Fanshop",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 50,
                             "capabilityName": "Delivery to buyer",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         }
-                    ],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    ]
                 },
                 {
                     "capabilityId": 51,
                     "capabilityName": "Food & drinks delivery",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
                     "children": [
                         {
                             "capabilityId": 52,
                             "capabilityName": "Stalls",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 53,
                             "capabilityName": "Mobile vendors",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         }
-                    ],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    ]
                 }
-            ],
-            "capabilityItems": [],
-            "projects": [],
-            "businessprocess": [],
-            "capabilityInformation": [],
-            "resources": [],
-            "capabilityApplications": []
+            ]
         },
         {
             "capabilityId": 54,
             "capabilityName": "Gameday Match/Event Delivery",
-            "description": null,
-            "level": "ONE",
-            "paceOfChange": "STANDARD",
-            "targetOperatingModel": "COORDINATION",
-            "resourceQuality": 1,
-            "informationQuality": null,
-            "applicationFit": null,
-            "status": {
-                "statusId": 1,
-                "validityPeriod": "0001-12-31"
-            },
             "children": [
                 {
                     "capabilityId": 55,
                     "capabilityName": "Physical or event delivery",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
                     "children": [
                         {
                             "capabilityId": 56,
                             "capabilityName": "Access control",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 57,
                             "capabilityName": "Side entertainment",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 58,
                             "capabilityName": "Preparing the field/pitch/venue",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 59,
                             "capabilityName": "Accreditation/area control",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 60,
                             "capabilityName": "Media & Big screen options",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 61,
                             "capabilityName": "Safety management & crowd control",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 62,
                             "capabilityName": "Interactivity & connectivity on site",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 63,
                             "capabilityName": "Media facilitation",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 64,
                             "capabilityName": "Virtual delivery",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         }
-                    ],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    ]
                 },
                 {
                     "capabilityId": 65,
                     "capabilityName": "Away game delivery",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
                     "children": [
                         {
                             "capabilityId": 66,
                             "capabilityName": "Providing fan experience at the home venue",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 67,
                             "capabilityName": "Organizing away ticketing",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 68,
                             "capabilityName": "Organizing away transport",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         }
-                    ],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    ]
                 },
                 {
                     "capabilityId": 69,
                     "capabilityName": "B2B Delivery",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
                     "children": [
                         {
                             "capabilityId": 70,
                             "capabilityName": "Issuing tickets",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 71,
                             "capabilityName": "Hospitality",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         },
                         {
                             "capabilityId": 72,
                             "capabilityName": "Catering",
-                            "description": null,
-                            "level": "THREE",
-                            "paceOfChange": "STANDARD",
-                            "targetOperatingModel": "COORDINATION",
-                            "resourceQuality": 1,
-                            "informationQuality": null,
-                            "applicationFit": null,
-                            "status": {
-                                "statusId": 1,
-                                "validityPeriod": "0001-12-31"
-                            },
-                            "children": [],
-                            "capabilityItems": [],
-                            "projects": [],
-                            "businessprocess": [],
-                            "capabilityInformation": [],
-                            "resources": [],
-                            "capabilityApplications": []
+                            "children": []
                         }
-                    ],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    ]
                 },
                 {
                     "capabilityId": 73,
                     "capabilityName": "E-sports delivery",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
-                    "children": [],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    "children": []
                 },
                 {
                     "capabilityId": 74,
                     "capabilityName": "B2C delivery: ticketing",
-                    "description": null,
-                    "level": "TWO",
-                    "paceOfChange": "STANDARD",
-                    "targetOperatingModel": "COORDINATION",
-                    "resourceQuality": 1,
-                    "informationQuality": null,
-                    "applicationFit": null,
-                    "status": {
-                        "statusId": 1,
-                        "validityPeriod": "0001-12-31"
-                    },
-                    "children": [],
-                    "capabilityItems": [],
-                    "projects": [],
-                    "businessprocess": [],
-                    "capabilityInformation": [],
-                    "resources": [],
-                    "capabilityApplications": []
+                    "children": []
                 }
-            ],
-            "capabilityItems": [],
-            "projects": [],
-            "businessprocess": [],
-            "capabilityInformation": [],
-            "resources": [],
-            "capabilityApplications": []
+            ]
         }
     ],
     "strategies": []

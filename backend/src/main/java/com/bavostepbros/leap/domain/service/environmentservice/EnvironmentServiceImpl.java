@@ -151,7 +151,7 @@ public class EnvironmentServiceImpl implements EnvironmentService {
      */
     @Override
     public boolean existsByEnvironmentName(String environmentName) {
-        return !environmentDAL.findByEnvironmentName(environmentName).isEmpty();        
+        return environmentDAL.findByEnvironmentName(environmentName).isPresent();
     }
 
 }
