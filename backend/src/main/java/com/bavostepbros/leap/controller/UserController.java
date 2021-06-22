@@ -123,20 +123,16 @@ public class UserController {
 
 	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@PutMapping(path = "changePassword", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public String changePassword(@ModelAttribute("password") String password, @ModelAttribute("id") Integer id,
+	public String changePassword(
+			@ModelAttribute("password") String password,
 			@RequestHeader("Authorization") String token) {
 		String jwt = token.substring(7);
-		User user = userService.get(id);
+		String email = jwtUtility.extractEmail(jwt);
+		User user = userService.getByEmail(email);
 
-		String username = user.getUsername();
-		String currentUser = jwtUtility.extractUsername(jwt);
-		if (currentUser.equals(username)) {
-			Integer roleId = user.getRoles().iterator().next().getRoleId();
-			userService.update(id, user.getUsername(), password, user.getEmail(), roleId);
-			return "Password saved";
-		} else {
-			return "Can not change someone elses password.";
-		}
+		Integer roleId = user.getRoles().iterator().next().getRoleId();
+		userService.update(user.getUserId(), user.getUsername(), password, email, roleId);
+		return "Password saved";
 	}
 
 	@PutMapping(path = "/forgotPassword", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
