@@ -27,10 +27,13 @@ export default class EditUser extends Component {
     formData.append("userId", this.state.userId);
     formData.append("username", this.state.username);
     formData.append("email", this.state.email);
-    formData.append("password", sha1("newUser"));
+    formData.append("password", this.state.password);
     formData.append("roleId", this.state.roleId);
+    for (var pair of formData.entries()) {
+      console.log(pair[0] + ", " + pair[1]);
+    }
     await this.state.api.endpoints.user
-      .update(formData, this.state.userId)
+      .updateUser(formData)
       .then((response) => {
         toast.success("User Updated Successfully!");
         this.props.history.push(`/user`);

@@ -47,7 +47,7 @@ export default class API {
       axios.put(`${resourceURL}/changePassword`, toCreate, config);
 
     endpoints.updateUser = (toUpdate) =>
-      axios.put(`${resourceURL}/`, toUpdate, config);
+      axios.put(`${resourceURL}`, toUpdate, config);
     endpoints.forgotPassword = (toUpdate) =>
       axios.put(`${resourceURL}/forgotPassword`, toUpdate);
 
