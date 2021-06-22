@@ -63,7 +63,7 @@ public class JwtUtility implements Serializable {
 		return Jwts.parser().setSigningKey(SECRETKEY).parseClaimsJws(jwt).getBody();
 	}
 
-	public String extractUsername(String jwt) {
+	public String extractEmail(String jwt) {
 		return getClaimsFromToken(jwt).getSubject();
 	}
 
@@ -76,7 +76,7 @@ public class JwtUtility implements Serializable {
 	}
 
 	public Boolean validateToken(String jwt) {
-		UserDetails userDetails = userDetailsService.loadUserByUsername(extractUsername(jwt));
-		return userDetails.getUsername().equals(extractUsername(jwt)) && !isExpired(jwt);
+		UserDetails userDetails = userDetailsService.loadUserByUsername(extractEmail(jwt));
+		return userDetails.getUsername().equals(extractEmail(jwt)) && !isExpired(jwt);
 	}
 }
