@@ -14,7 +14,6 @@ export default class EditUser extends Component {
       username: "",
       roleId: "",
       email: "",
-      password: "",
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -27,13 +26,12 @@ export default class EditUser extends Component {
     formData.append("userId", this.state.userId);
     formData.append("username", this.state.username);
     formData.append("email", this.state.email);
-    formData.append("password", this.state.password);
     formData.append("roleId", this.state.roleId);
     for (var pair of formData.entries()) {
       console.log(pair[0] + ", " + pair[1]);
     }
     await this.state.api.endpoints.user
-      .updateUser(formData)
+      .updateUser(formData, this.state.userId)
       .then((response) => {
         toast.success("User Updated Successfully!");
         this.props.history.push(`/user`);
@@ -46,14 +44,14 @@ export default class EditUser extends Component {
     this.state.api.createEntity({ name: "role" });
     await this.state.api.endpoints.user
       .getOne({ id: this.state.userId })
-      .then((response) =>
+      .then((response) => {
+        console.log(response.data);
         this.setState({
           username: response.data.username,
           email: response.data.email,
-          password: response.data.password,
-          roleId: response.data.roleId,
-        })
-      )
+          roleId: response.data.roleDto[0].roleId,
+        });
+      })
       .catch((error) => {
         toast.error("Could not Load User");
       });
