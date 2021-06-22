@@ -30,6 +30,7 @@ import com.bavostepbros.leap.domain.model.dto.UserDto;
 import com.bavostepbros.leap.domain.service.emailservice.EmailService;
 import com.bavostepbros.leap.domain.service.roleservice.RoleService;
 import com.bavostepbros.leap.domain.service.userservice.UserService;
+import com.bavostepbros.leap.persistence.UserDAL;
 
 import lombok.RequiredArgsConstructor;
 
@@ -89,9 +90,8 @@ public class UserController {
 	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public UserDto updateUser(@ModelAttribute("roleId") Integer roleId, 
 			@ModelAttribute("userId") Integer userId, @ModelAttribute("username") String username,
-			@ModelAttribute("password") String password, @ModelAttribute("email") String email) {
-
-		User user = userService.update(userId, username, password, email, roleId);
+			 @ModelAttribute("email") String email) {
+		User user = userService.update(userId, username, email, roleId);
 		return new UserDto(user.getUserId(), user.getUsername(), user.getEmail(), convertRoles(user.getRoles()));
 	}
 
@@ -120,22 +120,15 @@ public class UserController {
 	@PreAuthorize("hasAuthority('USER_ADMIN') or hasAuthority('APP_ADMIN') or hasAuthority('CREATING_USER') or hasAuthority('VIEWING_USER')")
 	@PutMapping(path = "changePassword", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public String changePassword(
-			@ModelAttribute("password") String password, 
-			@ModelAttribute("id") Integer id,			
+			@ModelAttribute("password") String password, 		
 			@RequestHeader("Authorization") String token) {
 		String jwt = token.substring(7);
-		User user = userService.get(id);
+		String email = jwtUtility.extractEmail(jwt);
+		User user = userService.getByEmail(email);
 
-		String username = user.getUsername();
-		String currentUser = jwtUtility.extractUsername(jwt);
-		if(currentUser.equals(username)) {
-			Integer roleId = user.getRoles().iterator().next().getRoleId();
-			userService.update(id, user.getUsername(), password, user.getEmail(), roleId);
-			return "Password saved";
-		}
-		else{
-			return "Can not change someone elses password.";
-		}
+		Integer roleId = user.getRoles().iterator().next().getRoleId();
+		userService.update(user.getUserId(), user.getUsername(), password, email, roleId);
+		return "Password saved";
 	}
 
 	@PutMapping(path = "/forgotPassword", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

@@ -59,6 +59,11 @@ public class UserServiceImpl implements UserService {
 	public User getByEmail(String email) {
 		return userDAL.findByEmail(email);
 	}
+
+	@Override
+	public User getByName(String username) {
+		return userDAL.findByUsername(username);
+	}
 	
 	@Override
 	public List<User> getAll() {
@@ -72,6 +77,17 @@ public class UserServiceImpl implements UserService {
 		user.addRole(role);
 		userDAL.save(user);
     	return user;
+	}
+
+	@Override
+	public User update(Integer userId, String username, String email, Integer roleId) {
+		User user = get(userId);
+		String password = user.getPassword();
+		User savedUser = userDAL.save(new User(userId, username, passwordEncoder.encode(password), email));
+		Role role = roleService.get(roleId);
+		savedUser.addRole(role);
+		userDAL.save(savedUser);
+    	return savedUser;
 	}
 
 	@Override
