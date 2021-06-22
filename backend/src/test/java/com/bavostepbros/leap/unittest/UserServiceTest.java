@@ -37,9 +37,6 @@ public class UserServiceTest {
 
 	@Autowired
     private RoleService roleService;
-	
-	@MockBean
-	private UserDAL userDAL;
 
     @MockBean
     private RoleDAL roleDAL;
